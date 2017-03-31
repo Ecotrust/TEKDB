@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+#User added
+code/TEKDB/TEKDB/local_settings.py
+
 __pycache__/
 *.py[cod]
 *$py.class
