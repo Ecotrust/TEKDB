@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 #User added
 code/TEKDB/TEKDB/local_settings.py
+code/TEKDB/db.sqlite3
 
 __pycache__/
 *.py[cod]
