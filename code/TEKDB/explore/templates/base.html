@@ -10,7 +10,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <style>
-      body { padding-top: 70px; }
+    
+      body { padding-top: 90px; }
+
+      h1 { text-align: center; }
+      .header-title a:hover {
+        text-decoration: none !important;
+      }
+      .header-title h1 {
+        /*margin: 5px;*/
+        border-radius: 10px;
+      }
+      .header-title:hover h1 {
+        background-color: #DDFFDD;
+      }
+
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -20,11 +34,15 @@
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="row">
-          <div class="col-md-8">
-            <h1>Traditional Ethnographic Knowledge DB</h1>
+          <div class="col-md-8 header-title">
+            {% block headerTitle %}
+            <a href="/"><h1 href="/">Traditional Ethnographic Knowledge DB</h1></a>
+            {% endblock %}
           </div>
           <div class="col-md-4">
+            {% block headerButtons %}
             <p>placeholder</p>
+            {% endblock %}
           </div>
         </div>
       </div>
@@ -32,10 +50,20 @@
 
     {% endblock %}
 
-    {% block content %}
-      <h1>{{pageTitle}}</h1>
-      {{pageContent}}
-    {% endblock %}
+    <div class="container content-container">
+      <div class="row content-row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-10 well">
+          {% block content %}
+            <h1>{{pageTitle}}</h1>
+            {{pageContent}}
+          {% endblock %}
+        </div>
+        <div class="col-md-1">
+        </div>
+      </div>
+    </div>
 
     <!-- JQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
