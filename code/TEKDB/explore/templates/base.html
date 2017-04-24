@@ -1,0 +1,46 @@
+<HTML>
+  <head>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Journal Bootswatch CSS -->
+    <link rel="stylesheet" href="https://bootswatch.com/journal/bootstrap.min.css" crossorigin="anonymous">
+
+    <!-- Optional Boostrap theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <style>
+      body { padding-top: 70px; }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    {% block header %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h1>Traditional Ethnographic Knowledge DB</h1>
+          </div>
+          <div class="col-md-4">
+            <p>placeholder</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    {% endblock %}
+
+    {% block content %}
+      <h1>{{pageTitle}}</h1>
+      {{pageContent}}
+    {% endblock %}
+
+    <!-- JQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</HTML>
