@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <style>
-    
+
       body { padding-top: 90px; }
 
       h1 { text-align: center; }
@@ -24,6 +24,36 @@
       .header-title:hover h1 {
         background-color: #DDFFDD;
       }
+
+      .header-button, .header-button-disabled {
+        font-size: 26px;
+        margin-top: 5px;
+        padding-top: 10px;
+        padding-bottom: 15px;
+        border-radius: 10px;
+      }
+      .header-button {
+        color: #000;
+      }
+      .header-button-disabled {
+        color: #999;
+      }
+
+      .header-button:hover, .header-button-disabled:hover {
+        text-decoration: none !important;
+      }
+      .header-button:hover {
+        background-color: #DDFFDD;
+        color: #000;
+      }
+      .header-button-disabled:hover {
+        color: #999;
+      }
+
+      .well {
+        background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%);
+      }
+
 
     </style>
 
@@ -41,7 +71,36 @@
           </div>
           <div class="col-md-4">
             {% block headerButtons %}
-            <p>placeholder</p>
+            <div class="row header-button-row">
+              {% ifnotequal pageTitle "Home" %}
+              <a href="/" class="col-md-3 header-button">
+              {% else %}
+              <a class="col-md-3 header-button-disabled">
+              {% endifnotequal %}
+                Home
+              </a>
+              {% ifnotequal pageTitle "About" %}
+              <a href="/about" class="col-md-3 header-button">
+              {% else %}
+              <a class="col-md-3 header-button-disabled">
+              {% endifnotequal %}
+                About
+              </a>
+              {% ifnotequal pageTitle "Help" %}
+              <a href="/help" class="col-md-3 header-button">
+              {% else %}
+              <a class="col-md-3 header-button-disabled">
+              {% endifnotequal %}
+                Help
+              </a>
+              {% ifnotequal pageTitle "Login" %}
+              <a href="/login" class="col-md-3 header-button">
+              {% else %}
+              <a class="col-md-3 header-button-disabled">
+              {% endifnotequal %}
+                Login
+              </a>
+            </div>
             {% endblock %}
           </div>
         </div>
