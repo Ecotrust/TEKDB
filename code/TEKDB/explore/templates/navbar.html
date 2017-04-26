@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8 header-title-content">
+        <a href="/">
+          {% block headerTitle %}
+          <div class="row">
+            <div class="col-md-12 header-title">
+              <h1>TEK</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p>Traditional Ethnographic Knowledge Database</p>
+            </div>
+          </div>
+          {% endblock %}
+        </a>
+      </div>
+      <div class="col-md-2">
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    {% block headerButtons %}
+    <div class="row header-button-row">
+      {% ifnotequal pageTitle "Home" %}
+      <a href="/" class="col-md-2 header-button">
+        Explore
+      {% else %}
+      <a class="col-md-2">
+      {% endifnotequal %}
+      </a>
+      {% ifnotequal pageTitle "About" %}
+      <a href="/about" class="col-md-2 header-button">
+      {% else %}
+      <a class="col-md-2 header-button-selected">
+      {% endifnotequal %}
+        About
+      </a>
+      {% ifnotequal pageTitle "Help" %}
+      <a href="/help" class="col-md-2 header-button">
+      {% else %}
+      <a class="col-md-2 header-button-selected">
+      {% endifnotequal %}
+        Help
+      </a>
+      <div class="col-md-2">
+      </div>
+      {% ifnotequal pageTitle "Login" %}
+      <a href="/login" class="col-md-2 header-button">
+      {% else %}
+      <a class="col-md-2 header-button-selected">
+      {% endifnotequal %}
+        Login
+      </a>
+    </div>
+    {% endblock %}
+  </div>
+</div>

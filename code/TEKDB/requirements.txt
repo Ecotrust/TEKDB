@@ -1,0 +1,6 @@
+#REQUIRED
+django
+
+#OPTIONAL, BUT LOVELY FOR DEBUGGING
+ipython
+ipdb

@@ -9,21 +9,28 @@ h1 { text-align: center; }
 .header-title-content {
   margin: 5px 0;
   text-align: center;
-  color: black;
+  color: white;
+  background-color: #777;
   border-radius: 10px;
   /*padding: 5px;*/
 }
-.header-title-content:hover {
-  background-color: #DDFFDD;
-  text-decoration: none !important;
-  color: black
-}
-.header-title-content a {
-  color: black;
+.header-title-content a,
+.header-title-content h1,
+.header-title-content p {
+  color: white;
 }
 .header-title-content p {
   margin-bottom: 3px;
   font-size: 14px;
+}
+.header-title-content:hover a,
+.header-title-content:hover h1,
+.header-title-content:hover p {
+  color: #DDFFDD;
+  text-decoration: none !important;
+}
+.header-title-content:hover {
+  background-color: #555;
 }
 
 .header-button, .header-button-selected {
@@ -48,6 +55,7 @@ h1 { text-align: center; }
 
 .header-button:hover, .header-button-selected:hover {
   text-decoration: none !important;
+  border: 1px solid black;
 }
 .header-button:hover {
   background-color: #DDFFDD;
