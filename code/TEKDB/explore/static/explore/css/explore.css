@@ -33,9 +33,13 @@ h1 { text-align: center; }
   background-color: #555;
 }
 
+.header-button-row {
+  min-height: 50px;
+  margin-top: 15px;
+}
+
 .header-button, .header-button-selected {
   font-size: 20px;
-  margin-top: 15px;
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 10px;
@@ -62,6 +66,13 @@ h1 { text-align: center; }
   color: #000;
 }
 
+.content-container {
+  margin-top: 60px;
+}
+
 .well {
   background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%);
+}
+.content-well {
+  padding-bottom: 200px;
 }

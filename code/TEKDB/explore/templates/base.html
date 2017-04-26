@@ -18,7 +18,6 @@
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         {% include 'navbar.html' %}
-        
       </div>
     </nav>
     {% endblock %}
@@ -28,7 +27,7 @@
       <div class="row content-row">
         <div class="col-md-1">
         </div>
-        <div class="col-md-10 well">
+        <div class="col-md-10 well content-well">
           {% block content %}
             <h1>{{pageTitle}}</h1>
             {{pageContent}}

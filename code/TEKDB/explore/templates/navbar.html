@@ -26,33 +26,33 @@
   <div class="col-md-6">
     {% block headerButtons %}
     <div class="row header-button-row">
-      {% ifnotequal pageTitle "Home" %}
-      <a href="/" class="col-md-2 header-button">
-        Explore
+      {% ifnotequal pageTitle "Explore" %}
+      <a href="/explore" class="col-sm-2 col-md-2 header-button">
       {% else %}
-      <a class="col-md-2">
+      <a class="col-sm-2 col-md-2 header-button-selected">
       {% endifnotequal %}
+        Explore
       </a>
       {% ifnotequal pageTitle "About" %}
-      <a href="/about" class="col-md-2 header-button">
+      <a href="/about" class="col-sm-2 col-md-2 header-button">
       {% else %}
-      <a class="col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected">
       {% endifnotequal %}
         About
       </a>
       {% ifnotequal pageTitle "Help" %}
-      <a href="/help" class="col-md-2 header-button">
+      <a href="/help" class="col-sm-2 col-md-2 header-button">
       {% else %}
-      <a class="col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected">
       {% endifnotequal %}
         Help
       </a>
-      <div class="col-md-2">
-      </div>
+      <a class="col-sm-2 col-md-2">
+      </a>
       {% ifnotequal pageTitle "Login" %}
-      <a href="/login" class="col-md-2 header-button">
+      <a href="/login" class="col-sm-2 col-md-2 header-button">
       {% else %}
-      <a class="col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected">
       {% endifnotequal %}
         Login
       </a>
