@@ -2,6 +2,7 @@
 #User added
 code/TEKDB/TEKDB/local_settings.py
 code/TEKDB/db.sqlite3
+code/TEKDB/static/*
 
 __pycache__/
 *.py[cod]

@@ -32,6 +32,7 @@ h1 { text-align: center; }
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 10px;
+  text-align: center;
 }
 .header-button {
   color: #000;
