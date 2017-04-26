@@ -1,0 +1,108 @@
+<HTML>
+  <head>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Journal Bootswatch CSS -->
+    <link rel="stylesheet" href="https://bootswatch.com/journal/bootstrap.min.css" crossorigin="anonymous">
+
+    <!-- Optional Boostrap theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/css/explore.css">
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    {% block header %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-8 header-title-content">
+                <a href="/">
+                  {% block headerTitle %}
+                  <div class="row">
+                    <div class="col-md-12 header-title">
+                      <h1>TEK</h1>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p>Traditional Ethnographic Knowledge Database</p>
+                    </div>
+                  </div>
+                  {% endblock %}
+                </a>
+              </div>
+              <div class="col-md-2">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            {% block headerButtons %}
+            <div class="row header-button-row">
+              {% ifnotequal pageTitle "Home" %}
+              <a href="/" class="col-md-2 header-button">
+                Explore
+              {% else %}
+              <a class="col-md-2">
+              {% endifnotequal %}
+              </a>
+              {% ifnotequal pageTitle "About" %}
+              <a href="/about" class="col-md-2 header-button">
+              {% else %}
+              <a class="col-md-2 header-button-selected">
+              {% endifnotequal %}
+                About
+              </a>
+              {% ifnotequal pageTitle "Help" %}
+              <a href="/help" class="col-md-2 header-button">
+              {% else %}
+              <a class="col-md-2 header-button-selected">
+              {% endifnotequal %}
+                Help
+              </a>
+              <div class="col-md-2 header-button">
+              </div>
+              {% ifnotequal pageTitle "Login" %}
+              <a href="/login" class="col-md-2 header-button">
+              {% else %}
+              <a class="col-md-2 header-button-selected">
+              {% endifnotequal %}
+                Login
+              </a>
+            </div>
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    {% endblock %}
+
+    <div class="container content-container">
+      <div class="row content-row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-10 well">
+          {% block content %}
+            <h1>{{pageTitle}}</h1>
+            {{pageContent}}
+          {% endblock %}
+        </div>
+        <div class="col-md-1">
+        </div>
+      </div>
+    </div>
+
+    <!-- JQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</HTML>

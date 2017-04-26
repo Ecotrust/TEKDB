@@ -1,20 +1,27 @@
-
-
 # Create your views here.
 from django.http import HttpResponse
 from django.shortcuts import render
 
 def index(request):
-	return render(request, "index.html", {})
-	#return HttpResponse("<h1>Server error: Already Logged In")
+    context = {
+        "pageTitle": "Login",
+    }
+    return render(request, "index.html", context)
+    #return HttpResponse("<h1>Server error: Already Logged In")
 
 def forgot(request):
-	return render(request, "forgot.html", {})
-	#return HttpResponse("<h1>Forgot Password")
+    context = {
+        "pageTitle": "Forgot Login",
+    }
+    return render(request, "forgot.html", context)
+    #return HttpResponse("<h1>Forgot Password")
 
 def create(request):
-	return render(request, "create.html", {})
-	#return HttpResponse("<h1>Create Password")
+    context = {
+        "pageTitle": "Create Account",
+    }
+    return render(request, "create.html", context)
+    #return HttpResponse("<h1>Create Password")
 
 def logout(request):
-	return HttpResponse("<h1>You have Logged Out")
+    return HttpResponse("<h1>You have Logged Out")
