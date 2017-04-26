@@ -1,13 +1,11 @@
-SECRET_KEY='fixthisdjango'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'DB Name', 
-        'USER': 'add user',
-        'PASSWORD': 'add password',
-        'HOST': 'add host',
-        'PORT': 'add number',
-    }
-}
-
-
+# SECRET_KEY='fixthisdjango'
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'DB Name',
+#         'USER': 'add user',
+#         'PASSWORD': 'add password',
+#         'HOST': 'add host',
+#         'PORT': 'add number',
+#     }
+# }
