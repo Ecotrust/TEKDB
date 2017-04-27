@@ -1,4 +1,4 @@
-<form method="post" action="/login/signin/">
+<form method="post" action="/login">
   {% csrf_token %}
   <!-- {{ form.as_p }} -->
   <div class="form-group">
@@ -11,7 +11,7 @@
   </div>
   <div class="modal-center">
     <button type="submit" class="btn">Login</button><br/>
-    <a>Request Signup</a>
+    <a href="/accounts/register">Request Signup</a>
     <span class="splitter">|</span>
     <a>Forgot Username or Password</a>
   </div>
