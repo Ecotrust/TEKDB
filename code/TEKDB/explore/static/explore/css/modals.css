@@ -1,0 +1,39 @@
+.modal-content {
+  background-color: #99AA99;
+  color: white;
+}
+
+.modal-header {
+  border: none;
+  text-align: center;
+}
+
+.modal-header h4 {
+  color: white;
+  font-size: 36px;
+  padding: 15px 0;
+}
+
+.modal-body form {
+  padding: 0 30px;
+}
+
+.modal-body .form-group .form-control {
+  color: white;
+  background-color: #777;
+  border: none;
+}
+
+.modal-center {
+  text-align: center;
+}
+
+.modal-center .btn {
+  width: 200px;
+  background-color: #444;
+  margin: 20px 0;
+}
+
+.modal-center .splitter {
+  margin: auto 5px;
+}

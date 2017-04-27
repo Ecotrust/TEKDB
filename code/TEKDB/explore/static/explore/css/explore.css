@@ -1,6 +1,11 @@
 body { padding-top: 90px; }
 
 h1 { text-align: center; }
+a { color: white; }
+a:hover {
+  color: white;
+  font-weight: bold;
+}
 .header-title h1 {
   padding-bottom: 0px;
   margin-bottom: 0px;

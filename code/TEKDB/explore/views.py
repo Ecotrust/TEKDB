@@ -8,7 +8,7 @@ def home(request):
         'pageTitle':'Welcome',
         'pageContent':"<p>Earl Grey tea, watercress sandwiches... and Bularian canapés? Are you up for promotion? That might've been one of the shortest assignments in the history of Starfleet. Is it my imagination, or have tempers become a little frayed on the ship lately? The Enterprise computer system is controlled by three primary main processor cores, cross-linked with a redundant melacortz ramistat, fourteen kiloquad interface modules. I guess it's better to be lucky than good. Then maybe you should consider this: if anything happens to them, Starfleet is going to want a full investigation.</p>"
     }
-    return render(request, "tek_index.html", context)
+    return render(request, "welcome.html", context)
 
 def about(request):
     context = {

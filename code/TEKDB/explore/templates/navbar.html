@@ -48,9 +48,10 @@
         Help
       </a>
       <a class="col-sm-2 col-md-2">
+
       </a>
       {% ifnotequal pageTitle "Login" %}
-      <a href="/login" class="col-sm-2 col-md-2 header-button">
+      <a class="col-sm-2 col-md-2 header-button" data-toggle="modal" data-target="#loginModal">
       {% else %}
       <a class="col-sm-2 col-md-2 header-button-selected">
       {% endifnotequal %}

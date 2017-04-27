@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/explore/css/welcome.css">
+{% endblock %}
+
+{% block content %}
+  <h1>{{pageTitle}}</h1>
+  {{pageContent | safe}}
+  <div class="welcome-login-button-wrapper">
+    <!-- <a href="/login"> -->
+      <button type="button" class="btn welcome-login-btn"  data-toggle="modal" data-target="#loginModal">Login</button>
+    <!-- </a> -->
+  </div>
+{% endblock %}
