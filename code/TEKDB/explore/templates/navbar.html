@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8 header-title-content">
+        <a href="/">
+          {% block headerTitle %}
+          <div class="row">
+            <div class="col-md-12 header-title">
+              <h1>TEK</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p>Traditional Ethnographic Knowledge Database</p>
+            </div>
+          </div>
+          {% endblock %}
+        </a>
+      </div>
+      <div class="col-md-2">
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    {% block headerButtons %}
+    <div class="row header-button-row">
+      {% ifnotequal pageTitle "Explore" %}
+      <a href="/explore" class="col-sm-2 col-md-2 header-button">
+      {% else %}
+      <a class="col-sm-2 col-md-2 header-button-selected">
+      {% endifnotequal %}
+        Explore
+      </a>
+      {% ifnotequal pageTitle "About" %}
+      <a href="/about" class="col-sm-2 col-md-2 header-button">
+      {% else %}
+      <a class="col-sm-2 col-md-2 header-button-selected">
+      {% endifnotequal %}
+        About
+      </a>
+      {% ifnotequal pageTitle "Help" %}
+      <a href="/help" class="col-sm-2 col-md-2 header-button">
+      {% else %}
+      <a class="col-sm-2 col-md-2 header-button-selected">
+      {% endifnotequal %}
+        Help
+      </a>
+      <a class="col-sm-2 col-md-2">
+
+      </a>
+      {% ifnotequal pageTitle "Login" %}
+      <a class="col-sm-2 col-md-2 header-button" data-toggle="modal" data-target="#loginModal">
+      {% else %}
+      <a class="col-sm-2 col-md-2 header-button-selected">
+      {% endifnotequal %}
+        Login
+      </a>
+    </div>
+    {% endblock %}
+  </div>
+</div>

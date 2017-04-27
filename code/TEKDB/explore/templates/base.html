@@ -9,111 +9,28 @@
     <!-- Optional Boostrap theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    <style>
-
-      body { padding-top: 90px; }
-
-      h1 { text-align: center; }
-      .header-title a:hover {
-        text-decoration: none !important;
-      }
-      .header-title h1 {
-        /*margin: 5px;*/
-        border-radius: 10px;
-      }
-      .header-title:hover h1 {
-        background-color: #DDFFDD;
-      }
-
-      .header-button, .header-button-disabled {
-        font-size: 26px;
-        margin-top: 5px;
-        padding-top: 10px;
-        padding-bottom: 15px;
-        border-radius: 10px;
-      }
-      .header-button {
-        color: #000;
-      }
-      .header-button-disabled {
-        color: #999;
-      }
-
-      .header-button:hover, .header-button-disabled:hover {
-        text-decoration: none !important;
-      }
-      .header-button:hover {
-        background-color: #DDFFDD;
-        color: #000;
-      }
-      .header-button-disabled:hover {
-        color: #999;
-      }
-
-      .well {
-        background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%);
-      }
-
-
-    </style>
+    <link rel="stylesheet" href="/static/explore/css/explore.css">
+    <link rel="stylesheet" href="/static/explore/css/modals.css">
 
     {% block extra_css %}{% endblock %}
   </head>
   <body>
+    {% include 'modals.html' %}
+
     {% block header %}
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
-        <div class="row">
-          <div class="col-md-8 header-title">
-            {% block headerTitle %}
-            <a href="/"><h1 href="/">Traditional Ethnographic Knowledge DB</h1></a>
-            {% endblock %}
-          </div>
-          <div class="col-md-4">
-            {% block headerButtons %}
-            <div class="row header-button-row">
-              {% ifnotequal pageTitle "Home" %}
-              <a href="/" class="col-md-3 header-button">
-              {% else %}
-              <a class="col-md-3 header-button-disabled">
-              {% endifnotequal %}
-                Home
-              </a>
-              {% ifnotequal pageTitle "About" %}
-              <a href="/about" class="col-md-3 header-button">
-              {% else %}
-              <a class="col-md-3 header-button-disabled">
-              {% endifnotequal %}
-                About
-              </a>
-              {% ifnotequal pageTitle "Help" %}
-              <a href="/help" class="col-md-3 header-button">
-              {% else %}
-              <a class="col-md-3 header-button-disabled">
-              {% endifnotequal %}
-                Help
-              </a>
-              {% ifnotequal pageTitle "Login" %}
-              <a href="/login" class="col-md-3 header-button">
-              {% else %}
-              <a class="col-md-3 header-button-disabled">
-              {% endifnotequal %}
-                Login
-              </a>
-            </div>
-            {% endblock %}
-          </div>
-        </div>
+        {% include 'navbar.html' %}
       </div>
     </nav>
-
     {% endblock %}
+
 
     <div class="container content-container">
       <div class="row content-row">
         <div class="col-md-1">
         </div>
-        <div class="col-md-10 well">
+        <div class="col-md-10 well content-well">
           {% block content %}
             <h1>{{pageTitle}}</h1>
             {{pageContent}}
@@ -128,6 +45,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/static/explore/js/modals.js"></script>
     {% block extra_js %}{% endblock %}
   </body>
 </HTML>

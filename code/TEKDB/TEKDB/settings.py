@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'explore',
+    'login',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -116,14 +118,25 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 #STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "static"),
 #    '/var/www/static/',
 #]
+
+### DJANGO-REGISTRATION SETTINGS ###
+REGISTRATION_OPEN = True
+
+
 from TEKDB.local_settings import *
