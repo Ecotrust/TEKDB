@@ -1,5 +1,6 @@
 #REQUIRED
 django
+django-registration
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
 ipython

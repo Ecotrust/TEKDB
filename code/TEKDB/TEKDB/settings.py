@@ -134,4 +134,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 #    os.path.join(BASE_DIR, "static"),
 #    '/var/www/static/',
 #]
+
+### DJANGO-REGISTRATION SETTINGS ###
+REGISTRATION_OPEN = True
+
+
 from TEKDB.local_settings import *

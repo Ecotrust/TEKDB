@@ -1,3 +1,4 @@
+REGISTRATION_OPEN = True
 # SECRET_KEY='fixthisdjango'
 # DATABASES = {
 #     'default': {

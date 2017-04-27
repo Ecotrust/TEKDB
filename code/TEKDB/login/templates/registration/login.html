@@ -1,0 +1,18 @@
+<form method="post" action="/login/signin/">
+  {% csrf_token %}
+  <!-- {{ form.as_p }} -->
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="username" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" placeholder="Password">
+  </div>
+  <div class="modal-center">
+    <button type="submit" class="btn">Login</button><br/>
+    <a>Request Signup</a>
+    <span class="splitter">|</span>
+    <a>Forgot Username or Password</a>
+  </div>
+</form>
