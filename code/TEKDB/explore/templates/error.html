@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{pageTitle}}</h1>
+{{pageContent | safe}}
+<div class="error-report">
+  <h2>Error:</h2>
+  <p>{{ error }}</p>
+  <p>Error code: {{ errorcode }}</p>
+</div>
+{% endblock %}

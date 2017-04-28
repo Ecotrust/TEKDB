@@ -1,6 +1,6 @@
-<form method="post" action="/login">
+<form method="post" action="/login/">
   {% csrf_token %}
-  <!-- {{ form.as_p }} -->
+  <!--   {{ form.as_p }}  -->
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" class="form-control" id="username" placeholder="Username">

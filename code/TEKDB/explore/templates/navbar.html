@@ -47,16 +47,26 @@
       {% endifnotequal %}
         Help
       </a>
-      <a class="col-sm-2 col-md-2">
+      <a class="col-sm-1 col-md-1">
 
       </a>
-      {% ifnotequal pageTitle "Login" %}
-      <a class="col-sm-2 col-md-2 header-button" data-toggle="modal" data-target="#loginModal">
+      {% if user.is_authenticated %}
+      <div class="dropdown col-sm-3 col-md-3">
+        <button class="btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          {{ user.username }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+          {% if user.is_superuser %}
+          <li><a class="dropdown-item" href="/admin">Administration</a></li>
+          {% endif %}
+          <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
+        </ul>
+      </div>
       {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
+      <a class="col-sm-3 col-md-3 header-button" data-toggle="modal" data-target="#loginModal">
         Login
       </a>
+      {% endif %}
     </div>
     {% endblock %}
   </div>

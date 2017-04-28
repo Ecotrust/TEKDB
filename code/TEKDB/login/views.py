@@ -16,12 +16,21 @@ def forgot(request):
     return render(request, "forgot.html", context)
     #return HttpResponse("<h1>Forgot Password")
 
-def create(request):
-    context = {
-        "pageTitle": "Create Account",
-    }
-    return render(request, "create.html", context)
-    #return HttpResponse("<h1>Create Password")
-
-def logout(request):
-    return HttpResponse("<h1>You have Logged Out")
+def login(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request.user)
+        from explore.views import home
+        return home(request)
+    else:
+        context = {
+            "errorcode": 403,
+            "error": "User name or password incorrect.",
+            'page':'error',
+            'pageTitle':'Error',
+            'pageContent':"<p>There was an error with your request. Please see below for details.</p>",
+            'user': request.user
+        }
+        return render(request, "error.html", context)
