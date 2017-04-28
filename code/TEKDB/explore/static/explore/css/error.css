@@ -1,0 +1,7 @@
+.error-report {
+  background-image: linear-gradient(to bottom,#777 0,#BBB 100%);
+  border: 2px solid #FF4444;
+  padding: 30px;
+  color: white;
+  font-weight: bold;
+}

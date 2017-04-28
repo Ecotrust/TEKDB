@@ -1,6 +1,8 @@
 # Create your views here.
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 
 def index(request):
     context = {
@@ -21,9 +23,9 @@ def login(request):
     password = request.POST['password']
     user = authenticate(request, username=username, password=password)
     if user is not None:
-        login(request.user)
-        from explore.views import home
-        return home(request)
+        auth_login(request, user)
+        from explore.views import explore
+        return explore(request)
     else:
         context = {
             "errorcode": 403,
