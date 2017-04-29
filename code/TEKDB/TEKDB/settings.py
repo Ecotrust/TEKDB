@@ -138,5 +138,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ### DJANGO-REGISTRATION SETTINGS ###
 REGISTRATION_OPEN = True
 
+SEARCH_CATEGORIES = [
+    'all',
+    'places',
+    'resources',
+    'activities',
+    'citations',
+    'media',
+]
+
 
 from TEKDB.local_settings import *
