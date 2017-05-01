@@ -1,78 +1,27 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
-<style>
-  .result-cell {
-
-  }
-  .result-img-col {
-    height: 60px;
-    width: 100%;
-  }
-
-  .result-desc-col {
-    height: 30px;
-    background-color: wheat;
-    text-align: center;
-  }
-</style>
+<link rel="stylesheet" href="/static/explore/css/results.css">
 {% endblock %}
 
 {% block content %}
 <h1>{{pageTitle}}</h1>
 {{pageContent | safe}}
-<div class="well"  data-bind='foreach: resultViewModel.results'>
-  <div class="row">
-    <a data-bind="href: link" class="col-md-3 col-sm-6 result-cell">
-      <div class="row result-img-row">
-        <div class="col-md-12 col-sm-12 result-img-col" data-bind="style: { backgroundImage: 'url(\'' + image + '\')' }">
-        <!-- <div class="col-md-12 col-sm-12 result-img-col" data-bind="style: { background-color: red }"> -->
-          <span data-bind="text: type">type</span>
-        </div>
-      </div>
-      <div class="row result-desc-row">
-        <div class="col-md-12 col-sm-12 result-desc-col">
-          <h3 data-bind="text: name">name</h3>
-          <p data-bind="text: type">type</p>
-          <div class="result-desc">
-            <p data-bind="text: description">description</p>
-          </div>
-        </div>
-      </div>
-    </a>
+
+<div class="well" data-bind="foreach: app.resultViewModel.resultGridArray">
+  <div data-bind="foreach: $data" class="row">
+    <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
   </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 
+<script src="/static/explore/js/results.js"></script>
 <script>
-  var resultViewModel = {
-    results: ko.observableArray([]),
-    category: ko.observable('all'),
-    db_query: ko.observable('*')
-  }
-  ko.applyBindings(resultViewModel);
-</script>
-
-<script>
-  // ResultViewModel();
-  resultViewModel.category( "{{ category }}" );
-  resultViewModel.db_query( "{{ query }}" );
-  // document.location.search = "query=" + db_query() + "&category=" + category();
-  // debugger;
-  $.ajax(
-    {
-      url: '/query?query=' + resultViewModel.db_query() + '&category=' + resultViewModel.category(),
-      success: function(result) {
-        resultViewModel.results(result.resultList);
-      },
-      error: function(result) {
-        window.alert('error!');
-      }
-
-    }
-  );
+  app.resultViewModel.category( "{{ category }}" );
+  app.resultViewModel.db_query( "{{ query }}" );
+  app.resultViewModel.loadResults();
 </script>
 
 {% endblock %}

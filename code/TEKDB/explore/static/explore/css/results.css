@@ -1,0 +1,35 @@
+.result-cell {
+  /*padding: 10px;*/
+  margin: 10px 4.166666%;
+  border: 2px solid white;
+  border-radius: 10px;
+}
+
+.result-img-col {
+  width: 100%;
+  background-size: cover;
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px 8px 0 0;
+}
+
+.result-desc-col {
+  height: 100px;
+  background-color: sandybrown;
+  text-align: center;
+  overflow: hidden;
+  /*white-space: nowrap;*/
+  text-overflow: ellipsis;
+  border-radius: 0 0 8px 8px;
+}
+.result-desc-col h3 {
+  margin: auto;
+}
+
+.result-img-col img {
+  height: 150px;
+}
+
+.result-alt-highlight {
+  background-color: #CCC;
+}
