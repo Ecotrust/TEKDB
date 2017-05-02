@@ -55,10 +55,10 @@ def search(request):
         else:
             category = '*'
     context = {
-        'query': query,
+        'query': query_string,
         'category': category,
-        'page':'explore',
-        'pageTitle':'Explore',
+        'page':'Results',
+        'pageTitle':'Results',
         'pageContent':"<p>Your search results:</p>",
         'user': request.user
     }
@@ -77,44 +77,16 @@ def query(request):
         category = None
 
     #TODO: Query database to generate 'results' dict.
-    results = {
-        'resultList' :[
-            {
-                'id': 1,
-                'type': 'place',
-                'name': 'Location 1',
-                'image': '/static/explore/img/demo-map.png',
-                'description': "Proin varius sollicitudin nisi in pretium. Sed fringilla leo eget arcu facilisis posuere. Pellentesque aliquet venenatis ullamcorper. Duis ornare sem.",
-                'link': '/explore/place/1',
-            },{
-                'id': 1,
-                'type': 'resource',
-                'name': 'Resource 1',
-                'image': '/static/explore/img/demo-resource.png',
-                'description': "Suspendisse tincidunt orci sed metus lobortis eleifend. Aliquam vel volutpat augue. Class aptent taciti sociosqu ad litora torquent per conubia.",
-                'link': '/explore/resource/1',
-            },{
-                'id': 1,
-                'type': 'activity',
-                'name': 'Activity 1',
-                'image': '/static/explore/img/demo-activity.png',
-                'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",
-                'link': '/explore/activity/1',
-            },{
-                'id': 1,
-                'type': 'citation',
-                'name': 'Citation 1',
-                'image': '/static/explore/img/demo-citation.png',
-                'description': "Quisque egestas mi lorem, at vehicula sem congue nec. Integer dui sapien, pellentesque eu auctor eget, laoreet sed nisi. Nunc.",
-                'link': '/explore/citatation/1',
-            },{
-                'id': 1,
-                'type': 'media',
-                'name': 'Media 1',
-                'image': '/static/explore/img/demo-media.png',
-                'description': "Maecenas scelerisque molestie nisl, ac blandit ipsum sagittis et. Donec ut enim pulvinar, suscipit lacus a, venenatis mauris. Aenean interdum.",
-                'link': '/explore/media/1',
-            },
-        ]
-    }
+    #####################################
+    ### START PLACEHOLDER FOR TESTING ###
+    #####################################
+    results = TEKDB.settings.TEST_QUERY_RESULTS
+    if category and not category == 'all':
+        results['resultList'] = [ x for x in results['resultList'] if x['type'] == category]
+    if keyword_string:
+        results['resultList'] = [ x for x in results['resultList'] if keyword_string in str(x)]
+    ###################################
+    ### END PLACEHOLDER FOR TESTING ###
+    ###################################
+
     return JsonResponse(results)
