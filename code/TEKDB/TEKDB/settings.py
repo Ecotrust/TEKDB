@@ -148,7 +148,7 @@ SEARCH_CATEGORIES = [
 ]
 
 
-from TEKDB.local_settings import *
+# from TEKDB.local_settings import *
 
 ### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
 
