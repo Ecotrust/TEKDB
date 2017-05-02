@@ -5,3 +5,8 @@ django-registration
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
 ipython
 ipdb
+
+#FOR HEROKU
+gunicorn==19.7.1
+dj-database-url==0.4.2
+whitenoise==3.3.0
