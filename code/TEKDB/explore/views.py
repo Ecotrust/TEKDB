@@ -80,11 +80,12 @@ def query(request):
     #####################################
     ### START PLACEHOLDER FOR TESTING ###
     #####################################
-    results = TEKDB.settings.TEST_QUERY_RESULTS
+    from copy import deepcopy
+    results = deepcopy(TEKDB.settings.TEST_QUERY_RESULTS)
     if category and not category == 'all':
         results['resultList'] = [ x for x in results['resultList'] if x['type'] == category]
-    if keyword_string:
-        results['resultList'] = [ x for x in results['resultList'] if keyword_string in str(x)]
+    if keyword_string and not keyword_string == '':
+        results['resultList'] = [ x for x in results['resultList'] if keyword_string.lower() in " ".join([x['type'],x['name'],x['description']]).lower()]
     ###################################
     ### END PLACEHOLDER FOR TESTING ###
     ###################################
