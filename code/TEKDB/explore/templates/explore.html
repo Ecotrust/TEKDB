@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- <h1>{{pageTitle}}</h1> -->
-<!-- {{pageContent | safe}} -->
 <form class="explore-form" method='post' action='/search/'>
   {% csrf_token %}
   <input type="text" id="search-category-type" name="category" value="all" required>
@@ -26,8 +24,12 @@
       <button type="button" class="btn btn-default"onclick="setCategoryType('media')">Media</button>
     </div>
   </div>
-  <input type="text" id="search-text" name="query" placeholder="Search Keywords">
-  <input type="submit" class="btn" value="Search">
+    <div class="input-group">
+      <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Keywords">
+      <span class="input-group-btn">
+        <button class="btn btn-secondary" type="submit">Search</button>
+      </span>
+    </div>
 </form>
 {% endblock %}
 
