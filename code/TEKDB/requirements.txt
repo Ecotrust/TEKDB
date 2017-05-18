@@ -1,6 +1,7 @@
 #REQUIRED
 django
 django-registration
+psycopg2
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
 ipython
