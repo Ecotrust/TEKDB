@@ -142,7 +142,7 @@ SEARCH_CATEGORIES = [
     'all',
     'places',
     'resources',
-    'activities',
+    'events',
     'citations',
     'media',
 ]
@@ -165,7 +165,7 @@ TEST_QUERY_RESULTS = {
             'link': '/explore/resource/1',
         },{
             'id': 1,
-            'type': 'activities',
+            'type': 'events',
             'name': 'Activity 1',
             'image': '/static/explore/img/demo-activity.png',
             'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",
@@ -200,7 +200,7 @@ TEST_QUERY_RESULTS = {
             'link': '/explore/resource/2',
         },{
             'id': 1,
-            'type': 'activities',
+            'type': 'events',
             'name': 'Activity 2',
             'image': '/static/explore/img/demo-activity.png',
             'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",

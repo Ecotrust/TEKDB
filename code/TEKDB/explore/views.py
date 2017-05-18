@@ -38,6 +38,91 @@ def explore(request):
     }
     return render(request, "explore.html", context)
 
+def get_model_by_type(model_type):
+    from TEKDB import models as tekmodels
+    searchable_models = {
+        'resource': [tekmodels.Resources],
+        'place': [tekmodels.Places],
+        'locality': [tekmodels.Locality],
+        'citation': [tekmodels.Citations],
+        'media': [tekmodels.Media],
+        'event': [
+            tekmodels.Localityplaceresourceevent,
+            tekmodels.Mediacitationevents,
+            tekmodels.Placescitationevents,
+            tekmodels.Placesmediaevents,
+            tekmodels.Placesresourcecitationevents,
+            tekmodels.Placesresourceevents,
+            tekmodels.Placesresourcemediaevents,
+            tekmodels.Resourceactivitycitationevents,
+            tekmodels.Resourceactivitymediaevents,
+            tekmodels.Resourceresourceevents,
+            tekmodels.Resourcesactivityevents,
+            tekmodels.Resourcescitationevents,
+            tekmodels.Resourcesmediaevents,
+        ],
+        'Localityplaceresourceevent': [tekmodels.Localityplaceresourceevent],
+        'Mediacitationevents': [tekmodels.Mediacitationevents],
+        'Placescitationevents': [tekmodels.Placescitationevents],
+        'Placesmediaevents': [tekmodels.Placesmediaevents],
+        'Placesresourcecitationevents': [tekmodels.Placesresourcecitationevents],
+        'Placesresourceevents': [tekmodels.Placesresourceevents],
+        'Placesresourcemediaevents': [tekmodels.Placesresourcemediaevents],
+        'Resourceactivitycitationevents': [tekmodels.Resourceactivitycitationevents],
+        'Resourceactivitymediaevents': [tekmodels.Resourceactivitymediaevents],
+        'Resourceresourceevents': [tekmodels.Resourceresourceevents],
+        'Resourcesactivityevents': [tekmodels.Resourcesactivityevents],
+        'Resourcescitationevents': [tekmodels.Resourcescitationevents],
+        'Resourcesmediaevents': [tekmodels.Resourcesmediaevents],
+    }
+
+    if model_type in searchable_models.keys():
+        return searchable_models[model_type]
+    elif model_type == 'all':
+        return sum([searchable_models[key] for key in ['resource','place','locality','citation', 'media']],[])
+    else:
+        return []
+
+def get_by_model_type(request, model_type):
+    ### Note: This would be better left done by the normal 'query' process
+    # models = get_model_by_type(model_type)
+    # return_values = []
+    # for model in models:
+    #     for obj in model.objects.all():
+    #         return_values.push(obj.get_query_json())
+    context = {
+        'query': '',
+        'category': model_type,
+        'page':'Results',
+        'pageTitle':'Results',
+        'pageContent':"<p>Your search results:</p>",
+        'user': request.user
+    }
+    return render(request, "results.html", context)
+
+def get_by_model_id(request, model_type, id):
+    models = get_model_by_type(model_type)
+    if len(models) == 1:
+        try:
+            obj = model.objects.get(pk=id)
+            record_json = obj.get_query_json()
+        except Exception as e:
+            obj = None
+            record_json = {}
+    else:
+        obj = None
+        record_json = {}
+
+    context = {
+        'page':'Record',
+        'pageTitle':'Record',
+        'pageContent':"<p>Your record:</p>",
+        'record': record_json,
+        'user': request.user
+    }
+    return render(request, "record.html", context)
+
+
 def search(request):
     # if request.method == 'GET':
     #     return explore(request)
