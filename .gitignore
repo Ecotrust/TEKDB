@@ -3,6 +3,7 @@
 code/TEKDB/TEKDB/local_settings.py
 code/TEKDB/db.sqlite3
 code/TEKDB/static/*
+code/TEKDB/env_TEKvir
 
 __pycache__/
 *.py[cod]
