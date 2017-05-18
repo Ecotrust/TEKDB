@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/explore/css/results.css">
+{% endblock %}
+
+{% block content %}
+<h1>{{pageTitle}}</h1>
+{{pageContent | safe}}
+
+<div class="well" data-bind="foreach: app.resultViewModel.resultGridArray">
+  <div data-bind="foreach: $data" class="row">
+    <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="/static/explore/js/results.js"></script>
+<script>
+  app.resultViewModel.category( "{{ category }}" );
+  app.resultViewModel.db_query( "{{ query }}" );
+  app.resultViewModel.loadResults();
+</script>
+
+{% endblock %}

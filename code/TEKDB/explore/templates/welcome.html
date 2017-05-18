@@ -10,7 +10,11 @@
   {{pageContent | safe}}
   <div class="welcome-login-button-wrapper">
     <!-- <a href="/login"> -->
+      {% if not user.is_authenticated %}
       <button type="button" class="btn welcome-login-btn"  data-toggle="modal" data-target="#loginModal">Login</button>
+      {% else %}
+      <a href="/explore" type="button" class="btn welcome-login-btn">Explore</a>
+      {% endif %}
     <!-- </a> -->
   </div>
 {% endblock %}

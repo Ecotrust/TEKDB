@@ -138,5 +138,90 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ### DJANGO-REGISTRATION SETTINGS ###
 REGISTRATION_OPEN = True
 
+SEARCH_CATEGORIES = [
+    'all',
+    'places',
+    'resources',
+    'activities',
+    'citations',
+    'media',
+]
+
+TEST_QUERY_RESULTS = {
+    'resultList' :[
+        {
+            'id': 1,
+            'type': 'places',
+            'name': 'Location 1',
+            'image': '/static/explore/img/demo-map.png',
+            'description': "Proin varius sollicitudin nisi in pretium. Sed fringilla leo eget arcu facilisis posuere. Pellentesque aliquet venenatis ullamcorper. Duis ornare sem.",
+            'link': '/explore/place/1',
+        },{
+            'id': 1,
+            'type': 'resources',
+            'name': 'Resource 1',
+            'image': '/static/explore/img/demo-resource.png',
+            'description': "Suspendisse tincidunt orci sed metus lobortis eleifend. Aliquam vel volutpat augue. Class aptent taciti sociosqu ad litora torquent per conubia.",
+            'link': '/explore/resource/1',
+        },{
+            'id': 1,
+            'type': 'activities',
+            'name': 'Activity 1',
+            'image': '/static/explore/img/demo-activity.png',
+            'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",
+            'link': '/explore/activity/1',
+        },{
+            'id': 1,
+            'type': 'citations',
+            'name': 'Citation 1',
+            'image': '/static/explore/img/demo-citation.png',
+            'description': "Quisque egestas mi lorem, at vehicula sem congue nec. Integer dui sapien, pellentesque eu auctor eget, laoreet sed nisi. Nunc.",
+            'link': '/explore/citatation/1',
+        },{
+            'id': 1,
+            'type': 'media',
+            'name': 'Media 1',
+            'image': '/static/explore/img/demo-media.png',
+            'description': "Maecenas scelerisque molestie nisl, ac blandit ipsum sagittis et. Donec ut enim pulvinar, suscipit lacus a, venenatis mauris. Aenean interdum.",
+            'link': '/explore/media/1',
+        },{
+            'id': 1,
+            'type': 'places',
+            'name': 'Location 2',
+            'image': '/static/explore/img/demo-map.png',
+            'description': "Proin varius sollicitudin nisi in pretium. Sed fringilla leo eget arcu facilisis posuere. Pellentesque aliquet venenatis ullamcorper. Duis ornare sem.",
+            'link': '/explore/place/2',
+        },{
+            'id': 1,
+            'type': 'resources',
+            'name': 'Resource 2',
+            'image': '/static/explore/img/demo-resource.png',
+            'description': "Suspendisse tincidunt orci sed metus lobortis eleifend. Aliquam vel volutpat augue. Class aptent taciti sociosqu ad litora torquent per conubia.",
+            'link': '/explore/resource/2',
+        },{
+            'id': 1,
+            'type': 'activities',
+            'name': 'Activity 2',
+            'image': '/static/explore/img/demo-activity.png',
+            'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",
+            'link': '/explore/activity/2',
+        },{
+            'id': 1,
+            'type': 'citations',
+            'name': 'Citation 2',
+            'image': '/static/explore/img/demo-citation.png',
+            'description': "Quisque egestas mi lorem, at vehicula sem congue nec. Integer dui sapien, pellentesque eu auctor eget, laoreet sed nisi. Nunc.",
+            'link': '/explore/citatation/2',
+        },{
+            'id': 1,
+            'type': 'media',
+            'name': 'Media 2',
+            'image': '/static/explore/img/demo-media.png',
+            'description': "Maecenas scelerisque molestie nisl, ac blandit ipsum sagittis et. Donec ut enim pulvinar, suscipit lacus a, venenatis mauris. Aenean interdum.",
+            'link': '/explore/media/2',
+        },
+    ]
+}
+
 
 from TEKDB.local_settings import *
