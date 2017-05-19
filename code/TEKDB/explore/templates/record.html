@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/explore/css/results.css">
+{% endblock %}
+
+{% block content %}
+<h1>{{pageTitle}}</h1>
+{{pageContent | safe}}
+<h1>{{ record }}</h1>
+{% endblock %}
