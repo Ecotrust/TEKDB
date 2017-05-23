@@ -11,6 +11,22 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class Queryable(models.Model):
+
+    class Meta:
+        abstract = True
+
+    def get_query_json(self):
+        return {
+            'name': self.name(),
+            'image': self.image(),
+            'subtitle': self.subtitle(),
+            'data': self.data(),
+            'enteredbyname': self.enteredbyname,
+            'enteredbydate': self.enteredbydate,
+            'modifiedbyname': self.modifiedbyname,
+            'modifiedbydate': self.modifiedbydate,
+        }
 
 class Citations(models.Model):
     citationid = models.ForeignKey('Placescitationevents', db_column='CitationID', primary_key=True)  # Field name made lowercase.
@@ -42,7 +58,7 @@ class Citations(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'citations'
+        db_table = 'Citations'
         app_label = 'citations'
 
 
@@ -53,7 +69,7 @@ class Currentversion(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'currentversion'
+        db_table = 'Currentversion'
         app_label = 'currentversion'
 
 
@@ -74,7 +90,7 @@ class Locality(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'locality'
+        db_table = 'Locality'
         app_label = 'locality'
 
 class Localitygisselections(models.Model):
@@ -84,7 +100,7 @@ class Localitygisselections(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'localitygisselections'
+        db_table = 'Localitygisselections'
         app_label = 'localitygisselections'
 
 class Localityplaceresourceevent(models.Model):
@@ -101,8 +117,8 @@ class Localityplaceresourceevent(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'localityplaceresourceevent'
-        app_label = 'localityplaceresourceevent'		
+        db_table = 'Localityplaceresourceevent'
+        app_label = 'localityplaceresourceevent'
         unique_together = (('placeresourceid', 'localityid'),)
 
 
@@ -111,7 +127,7 @@ class Lookupactivity(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupactivity'
+        db_table = 'Lookupactivity'
         app_label = 'lookupactivity'
 
 class Lookupauthortype(models.Model):
@@ -119,7 +135,7 @@ class Lookupauthortype(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupauthortype'
+        db_table = 'Lookupauthortype'
         app_label = 'lookupauthortype'
 
 class Lookupcustomaryuse(models.Model):
@@ -127,7 +143,7 @@ class Lookupcustomaryuse(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupcustomaryuse'
+        db_table = 'Lookupcustomaryuse'
         app_label = 'lookupcustomaryuse'
 
 class Lookuphabitat(models.Model):
@@ -135,7 +151,7 @@ class Lookuphabitat(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookuphabitat'
+        db_table = 'Lookuphabitat'
         app_label = 'lookuphabitat'
 
 class Lookuplocalitytype(models.Model):
@@ -143,7 +159,7 @@ class Lookuplocalitytype(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookuplocalitytype'
+        db_table = 'Lookuplocalitytype'
         app_label = 'lookuplocalitytype'
 
 class Lookupmediatype(models.Model):
@@ -152,7 +168,7 @@ class Lookupmediatype(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupmediatype'
+        db_table = 'Lookupmediatype'
         app_label = 'lookupmediatype'
 
 class Lookupparticipants(models.Model):
@@ -160,7 +176,7 @@ class Lookupparticipants(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupparticipants'
+        db_table = 'Lookupparticipants'
         app_label = 'lookupparticipants'
 
 class Lookuppartused(models.Model):
@@ -168,7 +184,7 @@ class Lookuppartused(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookuppartused'
+        db_table = 'Lookuppartused'
         app_label = 'lookuppartused'
 
 class Lookupplanningunit(models.Model):
@@ -177,7 +193,7 @@ class Lookupplanningunit(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupplanningunit'
+        db_table = 'Lookupplanningunit'
         app_label = 'lookupplanningunit'
 
 class Lookupreferencetype(models.Model):
@@ -185,7 +201,7 @@ class Lookupreferencetype(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupreferencetype'
+        db_table = 'Lookupreferencetype'
         app_label = 'lookupreferencetype'
 
 class Lookupresourcegroup(models.Model):
@@ -193,7 +209,7 @@ class Lookupresourcegroup(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupresourcegroup'
+        db_table = 'Lookupresourcegroup'
         app_label = 'lookupresourcegroup'
 
 
@@ -202,7 +218,7 @@ class Lookupseason(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupseason'
+        db_table = 'Lookupseason'
         app_label = 'lookupseason'
 
 
@@ -211,7 +227,7 @@ class Lookuptechniques(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookuptechniques'
+        db_table = 'Lookuptechniques'
         app_label = 'lookuptechniques'
 
 
@@ -220,7 +236,7 @@ class Lookuptiming(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookuptiming'
+        db_table = 'Lookuptiming'
         app_label = 'lookuptiming'
 
 
@@ -232,7 +248,7 @@ class Lookuptribe(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookuptribe'
+        db_table = 'Lookuptribe'
         app_label = 'lookuptribe'
 
 
@@ -244,7 +260,7 @@ class Lookupuserinfo(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'lookupuserinfo'
+        db_table = 'Lookupuserinfo'
         app_label = 'lookupuserinfo'
 
 
@@ -265,7 +281,7 @@ class Media(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'media'
+        db_table = 'Media'
         app_label = 'media'
 
 
@@ -285,7 +301,7 @@ class Mediacitationevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'mediacitationevents'
+        db_table = 'Mediacitationevents'
         app_label = 'mediacitationevents'
         unique_together = (('mediaid', 'citationid'),)
 
@@ -300,7 +316,7 @@ class People(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'people'
+        db_table = 'People'
         app_label = 'people'
 
 
@@ -311,7 +327,7 @@ class Placealtindigenousname(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placealtindigenousname'
+        db_table = 'Placealtindigenousname'
         app_label = 'placealtindigenousname'
 
 
@@ -322,7 +338,7 @@ class Placegisselections(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placegisselections'
+        db_table = 'Placegisselections'
         app_label = 'placegisselections'
 
 
@@ -346,7 +362,7 @@ class Places(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'places'
+        db_table = 'Places'
         app_label = 'places'
 
 
@@ -366,7 +382,7 @@ class Placescitationevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placescitationevents'
+        db_table = 'Placescitationevents'
         app_label = 'placescitationevents'
         unique_together = (('placeid', 'citationid'),)
 
@@ -387,7 +403,7 @@ class Placesmediaevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placesmediaevents'
+        db_table = 'Placesmediaevents'
         app_label = 'placesmediaevents'
         unique_together = (('placeid', 'mediaid'),)
 
@@ -408,7 +424,7 @@ class Placesresourcecitationevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placesresourcecitationevents'
+        db_table = 'Placesresourcecitationevents'
         app_label = 'placesresourcecitationevents'
         unique_together = (('placeresourceid', 'citationid'),)
 
@@ -448,7 +464,7 @@ class Placesresourceevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placesresourceevents'
+        db_table = 'Placesresourceevents'
         app_label = 'placesresourceevents'
 
 
@@ -468,7 +484,7 @@ class Placesresourcemediaevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'placesresourcemediaevents'
+        db_table = 'Placesresourcemediaevents'
         app_label = 'placesresourcemediaevents'
         unique_together = (('placeresourceid', 'mediaid'),)
 
@@ -489,7 +505,7 @@ class Resourceactivitycitationevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourceactivitycitationevents'
+        db_table = 'Resourceactivitycitationevents'
         app_label = 'resourceactivitycitationevents'
         unique_together = (('resourceactivityid', 'citationid'),)
 
@@ -510,7 +526,7 @@ class Resourceactivitymediaevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourceactivitymediaevents'
+        db_table = 'Resourceactivitymediaevents'
         app_label = 'resourceactivitymediaevents'
         unique_together = (('resourceactivityid', 'mediaid'),)
 
@@ -522,7 +538,7 @@ class Resourcealtindigenousname(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourcealtindigenousname'
+        db_table = 'Resourcealtindigenousname'
         app_label = 'resourcealtindigenousname'
 
 
@@ -541,7 +557,7 @@ class Resourceresourceevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourceresourceevents'
+        db_table = 'Resourceresourceevents'
         app_label = 'resourceresourceevents'
         unique_together = (('resourceid', 'altresourceid'),)
 
@@ -566,9 +582,25 @@ class Resources(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resources'
+        db_table = 'Resources'
         app_label = 'resources'
 
+    def name(self):
+        return self.commonname
+
+    def subtitle(self):
+        return self.indigenousname
+
+    def image(self):
+        return '/static/explore/img/demo-resource.png'
+
+    def data(self):
+        return [
+            {'key': 'commonname', 'value': self.commonname},
+            {'key': 'indigenousname', 'value': self.indigenousname},
+            {'key': 'genus', 'value': self.genus},
+            {'key': 'species', 'value': self.species},
+        ]
 
 class Resourcesactivityevents(models.Model):
     resourceactivityid = models.IntegerField(db_column='ResourceActivityID', primary_key=True)  # Field name made lowercase.
@@ -595,7 +627,7 @@ class Resourcesactivityevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourcesactivityevents'
+        db_table = 'Resourcesactivityevents'
         app_label = 'resourcesactivityevents'
 
 
@@ -615,7 +647,7 @@ class Resourcescitationevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourcescitationevents'
+        db_table = 'Resourcescitationevents'
         app_label = 'resourcescitationevents'
         unique_together = (('resourceid', 'citationid'),)
 
@@ -636,7 +668,7 @@ class Resourcesmediaevents(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'resourcesmediaevents'
+        db_table = 'Resourcesmediaevents'
         app_label = 'resourcesmediaevents'
         unique_together = (('resourceid', 'mediaid'),)
 
@@ -647,7 +679,7 @@ class Useraccess(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'useraccess'
+        db_table = 'Useraccess'
         app_label = 'useraccess'
 
 
@@ -663,5 +695,5 @@ class Users(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'users'
+        db_table = 'Users'
         app_label = 'users'

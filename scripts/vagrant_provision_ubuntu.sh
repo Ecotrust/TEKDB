@@ -3,12 +3,16 @@
 PROJECT_NAME=TEKDB
 APP_NAME=TEKDB
 HOME=/home/ubuntu
+APP_DB_NAME=tekdb
 
 PROJECT_DIR=/usr/local/apps/$PROJECT_NAME
 VIRTUALENV_DIR=$PROJECT_DIR/env
 
 PYTHON=$VIRTUALENV_DIR/bin/python
 PIP=$VIRTUALENV_DIR/bin/pip
+
+echo "resetting DB"
+$PROJECT_DIR/scripts/reset_db.sh $APP_DB_NAME #$USER
 
 # Virtualenv setup for project
 echo "setting up virtualenvs"

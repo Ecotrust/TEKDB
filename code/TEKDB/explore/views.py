@@ -104,6 +104,7 @@ def get_by_model_id(request, model_type, id):
     models = get_model_by_type(model_type)
     if len(models) == 1:
         try:
+            model = models[0]
             obj = model.objects.get(pk=id)
             record_json = obj.get_query_json()
         except Exception as e:
