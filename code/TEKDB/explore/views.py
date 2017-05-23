@@ -162,16 +162,55 @@ def query(request):
     else:
         category = None
 
-    #TODO: Query database to generate 'results' dict.
+    ### Use ipdb to dig into your code while it runs:
+    # import ipdb
+    # ipdb.set_trace()
+    ### n to step to _N_ext line of code
+    ### c to let the code _C_ontinue
+    ### Otherwise just write python in as you would in the django shell or in this filter
+    ###
+    #TODO: Get list of models to query (get_model_by_type)
+    #TODO: Loop through models, querying each as needed, collecting responses into 'resultlist'
+
+    #import your model
+    from TEKDB.models import Resources
+    #Check for 'wildcard' (match everything) search
+    if not keyword_string in ['*', '']:
+        #filter on appropriate fields (may be best to let the model figure this out for itself)
+        #TODO: make query case-insensitive and less strict (see doc on '__icontains')
+        query_results = Resources.objects.filter(commonname=keyword_string)
+    else:
+        #If search is a wildcard, grab everything
+        query_results = Resources.objects.all()
+
+    #Create empty list to fill
+    resultlist = []
+    #Loop over all results
+    for resource in query_results:
+        # add formatted result to resultlist (may be best to have model format itself)
+        resultlist.append({
+            'id': resource.pk,
+            # pk is django keyword for any model's Primary Key
+            'type': 'resources',
+            'name': resource.commonname,
+            'image': '/static/explore/img/demo-resource.png',
+            'description': resource.indigenousname,
+            'link': '/explore/resource/%d' % resource.pk,
+        })
+    # Create JSON object to be resturned
+    results = {
+        'resultList' : resultlist
+    }
+
     #####################################
     ### START PLACEHOLDER FOR TESTING ###
     #####################################
-    from copy import deepcopy
-    results = deepcopy(TEKDB.settings.TEST_QUERY_RESULTS)
-    if category and not category == 'all':
-        results['resultList'] = [ x for x in results['resultList'] if x['type'] == category]
-    if keyword_string and not keyword_string == '':
-        results['resultList'] = [ x for x in results['resultList'] if keyword_string.lower() in " ".join([x['type'],x['name'],x['description']]).lower()]
+    # from copy import deepcopy
+    # results = deepcopy(TEKDB.settings.TEST_QUERY_RESULTS)
+    # if category and not category == 'all':
+    #     results['resultList'] = [ x for x in results['resultList'] if x['type'] == category]
+    # if keyword_string and not keyword_string == '':
+    #     results['resultList'] = [ x for x in results['resultList'] if keyword_string.lower() in " ".join([x['type'],x['name'],x['description']]).lower()]
     ###################################
     ### END PLACEHOLDER FOR TESTING ###
     ###################################
