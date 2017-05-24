@@ -41,12 +41,12 @@ def explore(request):
 def get_model_by_type(model_type):
     from TEKDB import models as tekmodels
     searchable_models = {
-        'resource': [tekmodels.Resources],
-        'place': [tekmodels.Places],
+        'resources': [tekmodels.Resources],
+        'places': [tekmodels.Places],
         'locality': [tekmodels.Locality],
-        'citation': [tekmodels.Citations],
+        'citations': [tekmodels.Citations],
         'media': [tekmodels.Media],
-        'event': [
+        'activities': [
             tekmodels.Localityplaceresourceevent,
             tekmodels.Mediacitationevents,
             tekmodels.Placescitationevents,
@@ -61,7 +61,7 @@ def get_model_by_type(model_type):
             tekmodels.Resourcescitationevents,
             tekmodels.Resourcesmediaevents,
         ],
-        'Localityplaceresourceevent': [tekmodels.Localityplaceresourceevent],
+        'Localityplaceresourceevents': [tekmodels.Localityplaceresourceevent],
         'Mediacitationevents': [tekmodels.Mediacitationevents],
         'Placescitationevents': [tekmodels.Placescitationevents],
         'Placesmediaevents': [tekmodels.Placesmediaevents],
@@ -162,42 +162,24 @@ def query(request):
     else:
         category = None
 
-    ### Use ipdb to dig into your code while it runs:
-    # import ipdb
-    # ipdb.set_trace()
-    ### n to step to _N_ext line of code
-    ### c to let the code _C_ontinue
-    ### Otherwise just write python in as you would in the django shell or in this filter
-    ###
-    #TODO: Get list of models to query (get_model_by_type)
-    #TODO: Loop through models, querying each as needed, collecting responses into 'resultlist'
-
-    #import your model
-    from TEKDB.models import Resources
-    #Check for 'wildcard' (match everything) search
-    if not keyword_string in ['*', '']:
-        #filter on appropriate fields (may be best to let the model figure this out for itself)
-        #TODO: make query case-insensitive and less strict (see doc on '__icontains')
-        query_results = Resources.objects.filter(commonname=keyword_string)
-    else:
-        #If search is a wildcard, grab everything
-        query_results = Resources.objects.all()
-
-    #Create empty list to fill
     resultlist = []
-    #Loop over all results
-    for resource in query_results:
-        # add formatted result to resultlist (may be best to have model format itself)
-        resultlist.append({
-            'id': resource.pk,
-            # pk is django keyword for any model's Primary Key
-            'type': 'resources',
-            'name': resource.commonname,
-            'image': '/static/explore/img/demo-resource.png',
-            'description': resource.indigenousname,
-            'link': '/explore/resource/%d' % resource.pk,
-        })
-    # Create JSON object to be resturned
+    query_models = get_model_by_type(category)
+    for model in query_models:
+        # Find all results matching keyword in this model
+        model_results = model.keyword_search(keyword_string)
+        for result in model_results:
+            # Create JSON object to be resturned
+            resultlist.append(result.get_response_format())
+
+    # resultlist.append({
+    #     'id': resource.pk,
+    #     # pk is django keyword for any model's Primary Key
+    #     'type': 'resources',
+    #     'name': resource.commonname,
+    #     'image': '/static/explore/img/demo-resource.png',
+    #     'description': resource.indigenousname,
+    #     'link': '/explore/resource/%d' % resource.pk,
+    # })
     results = {
         'resultList' : resultlist
     }
