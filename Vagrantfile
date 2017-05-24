@@ -16,6 +16,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell" do |s|
     s.path = "scripts/vagrant_provision_root.sh"
+    s.args = ['xenial', '3.5.0', '9.5']
     s.privileged = "true"
   end
 

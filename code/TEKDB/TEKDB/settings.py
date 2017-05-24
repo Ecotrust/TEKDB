@@ -25,7 +25,10 @@ SECRET_KEY = 'lbgg^obk_vnj1o%s-u)vy+6@%=)uk4011d!!vub_5s40(^+mzp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    u'demo-tekdb.herokuapp.com',
+]
 
 
 # Application definition
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'explore',
     'login',
+    'TEKDB',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -80,8 +84,9 @@ WSGI_APPLICATION = 'TEKDB.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'tekdb',
+        'USER': 'postgres',
     }
 }
 
@@ -142,10 +147,11 @@ SEARCH_CATEGORIES = [
     'all',
     'places',
     'resources',
-    'events',
+    'activities',
     'citations',
     'media',
 ]
+
 
 TEST_QUERY_RESULTS = {
     'resultList' :[
@@ -165,7 +171,7 @@ TEST_QUERY_RESULTS = {
             'link': '/explore/resource/1',
         },{
             'id': 1,
-            'type': 'events',
+            'type': 'activities',
             'name': 'Activity 1',
             'image': '/static/explore/img/demo-activity.png',
             'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",
@@ -200,7 +206,7 @@ TEST_QUERY_RESULTS = {
             'link': '/explore/resource/2',
         },{
             'id': 1,
-            'type': 'events',
+            'type': 'activities',
             'name': 'Activity 2',
             'image': '/static/explore/img/demo-activity.png',
             'description': "Nulla maximus vitae urna eget dapibus. Donec id varius nulla, non elementum sem. Sed nec dapibus metus. Proin sit amet.",
@@ -225,3 +231,13 @@ TEST_QUERY_RESULTS = {
 
 
 from TEKDB.local_settings import *
+
+### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
+
+### Update database configuration with $DATABASE_URL.
+#
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
+#
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
