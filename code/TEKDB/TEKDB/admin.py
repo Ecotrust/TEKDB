@@ -1,13 +1,19 @@
+from django import forms
 from django.contrib import admin
 
 from .models import Resources, Places, Locality, Citations, Media, Localityplaceresourceevent, Mediacitationevents, Placescitationevents, Placesmediaevents, Placesresourcecitationevents, Placesresourceevents, Placesresourcemediaevents, Resourceactivitycitationevents, Resourceactivitymediaevents, Resourceresourceevents, Resourcesactivityevents, Resourcescitationevents, Resourcesmediaevents, Users
 
 # Citations referencetype select(Book, Edited Volume, Interview, Other)
+# class CitationsForm(forms.ModelForm):
+#     class Meta:
+#         model = Citations
 
 class CitationsAdmin(admin.ModelAdmin):
+    list_display = ('referencetype','title','referencetext','modifiedbydate','enteredbydate')
+    # form = CitationsForm
     fieldsets = (
         (None, {
-            'classes': ('citation-ref-type'),
+            'classes': ('citation-ref-type',),
             'fields': ('referencetype',)
         }),
         ('Book', {
@@ -56,7 +62,6 @@ class CitationsAdmin(admin.ModelAdmin):
                 'comments'
             )
         })
-
     )
     from TEKDB.settings import BASE_DIR
     add_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
