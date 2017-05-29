@@ -26,7 +26,7 @@ class Queryable(models.Model):
             'modifiedbydate': self.modifiedbydate,
         }
 
-		
+
 class Places(models.Model):
     placeid = models.AutoField(db_column='PlaceID', primary_key=True)  # Field name made lowercase.
     indigenousplacename = models.CharField(db_column='IndigenousPlaceName', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -48,9 +48,11 @@ class Places(models.Model):
     class Meta:
         managed = False
         db_table = 'Places'
-        app_label = 'Places'
+        verbose_name = 'Place'
+        verbose_name_plural = 'Places'
+        # app_label = 'Places'
 
-		
+
 class Placesresourceevents(models.Model):
     placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
     placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID')  # Field name made lowercase.
@@ -87,7 +89,7 @@ class Placesresourceevents(models.Model):
     class Meta:
         managed = False
         db_table = 'PlacesResourceEvents'
-        app_label = 'PlacesResourceEvents'
+        # app_label = 'PlacesResourceEvents'
 
 
 class Resourcesactivityevents(models.Model):
@@ -116,9 +118,9 @@ class Resourcesactivityevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourcesActivityEvents'
-        app_label = 'ResourcesActivityEvents'
+        # app_label = 'ResourcesActivityEvents'
 
-		
+
 class Placescitationevents(models.Model):
     placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True)  # Field name made lowercase.
     citationid = models.IntegerField(db_column='CitationID')  # Field name made lowercase.
@@ -136,13 +138,20 @@ class Placescitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'PlacesCitationEvents'
-        app_label = 'PlacesCitationEvents'
+        # app_label = 'PlacesCitationEvents'
         unique_together = (('placeid', 'citationid'),)
 
-		
+
+REFERENCE_TYPE_CHOICES = (
+    ('Book', 'Book'),
+    ('Edited Volume', 'Edited Volume'),
+    ('Interview', 'Interview'),
+    ('Other','Other')
+)
+
 class Citations(models.Model):
     citationid = models.AutoField(db_column='CitationID', primary_key=True)  # Field name made lowercase.
-    referencetype = models.CharField(db_column='ReferenceType', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    referencetype = models.CharField(db_column='ReferenceType', max_length=255, blank=True, null=True, verbose_name='reference type', choices=REFERENCE_TYPE_CHOICES)
     referencetext = models.CharField(db_column='ReferenceText', max_length=50, blank=True, null=True)  # Field name made lowercase.
     authortype = models.CharField(db_column='AuthorType', max_length=255, blank=True, null=True)  # Field name made lowercase.
     authorprimary = models.CharField(db_column='AuthorPrimary', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -171,7 +180,10 @@ class Citations(models.Model):
     class Meta:
         managed = False
         db_table = 'Citations'
-        app_label = 'citations'
+        verbose_name = 'Citation'
+        verbose_name_plural = 'Citations'
+        # app_label = 'Citations'
+
 
 class Currentversion(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -202,7 +214,9 @@ class Locality(models.Model):
     class Meta:
         managed = False
         db_table = 'Locality'
-        app_label = 'Locality'
+        verbose_name = 'Locality'
+        verbose_name_plural = 'Localities'
+        # app_label = 'Locality'
 
 
 class Localitygisselections(models.Model):
@@ -231,7 +245,7 @@ class Localityplaceresourceevent(models.Model):
     class Meta:
         managed = False
         db_table = 'LocalityPlaceResourceEvent'
-        app_label = 'LocalityPlaceResourceEvent'
+        # app_label = 'LocalityPlaceResourceEvent'
         unique_together = (('placeresourceid', 'localityid'),)
 
 
@@ -405,7 +419,9 @@ class Media(models.Model):
     class Meta:
         managed = False
         db_table = 'Media'
-        app_label = 'Media'
+        verbose_name = 'Medium'
+        verbose_name_plural = 'Media'
+        # app_label = 'Media'
 
 
 class Mediacitationevents(models.Model):
@@ -425,7 +441,7 @@ class Mediacitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'MediaCitationEvents'
-        app_label = 'MediaCitationEvents'
+        # app_label = 'MediaCitationEvents'
         unique_together = (('mediaid', 'citationid'),)
 
 
@@ -483,7 +499,7 @@ class Placesmediaevents(models.Model):
     class Meta:
         managed = False
         db_table = 'PlacesMediaEvents'
-        app_label = 'PlacesMediaEvents'
+        # app_label = 'PlacesMediaEvents'
         unique_together = (('placeid', 'mediaid'),)
 
 
@@ -504,7 +520,7 @@ class Placesresourcecitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'PlacesResourceCitationEvents'
-        app_label = 'PlacesResourceCitationEvents'
+        # app_label = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
 
 
@@ -526,7 +542,7 @@ class Placesresourcemediaevents(models.Model):
     class Meta:
         managed = False
         db_table = 'PlacesResourceMediaEvents'
-        app_label = 'PlacesResourceMediaEvents'
+        # app_label = 'PlacesResourceMediaEvents'
         unique_together = (('placeresourceid', 'mediaid'),)
 
 
@@ -547,7 +563,7 @@ class Resourceactivitycitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourceActivityCitationEvents'
-        app_label = 'ResourceActivityCitationEvents'
+        # app_label = 'ResourceActivityCitationEvents'
         unique_together = (('resourceactivityid', 'citationid'),)
 
 
@@ -568,7 +584,7 @@ class Resourceactivitymediaevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourceActivityMediaEvents'
-        app_label = 'ResourceActivityMediaEvents'
+        # app_label = 'ResourceActivityMediaEvents'
         unique_together = (('resourceactivityid', 'mediaid'),)
 
 
@@ -599,11 +615,11 @@ class Resourceresourceevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourceResourceEvents'
-        app_label = 'ResourceResourceEvents'
+        # app_label = 'ResourceResourceEvents'
         unique_together = (('resourceid', 'altresourceid'),)
 
 
-class Resources(models.Model):
+class Resources(Queryable):
     resourceid = models.AutoField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
     commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True)  # Field name made lowercase.
     indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -624,7 +640,40 @@ class Resources(models.Model):
     class Meta:
         managed = False
         db_table = 'Resources'
-        app_label = 'Resources'
+        verbose_name = 'Resource'
+        verbose_name_plural = 'Resources'
+        # app_label = 'Resources'
+
+    def keyword_search(keyword):
+        return Resources.objects.filter(commonname__icontains=keyword)
+
+    def get_response_format(self):
+        return {
+            'id': self.pk,
+            # pk is django keyword for any model's Primary Key
+            'type': 'resources',
+            'name': self.commonname,
+            'image': '/static/explore/img/demo-resource.png',
+            'description': self.indigenousname,
+            'link': '/explore/resources/%d' % self.pk,
+        }
+
+    def name(self):
+        return self.commonname
+
+    def image(self):
+        return '/static/explore/img/demo-resource.png'
+
+    def subtitle(self):
+        return self.species
+
+    def data(self):
+        return [
+            {'key':'name', 'value': self.commonname},
+            {'key':'indigenous name', 'value': self.indigenousname},
+            {'key':'species', 'value': self.species},
+            {'key':'genus', 'value': self.genus}
+        ]
 
 
 
@@ -645,7 +694,7 @@ class Resourcescitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourcesCitationEvents'
-        app_label = 'ResourcesCitationEvents'
+        # app_label = 'ResourcesCitationEvents'
         unique_together = (('resourceid', 'citationid'),)
 
 
@@ -666,7 +715,7 @@ class Resourcesmediaevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourcesMediaEvents'
-        app_label = 'ResourcesMediaEvents'
+        # app_label = 'ResourcesMediaEvents'
         unique_together = (('resourceid', 'mediaid'),)
 
 
@@ -693,4 +742,6 @@ class Users(models.Model):
     class Meta:
         managed = False
         db_table = 'Users'
-        app_label = 'Users'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+        # app_label = 'Users'
