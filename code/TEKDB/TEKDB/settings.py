@@ -229,6 +229,9 @@ TEST_QUERY_RESULTS = {
     ]
 }
 
+#TODO - make this work
+# AUTH_USER_MODEL = 'TEKDB.User'
+
 
 from TEKDB.local_settings import *
 
