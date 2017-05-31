@@ -15,10 +15,6 @@ class PlacescitationeventsInline(admin.TabularInline):
     extra = 1
     classes = ['collapse']
 
-# class ResourceModelChoiceField(forms.ModelChoiceField):
-#     def label_from_instance(self, obj):
-#         return obj.commonname
-
 class ResourcescitationeventsInline(admin.TabularInline):
     model = Resourcescitationevents
     fields = ('resourceid', 'relationshipdescription', 'pages')

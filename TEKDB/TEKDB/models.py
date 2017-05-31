@@ -65,6 +65,12 @@ class Places(models.Model):
         verbose_name_plural = 'Places'
         # app_label = 'Places'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.englishplacename))
+
+    def __str__(self):
+        return self.englishplacename
+
 
 class Placesresourceevents(models.Model):
     placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
@@ -197,9 +203,9 @@ class Citations(Queryable):
 
 
 class Placescitationevents(models.Model):
-    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True)  # Field name made lowercase.
+    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True, verbose_name='place')
     citationid = models.ForeignKey(Citations, db_column='CitationID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
     enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
     enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
@@ -459,11 +465,17 @@ class Media(models.Model):
         verbose_name_plural = 'Media'
         # app_label = 'Media'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.medianame))
+
+    def __str__(self):
+        return self.medianame
+
 
 class Mediacitationevents(models.Model):
-    mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID', primary_key=True)  # Field name made lowercase.
-    citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID', primary_key=True, verbose_name='media')
+    citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
     enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
     enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
@@ -708,9 +720,9 @@ class Resources(Queryable):
 
 
 class Resourcescitationevents(models.Model):
-    resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True)  # Field name made lowercase.
-    citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True, verbose_name='resource')
+    citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
     enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
     enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
