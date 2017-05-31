@@ -40,46 +40,6 @@ class Queryable(models.Model):
         super(Queryable, self).save(*args, **kwargs)
 
 
-class Lookupplanningunit(models.Model):
-    planningunitid = models.IntegerField(db_column='PlanningUnitID', primary_key=True)  # Field name made lowercase.
-    planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'LookupPlanningUnit'
-        # app_label = 'LookupPlanningUnit'
-
-    def get_name(self):
-        return "%s" % (self.planningunitname)
-
-    def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
-
-    def __str__(self):
-        return self.get_name()
-
-
-class Lookuptribe(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    tribeunit = models.CharField(db_column='TribeUnit', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    tribe = models.CharField(db_column='Tribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    federaltribe = models.CharField(db_column='FederalTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'LookupTribe'
-        # app_label = 'LookupTribe'
-
-    def get_name(self):
-        return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe)
-
-    def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
-
-    def __str__(self):
-        return self.get_name()
-
-
 PRIMARY_HABITAT_CHOICES  = [
     ('Coastal Marsh','Coastal Marsh'),
     ('Deep Canyon','Deep Canyon'),
@@ -125,6 +85,7 @@ class Places(models.Model):
 
     def __str__(self):
         return self.englishplacename
+
 
 PART_USED_CHOICES = [
     ('Antler','Antler'),
@@ -221,27 +182,27 @@ class Resourcesactivityevents(models.Model):
         # app_label = 'ResourcesActivityEvents'
 
 
-class People(models.Model):
-    personid = models.AutoField(db_column='PersonID', primary_key=True)  # Field name made lowercase.
-    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True)  # Field name made lowercase.
-    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True)  # Field name made lowercase.
+class Placescitationevents(models.Model):
+    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True, verbose_name='place')
+    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
+    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True)  # Field name made lowercase.
+    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
+    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'People'
-        # app_label = 'People'
-
-    def get_name(self):
-        return "%s %s" % (self.firstname, self.lastname)
-
-    def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
-
-    def __str__(self):
-        return self.get_name()
+        db_table = 'PlacesCitationEvents'
+        verbose_name = 'Place - Citation'
+        verbose_name_plural = 'Places - Citations'
+        # app_label = 'PlacesCitationEvents'
+        unique_together = (('placeid', 'citationid'),)
 
 
 REFERENCE_TYPE_CHOICES = (
@@ -306,31 +267,6 @@ class Citations(Queryable):
         # import ipdb
         # ipdb.set_trace()
         super(Citations, self).save(*args, **kwargs)
-
-
-class Placescitationevents(models.Model):
-    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True, verbose_name='place')
-    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True)  # Field name made lowercase.
-    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'PlacesCitationEvents'
-        verbose_name = 'Place - Citation'
-        verbose_name_plural = 'Places - Citations'
-        # app_label = 'PlacesCitationEvents'
-        unique_together = (('placeid', 'citationid'),)
-
-
 
 
 class Currentversion(models.Model):
@@ -486,6 +422,25 @@ class Lookupparticipants(models.Model):
         app_label = 'LookupParticipants'
 
 
+class Lookupplanningunit(models.Model):
+    planningunitid = models.IntegerField(db_column='PlanningUnitID', primary_key=True)  # Field name made lowercase.
+    planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'LookupPlanningUnit'
+        # app_label = 'LookupPlanningUnit'
+
+    def get_name(self):
+        return "%s" % (self.planningunitname)
+
+    def __unicode__(self):
+        return unicode('%s' % (self.get_name()))
+
+    def __str__(self):
+        return self.get_name()
+
+
 class Lookupreferencetype(models.Model):
     documenttype = models.CharField(db_column='DocumentType', primary_key=True, max_length=25)  # Field name made lowercase.
 
@@ -529,6 +484,27 @@ class Lookuptiming(models.Model):
         managed = False
         db_table = 'LookupTiming'
         app_label = 'LookupTiming'
+
+
+class Lookuptribe(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    tribeunit = models.CharField(db_column='TribeUnit', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    tribe = models.CharField(db_column='Tribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    federaltribe = models.CharField(db_column='FederalTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'LookupTribe'
+        # app_label = 'LookupTribe'
+
+    def get_name(self):
+        return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe)
+
+    def __unicode__(self):
+        return unicode('%s' % (self.get_name()))
+
+    def __str__(self):
+        return self.get_name()
 
 
 class Lookupuserinfo(models.Model):
@@ -602,6 +578,29 @@ class Mediacitationevents(models.Model):
         unique_together = (('mediaid', 'citationid'),)
 
 
+class People(models.Model):
+    personid = models.AutoField(db_column='PersonID', primary_key=True)  # Field name made lowercase.
+    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True)  # Field name made lowercase.
+    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'People'
+        # app_label = 'People'
+
+    def get_name(self):
+        return "%s %s" % (self.firstname, self.lastname)
+
+    def __unicode__(self):
+        return unicode('%s' % (self.get_name()))
+
+    def __str__(self):
+        return self.get_name()
+
+
 class Placealtindigenousname(models.Model):
     altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)  # Field name made lowercase.
     placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True)  # Field name made lowercase.
@@ -624,7 +623,6 @@ class Placegisselections(models.Model):
         managed = False
         db_table = 'PlaceGISSelections'
         app_label = 'PlaceGISSelections'
-
 
 
 class Placesmediaevents(models.Model):
@@ -669,7 +667,6 @@ class Placesresourcecitationevents(models.Model):
         db_table = 'PlacesResourceCitationEvents'
         # app_label = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
-
 
 
 class Placesresourcemediaevents(models.Model):
@@ -827,7 +824,6 @@ class Resources(Queryable):
             {'key':'species', 'value': self.species},
             {'key':'genus', 'value': self.genus}
         ]
-
 
 
 class Resourcescitationevents(models.Model):
