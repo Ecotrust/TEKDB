@@ -4,7 +4,7 @@ TEKDB/TEKDB/local_settings.py
 TEKDB/db.sqlite3
 TEKDB/static/*
 TEKDB/env_TEKvir
-
+old_code/
 __pycache__/
 *.py[cod]
 *$py.class

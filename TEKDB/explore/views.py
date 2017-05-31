@@ -79,7 +79,7 @@ def get_model_by_type(model_type):
     if model_type in searchable_models.keys():
         return searchable_models[model_type]
     elif model_type == 'all':
-        return sum([searchable_models[key] for key in ['resource','place','locality','citation', 'media', 'event']],[])
+        return sum([searchable_models[key] for key in ['resources','places','locality','citations', 'media', 'activities']],[])
     else:
         return []
 
