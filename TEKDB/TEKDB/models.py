@@ -134,25 +134,18 @@ class Resourcesactivityevents(models.Model):
         # app_label = 'ResourcesActivityEvents'
 
 
-class Placescitationevents(models.Model):
-    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True)  # Field name made lowercase.
-    citationid = models.IntegerField(db_column='CitationID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True)  # Field name made lowercase.
-    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
+class People(models.Model):
+    personid = models.AutoField(db_column='PersonID', primary_key=True)  # Field name made lowercase.
+    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True)  # Field name made lowercase.
+    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'PlacesCitationEvents'
-        # app_label = 'PlacesCitationEvents'
-        unique_together = (('placeid', 'citationid'),)
+        db_table = 'People'
+        # app_label = 'People'
 
 
 REFERENCE_TYPE_CHOICES = (
@@ -169,8 +162,8 @@ class Citations(Queryable):
     authortype = models.CharField(db_column='AuthorType', max_length=255, blank=True, null=True)  # Field name made lowercase.
     authorprimary = models.CharField(db_column='AuthorPrimary', max_length=255, blank=True, null=True, verbose_name='primary author')
     authorsecondary = models.CharField(db_column='AuthorSecondary', max_length=255, blank=True, null=True, verbose_name='secondary author')
-    intervieweeid = models.IntegerField(db_column='IntervieweeID', blank=True, null=True)  # Field name made lowercase.
-    interviewerid = models.IntegerField(db_column='InterviewerID', blank=True, null=True)  # Field name made lowercase.
+    intervieweeid = models.ForeignKey(People, db_column='IntervieweeID', related_name='interviewee', blank=True, null=True)  # Field name made lowercase.
+    interviewerid = models.ForeignKey(People, db_column='InterviewerID', related_name='interviewer', blank=True, null=True)  # Field name made lowercase.
     placeofinterview = models.CharField(db_column='PlaceofInterview', max_length=255, blank=True, null=True)  # Field name made lowercase.
     year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
     title = models.TextField(db_column='Title', blank=True, null=True)  # Field name made lowercase.
@@ -201,6 +194,31 @@ class Citations(Queryable):
         # import ipdb
         # ipdb.set_trace()
         super(Citations, self).save(*args, **kwargs)
+
+
+class Placescitationevents(models.Model):
+    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True)  # Field name made lowercase.
+    citationid = models.ForeignKey(Citations, db_column='CitationID')  # Field name made lowercase.
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
+    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True)  # Field name made lowercase.
+    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
+    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PlacesCitationEvents'
+        verbose_name = 'Place - Citation'
+        verbose_name_plural = 'Places - Citations'
+        # app_label = 'PlacesCitationEvents'
+        unique_together = (('placeid', 'citationid'),)
+
+
 
 
 class Currentversion(models.Model):
@@ -459,22 +477,10 @@ class Mediacitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'MediaCitationEvents'
+        verbose_name = 'Medium - Citation'
+        verbose_name_plural = 'Media - Citations'
         # app_label = 'MediaCitationEvents'
         unique_together = (('mediaid', 'citationid'),)
-
-
-class People(models.Model):
-    personid = models.AutoField(db_column='PersonID', primary_key=True)  # Field name made lowercase.
-    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True)  # Field name made lowercase.
-    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'People'
-        app_label = 'People'
 
 
 class Placealtindigenousname(models.Model):
@@ -639,7 +645,7 @@ class Resourceresourceevents(models.Model):
 
 class Resources(Queryable):
     resourceid = models.AutoField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
-    commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True, unique=True)  # Field name made lowercase.
     indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
     genus = models.CharField(db_column='Genus', max_length=255, blank=True, null=True)  # Field name made lowercase.
     species = models.CharField(db_column='Species', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -661,6 +667,12 @@ class Resources(Queryable):
         verbose_name = 'Resource'
         verbose_name_plural = 'Resources'
         # app_label = 'Resources'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.commonname))
+
+    def __str__(self):
+        return self.commonname
 
     def keyword_search(keyword):
         return Resources.objects.filter(commonname__icontains=keyword)
@@ -712,6 +724,8 @@ class Resourcescitationevents(models.Model):
     class Meta:
         managed = False
         db_table = 'ResourcesCitationEvents'
+        verbose_name = 'Resource - Citation'
+        verbose_name_plural = 'Resources - Citations'
         # app_label = 'ResourcesCitationEvents'
         unique_together = (('resourceid', 'citationid'),)
 

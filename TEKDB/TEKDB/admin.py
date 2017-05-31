@@ -1,12 +1,35 @@
 from django import forms
 from django.contrib import admin
 
-from .models import Resources, Places, Locality, Citations, Media, Localityplaceresourceevent, Mediacitationevents, Placescitationevents, Placesmediaevents, Placesresourcecitationevents, Placesresourceevents, Placesresourcemediaevents, Resourceactivitycitationevents, Resourceactivitymediaevents, Resourceresourceevents, Resourcesactivityevents, Resourcescitationevents, Resourcesmediaevents, Users
+from .models import Resources, Places, Locality, Citations, Media, Localityplaceresourceevent, Mediacitationevents, Placescitationevents, Placesmediaevents, Placesresourcecitationevents, Placesresourceevents, Placesresourcemediaevents, Resourceactivitycitationevents, Resourceactivitymediaevents, Resourceresourceevents, Resourcesactivityevents, Resourcescitationevents, Resourcesmediaevents, Users, People
 
 # Citations referencetype select(Book, Edited Volume, Interview, Other)
 # class CitationsForm(forms.ModelForm):
 #     class Meta:
 #         model = Citations
+
+### INLINES ###
+class PlacescitationeventsInline(admin.TabularInline):
+    model = Placescitationevents
+    fields = ('placeid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
+
+# class ResourceModelChoiceField(forms.ModelChoiceField):
+#     def label_from_instance(self, obj):
+#         return obj.commonname
+
+class ResourcescitationeventsInline(admin.TabularInline):
+    model = Resourcescitationevents
+    fields = ('resourceid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
+
+class MediacitationeventsInline(admin.TabularInline):
+    model = Mediacitationevents
+    fields = ('mediaid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
 
 class CitationsAdmin(admin.ModelAdmin):
     list_display = ('referencetype','title','referencetext','modifiedbydate','enteredbydate')
@@ -66,6 +89,11 @@ class CitationsAdmin(admin.ModelAdmin):
     from TEKDB.settings import BASE_DIR
     add_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
     change_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
+    inlines = [
+        PlacescitationeventsInline,
+        ResourcescitationeventsInline,
+        MediacitationeventsInline,
+    ]
 
 
 admin.site.register(Resources)
