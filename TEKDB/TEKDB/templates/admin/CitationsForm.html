@@ -9,7 +9,6 @@
 {% block field_sets %}
 {% for fieldset in adminform %}
   {% if fieldset.name == None %}
-  <h3>stuff!</h3>
   {% endif %}
   {% include "admin/includes/fieldset.html" %}
 {% endfor %}

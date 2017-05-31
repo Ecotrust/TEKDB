@@ -1,32 +1,116 @@
 from django import forms
 from django.contrib import admin
 
-from .models import Resources, Places, Locality, Citations, Media, Localityplaceresourceevent, Mediacitationevents, Placescitationevents, Placesmediaevents, Placesresourcecitationevents, Placesresourceevents, Placesresourcemediaevents, Resourceactivitycitationevents, Resourceactivitymediaevents, Resourceresourceevents, Resourcesactivityevents, Resourcescitationevents, Resourcesmediaevents, Users, People
-
-# Citations referencetype select(Book, Edited Volume, Interview, Other)
-# class CitationsForm(forms.ModelForm):
-#     class Meta:
-#         model = Citations
+from .models import (
+    Resources,
+    Places,
+    Locality,
+    Citations,
+    Media,
+    Localityplaceresourceevent,
+    Mediacitationevents,
+    Placealtindigenousname,
+    Placescitationevents,
+    Placesmediaevents,
+    Placesresourcecitationevents,
+    Placesresourceevents,
+    Placesresourcemediaevents,
+    Resourceactivitycitationevents,
+    Resourceactivitymediaevents,
+    Resourceresourceevents,
+    Resourcesactivityevents,
+    Resourcescitationevents,
+    Resourcesmediaevents,
+    Users,
+    People
+)
 
 ### INLINES ###
-class PlacescitationeventsInline(admin.TabularInline):
+#### CITATIONS ####
+class CitationplaceseventsInline(admin.TabularInline):
     model = Placescitationevents
     fields = ('placeid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
-class ResourcescitationeventsInline(admin.TabularInline):
+class CitationresourceseventsInline(admin.TabularInline):
     model = Resourcescitationevents
     fields = ('resourceid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
-class MediacitationeventsInline(admin.TabularInline):
+class CitationmediaeventsInline(admin.TabularInline):
     model = Mediacitationevents
     fields = ('mediaid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
+#### MEDIA ####
+class MediaplaceseventsInline(admin.TabularInline):
+    model = Placesmediaevents
+    fields = ('placeid','relationshipdescription','pages')
+    extra = 1
+    classes = ['collapse']
+
+class MediacitationeventsInline(admin.TabularInline):
+    model = Mediacitationevents
+    fields = ('citationid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
+
+class MediaresourceseventsInline(admin.TabularInline):
+    model = Resourcesmediaevents
+    fields = ('resourceid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
+
+#### PLACES ####
+class PlacesalternativenameInline(admin.TabularInline):
+    model = Placealtindigenousname
+    fields = ('altindigenousnameid', 'altindigenousname')
+    extra = 1
+    classes = ['collapse']
+    verbose_name_plural = 'alternate indigenous names'
+
+class PlacesresourceeventsInline(admin.StackedInline):
+    model = Placesresourceevents
+    fieldsets = (
+        ('', {
+            'fields': ('resourceid', 'relationshipdescription', 'partused',
+                'customaryuse', 'barterresource', 'season',
+                # 'timing',
+                ('january', 'february', 'march'), ('april', 'may', 'june'),
+                ('july', 'august', 'september'), ('october', 'november',
+                'december'), 'year', 'islocked'
+            )
+        }),
+    )
+    extra = 1
+    classes = ['collapse']
+    verbose_name_plural = 'related resources'
+
+class PlaceslocalityInline(admin.TabularInline):
+    model = Locality
+    fields = ('indigenousname', 'englishname', 'localitytype')
+    extra = 1
+    classes = ['collapse']
+
+class PlacesmediaeventsInline(admin.TabularInline):
+    model = Placesmediaevents
+    fields = ('mediaid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
+    verbose_name_plural = 'related media'
+
+class PlacescitationeventsInline(admin.TabularInline):
+    model = Placescitationevents
+    fields = ('citationid', 'relationshipdescription', 'pages')
+    extra = 1
+    classes = ['collapse']
+    max_num = 9999
+    verbose_name_plural = 'related citations'
+
+### MODEL ADMINS ###
 class CitationsAdmin(admin.ModelAdmin):
     list_display = ('referencetype','title','referencetext','modifiedbydate','enteredbydate')
     # form = CitationsForm
@@ -86,17 +170,49 @@ class CitationsAdmin(admin.ModelAdmin):
     add_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
     change_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
     inlines = [
-        PlacescitationeventsInline,
-        ResourcescitationeventsInline,
-        MediacitationeventsInline,
+        CitationplaceseventsInline,
+        CitationresourceseventsInline,
+        CitationmediaeventsInline,
     ]
 
+class MediaAdmin(admin.ModelAdmin):
+    list_display = ('medianame','mediatype','modifiedbydate','enteredbydate')
+    fieldsets = (
+        (None, {
+            'fields': (('medianame','mediatype'),'medialink','mediadescription')
+        }),
+    )
+    inlines = [
+        MediaplaceseventsInline,
+        MediacitationeventsInline,
+        MediaresourceseventsInline,
+    ]
+
+class PlacesAdmin(admin.ModelAdmin):
+    list_display = ('indigenousplacename','englishplacename','modifiedbydate','enteredbydate')
+    fieldsets = (
+        (None, {
+            'fields':(
+                ('indigenousplacename','indigenousplacenamemeaning'),
+                'englishplacename',
+                ('planningunitid','primaryhabitat'),
+                'tribeid'
+            )
+        }),
+    )
+    inlines = [
+        PlacesalternativenameInline,
+        PlacesresourceeventsInline,
+        PlacesmediaeventsInline,
+        PlacescitationeventsInline,
+        PlaceslocalityInline,
+    ]
 
 admin.site.register(Resources)
-admin.site.register(Places)
+admin.site.register(Places, PlacesAdmin)
 # admin.site.register(Locality)
 admin.site.register(Citations, CitationsAdmin)
-admin.site.register(Media)
+admin.site.register(Media, MediaAdmin)
 # admin.site.register(Localityplaceresourceevent)
 # admin.site.register(Mediacitationevents)
 # admin.site.register(Placescitationevents)
