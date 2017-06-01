@@ -1021,10 +1021,10 @@ class Placealtindigenousname(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'PlaceAltIndigenousName'
+        db_table = 'Placealtindigenousname'
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
-        app_label = 'PlaceAltIndigenousName'
+        # app_label = 'PlaceAltIndigenousName'
 
 
 class Placegisselections(models.Model):
