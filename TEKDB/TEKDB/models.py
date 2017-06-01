@@ -190,11 +190,80 @@ SEASON_CHOICES = [
     ('Winter/Spring','Winter/Spring'),
 ]
 
-#TODO: resourceid to be ForeignKey to Resources. DO NOT REARRANGE BEFORE MERGE!!!
+
+class Resources(Queryable):
+    resourceid = models.AutoField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
+    commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True, unique=True)  # Field name made lowercase.
+    indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    genus = models.CharField(db_column='Genus', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    species = models.CharField(db_column='Species', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    specific = models.BooleanField(db_column='Specific', default=False)  # Field name made lowercase.
+    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')  # Field name made lowercase.
+    # enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
+    # enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    # enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    # enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True)  # Field name made lowercase.
+    # modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
+    # modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    # modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    # modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Resources'
+        verbose_name = 'Resource'
+        verbose_name_plural = 'Resources'
+        # app_label = 'Resources'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.commonname))
+
+    def __str__(self):
+        return self.commonname
+
+    def keyword_search(keyword):
+        return Resources.objects.filter(Q(commonname__icontains=keyword) | Q(genus__icontains=keyword)| Q(species__icontains=keyword))
+
+    #def keyword_search(keyword):
+       #return Resources.objects.filter(commonname__icontains=keyword)  #UPDATE THIS
+
+    def name(self):
+        return self.commonname                          #UPDATE THIS
+
+    def image(self):
+        return '/static/explore/img/demo-resource.png'  #UPDATE THIS
+
+    def subtitle(self):
+        return self.species                             #UPDATE THIS
+
+    def data(self):                                     #UPDATE THIS
+        return [
+            {'key':'name', 'value': self.commonname},
+            {'key':'indigenous name', 'value': self.indigenousname},
+            {'key':'species', 'value': self.species},
+            {'key':'genus', 'value': self.genus}
+        ]
+
+    #TODO: look at explore/views.py (get_model_by_type)
+    def get_response_format(self):
+        type = 'resources'                              #UPDATE THIS
+        return {
+            'id': self.pk,
+            # pk is django keyword for any model's Primary Key
+            'type': type,
+            'name': self.name(),
+            'image': self.image(),
+            'description': self.indigenousname,         #UPDATE THIS
+            'link': '/explore/%s/%d' % (type, self.pk)
+        }
+    ################################
+
+
 class Placesresourceevents(Queryable):
     placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
     placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID')  # Field name made lowercase.
-    resourceid = models.IntegerField(db_column='ResourceID', verbose_name='resource')
+    resourceid = models.ForeignKey(Resources, db_column='ResourceID', verbose_name='resource')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     partused = models.CharField(db_column='PartUsed', max_length=255, blank=True, null=True, verbose_name='part used', choices=PART_USED_CHOICES)
     customaryuse = models.CharField(db_column='CustomaryUse', max_length=255, blank=True, null=True, verbose_name='customary use')
@@ -232,16 +301,20 @@ class Placesresourceevents(Queryable):
         # app_label = 'PlacesResourceEvents'
 
     def keyword_search(keyword):
-        resource_qs = Resource.keyword_search(keyword)
+        resource_qs = Resources.keyword_search(keyword)
         resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
 
-        placeresource_qs = PlaceResource.keyword_search(keyword)
-        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
-
-        place_qs = Place.keyword_search(keyword)
+        place_qs = Places.keyword_search(keyword)
         place_loi = [place.pk for place in place_qs]
 
-        return Placesresourceevents.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(resourceid_in=resource_loi) | Q(placeid_in=place_loi) | Q(relationshipdescription__icontains=keyword) | Q(partused__icontains=keyword) | Q(customaryuse__icontains=keyword) | Q(season__icontains=keyword) | Q(timing__icontains=keyword))
+        return Placesresourceevents.objects.filter(
+            Q(resourceid__in=resource_loi) |
+            Q(placeid__in=place_loi) |
+            Q(relationshipdescription__icontains=keyword) |
+            Q(partused__icontains=keyword) |
+            Q(customaryuse__icontains=keyword) |
+            Q(season__icontains=keyword) |
+            Q(timing__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -305,13 +378,10 @@ class Resourcesactivityevents(Queryable):
         # app_label = 'ResourcesActivityEvents'
 
     def keyword_search(keyword):
-        resourceactivity_qs = ResourceActivity.keyword_search(keyword)
-        resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs] #[19, 24, 350]
-
-        placeresource_qs = PlaceResource.keyword_search(keyword)
+        placeresource_qs = Placesresourceevents.keyword_search(keyword)
         placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
-        return Resourcesactivityevents.objects.filter(Q(resourceactivityid__in=resourceactivity_loi) | Q(placeresourceid_in=placeresource_loi) | Q(relationshipdescription__icontains=keyword) | Q(partused__icontains=keyword) | Q(activityshortdescription__icontains=keyword) | Q(activitylongdescription__icontains=keyword) | Q(participants__icontains=keyword) | Q(technique__icontains=keyword) | Q(gear__icontains=keyword) | Q(customaryuse__icontains=keyword) | Q(timing__icontains=keyword) | Q(timingdescription__icontains=keyword))
+        return Resourcesactivityevents.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(relationshipdescription__icontains=keyword) | Q(partused__icontains=keyword) | Q(activityshortdescription__icontains=keyword) | Q(activitylongdescription__icontains=keyword) | Q(participants__icontains=keyword) | Q(technique__icontains=keyword) | Q(gear__icontains=keyword) | Q(customaryuse__icontains=keyword) | Q(timing__icontains=keyword) | Q(timingdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -512,19 +582,19 @@ class Placescitationevents(Queryable):
         unique_together = (('placeid', 'citationid'),)
 
     def keyword_search(keyword):
-        place_qs = Place.keyword_search(keyword)
+        place_qs = Places.keyword_search(keyword)
         place_loi = [place.pk for place in place_qs] #[19, 24, 350]
 
-        citation_qs = Citation.keyword_search(keyword)
+        citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return Placescitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(placeid_in=place_loi) | Q(relationshipdescription__icontains=keyword)| Q(pages__icontains=keyword))
+        return Placescitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(placeid__in=place_loi) | Q(relationshipdescription__icontains=keyword)| Q(pages__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
 
     def image(self):
-        return '/static/explore/img/demo-map.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
 
     def subtitle(self):
         return self.pages                             #UPDATE THIS
@@ -673,7 +743,7 @@ class Localityplaceresourceevent(Queryable):
         placeresource_qs = Placesresourceevents.keyword_search(keyword)
         placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
-        return Localityplaceresourceevent.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(localityid_in=locality_loi))
+        return Localityplaceresourceevent.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(localityid__in=locality_loi))
 
 
 class Lookupactivity(models.Model):
@@ -906,10 +976,10 @@ class Mediacitationevents(Queryable):
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs] #[19, 24, 350]
 
-        citation_qs = Citation.keyword_search(keyword)
+        citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return Mediacitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(mediaid_in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return Mediacitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
 
     #def keyword_search(keyword):
        #return Resources.objects.filter(commonname__icontains=keyword)  #UPDATE THIS
@@ -991,13 +1061,13 @@ class Placesmediaevents(Queryable):
         unique_together = (('placeid', 'mediaid'),)
 
     def keyword_search(keyword):
-        place_qs = Place.keyword_search(keyword)
+        place_qs = Places.keyword_search(keyword)
         place_loi = [place.pk for place in place_qs] #[19, 24, 350]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return Placesmediaevents.objects.filter(Q(placeid__in=place_loi) | Q(mediaid_in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return Placesmediaevents.objects.filter(Q(placeid__in=place_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1051,13 +1121,13 @@ class Placesresourcecitationevents(Queryable):
         unique_together = (('placeresourceid', 'citationid'),)
 
     def keyword_search(keyword):
-        placeresource_qs = PlaceResource.keyword_search(keyword)
+        placeresource_qs = Placesresourceevents.keyword_search(keyword)
         placeresource_loi = [placeresource.pk for placeresource in placeresource_qs] #[19, 24, 350]
 
-        citation_qs = Citation.keyword_search(keyword)
+        citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return Placesresourcecitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(placeresourceid_in=placeresource_loi) | Q(relationshipdescription__icontains=keyword))
+        return Placesresourcecitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(placeresourceid__in=placeresource_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1110,13 +1180,13 @@ class Placesresourcemediaevents(Queryable):
         unique_together = (('placeresourceid', 'mediaid'),)
 
     def keyword_search(keyword):
-        placeresource_qs = PlaceResource.keyword_search(keyword)
+        placeresource_qs = Placesresourceevents.keyword_search(keyword)
         placeresource_loi = [placeresource.pk for placeresource in placeresource_qs] #[19, 24, 350]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return Placesresourcemediaevents.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(mediaid_in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return Placesresourcemediaevents.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1168,13 +1238,13 @@ class Resourceactivitycitationevents(Queryable):
         unique_together = (('resourceactivityid', 'citationid'),)
 
     def keyword_search(keyword):
-        resourceactivity_qs = ResourceActivity.keyword_search(keyword)
+        resourceactivity_qs = Resourcesactivityevents.keyword_search(keyword)
         resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs] #[19, 24, 350]
 
-        citation_qs = Citation.keyword_search(keyword)
+        citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return Resourceactivitycitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(resourceactivityid_in=resourceactivity_loi) | Q(relationshipdescription__icontains=keyword))
+        return Resourceactivitycitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(resourceactivityid__in=resourceactivity_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1227,13 +1297,13 @@ class Resourceactivitymediaevents(Queryable):
         unique_together = (('resourceactivityid', 'mediaid'),)
 
     def keyword_search(keyword):
-        resourceactivity_qs = ResourceActivity.keyword_search(keyword)
+        resourceactivity_qs = Resourcesactivityevents.keyword_search(keyword)
         resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs] #[19, 24, 350]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return Resourceactivitymediaevents.objects.filter(Q(resourceactivityid__in=resourceactivity_loi) | Q(mediaid_in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return Resourceactivitymediaevents.objects.filter(Q(resourceactivityid__in=resourceactivity_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1296,13 +1366,10 @@ class Resourceresourceevents(Queryable):
         unique_together = (('resourceid', 'altresourceid'),)
 
     def keyword_search(keyword):
-        resource_qs = Resource.keyword_search(keyword)
+        resource_qs = Resources.keyword_search(keyword)
         resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
 
-        altresource_qs = AltResource.keyword_search(keyword)
-        altresource_loi = [altresource.pk for altresource in altresource_qs]
-
-        return Resourceresourceevents.objects.filter(Q(resourceid__in=cresource_loi) | Q(altresourceid_in=altresource_loi) | Q(relationshipdescription__icontains=keyword))
+        return Resourceresourceevents.objects.filter(Q(resourceid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1333,75 +1400,6 @@ class Resourceresourceevents(Queryable):
         }
 
 
-class Resources(Queryable):
-    resourceid = models.AutoField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
-    commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True, unique=True)  # Field name made lowercase.
-    indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    genus = models.CharField(db_column='Genus', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    species = models.CharField(db_column='Species', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    specific = models.BooleanField(db_column='Specific', default=False)  # Field name made lowercase.
-    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')  # Field name made lowercase.
-    # enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    # enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    # enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    # enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True)  # Field name made lowercase.
-    # modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    # modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    # modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    # modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Resources'
-        verbose_name = 'Resource'
-        verbose_name_plural = 'Resources'
-        # app_label = 'Resources'
-
-    def __unicode__(self):
-        return unicode('%s' % (self.commonname))
-
-    def __str__(self):
-        return self.commonname
-
-    def keyword_search(keyword):
-        return Resources.objects.filter(Q(commonname__icontains=keyword) | Q(genus__icontains=keyword)| Q(species__icontains=keyword))
-
-    #def keyword_search(keyword):
-       #return Resources.objects.filter(commonname__icontains=keyword)  #UPDATE THIS
-
-    def name(self):
-        return self.commonname                          #UPDATE THIS
-
-    def image(self):
-        return '/static/explore/img/demo-resource.png'  #UPDATE THIS
-
-    def subtitle(self):
-        return self.species                             #UPDATE THIS
-
-    def data(self):                                     #UPDATE THIS
-        return [
-            {'key':'name', 'value': self.commonname},
-            {'key':'indigenous name', 'value': self.indigenousname},
-            {'key':'species', 'value': self.species},
-            {'key':'genus', 'value': self.genus}
-        ]
-
-    #TODO: look at explore/views.py (get_model_by_type)
-    def get_response_format(self):
-        type = 'resources'                              #UPDATE THIS
-        return {
-            'id': self.pk,
-            # pk is django keyword for any model's Primary Key
-            'type': type,
-            'name': self.name(),
-            'image': self.image(),
-            'description': self.indigenousname,         #UPDATE THIS
-            'link': '/explore/%s/%d' % (type, self.pk)
-        }
-    ################################
-
-
 class Resourcescitationevents(Queryable):
     resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True, verbose_name='resource')
     citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID', verbose_name='citation')
@@ -1425,13 +1423,13 @@ class Resourcescitationevents(Queryable):
         unique_together = (('resourceid', 'citationid'),)
 
     def keyword_search(keyword):
-        resource_qs = Resource.keyword_search(keyword)
+        resource_qs = Resources.keyword_search(keyword)
         resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
 
-        citation_qs = Citation.keyword_search(keyword)
+        citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return Resourcescitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(resourceid_in=resource_loi) | Q(relationshipdescription__icontains=keyword))
+        return Resourcescitationevents.objects.filter(Q(citationid__in=citation_loi) | Q(resourceid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
@@ -1486,13 +1484,13 @@ class Resourcesmediaevents(Queryable):
         unique_together = (('resourceid', 'mediaid'),)
 
     def keyword_search(keyword):
-        resource_qs = Resource.keyword_search(keyword)
+        resource_qs = Resources.keyword_search(keyword)
         resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return Resourcesmediaevents.objects.filter(Q(mediaid__in=citation_loi) | Q(mediaid_in=resource_loi) | Q(relationshipdescription__icontains=keyword))
+        return Resourcesmediaevents.objects.filter(Q(mediaid__in=media_loi) | Q(mediaid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
