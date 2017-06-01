@@ -1490,7 +1490,7 @@ class Resourcesmediaevents(Queryable):
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return Resourcesmediaevents.objects.filter(Q(mediaid__in=media_loi) | Q(mediaid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
+        return Resourcesmediaevents.objects.filter(Q(mediaid__in=media_loi) | Q(resourceid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
 
     def name(self):
         return self.relationshipdescription                          #UPDATE THIS
