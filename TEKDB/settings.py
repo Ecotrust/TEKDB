@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     u'demo-tekdb.herokuapp.com',
+    u'demo-tekdb-dev.herokuapp.com',
 ]
 
 
@@ -135,10 +136,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATICFILES_DIRS = [
-   os.path.join(BASE_DIR, "static"),
-   '/var/www/static/',
-]
+# STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, "static"),
+#    '/var/www/static/',
+# ]
 
 ### DJANGO-REGISTRATION SETTINGS ###
 REGISTRATION_OPEN = True
@@ -233,7 +234,7 @@ TEST_QUERY_RESULTS = {
 # AUTH_USER_MODEL = 'TEKDB.User'
 
 
-# from TEKDB.local_settings import *
+from TEKDB.local_settings import *
 
 ### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
 
