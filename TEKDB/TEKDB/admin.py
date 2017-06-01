@@ -7,20 +7,20 @@ from .models import (
     Locality,
     Citations,
     Media,
-    Localityplaceresourceevent,
-    Mediacitationevents,
-    Placealtindigenousname,
-    Placescitationevents,
-    Placesmediaevents,
-    Placesresourcecitationevents,
-    Placesresourceevents,
-    Placesresourcemediaevents,
-    Resourceactivitycitationevents,
-    Resourceactivitymediaevents,
-    Resourceresourceevents,
-    Resourcesactivityevents,
-    Resourcescitationevents,
-    Resourcesmediaevents,
+    LocalityPlaceResourceEvent,
+    MediaCitationEvents,
+    PlaceAltIndigenousName,
+    PlacesCitationEvents,
+    PlacesMediaEvents,
+    PlacesResourceCitationEvents,
+    PlacesResourceEvents,
+    PlacesResourceMediaEvents,
+    ResourceActivityCitationEvents,
+    ResourceActivityMediaEvents,
+    ResourceResourceEvents,
+    ResourcesActivityEvents,
+    ResourcesCitationEvents,
+    ResourcesMediaEvents,
     Users,
     People
 )
@@ -28,52 +28,52 @@ from .models import (
 ### INLINES ###
 #### CITATIONS ####
 class CitationplaceseventsInline(admin.TabularInline):
-    model = Placescitationevents
+    model = PlacesCitationEvents
     fields = ('placeid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
 class CitationresourceseventsInline(admin.TabularInline):
-    model = Resourcescitationevents
+    model = ResourcesCitationEvents
     fields = ('resourceid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
 class CitationmediaeventsInline(admin.TabularInline):
-    model = Mediacitationevents
+    model = MediaCitationEvents
     fields = ('mediaid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
 #### MEDIA ####
 class MediaplaceseventsInline(admin.TabularInline):
-    model = Placesmediaevents
+    model = PlacesMediaEvents
     fields = ('placeid','relationshipdescription','pages')
     extra = 1
     classes = ['collapse']
 
 class MediacitationeventsInline(admin.TabularInline):
-    model = Mediacitationevents
+    model = MediaCitationEvents
     fields = ('citationid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
 class MediaresourceseventsInline(admin.TabularInline):
-    model = Resourcesmediaevents
+    model = ResourcesMediaEvents
     fields = ('resourceid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
 
 #### PLACES ####
 class PlacesalternativenameInline(admin.TabularInline):
-    model = Placealtindigenousname
+    model = PlaceAltIndigenousName
     fields = ('altindigenousnameid', 'altindigenousname')
     extra = 1
     classes = ['collapse']
     verbose_name_plural = 'alternate indigenous names'
 
 class PlacesresourceeventsInline(admin.StackedInline):
-    model = Placesresourceevents
+    model = PlacesResourceEvents
     fieldsets = (
         ('', {
             'fields': ('resourceid', 'relationshipdescription', 'partused',
@@ -96,14 +96,14 @@ class PlaceslocalityInline(admin.TabularInline):
     classes = ['collapse']
 
 class PlacesmediaeventsInline(admin.TabularInline):
-    model = Placesmediaevents
+    model = PlacesMediaEvents
     fields = ('mediaid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
     verbose_name_plural = 'related media'
 
 class PlacescitationeventsInline(admin.TabularInline):
-    model = Placescitationevents
+    model = PlacesCitationEvents
     fields = ('citationid', 'relationshipdescription', 'pages')
     extra = 1
     classes = ['collapse']
@@ -213,17 +213,17 @@ admin.site.register(Places, PlacesAdmin)
 # admin.site.register(Locality)
 admin.site.register(Citations, CitationsAdmin)
 admin.site.register(Media, MediaAdmin)
-# admin.site.register(Localityplaceresourceevent)
-# admin.site.register(Mediacitationevents)
-# admin.site.register(Placescitationevents)
-# admin.site.register(Placesmediaevents)
-# admin.site.register(Placesresourcecitationevents)
-# admin.site.register(Placesresourceevents)
-# admin.site.register(Placesresourcemediaevents)
-# admin.site.register(Resourceactivitycitationevents)
-# admin.site.register(Resourceactivitymediaevents)
-# admin.site.register(Resourceresourceevents)
-# admin.site.register(Resourcesactivityevents)
-# admin.site.register(Resourcescitationevents)
-# admin.site.register(Resourcesmediaevents)
+# admin.site.register(LocalityPlaceResourceEvent)
+# admin.site.register(MediaCitationEvents)
+# admin.site.register(PlacesCitationEvents)
+# admin.site.register(PlacesMediaEvents)
+# admin.site.register(PlacesResourceCitationEvents)
+# admin.site.register(PlacesResourceEvents)
+# admin.site.register(PlacesResourceMediaEvents)
+# admin.site.register(ResourceActivityCitationEvents)
+# admin.site.register(ResourceActivityMediaEvents)
+# admin.site.register(ResourceResourceEvents)
+# admin.site.register(ResourcesActivityEvents)
+# admin.site.register(ResourcesCitationEvents)
+# admin.site.register(ResourcesMediaEvents)
 admin.site.register(Users)
