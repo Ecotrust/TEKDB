@@ -96,7 +96,7 @@
     "planningunitid": 2,
     "primaryhabitat": "Rocky Intertidal",
     "tribeid": 1,
-    "islocked": null
+    "islocked": false
   }
 },
 {
