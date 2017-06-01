@@ -50,7 +50,7 @@ class Lookupplanningunit(models.Model):
 
     class Meta:
         managed = MANAGED
-        db_table = 'Lookupplanningunit'
+        db_table = 'LookupPlanningUnit'
         # app_label = 'LookupPlanningUnit'
 
     def get_name(self):
@@ -71,7 +71,7 @@ class Lookuptribe(models.Model):
 
     class Meta:
         managed = MANAGED
-        db_table = 'Lookuptribe'
+        db_table = 'LookupTribe'
         # app_label = 'LookupTribe'
 
     def get_name(self):
@@ -297,7 +297,7 @@ class Placesresourceevents(Queryable):
 
     class Meta:
         managed = MANAGED
-        db_table = 'Placesresourceevents'
+        db_table = 'PlacesResourceEvents'
         verbose_name = 'Place - Resource'
         verbose_name_plural = 'Places - Resources'
         # app_label = 'PlacesResourceEvents'
@@ -1023,7 +1023,7 @@ class Placealtindigenousname(models.Model):
 
     class Meta:
         managed = MANAGED
-        db_table = 'Placealtindigenousname'
+        db_table = 'PlaceAltIndigenousName'
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
         # app_label = 'PlaceAltIndigenousName'
