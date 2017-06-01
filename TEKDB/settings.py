@@ -234,7 +234,7 @@ TEST_QUERY_RESULTS = {
 # AUTH_USER_MODEL = 'TEKDB.User'
 
 
-from TEKDB.local_settings import *
+from TEKDB.heroku_settings import *
 
 ### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
 
