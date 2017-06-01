@@ -47,7 +47,7 @@ class Lookupplanningunit(models.Model):
     planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupPlanningUnit'
         # app_label = 'LookupPlanningUnit'
 
@@ -68,7 +68,7 @@ class Lookuptribe(models.Model):
     federaltribe = models.CharField(db_column='FederalTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupTribe'
         # app_label = 'LookupTribe'
 
@@ -116,7 +116,7 @@ class Places(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Places'
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
@@ -210,7 +210,7 @@ class Resources(Queryable):
     # modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Resources'
         verbose_name = 'Resource'
         verbose_name_plural = 'Resources'
@@ -294,7 +294,7 @@ class Placesresourceevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlacesResourceEvents'
         verbose_name = 'Place - Resource'
         verbose_name_plural = 'Places - Resources'
@@ -373,7 +373,7 @@ class Resourcesactivityevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourcesActivityEvents'
         # app_label = 'ResourcesActivityEvents'
 
@@ -430,7 +430,7 @@ class People(models.Model):
     relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'People'
         # app_label = 'People'
 
@@ -480,7 +480,7 @@ class Citations(Queryable):
     # modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Citations'
         verbose_name = 'Citation'
         verbose_name_plural = 'Citations'
@@ -574,7 +574,7 @@ class Placescitationevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlacesCitationEvents'
         verbose_name = 'Place - Citation'
         verbose_name_plural = 'Places - Citations'
@@ -626,7 +626,7 @@ class Currentversion(models.Model):
     frontendversion = models.IntegerField(db_column='FrontendVersion', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'CurrentVersion'
         app_label = 'CurrentVersion'
 
@@ -663,7 +663,7 @@ class Locality(models.Model):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Locality'
         verbose_name = 'Locality'
         verbose_name_plural = 'Localities'
@@ -713,7 +713,7 @@ class Localitygisselections(models.Model):
     sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LocalityGISSelections'
         app_label = 'LocalityGISSelections'
 
@@ -731,7 +731,7 @@ class Localityplaceresourceevent(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LocalityPlaceResourceEvent'
         # app_label = 'LocalityPlaceResourceEvent'
         unique_together = (('placeresourceid', 'localityid'),)
@@ -750,7 +750,7 @@ class Lookupactivity(models.Model):
     activity = models.CharField(db_column='Activity', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupActivity'
         app_label = 'LookupActivity'
 
@@ -759,7 +759,7 @@ class Lookupauthortype(models.Model):
     authortype = models.CharField(db_column='AuthorType', primary_key=True, max_length=50)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupAuthorType'
         app_label = 'LookupAuthorType'
 
@@ -768,7 +768,7 @@ class Lookupcustomaryuse(models.Model):
     usedfor = models.CharField(db_column='UsedFor', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupCustomaryUse'
         app_label = 'LookupCustomaryUse'
 
@@ -777,7 +777,7 @@ class Lookuphabitat(models.Model):
     habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupHabitat'
         app_label = 'LookupHabitat'
 
@@ -786,7 +786,7 @@ class Lookuplocalitytype(models.Model):
     localitytype = models.CharField(db_column='LocalityType', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupLocalityType'
         app_label = 'LookupLocalityType'
 
@@ -796,7 +796,7 @@ class Lookupmediatype(models.Model):
     mediacategory = models.CharField(db_column='MediaCategory', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupMediaType'
         app_label = 'LookupMediaType'
 
@@ -805,7 +805,7 @@ class Lookuppartused(models.Model):
     partused = models.CharField(db_column='PartUsed', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupPartUsed'
         app_label = 'LookupPartUsed'
 
@@ -814,7 +814,7 @@ class Lookupparticipants(models.Model):
     participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupParticipants'
         app_label = 'LookupParticipants'
 
@@ -823,7 +823,7 @@ class Lookupreferencetype(models.Model):
     documenttype = models.CharField(db_column='DocumentType', primary_key=True, max_length=25)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupReferenceType'
         app_label = 'LookupReferenceType'
 
@@ -832,7 +832,7 @@ class Lookupresourcegroup(models.Model):
     resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupResourceGroup'
         app_label = 'LookupResourceGroup'
 
@@ -841,7 +841,7 @@ class Lookupseason(models.Model):
     season = models.CharField(db_column='Season', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupSeason'
         app_label = 'LookupSeason'
 
@@ -850,7 +850,7 @@ class Lookuptechniques(models.Model):
     techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupTechniques'
         app_label = 'LookupTechniques'
 
@@ -859,7 +859,7 @@ class Lookuptiming(models.Model):
     timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupTiming'
         app_label = 'LookupTiming'
 
@@ -871,7 +871,7 @@ class Lookupuserinfo(models.Model):
     useraffiliation = models.CharField(db_column='UserAffiliation', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'LookupUserInfo'
         app_label = 'LookupUserInfo'
 
@@ -899,7 +899,7 @@ class Media(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Media'
         verbose_name = 'Medium'
         verbose_name_plural = 'Media'
@@ -962,7 +962,7 @@ class Mediacitationevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'MediaCitationEvents'
         verbose_name = 'Medium - Citation'
         verbose_name_plural = 'Media - Citations'
@@ -1020,7 +1020,7 @@ class Placealtindigenousname(models.Model):
     altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alternate indigenous name')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlaceAltIndigenousName'
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
@@ -1033,7 +1033,7 @@ class Placegisselections(models.Model):
     sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlaceGISSelections'
         app_label = 'PlaceGISSelections'
 
@@ -1053,7 +1053,7 @@ class Placesmediaevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlacesMediaEvents'
         verbose_name = 'Place - Medium'
         verbose_name_plural = 'Places - Media'
@@ -1115,7 +1115,7 @@ class Placesresourcecitationevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlacesResourceCitationEvents'
         # app_label = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
@@ -1174,7 +1174,7 @@ class Placesresourcemediaevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PlacesResourceMediaEvents'
         # app_label = 'PlacesResourceMediaEvents'
         unique_together = (('placeresourceid', 'mediaid'),)
@@ -1232,7 +1232,7 @@ class Resourceactivitycitationevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourceActivityCitationEvents'
         # app_label = 'ResourceActivityCitationEvents'
         unique_together = (('resourceactivityid', 'citationid'),)
@@ -1291,7 +1291,7 @@ class Resourceactivitymediaevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourceActivityMediaEvents'
         # app_label = 'ResourceActivityMediaEvents'
         unique_together = (('resourceactivityid', 'mediaid'),)
@@ -1341,7 +1341,7 @@ class Resourcealtindigenousname(models.Model):
     altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourceAltIndigenousName'
         app_label = 'ResourceAltIndigenousName'
 
@@ -1360,7 +1360,7 @@ class Resourceresourceevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourceResourceEvents'
         # app_label = 'ResourceResourceEvents'
         unique_together = (('resourceid', 'altresourceid'),)
@@ -1415,7 +1415,7 @@ class Resourcescitationevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourcesCitationEvents'
         verbose_name = 'Resource - Citation'
         verbose_name_plural = 'Resources - Citations'
@@ -1476,7 +1476,7 @@ class Resourcesmediaevents(Queryable):
     #modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ResourcesMediaEvents'
         verbose_name = 'Resource - Medium'
         verbose_name_plural = 'Resources - Media'
@@ -1527,7 +1527,7 @@ class Useraccess(models.Model):
     accesslevel = models.CharField(db_column='AccessLevel', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'UserAccess'
         app_label = 'UserAccess'
 
@@ -1543,7 +1543,7 @@ class Users(models.Model):
     accesslevel = models.IntegerField(db_column='AccessLevel')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Users'
         verbose_name = 'User'
         verbose_name_plural = 'Users'
