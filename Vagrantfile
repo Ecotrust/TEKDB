@@ -6,8 +6,8 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/xenial64"
   config.vm.box_check_update = true
 
-  config.vm.network "forwarded_port", guest:8000, host:8111
-  config.vm.network "forwarded_port", guest:5432, host:65432
+  config.vm.network "forwarded_port", guest:8000, host:8110
+  config.vm.network "forwarded_port", guest:5432, host:65431
 
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
