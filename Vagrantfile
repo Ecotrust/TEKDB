@@ -12,10 +12,11 @@ Vagrant.configure(2) do |config|
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
 
-  config.vm.synced_folder "./code/TEKDB", "/usr/local/apps/TEKDB"
+  config.vm.synced_folder "./TEKDB", "/usr/local/apps/TEKDB"
 
   config.vm.provision "shell" do |s|
     s.path = "scripts/vagrant_provision_root.sh"
+    s.args = ['xenial', '3.5.0', '9.5']
     s.privileged = "true"
   end
 

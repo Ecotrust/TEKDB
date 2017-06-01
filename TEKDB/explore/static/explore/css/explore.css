@@ -7,6 +7,14 @@ a:hover {
   font-weight: bold;
 }
 
+#search-category-type {
+  display: none;
+}
+
+.btn-default {
+  color: black;
+}
+
 .content-container {
   margin-top: 60px;
 }
@@ -26,4 +34,5 @@ a:hover {
 
 .explore-form {
   text-align: center;
+  margin: 80px 150px;
 }
