@@ -5605,76 +5605,42 @@
   "fields": {}
 },
 {
+  "model": "TEKDB.citations",
+  "pk": 1,
+  "fields": {
+    "enteredbyname": null,
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-06-02T05:07:01.227Z",
+    "modifiedbyname": null,
+    "modifiedbytitle": null,
+    "modifiedbytribe": null,
+    "modifiedbydate": "2017-06-02T05:07:01.227Z",
+    "referencetype": "Book",
+    "referencetext": "Riveting",
+    "authortype": null,
+    "authorprimary": "Author, Ann",
+    "authorsecondary": "Author, Secondary",
+    "intervieweeid": null,
+    "interviewerid": null,
+    "placeofinterview": null,
+    "year": 1948,
+    "title": "A book",
+    "seriestitle": null,
+    "seriesvolume": null,
+    "serieseditor": null,
+    "publisher": "Publisher",
+    "publishercity": "Pub. City",
+    "preparedfor": null,
+    "comments": "The book was okay"
+  }
+},
+{
   "model": "TEKDB.currentversion",
   "pk": 1,
   "fields": {
     "backendversion": 1,
     "frontendversion": 1
   }
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "bay",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "beach",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "creek",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "estuary",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "intertidal",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "lagoon",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "mainstem river",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "offshore rocks",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "open ocean",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "river eddy",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "river mouth",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "side channel river",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "subtidal",
-  "fields": {}
-},
+}
 ]

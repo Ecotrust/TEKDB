@@ -1,0 +1,113 @@
+[
+{
+  "model": "TEKDB.resourcesmediaevents",
+  "pk": 188,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:18:08",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:18:13",
+    "mediaid": 6,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
+  "model": "TEKDB.resourcesmediaevents",
+  "pk": 266,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:18:26",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:18:32",
+    "mediaid": 7,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
+  "model": "TEKDB.resourcesmediaevents",
+  "pk": 347,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:19:30",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:19:35",
+    "mediaid": 8,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
+  "model": "TEKDB.useraccess",
+  "pk": 1,
+  "fields": {
+    "accesslevel": "Administrator"
+  }
+},
+{
+  "model": "TEKDB.useraccess",
+  "pk": 2,
+  "fields": {
+    "accesslevel": "Editor"
+  }
+},
+{
+  "model": "TEKDB.useraccess",
+  "pk": 3,
+  "fields": {
+    "accesslevel": "Reader"
+  }
+},
+{
+  "model": "TEKDB.users",
+  "pk": 5,
+  "fields": {
+    "username": "admin",
+    "password": "admin",
+    "firstname": "Admin",
+    "lastname": "Administrator",
+    "affiliation": "General Admin",
+    "title": "Admin",
+    "accesslevel": 1
+  }
+},
+{
+  "model": "TEKDB.users",
+  "pk": 6,
+  "fields": {
+    "username": "editor",
+    "password": "editor",
+    "firstname": "Editor",
+    "lastname": "Editor",
+    "affiliation": "General Admin",
+    "title": "Editor",
+    "accesslevel": 2
+  }
+},
+{
+  "model": "TEKDB.users",
+  "pk": 7,
+  "fields": {
+    "username": "readonly",
+    "password": "readonly",
+    "firstname": "Read",
+    "lastname": "Only",
+    "affiliation": "General Access",
+    "title": "Mr. Reader",
+    "accesslevel": 3
+  }
+}
+]

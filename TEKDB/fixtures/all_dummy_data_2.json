@@ -1,0 +1,339 @@
+[
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "bay",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "beach",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "creek",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "estuary",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "intertidal",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "lagoon",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "mainstem river",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "offshore rocks",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "open ocean",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "river eddy",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "river mouth",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "side channel river",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "subtidal",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Cemetery",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Customary Fishing and Gathering from Shore",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Customary Fishing and Gathering Offshore",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Customary Hunting from Shore",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Customary Hunting Offshore",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Processing",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Related to Ceremony",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Related to Song",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Related to Story",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Residence/Village",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupactivity",
+  "pk": "Training",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupmediatype",
+  "pk": "audio",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "TEKDB.lookupmediatype",
+  "pk": "image",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "TEKDB.lookupmediatype",
+  "pk": "other",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "TEKDB.lookupmediatype",
+  "pk": "PDF",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "TEKDB.lookupmediatype",
+  "pk": "video",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 6,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:12:46Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:13:36Z",
+    "mediatype": "image",
+    "medianame": "Chiton Photo",
+    "mediadescription": "Photo taken by Manaha Herman, 2015",
+    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\IMG_3996.JPG"
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 7,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:13:45Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:14:32Z",
+    "mediatype": "image",
+    "medianame": "Mussel Photo",
+    "mediadescription": "Photo taken by Manaha Herman, 2014",
+    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\IMG_0470.JPG"
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 8,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:14:37Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:15:18Z",
+    "mediatype": "image",
+    "medianame": "Perch Photo",
+    "mediadescription": "Photo taken by Manahe Herman, 2004",
+    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\IMGP0344.JPG"
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 9,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:15:26Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:17:51Z",
+    "mediatype": "PDF",
+    "medianame": "Jay Tosanic Interview Transcript",
+    "mediadescription": "Interview transcript for Jay Tosanic on marine havesting  from 2016",
+    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\giant_devil_ray_st_factsheet.pdf"
+  }
+},
+{
+  "model": "TEKDB.mediacitationevents",
+  "pk": 9,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:17:29",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:17:33",
+    "citationid": 12,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
+  "model": "TEKDB.placesresourcecitationevents",
+  "pk": 22,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T14:58:29",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T14:59:40",
+    "citationid": 12,
+    "relationshipdescription": "Discussion about mussels and otters",
+    "pages": "11"
+  }
+},
+{
+  "model": "TEKDB.placesresourcecitationevents",
+  "pk": 23,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:00:31",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:00:47",
+    "citationid": 12,
+    "relationshipdescription": "discussion about mussels and otters",
+    "pages": "11"
+  }
+},
+{
+  "model": "TEKDB.resourceactivitycitationevents",
+  "pk": 27,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T14:44:54",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T14:45:08",
+    "citationid": 11,
+    "relationshipdescription": "harvesting of chitons",
+    "pages": "16"
+  }
+},
+{
+  "model": "TEKDB.resourceactivitycitationevents",
+  "pk": 28,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T14:53:14",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T14:53:34",
+    "citationid": 11,
+    "relationshipdescription": "Gathering of dentalia",
+    "pages": "36"
+  }
+},
+{
+  "model": "TEKDB.resourceactivitycitationevents",
+  "pk": 31,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-03-20T15:08:12",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-03-20T15:08:28",
+    "citationid": 12,
+    "relationshipdescription": "Discussion of perch fishing",
+    "pages": "20"
+  }
+},
+{
+  "model": "TEKDB.resourcealtindigenousname",
+  "pk": 6,
+  "fields": {
+    "resourceid": 207,
+    "altindigenousname": "scaphapod"
+  }
+}
+]
