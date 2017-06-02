@@ -170,6 +170,11 @@
 },
 {
   "model": "TEKDB.lookupresourcegroup",
+  "pk": "plant",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupresourcegroup",
   "pk": "invertebrate",
   "fields": {}
 },
