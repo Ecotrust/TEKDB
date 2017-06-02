@@ -96,6 +96,12 @@ class LookupHabitat(models.Model):
         managed = MANAGED
         db_table = 'LookupHabitat'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.habitat))
+
+    def __str__(self):
+        return self.habitat
+
 
 class Places(Queryable):
     placeid = models.AutoField(db_column='PlaceID', primary_key=True)  # Field name made lowercase.
@@ -174,6 +180,12 @@ class LookupResourceGroup(models.Model):
         managed = MANAGED
         db_table = 'LookupResourceGroup'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.resourceclassificationgroup))
+
+    def __str__(self):
+        return self.resourceclassificationgroup
+
 
 class Resources(Queryable):
     resourceid = models.AutoField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
@@ -245,6 +257,12 @@ class LookupPartUsed(models.Model):
         managed = MANAGED
         db_table = 'LookupPartUsed'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.partused))
+
+    def __str__(self):
+        return self.partused
+
 
 class LookupCustomaryUse(models.Model):
     usedfor = models.CharField(db_column='UsedFor', primary_key=True, max_length=255)  # Field name made lowercase.
@@ -252,6 +270,12 @@ class LookupCustomaryUse(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupCustomaryUse'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.usedfor))
+
+    def __str__(self):
+        return self.usedfor
 
 
 class LookupSeason(models.Model):
@@ -261,6 +285,12 @@ class LookupSeason(models.Model):
         managed = MANAGED
         db_table = 'LookupSeason'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.season))
+
+    def __str__(self):
+        return self.season
+
 
 class LookupTiming(models.Model):
     timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)  # Field name made lowercase.
@@ -268,6 +298,12 @@ class LookupTiming(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupTiming'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.timing))
+
+    def __str__(self):
+        return self.timing
 
 
 class PlacesResourceEvents(Queryable):
@@ -368,6 +404,12 @@ class LookupParticipants(models.Model):
         managed = MANAGED
         db_table = 'LookupParticipants'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.participants))
+
+    def __str__(self):
+        return self.participants
+
 
 class LookupTechniques(models.Model):
     techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)  # Field name made lowercase.
@@ -376,7 +418,14 @@ class LookupTechniques(models.Model):
         managed = MANAGED
         db_table = 'LookupTechniques'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.techniques))
 
+    def __str__(self):
+        return self.techniques
+
+
+#TODO: Still don't know who uses LookupActivity, but 'activityshortdescription' seems like a good candidate
 class ResourcesActivityEvents(Queryable):
     resourceactivityid = models.AutoField(db_column='ResourceActivityID', primary_key=True)  # Field name made lowercase.
     placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID')  # Field name made lowercase.
@@ -430,7 +479,7 @@ class ResourcesActivityEvents(Queryable):
         )
 
     def name(self):
-        return self.relationshipdescription
+        return "%s %s" % (self.placeresourceid.name(), self.activityshortdescription)
 
     def image(self):
         return '/static/explore/img/demo-activity.png'
@@ -440,10 +489,12 @@ class ResourcesActivityEvents(Queryable):
 
     def data(self):
         return [
+            {'key':'place', 'value': self.placeresourceid.placeid.name()},
+            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'part used', 'value': self.partused},
-            {'key':'activity short description', 'value': self.activityshortdescription},
-            {'key':'activity long description', 'value': self.activitylongdescription},
+            {'key':'brief description', 'value': self.activityshortdescription},
+            {'key':'full description', 'value': self.activitylongdescription},
             {'key':'participants', 'value': self.participants},
             {'key':'technique', 'value': self.technique},
             {'key':'gear', 'value': self.gear},
@@ -502,6 +553,12 @@ class LookupReferenceType(models.Model):
         managed = MANAGED
         db_table = 'LookupReferenceType'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.documenttype))
+
+    def __str__(self):
+        return self.documenttype
+
 
 class LookupAuthorType(models.Model):
     authortype = models.CharField(db_column='AuthorType', primary_key=True, max_length=50)  # Field name made lowercase.
@@ -509,6 +566,12 @@ class LookupAuthorType(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupAuthorType'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.authortype))
+
+    def __str__(self):
+        return self.authortype
 
 
 class Citations(Queryable):
@@ -696,6 +759,12 @@ class LookupLocalityType(models.Model):
         managed = MANAGED
         db_table = 'LookupLocalityType'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.localitytype))
+
+    def __str__(self):
+        return self.localitytype
+
 
 class Locality(models.Model):
     localityid = models.AutoField(db_column='LocalityID', primary_key=True)  # Field name made lowercase.
@@ -783,6 +852,33 @@ class LocalityPlaceResourceEvent(Queryable):
             Q(localityid__in=locality_loi)
         )
 
+    def name(self):
+        return "%s - %s" % (self.localityid.name(), self.placeresoureid.name())
+
+    def image(self):
+        return '/static/explore/img/demo-activity.png'
+
+    def subtitle(self):
+        return ''
+
+    def data(self):
+        return [
+            {'key':'place', 'value': self.placeresourceid.placeid.name()},
+            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
+            {'key':'locality', 'value': self.localityid.name()}
+        ]
+
+    def get_response_format(self):
+        type = 'Placescitationevents'
+        return {
+            'id': self.pk,
+            'type': type,
+            'name': self.name(),
+            'image': self.image(),
+            'description': 'locality place resource event',
+            'link': '/explore/%s/%d' % (type, self.pk)
+        }
+
 
 class LookupActivity(models.Model):
     activity = models.CharField(db_column='Activity', primary_key=True, max_length=255)  # Field name made lowercase.
@@ -790,6 +886,12 @@ class LookupActivity(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupActivity'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.activity))
+
+    def __str__(self):
+        return self.activity
 
 
 
@@ -800,6 +902,12 @@ class LookupMediaType(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupMediaType'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.mediatype))
+
+    def __str__(self):
+        return self.mediatype
 
     def keyword_search(keyword):
         return LookupMediaType.objects.filter(
@@ -817,6 +925,12 @@ class LookupUserInfo(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupUserInfo'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.username))
+
+    def __str__(self):
+        return self.username
 
 
 class Media(Queryable):
@@ -844,15 +958,15 @@ class Media(Queryable):
         )
 
     def name(self):
-        return self.medianame                          #UPDATE THIS
+        return self.medianame
 
     def image(self):
-        return '/static/explore/img/demo-media.png'  #UPDATE THIS
+        return '/static/explore/img/demo-media.png'
 
     def subtitle(self):
-        return self.mediatype                             #UPDATE THIS
+        return self.mediatype
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
             {'key':'name', 'value': self.medianame},
             {'key':'media type', 'value': self.mediatype},
@@ -860,16 +974,14 @@ class Media(Queryable):
             {'key':'link', 'value': self.medialink}
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'media'                              #UPDATE THIS
+        type = 'media'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.mediadescription,         #UPDATE THIS
+            'description': self.mediadescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
@@ -890,47 +1002,46 @@ class MediaCitationEvents(Queryable):
         db_table = 'MediaCitationEvents'
         verbose_name = 'Medium - Citation'
         verbose_name_plural = 'Media - Citations'
-        # app_label = 'MediaCitationEvents'
         unique_together = (('mediaid', 'citationid'),)
-
-    #def keyword_search(keyword):
-        #return MediaCitationEvents.objects.filter(Q(relationshipdescription__icontains=keyword) | Q(pages__icontains=keyword))
 
     def keyword_search(keyword):
         media_qs = Media.keyword_search(keyword)
-        media_loi = [media.pk for media in media_qs] #[19, 24, 350]
+        media_loi = [media.pk for media in media_qs]
 
         citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return MediaCitationEvents.objects.filter(Q(citationid__in=citation_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return MediaCitationEvents.objects.filter(
+            Q(citationid__in=citation_loi) |
+            Q(mediaid__in=media_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return 'media citation'
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'media', 'value': self.mediaid.name()},
+            {'key':'citation', 'value': self.citationid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Mediacitationevents'                              #UPDATE THIS
+        type = 'Mediacitationevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
@@ -945,7 +1056,6 @@ class PlaceAltIndigenousName(models.Model):
         db_table = 'PlaceAltIndigenousName'
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
-        # app_label = 'PlaceAltIndigenousName'
 
 
 class PlaceGISSelections(models.Model):
@@ -956,7 +1066,6 @@ class PlaceGISSelections(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'PlaceGISSelections'
-        # app_label = 'PlaceGISSelections'
 
 
 class PlacesMediaEvents(Queryable):
@@ -970,7 +1079,6 @@ class PlacesMediaEvents(Queryable):
         db_table = 'PlacesMediaEvents'
         verbose_name = 'Place - Medium'
         verbose_name_plural = 'Places - Media'
-        # app_label = 'PlacesMediaEvents'
         unique_together = (('placeid', 'mediaid'),)
 
     def keyword_search(keyword):
@@ -980,150 +1088,157 @@ class PlacesMediaEvents(Queryable):
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return PlacesMediaEvents.objects.filter(Q(placeid__in=place_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return PlacesMediaEvents.objects.filter(
+            Q(placeid__in=place_loi) |
+            Q(mediaid__in=media_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return 'place media'
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'place', 'value': self.placeid.name()},
+            {'key':'media', 'value': self.mediaid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Placesmediaevents'                              #UPDATE THIS
+        type = 'Placesmediaevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
-
 class PlacesResourceCitationEvents(Queryable):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
-    citationid = models.IntegerField(db_column='CitationID')  # Field name made lowercase.
+    citationid = models.ForeignKey(Citations, db_column='CitationID')  # Field name made lowercase.
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
     pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'PlacesResourceCitationEvents'
-        # app_label = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
-        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs] #[19, 24, 350]
+        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
         citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return PlacesResourceCitationEvents.objects.filter(Q(citationid__in=citation_loi) | Q(placeresourceid__in=placeresource_loi) | Q(relationshipdescription__icontains=keyword))
+        return PlacesResourceCitationEvents.objects.filter(
+            Q(citationid__in=citation_loi) |
+            Q(placeresourceid__in=placeresource_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return "%s %s" % (self.placesresourceid.name(), self.citationid.get_name())
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'place', 'value': self.placeresourceid.placeid.name()},
+            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
+            {'key':'citation', 'value': self.citationid.get_name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Placesresourcecitationevents'                              #UPDATE THIS
+        type = 'Placesresourcecitationevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
 class PlacesResourceMediaEvents(Queryable):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
-    mediaid = models.IntegerField(db_column='MediaID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True, verbose_name='place - resource')
+    mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'PlacesResourceMediaEvents'
-        # app_label = 'PlacesResourceMediaEvents'
         unique_together = (('placeresourceid', 'mediaid'),)
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
-        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs] #[19, 24, 350]
+        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return PlacesResourceMediaEvents.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return PlacesResourceMediaEvents.objects.filter(
+            Q(placeresourceid__in=placeresource_loi) |
+            Q(mediaid__in=media_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return "%s %s" % (self.placesresourceid.name(), self.mediaid.name())
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'place', 'value': self.placeresourceid.placeid.name()},
+            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
+            {'key':'media', 'value': self.mediaid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Placesresourcemediaevents'                              #UPDATE THIS
+        type = 'Placesresourcemediaevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
 class ResourceActivityCitationEvents(Queryable):
-    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, models.DO_NOTHING, db_column='ResourceActivityID', primary_key=True)  # Field name made lowercase.
-    citationid = models.IntegerField(db_column='CitationID')  # Field name made lowercase.
+    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, models.DO_NOTHING, db_column='ResourceActivityID', primary_key=True, verbose_name='resource activity')
+    citationid = models.ForeignKey(Citations, db_column='CitationID')  # Field name made lowercase.
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
     pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceActivityCitationEvents'
-        # app_label = 'ResourceActivityCitationEvents'
         unique_together = (('resourceactivityid', 'citationid'),)
 
     def keyword_search(keyword):
@@ -1133,142 +1248,149 @@ class ResourceActivityCitationEvents(Queryable):
         citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return ResourceActivityCitationEvents.objects.filter(Q(citationid__in=citation_loi) | Q(resourceactivityid__in=resourceactivity_loi) | Q(relationshipdescription__icontains=keyword))
+        return ResourceActivityCitationEvents.objects.filter(
+            Q(citationid__in=citation_loi) |
+            Q(resourceactivityid__in=resourceactivity_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return 'resource activity citation'
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'resource activity', 'value': self.resourceactivityid.name()},
+            {'key':'citation', 'value': self.citationid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
 
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Resourceactivitycitationevents'                              #UPDATE THIS
+        type = 'Resourceactivitycitationevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
 class ResourceActivityMediaEvents(Queryable):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, models.DO_NOTHING, db_column='ResourceActivityID', primary_key=True)  # Field name made lowercase.
-    mediaid = models.IntegerField(db_column='MediaID')  # Field name made lowercase.
+    mediaid = models.ForeignKey(Media, db_column='MediaID')  # Field name made lowercase.
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
     pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceActivityMediaEvents'
-        # app_label = 'ResourceActivityMediaEvents'
         unique_together = (('resourceactivityid', 'mediaid'),)
 
     def keyword_search(keyword):
         resourceactivity_qs = ResourcesActivityEvents.keyword_search(keyword)
-        resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs] #[19, 24, 350]
+        resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return ResourceActivityMediaEvents.objects.filter(Q(resourceactivityid__in=resourceactivity_loi) | Q(mediaid__in=media_loi) | Q(relationshipdescription__icontains=keyword))
+        return ResourceActivityMediaEvents.objects.filter(
+            Q(resourceactivityid__in=resourceactivity_loi) |
+            Q(mediaid__in=media_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return 'resource activity media'
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'resource activity', 'value': self.resourceactivityid.name()},
+            {'key':'media', 'value': self.mediaid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Resourceactivitymediaevents'                              #UPDATE THIS
+        type = 'Resourceactivitymediaevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
 class ResourceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)  # Field name made lowercase.
-    resourceid = models.IntegerField(db_column='ResourceID', blank=True, null=True)  # Field name made lowercase.
+    resourceid = models.ForeignKey(Resources, db_column='ResourceID', blank=True, null=True)  # Field name made lowercase.
     altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceAltIndigenousName'
-        # app_label = 'ResourceAltIndigenousName'
 
 
 class ResourceResourceEvents(Queryable):
-    resourceid = models.IntegerField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
-    altresourceid = models.IntegerField(db_column='AltResourceID')  # Field name made lowercase.
+    resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=True, related_name="resource_a")
+    altresourceid = models.ForeignKey(Resources, db_column='AltResourceID', related_name="resource_b")
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceResourceEvents'
-        # app_label = 'ResourceResourceEvents'
         unique_together = (('resourceid', 'altresourceid'),)
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
-        resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
+        resource_loi = [resource.pk for resource in resource_qs]
 
-        return ResourceResourceEvents.objects.filter(Q(resourceid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
+        return ResourceResourceEvents.objects.filter(
+            Q(resourceid__in=resource_loi) |
+            Q(altresourceid__in=resource_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return "%s %s" % (resourceid.name(), altresourceid.name())
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'resource a', 'value': self.resourceid.name()},
+            {'key':'resource b', 'value': self.altresourceid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Resourceresourceevents'                              #UPDATE THIS
+        type = 'Resourceresourceevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
@@ -1284,51 +1406,53 @@ class ResourcesCitationEvents(Queryable):
         db_table = 'ResourcesCitationEvents'
         verbose_name = 'Resource - Citation'
         verbose_name_plural = 'Resources - Citations'
-        # app_label = 'ResourcesCitationEvents'
         unique_together = (('resourceid', 'citationid'),)
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
-        resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
+        resource_loi = [resource.pk for resource in resource_qs]
 
         citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
 
-        return ResourcesCitationEvents.objects.filter(Q(citationid__in=citation_loi) | Q(resourceid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
+        return ResourcesCitationEvents.objects.filter(
+            Q(citationid__in=citation_loi) |
+            Q(resourceid__in=resource_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return "%s %s" % (self.resourceid.name(), self.citationid.name())
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'resource', 'value': self.resourceid.name()},
+            {'key':'citation', 'value': self.citationid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
-
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Resourcescitationevents'                              #UPDATE THIS
+        type = 'Resourcescitationevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
 class ResourcesMediaEvents(Queryable):
     resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True, verbose_name='resource')
-    mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID')  # Field name made lowercase.
+    mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
 
@@ -1337,7 +1461,6 @@ class ResourcesMediaEvents(Queryable):
         db_table = 'ResourcesMediaEvents'
         verbose_name = 'Resource - Medium'
         verbose_name_plural = 'Resources - Media'
-        # app_label = 'ResourcesMediaEvents'
         unique_together = (('resourceid', 'mediaid'),)
 
     def keyword_search(keyword):
@@ -1347,34 +1470,38 @@ class ResourcesMediaEvents(Queryable):
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
 
-        return ResourcesMediaEvents.objects.filter(Q(mediaid__in=media_loi) | Q(resourceid__in=resource_loi) | Q(relationshipdescription__icontains=keyword))
+        return ResourcesMediaEvents.objects.filter(
+            Q(mediaid__in=media_loi) |
+            Q(resourceid__in=resource_loi) |
+            Q(relationshipdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return "%s %s" % (self.resourceid.name(), self.mediaid.name())
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
+            {'key':'resource', 'value': self.resourceid.name()},
+            {'key':'media', 'value': self.mediaid.name()},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
 
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Resourcesmediaevents'                              #UPDATE THIS
+        type = 'Resourcesmediaevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
@@ -1386,7 +1513,12 @@ class UserAccess(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'UserAccess'
-        # app_label = 'UserAccess'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.accesslevel))
+
+    def __str__(self):
+        return self.accesslevel
 
 
 class Users(models.Model):
@@ -1397,11 +1529,16 @@ class Users(models.Model):
     lastname = models.CharField(db_column='LastName', max_length=255)  # Field name made lowercase.
     affiliation = models.CharField(db_column='Affiliation', max_length=255)  # Field name made lowercase.
     title = models.CharField(db_column='Title', max_length=255)  # Field name made lowercase.
-    accesslevel = models.IntegerField(db_column='AccessLevel')  # Field name made lowercase.
+    accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel')  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'Users'
         verbose_name = 'User'
         verbose_name_plural = 'Users'
-        # app_label = 'Users'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.username))
+
+    def __str__(self):
+        return self.username
