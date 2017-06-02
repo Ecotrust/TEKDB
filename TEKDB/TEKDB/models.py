@@ -14,22 +14,21 @@ from django.db.models import Q
 MANAGED = True
 
 class Queryable(models.Model):
-    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True, auto_now_add=True)
-    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True)  # Field name made lowercase.
-    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True, auto_now=True)
-
+    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True, verbose_name='entered by name')
+    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True, verbose_name='entered by tribe')
+    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True, verbose_name='entered by title')
+    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True, auto_now_add=True, verbose_name='entered by date')
+    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True, verbose_name='modified by name')
+    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True, verbose_name='modified by title')
+    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True, verbose_name='modified by tribe')
+    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True, auto_now=True, verbose_name='modified by date')
 
     class Meta:
         abstract = True
 
     def get_query_json(self):
         return {
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'subtitle': self.subtitle(),
             'data': self.data(),
@@ -45,28 +44,25 @@ class Queryable(models.Model):
 
 
 class LookupPlanningUnit(models.Model):
-    planningunitid = models.IntegerField(db_column='PlanningUnitID', primary_key=True)  # Field name made lowercase.
-    planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    planningunitid = models.IntegerField(db_column='PlanningUnitID', primary_key=True)
+    planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True, verbose_name='planning unit')
 
     class Meta:
         managed = MANAGED
         db_table = 'LookupPlanningUnit'
 
-    def get_name(self):
-        return "%s" % (self.planningunitname)
-
     def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
+        return unicode("%s" % (self.planningunitname))
 
     def __str__(self):
-        return self.get_name()
+        return self.planningunitname
 
 
 class LookupTribe(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    tribeunit = models.CharField(db_column='TribeUnit', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    tribe = models.CharField(db_column='Tribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    federaltribe = models.CharField(db_column='FederalTribe', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    tribeunit = models.CharField(db_column='TribeUnit', max_length=50, blank=True, null=True, verbose_name='tribe subunit')
+    tribe = models.CharField(db_column='Tribe', max_length=100, blank=True, null=True, verbose_name='tribe')
+    federaltribe = models.CharField(db_column='FederalTribe', max_length=100, blank=True, null=True, verbose_name='tribal government')
 
     class Meta:
         managed = MANAGED
@@ -79,18 +75,33 @@ class LookupTribe(models.Model):
             Q(federaltribe__icontains=keyword)
         )
 
-    def get_name(self):
-        return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe)
-
     def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
+        return unicode("%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe))
 
     def __str__(self):
-        return self.get_name()
+        return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe)
+
+    def data(self):
+        return [
+            {'key':'tribe', 'value': self.tribe},
+            {'key':'tribe subunit', 'value': self.tribeunit},
+            {'key':'tribal government', 'value': self.federaltribe}
+        ]
+
+    def get_response_format(self):
+        type = 'tribes'
+        return {
+            'id': self.pk,
+            'type': type,
+            'name': str(self),
+            'image': None,
+            'description': None,
+            'link': '/explore/%s/%d' % (type, self.pk)
+        }
 
 
 class LookupHabitat(models.Model):
-    habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)  # Field name made lowercase.
+    habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)
 
     class Meta:
         managed = MANAGED
@@ -104,7 +115,7 @@ class LookupHabitat(models.Model):
 
 
 class Places(Queryable):
-    placeid = models.AutoField(db_column='PlaceID', primary_key=True)  # Field name made lowercase.
+    placeid = models.AutoField(db_column='PlaceID', primary_key=True)
     indigenousplacename = models.CharField(db_column='IndigenousPlaceName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
     indigenousplacenamemeaning = models.CharField(db_column='IndigenousPlaceNameMeaning', max_length=255, blank=True, null=True, verbose_name='english translation')
     englishplacename = models.CharField(db_column='EnglishPlaceName', max_length=255, blank=True, null=True, verbose_name='english name')
@@ -138,9 +149,6 @@ class Places(Queryable):
             Q(tribeid__in=tribe_loi)
         )
 
-    def name(self):
-        return self.englishplacename
-
     def image(self):
         return '/static/explore/img/demo-map.png'
 
@@ -152,7 +160,9 @@ class Places(Queryable):
             {'key':'english place name', 'value': self.englishplacename},
             {'key':'indigenous place name', 'value': self.indigenousplacename},
             {'key':'indigenous place name meaning', 'value': self.indigenousplacenamemeaning},
-            {'key':'primary habitat', 'value': self.primaryhabitat}
+            {'key':'planning unit', 'value': str(self.planningunitid)},
+            {'key':'primary habitat', 'value': str(self.primaryhabitat)},
+            {'key':'tribe', 'value': str(self.tribeid)}
         ]
 
     def get_response_format(self):
@@ -160,7 +170,7 @@ class Places(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.indigenousplacenamemeaning,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -174,7 +184,7 @@ class Places(Queryable):
 
 
 class LookupResourceGroup(models.Model):
-    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', primary_key=True, max_length=255)  # Field name made lowercase.
+    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', primary_key=True, max_length=255, verbose_name='broad species group')
 
     class Meta:
         managed = MANAGED
@@ -188,12 +198,12 @@ class LookupResourceGroup(models.Model):
 
 
 class Resources(Queryable):
-    resourceid = models.AutoField(db_column='ResourceID', primary_key=True)  # Field name made lowercase.
+    resourceid = models.AutoField(db_column='ResourceID', primary_key=True)
     commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True, unique=True, verbose_name='common name')
     indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
     genus = models.CharField(db_column='Genus', max_length=255, blank=True, null=True, verbose_name='genus')
-    species = models.CharField(db_column='Species', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    specific = models.BooleanField(db_column='Specific', default=False)  # Field name made lowercase.
+    species = models.CharField(db_column='Species', max_length=255, blank=True, null=True)
+    specific = models.BooleanField(db_column='Specific', default=False)
     resourceclassificationgroup = models.ForeignKey(LookupResourceGroup, db_column='ResourceClassificationGroup', max_length=255, blank=True, null=True, verbose_name='broad species group')
     islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
 
@@ -221,9 +231,6 @@ class Resources(Queryable):
             Q(resourceclassificationgroup__in=group_loi)
         )
 
-    def name(self):
-        return self.commonname
-
     def image(self):
         return '/static/explore/img/demo-resource.png'
 
@@ -234,8 +241,9 @@ class Resources(Queryable):
         return [
             {'key':'name', 'value': self.commonname},
             {'key':'indigenous name', 'value': self.indigenousname},
+            {'key':'genus', 'value': self.genus},
             {'key':'species', 'value': self.species},
-            {'key':'genus', 'value': self.genus}
+            {'key':'broad species group', 'value': str(self.resourceclassificationgroup)}
         ]
 
     def get_response_format(self):
@@ -243,7 +251,7 @@ class Resources(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.indigenousname,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -251,7 +259,7 @@ class Resources(Queryable):
 
 
 class LookupPartUsed(models.Model):
-    partused = models.CharField(db_column='PartUsed', primary_key=True, max_length=255)  # Field name made lowercase.
+    partused = models.CharField(db_column='PartUsed', primary_key=True, max_length=255, verbose_name='part used')
 
     class Meta:
         managed = MANAGED
@@ -265,7 +273,7 @@ class LookupPartUsed(models.Model):
 
 
 class LookupCustomaryUse(models.Model):
-    usedfor = models.CharField(db_column='UsedFor', primary_key=True, max_length=255)  # Field name made lowercase.
+    usedfor = models.CharField(db_column='UsedFor', primary_key=True, max_length=255, verbose_name='used_for')
 
     class Meta:
         managed = MANAGED
@@ -279,7 +287,7 @@ class LookupCustomaryUse(models.Model):
 
 
 class LookupSeason(models.Model):
-    season = models.CharField(db_column='Season', primary_key=True, max_length=255)  # Field name made lowercase.
+    season = models.CharField(db_column='Season', primary_key=True, max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -293,7 +301,7 @@ class LookupSeason(models.Model):
 
 
 class LookupTiming(models.Model):
-    timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)  # Field name made lowercase.
+    timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -307,28 +315,28 @@ class LookupTiming(models.Model):
 
 
 class PlacesResourceEvents(Queryable):
-    placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
-    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID')  # Field name made lowercase.
+    placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)
+    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', verbose_name='place')
     resourceid = models.ForeignKey(Resources, db_column='ResourceID', verbose_name='resource')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
     partused = models.ForeignKey(LookupPartUsed, db_column='PartUsed', max_length=255, blank=True, null=True, verbose_name='part used')
     customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='CustomaryUse', max_length=255, blank=True, null=True, verbose_name='customary use')
     barterresource = models.BooleanField(db_column='BarterResource', verbose_name='barter resource?', default=False)
     season = models.ForeignKey(LookupSeason, db_column='Season', max_length=255, blank=True, null=True)
-    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    january = models.BooleanField(db_column='January', default=False)  # Field name made lowercase.
-    february = models.BooleanField(db_column='February', default=False)  # Field name made lowercase.
-    march = models.BooleanField(db_column='March', default=False)  # Field name made lowercase.
-    april = models.BooleanField(db_column='April', default=False)  # Field name made lowercase.
-    may = models.BooleanField(db_column='May', default=False)  # Field name made lowercase.
-    june = models.BooleanField(db_column='June', default=False)  # Field name made lowercase.
-    july = models.BooleanField(db_column='July', default=False)  # Field name made lowercase.
-    august = models.BooleanField(db_column='August', default=False)  # Field name made lowercase.
-    september = models.BooleanField(db_column='September', default=False)  # Field name made lowercase.
-    october = models.BooleanField(db_column='October', default=False)  # Field name made lowercase.
-    november = models.BooleanField(db_column='November', default=False)  # Field name made lowercase.
-    december = models.BooleanField(db_column='December', default=False)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
+    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)
+    january = models.BooleanField(db_column='January', default=False)
+    february = models.BooleanField(db_column='February', default=False)
+    march = models.BooleanField(db_column='March', default=False)
+    april = models.BooleanField(db_column='April', default=False)
+    may = models.BooleanField(db_column='May', default=False)
+    june = models.BooleanField(db_column='June', default=False)
+    july = models.BooleanField(db_column='July', default=False)
+    august = models.BooleanField(db_column='August', default=False)
+    september = models.BooleanField(db_column='September', default=False)
+    october = models.BooleanField(db_column='October', default=False)
+    november = models.BooleanField(db_column='November', default=False)
+    december = models.BooleanField(db_column='December', default=False)
+    year = models.IntegerField(db_column='Year', blank=True, null=True)
     islocked = models.BooleanField(db_column='IsLocked', verbose_name='locked?', default=False)
 
     class Meta:
@@ -366,8 +374,11 @@ class PlacesResourceEvents(Queryable):
             Q(timing__in=timing_loi)
         )
 
-    def name(self):
-        return self.relationshipdescription
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.placeid), str(self.resourceid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.placeid), str(self.resourceid))
 
     def image(self):
         return '/static/explore/img/demo-activity.png'
@@ -376,13 +387,33 @@ class PlacesResourceEvents(Queryable):
         return self.relationshipdescription
 
     def data(self):
-        return [
-            {'key':'relationship description', 'value': self.relationshipdescription},
-            {'key':'part used', 'value': self.partused},
-            {'key':'customary use', 'value': self.customaryuse},
-            {'key':'season', 'value': self.season},
-            {'key':'timing', 'value': self.timing}
+        if self.barterresource:
+            barter = 'Yes'
+        else:
+            barter = 'No'
 
+        months_list = [
+            x for x in [
+                'january', 'february', 'march', 'april', 'may', 'june', 'july',
+                'august', 'september', 'october', 'november', 'december'
+            ] if self.__getattribute__(x)
+        ]
+        if len(months_list) > 0:
+            months = ', '.join(months_list)
+        else:
+            months = 'None'
+
+        return [
+            {'key':'place', 'value': str(self.placeid)},
+            {'key':'resource', 'value': str(self.resourceid)},
+            {'key':'relationship description', 'value': self.relationshipdescription},
+            {'key':'part used', 'value': str(self.partused)},
+            {'key':'customary use', 'value': str(self.customaryuse)},
+            {'key':'used for barter', 'value': barter},
+            {'key':'season', 'value': str(self.season)},
+            {'key':'timing', 'value': str(self.timing)},
+            {'key':'months', 'value': months},
+            {'key':'year', 'value': str(self.timing)},
         ]
 
     def get_response_format(self):
@@ -390,7 +421,7 @@ class PlacesResourceEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -398,7 +429,7 @@ class PlacesResourceEvents(Queryable):
 
 
 class LookupParticipants(models.Model):
-    participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)  # Field name made lowercase.
+    participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -412,7 +443,7 @@ class LookupParticipants(models.Model):
 
 
 class LookupTechniques(models.Model):
-    techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)  # Field name made lowercase.
+    techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -425,25 +456,44 @@ class LookupTechniques(models.Model):
         return self.techniques
 
 
-#TODO: Still don't know who uses LookupActivity, but 'activityshortdescription' seems like a good candidate
+class LookupActivity(models.Model):
+    activity = models.CharField(db_column='Activity', primary_key=True, max_length=255)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'LookupActivity'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.activity))
+
+    def __str__(self):
+        return self.activity
+
+
 class ResourcesActivityEvents(Queryable):
-    resourceactivityid = models.AutoField(db_column='ResourceActivityID', primary_key=True)  # Field name made lowercase.
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID')  # Field name made lowercase.
-    relationshipdescription = models.TextField(db_column='RelationshipDescription', blank=True, null=True)  # Field name made lowercase.
-    partused = models.ForeignKey(LookupPartUsed, db_column='PartUsed', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    activityshortdescription = models.CharField(db_column='ActivityShortDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    activitylongdescription = models.TextField(db_column='ActivityLongDescription', blank=True, null=True)  # Field name made lowercase.
-    participants = models.ForeignKey(LookupParticipants, db_column='Participants', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    technique = models.ForeignKey(LookupTechniques, db_column='Technique', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    gear = models.CharField(db_column='Gear', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    customaryuse = models.CharField(db_column='CustomaryUse', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    resourceactivityid = models.AutoField(db_column='ResourceActivityID', primary_key=True)
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', verbose_name='place resource')
+    relationshipdescription = models.TextField(db_column='RelationshipDescription', blank=True, null=True, verbose_name='relationship description')
+    partused = models.ForeignKey(LookupPartUsed, db_column='PartUsed', max_length=255, blank=True, null=True, verbose_name='part used')
+    activityshortdescription = models.ForeignKey(LookupActivity, db_column='ActivityShortDescription', max_length=255, blank=True, null=True, verbose_name='activity type')
+    activitylongdescription = models.TextField(db_column='ActivityLongDescription', blank=True, null=True, verbose_name='full activity description')
+    participants = models.ForeignKey(LookupParticipants, db_column='Participants', max_length=50, blank=True, null=True)
+    technique = models.ForeignKey(LookupTechniques, db_column='Technique', max_length=255, blank=True, null=True)
+    gear = models.CharField(db_column='Gear', max_length=255, blank=True, null=True)
+    customaryuse = models.CharField(db_column='CustomaryUse', max_length=255, blank=True, null=True, verbose_name='customary use')
+    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)
     timingdescription = models.CharField(db_column='TimingDescription', max_length=255, blank=True, null=True, verbose_name='timing description')
-    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')  # Field name made lowercase.
+    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourcesActivityEvents'
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.placeresourceid), self.activityshortdescription))
+
+    def __str__(self):
+        return "%s %s" % (str(self.placeresourceid), self.activityshortdescription)
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -451,6 +501,9 @@ class ResourcesActivityEvents(Queryable):
 
         part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
         part_loi = [part.partused for part in part_qs]
+
+        activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
+        activity_loi = [activity.activity for activity in activity_qs]
 
         participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
         participant_loi = [participant.participants for participant in participant_qs]
@@ -468,7 +521,7 @@ class ResourcesActivityEvents(Queryable):
             Q(placeresourceid__in=placeresource_loi) |
             Q(relationshipdescription__icontains=keyword) |
             Q(partused__in=part_loi) |
-            Q(activityshortdescription__icontains=keyword) |
+            Q(activityshortdescription__in=activity_loi) |
             Q(activitylongdescription__icontains=keyword) |
             Q(participants__in=participant_loi) |
             Q(technique__in=technique_loi) |
@@ -478,9 +531,6 @@ class ResourcesActivityEvents(Queryable):
             Q(timingdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (self.placeresourceid.name(), self.activityshortdescription)
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -489,19 +539,18 @@ class ResourcesActivityEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'place', 'value': self.placeresourceid.placeid.name()},
-            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
+            {'key':'place', 'value': str(self.placeresourceid.placeid)},
+            {'key':'resource', 'value': str(self.placeresourceid.resourceid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
-            {'key':'part used', 'value': self.partused},
-            {'key':'brief description', 'value': self.activityshortdescription},
+            {'key':'part used', 'value': str(self.partused)},
+            {'key':'activity type', 'value': str(self.activityshortdescription)},
             {'key':'full description', 'value': self.activitylongdescription},
-            {'key':'participants', 'value': self.participants},
-            {'key':'technique', 'value': self.technique},
+            {'key':'participants', 'value': str(self.participants)},
+            {'key':'technique', 'value': str(self.technique)},
             {'key':'gear', 'value': self.gear},
-            {'key':'customary use', 'value': self.customaryuse},
-            {'key':'timing', 'value': self.timing},
+            {'key':'customary use', 'value': str(self.customaryuse)},
+            {'key':'timing', 'value': str(self.timing)},
             {'key':'timing description', 'value': self.timingdescription}
-
         ]
 
     def get_response_format(self):
@@ -509,7 +558,7 @@ class ResourcesActivityEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -517,12 +566,12 @@ class ResourcesActivityEvents(Queryable):
 
 
 class People(models.Model):
-    personid = models.AutoField(db_column='PersonID', primary_key=True)  # Field name made lowercase.
-    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True)  # Field name made lowercase.
-    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True)  # Field name made lowercase.
+    personid = models.AutoField(db_column='PersonID', primary_key=True)
+    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True, verbose_name='first name')
+    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True, verbose_name='last name')
+    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True, verbose_name='year born')
+    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)
+    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True, verbose_name='relationship to other people')
 
     class Meta:
         managed = MANAGED
@@ -536,18 +585,15 @@ class People(models.Model):
             Q(relationshiptootherpeople__icontains=keyword)
         )
 
-    def get_name(self):
-        return "%s %s" % (self.firstname, self.lastname)
-
     def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
+        return unicode("%s %s" % (self.firstname, self.lastname))
 
     def __str__(self):
-        return self.get_name()
+        return "%s %s" % (self.firstname, self.lastname)
 
 
 class LookupReferenceType(models.Model):
-    documenttype = models.CharField(db_column='DocumentType', primary_key=True, max_length=25)  # Field name made lowercase.
+    documenttype = models.CharField(db_column='DocumentType', primary_key=True, max_length=25, verbose_name='document type')
 
     class Meta:
         managed = MANAGED
@@ -561,7 +607,7 @@ class LookupReferenceType(models.Model):
 
 
 class LookupAuthorType(models.Model):
-    authortype = models.CharField(db_column='AuthorType', primary_key=True, max_length=50)  # Field name made lowercase.
+    authortype = models.CharField(db_column='AuthorType', primary_key=True, max_length=50, verbose_name='author type')
 
     class Meta:
         managed = MANAGED
@@ -575,24 +621,24 @@ class LookupAuthorType(models.Model):
 
 
 class Citations(Queryable):
-    citationid = models.AutoField(db_column='CitationID', primary_key=True)  # Field name made lowercase.
+    citationid = models.AutoField(db_column='CitationID', primary_key=True)
     referencetype = models.ForeignKey(LookupReferenceType, db_column='ReferenceType', max_length=255, verbose_name='reference type')
     referencetext = models.CharField(db_column='ReferenceText', max_length=50, blank=True, null=True, verbose_name='description')
-    authortype = models.CharField(db_column='AuthorType', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    authortype = models.ForeignKey(LookupAuthorType, db_column='AuthorType', max_length=255, blank=True, null=True, verbose_name='author type')
     authorprimary = models.CharField(db_column='AuthorPrimary', max_length=255, blank=True, null=True, verbose_name='primary author')
     authorsecondary = models.CharField(db_column='AuthorSecondary', max_length=255, blank=True, null=True, verbose_name='secondary author')
-    intervieweeid = models.ForeignKey(People, db_column='IntervieweeID', related_name='interviewee', blank=True, null=True)  # Field name made lowercase.
-    interviewerid = models.ForeignKey(People, db_column='InterviewerID', related_name='interviewer', blank=True, null=True)  # Field name made lowercase.
-    placeofinterview = models.CharField(db_column='PlaceofInterview', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    year = models.IntegerField(db_column='Year', blank=True, null=True)  # Field name made lowercase.
-    title = models.TextField(db_column='Title', blank=True, null=True)  # Field name made lowercase.
-    seriestitle = models.CharField(db_column='SeriesTitle', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    seriesvolume = models.CharField(db_column='SeriesVolume', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    serieseditor = models.CharField(db_column='SeriesEditor', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    publisher = models.CharField(db_column='Publisher', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    intervieweeid = models.ForeignKey(People, db_column='IntervieweeID', related_name='interviewee', blank=True, null=True, verbose_name='interviewee')
+    interviewerid = models.ForeignKey(People, db_column='InterviewerID', related_name='interviewer', blank=True, null=True, verbose_name='interviewer')
+    placeofinterview = models.CharField(db_column='PlaceofInterview', max_length=255, blank=True, null=True, verbose_name='place of interview')
+    year = models.IntegerField(db_column='Year', blank=True, null=True)
+    title = models.TextField(db_column='Title', blank=True, null=True)
+    seriestitle = models.CharField(db_column='SeriesTitle', max_length=255, blank=True, null=True, verbose_name='series title')
+    seriesvolume = models.CharField(db_column='SeriesVolume', max_length=50, blank=True, null=True, verbose_name='series volume')
+    serieseditor = models.CharField(db_column='SeriesEditor', max_length=255, blank=True, null=True, verbose_name='series editor')
+    publisher = models.CharField(db_column='Publisher', max_length=100, blank=True, null=True)
     publishercity = models.CharField(db_column='PublisherCity', max_length=255, blank=True, null=True, verbose_name='city')
-    preparedfor = models.CharField(db_column='PreparedFor', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    comments = models.TextField(db_column='Comments', blank=True, null=True)  # Field name made lowercase.
+    preparedfor = models.CharField(db_column='PreparedFor', max_length=100, blank=True, null=True, verbose_name='prepared_for')
+    comments = models.TextField(db_column='Comments', blank=True, null=True)
 
     class Meta:
         managed = MANAGED
@@ -629,9 +675,6 @@ class Citations(Queryable):
             Q(comments__icontains=keyword)
         )
 
-    def name(self):
-        return self.get_name()
-
     def image(self):
         return '/static/explore/img/demo-citation.png'
 
@@ -641,16 +684,18 @@ class Citations(Queryable):
     def data(self):
         #TODO: Return different results for different reference types
         return [
-            {'key':'reference type', 'value': self.referencetype},
+            {'key':'reference type', 'value': str(self.referencetype)},
             {'key':'description', 'value': self.referencetext},
             {'key':'title', 'value': self.title},
-            {'key':'author type', 'value': self.authortype},
+            {'key':'author type', 'value': str(self.authortype)},
             {'key':'primary author', 'value': self.authorprimary},
             {'key':'secondary author', 'value': self.authorsecondary},
             {'key':'year', 'value': self.year},
             {'key':'series volume', 'value': self.seriesvolume},
             {'key':'series title', 'value': self.seriestitle},
             {'key':'series editor', 'value': self.serieseditor},
+            {'key':'interviewee', 'value': str(self.intervieweeid)},
+            {'key':'interviewer', 'value': str(self.interviewerid)},
             {'key':'place of interview', 'value': self.placeofinterview},
             {'key':'prepared for', 'value': self.preparedfor},
             {'key':'publisher', 'value': self.publisher},
@@ -663,34 +708,32 @@ class Citations(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.referencetext,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-    def get_name(self):
-        if self.referencetype == 'Interview':
+    def __str__(self):
+        if str(self.referencetype) == 'Interview':
             try:
-                interviewee = People.objects.get(pk=self.intervieweeid)
+                interviewee = People.objects.get(pk=self.intervieweeid.pk)
             except Exception as e:
                 interviewee = 'Unknown Interviewee'
-            return '[%s] %s (%d) - %d' % (self.referencetype, interviewee, self.year, self.pk)
+            # return '[%s] %s (%d) - %d' % (str(self.referencetype), interviewee, self.year, self.pk)
+            return '[%s] %s (%d)' % (str(self.referencetype), interviewee, self.year)
         else:
-            return '[%s] %s (%d) - %d' % (self.referencetype, self.title, self.year, self.pk)
+            return '[%s] %s (%d)' % (str(self.referencetype), self.title, self.year)
 
     def __unicode__(self):
-        return unicode('%s' % (self.get_name()))
-
-    def __str__(self):
-        return self.get_name()
+        return unicode('%s' % (str(self)))
 
 
 class PlacesCitationEvents(Queryable):
     placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True, verbose_name='place')
     citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
@@ -698,6 +741,12 @@ class PlacesCitationEvents(Queryable):
         verbose_name = 'Place - Citation'
         verbose_name_plural = 'Places - Citations'
         unique_together = (('placeid', 'citationid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.placeid), str(self.citationid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.placeid), str(self.citationid))
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
@@ -712,9 +761,6 @@ class PlacesCitationEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (self.placeid.name(), self.citationid.get_name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -723,8 +769,8 @@ class PlacesCitationEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'location', 'value': self.placeid.name()},
-            {'key':'citation', 'value': self.citationid.get_name()},
+            {'key':'place', 'value': str(self.placeid)},
+            {'key':'citation', 'value': str(self.citationid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
         ]
@@ -734,7 +780,7 @@ class PlacesCitationEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -743,17 +789,23 @@ class PlacesCitationEvents(Queryable):
 
 # Appears to be the version of AccessDB(s). Export gave 1 entry: [1,1,1]
 class CurrentVersion(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    backendversion = models.IntegerField(db_column='BackendVersion', blank=True, null=True)  # Field name made lowercase.
-    frontendversion = models.IntegerField(db_column='FrontendVersion', blank=True, null=True)  # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    backendversion = models.IntegerField(db_column='BackendVersion', blank=True, null=True, verbose_name='backend version')
+    frontendversion = models.IntegerField(db_column='FrontendVersion', blank=True, null=True, verbose_name='frontend version')
 
     class Meta:
         managed = MANAGED
         db_table = 'CurrentVersion'
 
+    def __unicode__(self):
+        return unicode("Back: %d, Front:%d" % (self.backendversion, self.frontendversion))
+
+    def __str__(self):
+        return "Back: %d, Front:%d" % (self.backendversion, self.frontendversion)
+
 
 class LookupLocalityType(models.Model):
-    localitytype = models.CharField(db_column='LocalityType', primary_key=True, max_length=255)  # Field name made lowercase.
+    localitytype = models.CharField(db_column='LocalityType', primary_key=True, max_length=255, verbose_name='locality type')
 
     class Meta:
         managed = MANAGED
@@ -767,8 +819,8 @@ class LookupLocalityType(models.Model):
 
 
 class Locality(models.Model):
-    localityid = models.AutoField(db_column='LocalityID', primary_key=True)  # Field name made lowercase.
-    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', blank=True, null=True)  # Field name made lowercase.
+    localityid = models.AutoField(db_column='LocalityID', primary_key=True)
+    placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', blank=True, null=True, verbose_name='place')
     englishname = models.CharField(db_column='EnglishName', max_length=255, blank=True, null=True, verbose_name='english name')
     indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
     localitytype = models.ForeignKey(LookupLocalityType, db_column='LocalityType', max_length=255, blank=True, null=True, verbose_name='type')
@@ -778,6 +830,12 @@ class Locality(models.Model):
         db_table = 'Locality'
         verbose_name = 'Locality'
         verbose_name_plural = 'Localities'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.englishname))
+
+    def __str__(self):
+        return self.englishname
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
@@ -793,9 +851,6 @@ class Locality(models.Model):
             Q(localitytype__in=locality_loi)
         )
 
-    def name(self):
-        return self.englishname
-
     def image(self):
         return '/static/explore/img/demo-map.png'
 
@@ -806,7 +861,8 @@ class Locality(models.Model):
         return [
             {'key':'english name', 'value': self.englishname},
             {'key':'indigenous name', 'value': self.indigenousname},
-            {'key':'locality type', 'value': self.localitytype}
+            {'key':'place', 'value': str(self.placeid)},
+            {'key':'locality type', 'value': str(self.localitytype)}
         ]
 
     def get_response_format(self):
@@ -814,7 +870,7 @@ class Locality(models.Model):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.indigenousname,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -822,23 +878,35 @@ class Locality(models.Model):
 
 
 class LocalityGISSelections(models.Model):
-    localityid = models.IntegerField(db_column='LocalityID', blank=True, null=True)  # Field name made lowercase.
-    localitylabel = models.CharField(db_column='LocalityLabel', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    localityid = models.ForeignKey(Locality, db_column='LocalityID', blank=True, null=True, verbose_name='locality')
+    localitylabel = models.CharField(db_column='LocalityLabel', max_length=255, blank=True, null=True, verbose_name='locality label')
+    sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True, verbose_name='source fc')
 
     class Meta:
         managed = MANAGED
         db_table = 'LocalityGISSelections'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.localitylabel))
+
+    def __str__(self):
+        return self.localitylabel
+
 
 class LocalityPlaceResourceEvent(Queryable):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
-    localityid = models.ForeignKey(Locality, models.DO_NOTHING, db_column='LocalityID')  # Field name made lowercase.
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True, verbose_name='place resource')
+    localityid = models.ForeignKey(Locality, models.DO_NOTHING, db_column='LocalityID', verbose_name='locality')
 
     class Meta:
         managed = MANAGED
         db_table = 'LocalityPlaceResourceEvent'
         unique_together = (('placeresourceid', 'localityid'),)
+
+    def __unicode__(self):
+        return unicode("%s - %s" % (str(self.localityid), str(self.placeresoureid)))
+
+    def __str__(self):
+        return "%s - %s" % (str(self.localityid), str(self.placeresoureid))
 
     def keyword_search(keyword):
         locality_qs = Locality.keyword_search(keyword)
@@ -852,9 +920,6 @@ class LocalityPlaceResourceEvent(Queryable):
             Q(localityid__in=locality_loi)
         )
 
-    def name(self):
-        return "%s - %s" % (self.localityid.name(), self.placeresoureid.name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -863,9 +928,9 @@ class LocalityPlaceResourceEvent(Queryable):
 
     def data(self):
         return [
-            {'key':'place', 'value': self.placeresourceid.placeid.name()},
-            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
-            {'key':'locality', 'value': self.localityid.name()}
+            {'key':'place', 'value': str(self.placeresourceid.placeid)},
+            {'key':'resource', 'value': str(self.placeresourceid.resourceid)},
+            {'key':'locality', 'value': str(self.localityid)}
         ]
 
     def get_response_format(self):
@@ -873,31 +938,16 @@ class LocalityPlaceResourceEvent(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': 'locality place resource event',
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
 
-class LookupActivity(models.Model):
-    activity = models.CharField(db_column='Activity', primary_key=True, max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'LookupActivity'
-
-    def __unicode__(self):
-        return unicode('%s' % (self.activity))
-
-    def __str__(self):
-        return self.activity
-
-
-
 class LookupMediaType(models.Model):
-    mediatype = models.CharField(db_column='MediaType', primary_key=True, max_length=255)  # Field name made lowercase.
-    mediacategory = models.CharField(db_column='MediaCategory', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    mediatype = models.CharField(db_column='MediaType', primary_key=True, max_length=255, verbose_name='type')
+    mediacategory = models.CharField(db_column='MediaCategory', max_length=255, blank=True, null=True, verbose_name='category')
 
     class Meta:
         managed = MANAGED
@@ -917,10 +967,10 @@ class LookupMediaType(models.Model):
 
 
 class LookupUserInfo(models.Model):
-    username = models.CharField(db_column='UserName', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    usingcustomusername = models.BooleanField(db_column='UsingCustomUsername', default=False)  # Field name made lowercase.
-    usertitle = models.CharField(db_column='UserTitle', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    useraffiliation = models.CharField(db_column='UserAffiliation', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    username = models.CharField(db_column='UserName', max_length=100, blank=True, null=True, verbose_name='username')
+    usingcustomusername = models.BooleanField(db_column='UsingCustomUsername', default=False, verbose_name='using custom username')
+    usertitle = models.CharField(db_column='UserTitle', max_length=100, blank=True, null=True, verbose_name='title')
+    useraffiliation = models.CharField(db_column='UserAffiliation', max_length=100, blank=True, null=True, verbose_name='affiliation')
 
     class Meta:
         managed = MANAGED
@@ -934,7 +984,7 @@ class LookupUserInfo(models.Model):
 
 
 class Media(Queryable):
-    mediaid = models.AutoField(db_column='MediaID', primary_key=True)  # Field name made lowercase.
+    mediaid = models.AutoField(db_column='MediaID', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='MediaType', max_length=255, blank=True, null=True, verbose_name='type')
     medianame = models.CharField(db_column='MediaName', max_length=255, blank=True, null=True, verbose_name='name')
     mediadescription = models.TextField(db_column='MediaDescription', blank=True, null=True, verbose_name='description')
@@ -945,6 +995,12 @@ class Media(Queryable):
         db_table = 'Media'
         verbose_name = 'Medium'
         verbose_name_plural = 'Media'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.medianame))
+
+    def __str__(self):
+        return self.medianame
 
     def keyword_search(keyword):
         type_qs = LookupMediaType.keyword_search(keyword)
@@ -957,9 +1013,6 @@ class Media(Queryable):
             Q(medialink__icontains=keyword)
         )
 
-    def name(self):
-        return self.medianame
-
     def image(self):
         return '/static/explore/img/demo-media.png'
 
@@ -969,7 +1022,7 @@ class Media(Queryable):
     def data(self):
         return [
             {'key':'name', 'value': self.medianame},
-            {'key':'media type', 'value': self.mediatype},
+            {'key':'media type', 'value': str(self.mediatype)},
             {'key':'media description', 'value': self.mediadescription},
             {'key':'link', 'value': self.medialink}
         ]
@@ -979,23 +1032,18 @@ class Media(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.mediadescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-    def __unicode__(self):
-        return unicode('%s' % (self.medianame))
-
-    def __str__(self):
-        return self.medianame
 
 class MediaCitationEvents(Queryable):
     mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID', primary_key=True, verbose_name='media')
     citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
@@ -1003,6 +1051,12 @@ class MediaCitationEvents(Queryable):
         verbose_name = 'Medium - Citation'
         verbose_name_plural = 'Media - Citations'
         unique_together = (('mediaid', 'citationid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.mediaid), str(self.citationid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.mediaid), str(self.citationid))
 
     def keyword_search(keyword):
         media_qs = Media.keyword_search(keyword)
@@ -1017,9 +1071,6 @@ class MediaCitationEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return 'media citation'
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1028,8 +1079,8 @@ class MediaCitationEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'media', 'value': self.mediaid.name()},
-            {'key':'citation', 'value': self.citationid.name()},
+            {'key':'media', 'value': str(self.mediaid)},
+            {'key':'citation', 'value': str(self.citationid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
         ]
@@ -1039,7 +1090,7 @@ class MediaCitationEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1047,8 +1098,8 @@ class MediaCitationEvents(Queryable):
 
 
 class PlaceAltIndigenousName(models.Model):
-    altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)  # Field name made lowercase.
-    placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True)  # Field name made lowercase.
+    altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
+    placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
     altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alternate indigenous name')
 
     class Meta:
@@ -1057,22 +1108,34 @@ class PlaceAltIndigenousName(models.Model):
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.altindigenousname))
+
+    def __str__(self):
+        return self.altindigenousname
+
 
 class PlaceGISSelections(models.Model):
-    placeid = models.IntegerField(db_column='PlaceID', blank=True, null=True)  # Field name made lowercase.
-    placelabel = models.CharField(db_column='PlaceLabel', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
+    placelabel = models.CharField(db_column='PlaceLabel', max_length=255, blank=True, null=True, verbose_name='label')
+    sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True, verbose_name='source fc')
 
     class Meta:
         managed = MANAGED
         db_table = 'PlaceGISSelections'
+
+    def __unicode__(self):
+        return unicode('%s' % (self.placelabel))
+
+    def __str__(self):
+        return self.placelabel
 
 
 class PlacesMediaEvents(Queryable):
     placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', primary_key=True, verbose_name='place')
     mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
@@ -1080,6 +1143,12 @@ class PlacesMediaEvents(Queryable):
         verbose_name = 'Place - Medium'
         verbose_name_plural = 'Places - Media'
         unique_together = (('placeid', 'mediaid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.placeid), str(self.mediaid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.placeid), str(self.mediaid))
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
@@ -1094,9 +1163,6 @@ class PlacesMediaEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return 'place media'
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1105,8 +1171,8 @@ class PlacesMediaEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'place', 'value': self.placeid.name()},
-            {'key':'media', 'value': self.mediaid.name()},
+            {'key':'place', 'value': str(self.placeid)},
+            {'key':'media', 'value': str(self.mediaid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
         ]
@@ -1116,7 +1182,7 @@ class PlacesMediaEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1124,15 +1190,21 @@ class PlacesMediaEvents(Queryable):
 
 
 class PlacesResourceCitationEvents(Queryable):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True)  # Field name made lowercase.
-    citationid = models.ForeignKey(Citations, db_column='CitationID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True, verbose_name='place resource')
+    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
         db_table = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.placeresourceid), str(self.citationid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.placeresourceid), str(self.citationid))
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -1147,9 +1219,6 @@ class PlacesResourceCitationEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (self.placeresourceid.name(), self.citationid.get_name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1158,9 +1227,9 @@ class PlacesResourceCitationEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'place', 'value': self.placeresourceid.placeid.name()},
-            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
-            {'key':'citation', 'value': self.citationid.get_name()},
+            {'key':'place', 'value': str(self.placeresourceid.placeid)},
+            {'key':'resource', 'value': str(self.placeresourceid.resourceid)},
+            {'key':'citation', 'value': str(self.citationid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
         ]
@@ -1170,7 +1239,7 @@ class PlacesResourceCitationEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1181,12 +1250,18 @@ class PlacesResourceMediaEvents(Queryable):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, models.DO_NOTHING, db_column='PlaceResourceID', primary_key=True, verbose_name='place - resource')
     mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
         db_table = 'PlacesResourceMediaEvents'
         unique_together = (('placeresourceid', 'mediaid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.placeresourceid), str(self.mediaid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.placeresourceid), str(self.mediaid))
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -1201,9 +1276,6 @@ class PlacesResourceMediaEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (self.placesresourceid.name(), self.mediaid.name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1212,9 +1284,9 @@ class PlacesResourceMediaEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'place', 'value': self.placeresourceid.placeid.name()},
-            {'key':'resource', 'value': self.placeresourceid.resourceid.name()},
-            {'key':'media', 'value': self.mediaid.name()},
+            {'key':'place', 'value': str(self.placeresourceid.placeid)},
+            {'key':'resource', 'value': str(self.placeresourceid.resourceid)},
+            {'key':'media', 'value': str(self.mediaid)},
             {'key':'relationship description', 'value': self.relationshipdescription}
         ]
 
@@ -1223,7 +1295,7 @@ class PlacesResourceMediaEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1232,18 +1304,24 @@ class PlacesResourceMediaEvents(Queryable):
 
 class ResourceActivityCitationEvents(Queryable):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, models.DO_NOTHING, db_column='ResourceActivityID', primary_key=True, verbose_name='resource activity')
-    citationid = models.ForeignKey(Citations, db_column='CitationID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceActivityCitationEvents'
         unique_together = (('resourceactivityid', 'citationid'),)
 
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.resourceactivityid), str(self.citationid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.resourceactivityid), str(self.citationid))
+
     def keyword_search(keyword):
         resourceactivity_qs = ResourcesActivityEvents.keyword_search(keyword)
-        resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs] #[19, 24, 350]
+        resourceactivity_loi = [resourceactivity.pk for resourceactivity in resourceactivity_qs]
 
         citation_qs = Citations.keyword_search(keyword)
         citation_loi = [citation.pk for citation in citation_qs]
@@ -1254,9 +1332,6 @@ class ResourceActivityCitationEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return 'resource activity citation'
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1265,8 +1340,8 @@ class ResourceActivityCitationEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'resource activity', 'value': self.resourceactivityid.name()},
-            {'key':'citation', 'value': self.citationid.name()},
+            {'key':'resource activity', 'value': str(self.resourceactivityid)},
+            {'key':'citation', 'value': str(self.citationid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
 
@@ -1277,7 +1352,7 @@ class ResourceActivityCitationEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1285,15 +1360,21 @@ class ResourceActivityCitationEvents(Queryable):
 
 
 class ResourceActivityMediaEvents(Queryable):
-    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, models.DO_NOTHING, db_column='ResourceActivityID', primary_key=True)  # Field name made lowercase.
-    mediaid = models.ForeignKey(Media, db_column='MediaID')  # Field name made lowercase.
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, models.DO_NOTHING, db_column='ResourceActivityID', primary_key=True, verbose_name='resource activity')
+    mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceActivityMediaEvents'
         unique_together = (('resourceactivityid', 'mediaid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.resourceactivityid), str(self.mediaid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.resourceactivityid), str(self.mediaid))
 
     def keyword_search(keyword):
         resourceactivity_qs = ResourcesActivityEvents.keyword_search(keyword)
@@ -1319,8 +1400,8 @@ class ResourceActivityMediaEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'resource activity', 'value': self.resourceactivityid.name()},
-            {'key':'media', 'value': self.mediaid.name()},
+            {'key':'resource activity', 'value': str(self.resourceactivityid)},
+            {'key':'media', 'value': str(self.mediaid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
         ]
@@ -1330,7 +1411,7 @@ class ResourceActivityMediaEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1338,24 +1419,36 @@ class ResourceActivityMediaEvents(Queryable):
 
 
 class ResourceAltIndigenousName(models.Model):
-    altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)  # Field name made lowercase.
-    resourceid = models.ForeignKey(Resources, db_column='ResourceID', blank=True, null=True)  # Field name made lowercase.
-    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
+    resourceid = models.ForeignKey(Resources, db_column='ResourceID', blank=True, null=True, verbose_name='resource')
+    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alt indigenous name')
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceAltIndigenousName'
 
+    def __unicode__(self):
+        return unicode('%s' % (self.altindigenousname))
+
+    def __str__(self):
+        return self.altindigenousname
+
 
 class ResourceResourceEvents(Queryable):
     resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=True, related_name="resource_a")
     altresourceid = models.ForeignKey(Resources, db_column='AltResourceID', related_name="resource_b")
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceResourceEvents'
         unique_together = (('resourceid', 'altresourceid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.resourceid), str(self.altresourceid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.resourceid), str(self.altresourceid))
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
@@ -1367,9 +1460,6 @@ class ResourceResourceEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (resourceid.name(), altresourceid.name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1378,8 +1468,8 @@ class ResourceResourceEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'resource a', 'value': self.resourceid.name()},
-            {'key':'resource b', 'value': self.altresourceid.name()},
+            {'key':'resource a', 'value': str(self.resourceid)},
+            {'key':'resource b', 'value': str(self.altresourceid)},
             {'key':'relationship description', 'value': self.relationshipdescription}
         ]
 
@@ -1388,7 +1478,7 @@ class ResourceResourceEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1399,7 +1489,7 @@ class ResourcesCitationEvents(Queryable):
     resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True, verbose_name='resource')
     citationid = models.ForeignKey(Citations, models.DO_NOTHING, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
@@ -1407,6 +1497,12 @@ class ResourcesCitationEvents(Queryable):
         verbose_name = 'Resource - Citation'
         verbose_name_plural = 'Resources - Citations'
         unique_together = (('resourceid', 'citationid'),)
+
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.resourceid), str(self.citationid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.resourceid), str(self.citationid))
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
@@ -1421,9 +1517,6 @@ class ResourcesCitationEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (self.resourceid.name(), self.citationid.name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1432,8 +1525,8 @@ class ResourcesCitationEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'resource', 'value': self.resourceid.name()},
-            {'key':'citation', 'value': self.citationid.name()},
+            {'key':'resource', 'value': str(self.resourceid)},
+            {'key':'citation', 'value': str(self.citationid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
         ]
@@ -1443,7 +1536,7 @@ class ResourcesCitationEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1454,7 +1547,7 @@ class ResourcesMediaEvents(Queryable):
     resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True, verbose_name='resource')
     mediaid = models.ForeignKey(Media, models.DO_NOTHING, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
@@ -1463,9 +1556,15 @@ class ResourcesMediaEvents(Queryable):
         verbose_name_plural = 'Resources - Media'
         unique_together = (('resourceid', 'mediaid'),)
 
+    def __unicode__(self):
+        return unicode("%s %s" % (str(self.resourceid), str(self.mediaid)))
+
+    def __str__(self):
+        return "%s %s" % (str(self.resourceid), str(self.mediaid))
+
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
-        resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
+        resource_loi = [resource.pk for resource in resource_qs]
 
         media_qs = Media.keyword_search(keyword)
         media_loi = [media.pk for media in media_qs]
@@ -1476,9 +1575,6 @@ class ResourcesMediaEvents(Queryable):
             Q(relationshipdescription__icontains=keyword)
         )
 
-    def name(self):
-        return "%s %s" % (self.resourceid.name(), self.mediaid.name())
-
     def image(self):
         return '/static/explore/img/demo-activity.png'
 
@@ -1487,11 +1583,10 @@ class ResourcesMediaEvents(Queryable):
 
     def data(self):
         return [
-            {'key':'resource', 'value': self.resourceid.name()},
-            {'key':'media', 'value': self.mediaid.name()},
+            {'key':'resource', 'value': str(self.resourceid)},
+            {'key':'media', 'value': str(self.mediaid)},
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'pages', 'value': self.pages}
-
         ]
 
     def get_response_format(self):
@@ -1499,7 +1594,7 @@ class ResourcesMediaEvents(Queryable):
         return {
             'id': self.pk,
             'type': type,
-            'name': self.name(),
+            'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
@@ -1507,8 +1602,8 @@ class ResourcesMediaEvents(Queryable):
 
 
 class UserAccess(models.Model):
-    accessid = models.AutoField(db_column='AccessID', primary_key=True)  # Field name made lowercase.
-    accesslevel = models.CharField(db_column='AccessLevel', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    accessid = models.AutoField(db_column='AccessID', primary_key=True)
+    accesslevel = models.CharField(db_column='AccessLevel', max_length=255, blank=True, null=True, verbose_name='access level')
 
     class Meta:
         managed = MANAGED
@@ -1522,14 +1617,14 @@ class UserAccess(models.Model):
 
 
 class Users(models.Model):
-    userid = models.AutoField(db_column='UserID', primary_key=True)  # Field name made lowercase.
-    username = models.CharField(db_column='UserName', max_length=20)  # Field name made lowercase.
-    password = models.CharField(db_column='Password', max_length=20)  # Field name made lowercase.
-    firstname = models.CharField(db_column='FirstName', max_length=255)  # Field name made lowercase.
-    lastname = models.CharField(db_column='LastName', max_length=255)  # Field name made lowercase.
-    affiliation = models.CharField(db_column='Affiliation', max_length=255)  # Field name made lowercase.
-    title = models.CharField(db_column='Title', max_length=255)  # Field name made lowercase.
-    accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel')  # Field name made lowercase.
+    userid = models.AutoField(db_column='UserID', primary_key=True)
+    username = models.CharField(db_column='UserName', max_length=20, verbose_name='username')
+    password = models.CharField(db_column='Password', max_length=20)
+    firstname = models.CharField(db_column='FirstName', max_length=255, verbose_name='first name')
+    lastname = models.CharField(db_column='LastName', max_length=255, verbose_name='last name')
+    affiliation = models.CharField(db_column='Affiliation', max_length=255)
+    title = models.CharField(db_column='Title', max_length=255)
+    accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel', verbose_name='access level')
 
     class Meta:
         managed = MANAGED
