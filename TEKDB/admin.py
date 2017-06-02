@@ -10,6 +10,7 @@ from .models import (
     LocalityPlaceResourceEvent,
     MediaCitationEvents,
     PlaceAltIndigenousName,
+    PlaceGISSelections,
     PlacesCitationEvents,
     PlacesMediaEvents,
     PlacesResourceCitationEvents,
@@ -30,47 +31,54 @@ from .models import (
 class CitationplaceseventsInline(admin.TabularInline):
     model = PlacesCitationEvents
     fields = ('placeid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 class CitationresourceseventsInline(admin.TabularInline):
     model = ResourcesCitationEvents
     fields = ('resourceid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 class CitationmediaeventsInline(admin.TabularInline):
     model = MediaCitationEvents
     fields = ('mediaid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 #### MEDIA ####
 class MediaplaceseventsInline(admin.TabularInline):
     model = PlacesMediaEvents
     fields = ('placeid','relationshipdescription','pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 class MediacitationeventsInline(admin.TabularInline):
     model = MediaCitationEvents
     fields = ('citationid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 class MediaresourceseventsInline(admin.TabularInline):
     model = ResourcesMediaEvents
     fields = ('resourceid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 #### PLACES ####
 class PlacesalternativenameInline(admin.TabularInline):
     model = PlaceAltIndigenousName
     fields = ('altindigenousnameid', 'altindigenousname')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
     verbose_name_plural = 'alternate indigenous names'
+
+class PlaceGISSelectionsInline(admin.TabularInline):
+    model = PlaceGISSelections
+    fields = ('placelabel', 'sourcefc')
+    extra = 0
+    classes = ['collapse', 'open']
+    verbose_name_plural = 'Place GIS Selections'
 
 class PlacesresourceeventsInline(admin.StackedInline):
     model = PlacesResourceEvents
@@ -85,28 +93,28 @@ class PlacesresourceeventsInline(admin.StackedInline):
             )
         }),
     )
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
     verbose_name_plural = 'related resources'
 
 class PlaceslocalityInline(admin.TabularInline):
     model = Locality
     fields = ('indigenousname', 'englishname', 'localitytype')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
 
 class PlacesmediaeventsInline(admin.TabularInline):
     model = PlacesMediaEvents
     fields = ('mediaid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
     verbose_name_plural = 'related media'
 
 class PlacescitationeventsInline(admin.TabularInline):
     model = PlacesCitationEvents
     fields = ('citationid', 'relationshipdescription', 'pages')
-    extra = 1
-    classes = ['collapse']
+    extra = 0
+    classes = ['collapse', 'open']
     max_num = 9999
     verbose_name_plural = 'related citations'
 
@@ -206,6 +214,7 @@ class PlacesAdmin(admin.ModelAdmin):
         PlacesmediaeventsInline,
         PlacescitationeventsInline,
         PlaceslocalityInline,
+        PlaceGISSelectionsInline,
     ]
 
 admin.site.register(Resources)
