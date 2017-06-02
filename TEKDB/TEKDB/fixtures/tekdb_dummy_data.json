@@ -37,6 +37,66 @@
   }
 },
 {
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Coastal Marsh",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Deep Canyon",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Estuary",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Hard-bottom 0-100m",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Hard-bottom >100m",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Offshore Reefs",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Offshore Rock",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Rocky Intertidal",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Sandy Beach",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Soft-bottom 0-100m",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Soft-bottom >100m",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuphabitat",
+  "pk": "Tidal Flats",
+  "fields": {}
+},
+{
   "model": "TEKDB.places",
   "pk": 19,
   "fields": {
@@ -5140,6 +5200,41 @@
   "fields": {}
 },
 {
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Barter",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Ceremony",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Food",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Regalia",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Song",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Story",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupcustomaryuse",
+  "pk": "Tool",
+  "fields": {}
+},
+{
   "model": "TEKDB.lookupseason",
   "pk": "All",
   "fields": {}
@@ -5182,6 +5277,196 @@
 {
   "model": "TEKDB.lookupseason",
   "pk": "Winter/Spring",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Daytime",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Evening",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Fall",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Morning",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Night",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Seasonal",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Spring",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Summer",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptiming",
+  "pk": "Winter",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Children",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Children-boys",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Children-girls",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Everyone",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Men",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Other beings",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupparticipants",
+  "pk": "Women",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "A-frame net",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "canoe",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "club",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "conical basket",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "dip net",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "eel basket",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "eel hook",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "gaff hook",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "gill net",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "hand fishing",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "hand gathered",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "harpoon",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "hook and line",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "net",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "poison",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "seine",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "snare",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "spears with detachable points",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "spears without detachable points",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "V-frame scoop net",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "V-shaped/converging weir",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuptechniques",
+  "pk": "weir/fish dam",
   "fields": {}
 },
 {
@@ -5305,10 +5590,90 @@
   "fields": {}
 },
 {
+  "model": "TEKDB.lookupauthortype",
+  "pk": "Author",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupauthortype",
+  "pk": "Corporate Author",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookupauthortype",
+  "pk": "Editor",
+  "fields": {}
+},
+{
   "model": "TEKDB.currentversion",
   "pk": 1,
   "fields": {
     "backendversion": 1,
     "frontendversion": 1
   }
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "bay",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "beach",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "creek",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "estuary",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "intertidal",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "lagoon",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "mainstem river",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "offshore rocks",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "open ocean",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "river eddy",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "river mouth",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "side channel river",
+  "fields": {}
+},
+{
+  "model": "TEKDB.lookuplocalitytype",
+  "pk": "subtidal",
+  "fields": {}
 }
