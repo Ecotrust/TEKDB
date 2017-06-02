@@ -630,7 +630,7 @@ class Citations(Queryable):
         )
 
     def name(self):
-        return self.referencetype
+        return self.get_name()
 
     def image(self):
         return '/static/explore/img/demo-citation.png'
@@ -1148,7 +1148,7 @@ class PlacesResourceCitationEvents(Queryable):
         )
 
     def name(self):
-        return "%s %s" % (self.placesresourceid.name(), self.citationid.get_name())
+        return "%s %s" % (self.placeresourceid.name(), self.citationid.get_name())
 
     def image(self):
         return '/static/explore/img/demo-activity.png'
