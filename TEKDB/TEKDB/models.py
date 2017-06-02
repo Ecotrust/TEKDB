@@ -51,7 +51,6 @@ class LookupPlanningUnit(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupPlanningUnit'
-        # app_label = 'LookupPlanningUnit'
 
     def get_name(self):
         return "%s" % (self.planningunitname)
@@ -72,7 +71,13 @@ class LookupTribe(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupTribe'
-        # app_label = 'LookupTribe'
+
+    def keyword_search(keyword):
+        return Places.objects.filter(
+            Q(tribeunit__icontains=keyword) |
+            Q(tribe__icontains=keyword) |
+            Q(federaltribe__icontains=keyword)
+        )
 
     def get_name(self):
         return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe)
@@ -84,20 +89,13 @@ class LookupTribe(models.Model):
         return self.get_name()
 
 
-PRIMARY_HABITAT_CHOICES  = [
-    ('Coastal Marsh','Coastal Marsh'),
-    ('Deep Canyon','Deep Canyon'),
-    ('Hard-bottom >100m','Hard-bottom >100m'),
-    ('Hard-bottom 0-100m','Hard-bottom 0-100m'),
-    ('Offshore Reefs','Offshore Reefs'),
-    ('Offshore Rock','Offshore Rock'),
-    ('Rocky Intertidal','Rocky Intertidal'),
-    ('Sandy Beach','Sandy Beach'),
-    ('Soft-bottom >100m','Soft-bottom >100m'),
-    ('Soft-bottom 0-100m','Soft-bottom 0-100m'),
-    ('Tidal Flats','Tidal Flats'),
-    ('Other','Other')
-]
+class LookupHabitat(models.Model):
+    habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)  # Field name made lowercase.
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'LookupHabitat'
+
 
 class Places(Queryable):
     placeid = models.AutoField(db_column='PlaceID', primary_key=True)  # Field name made lowercase.
@@ -105,7 +103,7 @@ class Places(Queryable):
     indigenousplacenamemeaning = models.CharField(db_column='IndigenousPlaceNameMeaning', max_length=255, blank=True, null=True, verbose_name='english translation')
     englishplacename = models.CharField(db_column='EnglishPlaceName', max_length=255, blank=True, null=True, verbose_name='english name')
     planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='PlanningUnitID', blank=True, null=True, verbose_name='planning unit')
-    primaryhabitat = models.CharField(db_column='PrimaryHabitat', max_length=100, blank=True, null=True, choices=PRIMARY_HABITAT_CHOICES, verbose_name='primary habitat')
+    primaryhabitat = models.ForeignKey(LookupHabitat, db_column='PrimaryHabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat')
     tribeid = models.ForeignKey(LookupTribe, db_column='TribeID', blank=True, null=True, verbose_name='tribe')
     islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
 
@@ -114,22 +112,37 @@ class Places(Queryable):
         db_table = 'Places'
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
-        # app_label = 'Places'
 
-    #TODO: Complex 'Q' query to search all relevant fields
     def keyword_search(keyword):
-        return Places.objects.filter(Q(indigenousplacename__icontains=keyword) | Q(indigenousplacenamemeaning__icontains=keyword)| Q(englishplacename__icontains=keyword)| Q(primaryhabitat__icontains=keyword))
+        planningunit_qs = LookupPlanningUnit.objects.filter(planningunitname__icontains=keyword)
+        planningunit_loi = [planningunit.pk for planningunit in planningunit_qs]
+
+        habitat_qs = LookupHabitat.objects.filter(habitat__icontains=keyword)
+        habitat_loi = [habitat.pk for habitat in habitat_qs]
+
+        tribe_qs = LookupTribe.keyword_search(keyword)
+        tribe_loi = [tribe.pk for tribe in tribe_qs]
+
+        return Places.objects.filter(
+            Q(indigenousplacename__icontains=keyword) |
+            Q(indigenousplacenamemeaning__icontains=keyword)|
+            Q(englishplacename__icontains=keyword)|
+            Q(planningunitid__in=planningunit_loi) |
+            Q(primaryhabitat__in=habitat_loi) |
+            Q(primaryhabitat__in=tribe_loi) |
+            Q(primaryhabitat__icontains=keyword)
+        )
 
     def name(self):
-        return self.englishplacename                          #UPDATE THIS
+        return self.englishplacename
 
     def image(self):
-        return '/static/explore/img/demo-map.png'  #UPDATE THIS
+        return '/static/explore/img/demo-map.png'
 
     def subtitle(self):
-        return self.indigenousplacenamemeaning                             #UPDATE THIS
+        return self.indigenousplacenamemeaning
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
             {'key':'english place name', 'value': self.englishplacename},
             {'key':'indigenous place name', 'value': self.indigenousplacename},
@@ -137,16 +150,14 @@ class Places(Queryable):
             {'key':'primary habitat', 'value': self.primaryhabitat}
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'places'                              #UPDATE THIS
+        type = 'places'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.indigenousplacenamemeaning,         #UPDATE THIS
+            'description': self.indigenousplacenamemeaning,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
@@ -163,7 +174,6 @@ class LookupResourceGroup(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupResourceGroup'
-        # app_label = 'LookupResourceGroup'
 
 
 class Resources(Queryable):
@@ -189,12 +199,15 @@ class Resources(Queryable):
         return self.commonname
 
     def keyword_search(keyword):
+        group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
+        group_loi = [group.pk for group in group_qs]
+
         return Resources.objects.filter(
             Q(commonname__icontains=keyword) |
             Q(indigenousname__icontains=keyword) |
             Q(genus__icontains=keyword) |
             Q(species__icontains=keyword) |
-            Q(resourceclassificationgroup__icontains=keyword)
+            Q(resourceclassificationgroup__in=group_loi)
         )
 
     def name(self):
@@ -232,7 +245,6 @@ class LookupPartUsed(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupPartUsed'
-        # app_label = 'LookupPartUsed'
 
 
 class LookupSeason(models.Model):
@@ -241,7 +253,14 @@ class LookupSeason(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupSeason'
-        # app_label = 'LookupSeason'
+
+
+class LookupTiming(models.Model):
+    timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)  # Field name made lowercase.
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'LookupTiming'
 
 
 class PlacesResourceEvents(Queryable):
@@ -253,7 +272,7 @@ class PlacesResourceEvents(Queryable):
     customaryuse = models.CharField(db_column='CustomaryUse', max_length=255, blank=True, null=True, verbose_name='customary use')
     barterresource = models.BooleanField(db_column='BarterResource', verbose_name='barter resource?', default=False)
     season = models.ForeignKey(LookupSeason, db_column='Season', max_length=255, blank=True, null=True)
-    timing = models.CharField(db_column='Timing', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)  # Field name made lowercase.
     january = models.BooleanField(db_column='January', default=False)  # Field name made lowercase.
     february = models.BooleanField(db_column='February', default=False)  # Field name made lowercase.
     march = models.BooleanField(db_column='March', default=False)  # Field name made lowercase.
@@ -274,34 +293,43 @@ class PlacesResourceEvents(Queryable):
         db_table = 'PlacesResourceEvents'
         verbose_name = 'Place - Resource'
         verbose_name_plural = 'Places - Resources'
-        # app_label = 'PlacesResourceEvents'
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
-        resource_loi = [resource.pk for resource in resource_qs] #[19, 24, 350]
+        resource_loi = [resource.pk for resource in resource_qs]
 
         place_qs = Places.keyword_search(keyword)
         place_loi = [place.pk for place in place_qs]
+
+        part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
+        part_loi = [part.partused for part in part_qs]
+
+        season_qs = LookupSeason.objects.filter(season__icontains=keyword)
+        season_loi = [season.season for season in season_qs]
+
+        timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
+        timing_loi = [timing.timing for timing in timing_qs]
 
         return PlacesResourceEvents.objects.filter(
             Q(resourceid__in=resource_loi) |
             Q(placeid__in=place_loi) |
             Q(relationshipdescription__icontains=keyword) |
-            Q(partused__icontains=keyword) |
+            Q(partused__in=part_loi) |
             Q(customaryuse__icontains=keyword) |
-            Q(season__icontains=keyword) |
-            Q(timing__icontains=keyword))
+            Q(season__in=season_loi) |
+            Q(timing__in=timing_loi)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return self.relationshipdescription
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'part used', 'value': self.partused},
@@ -311,18 +339,32 @@ class PlacesResourceEvents(Queryable):
 
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Placesresourceevents'                              #UPDATE THIS
+        type = 'Placesresourceevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
+
+
+class LookupParticipants(models.Model):
+    participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)  # Field name made lowercase.
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'LookupParticipants'
+
+
+class LookupTechniques(models.Model):
+    techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)  # Field name made lowercase.
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'LookupTechniques'
 
 
 class ResourcesActivityEvents(Queryable):
@@ -332,35 +374,58 @@ class ResourcesActivityEvents(Queryable):
     partused = models.ForeignKey(LookupPartUsed, db_column='PartUsed', max_length=255, blank=True, null=True)  # Field name made lowercase.
     activityshortdescription = models.CharField(db_column='ActivityShortDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
     activitylongdescription = models.TextField(db_column='ActivityLongDescription', blank=True, null=True)  # Field name made lowercase.
-    participants = models.CharField(db_column='Participants', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    technique = models.CharField(db_column='Technique', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    participants = models.ForeignKey(LookupParticipants, db_column='Participants', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    technique = models.ForeignKey(LookupTechniques, db_column='Technique', max_length=255, blank=True, null=True)  # Field name made lowercase.
     gear = models.CharField(db_column='Gear', max_length=255, blank=True, null=True)  # Field name made lowercase.
     customaryuse = models.CharField(db_column='CustomaryUse', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    timing = models.CharField(db_column='Timing', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    timingdescription = models.CharField(db_column='TimingDescription', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    timingdescription = models.CharField(db_column='TimingDescription', max_length=255, blank=True, null=True, verbose_name='timing description')
     islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')  # Field name made lowercase.
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourcesActivityEvents'
-        # app_label = 'ResourcesActivityEvents'
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
         placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
-        return ResourcesActivityEvents.objects.filter(Q(placeresourceid__in=placeresource_loi) | Q(relationshipdescription__icontains=keyword) | Q(partused__icontains=keyword) | Q(activityshortdescription__icontains=keyword) | Q(activitylongdescription__icontains=keyword) | Q(participants__icontains=keyword) | Q(technique__icontains=keyword) | Q(gear__icontains=keyword) | Q(customaryuse__icontains=keyword) | Q(timing__icontains=keyword) | Q(timingdescription__icontains=keyword))
+        part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
+        part_loi = [part.partused for part in part_qs]
+
+        participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
+        participant_loi = [participant.participants for participant in participant_qs]
+
+        technique_qs = LookupParticipants.objects.filter(techniques__icontains=keyword)
+        technique_loi = [technique.techniques for technique in technique_qs]
+
+        timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
+        timing_loi = [timing.timing for timing in timing_qs]
+
+        return ResourcesActivityEvents.objects.filter(
+            Q(placeresourceid__in=placeresource_loi) |
+            Q(relationshipdescription__icontains=keyword) |
+            Q(partused__in=part_loi) |
+            Q(activityshortdescription__icontains=keyword) |
+            Q(activitylongdescription__icontains=keyword) |
+            Q(participants__in=participant_loi) |
+            Q(technique__in=technique_loi) |
+            Q(gear__icontains=keyword) |
+            Q(customaryuse__icontains=keyword) |
+            Q(timing__in=timing_loi) |
+            Q(timingdescription__icontains=keyword)
+        )
 
     def name(self):
-        return self.relationshipdescription                          #UPDATE THIS
+        return self.relationshipdescription
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'  #UPDATE THIS
+        return '/static/explore/img/demo-activity.png'
 
     def subtitle(self):
-        return self.relationshipdescription                             #UPDATE THIS
+        return self.relationshipdescription
 
-    def data(self):                                     #UPDATE THIS
+    def data(self):
         return [
             {'key':'relationship description', 'value': self.relationshipdescription},
             {'key':'part used', 'value': self.partused},
@@ -375,16 +440,14 @@ class ResourcesActivityEvents(Queryable):
 
         ]
 
-    #TODO: look at explore/views.py (get_model_by_type)
     def get_response_format(self):
-        type = 'Resourcesactivityevents'                              #UPDATE THIS
+        type = 'Resourcesactivityevents'
         return {
             'id': self.pk,
-            # pk is django keyword for any model's Primary Key
             'type': type,
             'name': self.name(),
             'image': self.image(),
-            'description': self.relationshipdescription,         #UPDATE THIS
+            'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
@@ -711,15 +774,6 @@ class LookupCustomaryUse(models.Model):
         # app_label = 'LookupCustomaryUse'
 
 
-class LookupHabitat(models.Model):
-    habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)  # Field name made lowercase.
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'LookupHabitat'
-        # app_label = 'LookupHabitat'
-
-
 class LookupLocalityType(models.Model):
     localitytype = models.CharField(db_column='LocalityType', primary_key=True, max_length=255)  # Field name made lowercase.
 
@@ -737,33 +791,6 @@ class LookupMediaType(models.Model):
         managed = MANAGED
         db_table = 'LookupMediaType'
         # app_label = 'LookupMediaType'
-
-
-class LookupParticipants(models.Model):
-    participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'LookupParticipants'
-        # app_label = 'LookupParticipants'
-
-
-class LookupTechniques(models.Model):
-    techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'LookupTechniques'
-        # app_label = 'LookupTechniques'
-
-
-class LookupTiming(models.Model):
-    timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'LookupTiming'
-        # app_label = 'LookupTiming'
 
 
 class LookupUserInfo(models.Model):
