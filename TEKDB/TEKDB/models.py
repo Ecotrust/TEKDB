@@ -1486,17 +1486,18 @@ class ResourceResourceEvents(Queryable):
 
     # Need to create two-sided pairs for these relationships to show up correctly in the admin - this could fuzz-up the querying, though
     def save(self, *args, **kwargs):
-        try:
-            ResourceResourceEvents.objects.get(resourceid=self.altresourceid, altresourceid=self.resourceid, relationshipdescription=self.relationshipdescription)
-            super(ResourceResourceEvents, self).save(*args, **kwargs)
-        except Exception as e:
-            super(ResourceResourceEvents, self).save(*args, **kwargs)
+        super(ResourceResourceEvents, self).save(*args, **kwargs)
+        relatedResources = ResourceResourceEvents.objects.filter(resourceid=self.altresourceid, altresourceid=self.resourceid)
+        if len(relatedResources) == 1:
+            relatedResources[0].relationshipdescription=self.relationshipdescription
+            super(ResourceResourceEvents, relatedResources[0]).save()
+        else:
             ResourceResourceEvents.objects.create(resourceid=self.altresourceid, altresourceid=self.resourceid, relationshipdescription=self.relationshipdescription)
 
     def delete(self, *args, **kwargs):
         super(ResourceResourceEvents, self).delete(*args, **kwargs)
         try:
-            pair = ResourceResourceEvents.objects.get(resourceid=self.altresourceid, altresourceid=self.resourceid, relationshipdescription=self.relationshipdescription)
+            pair = ResourceResourceEvents.objects.get(resourceid=self.altresourceid, altresourceid=self.resourceid)
             pair.delete()
         except Exception as e:
             pass
