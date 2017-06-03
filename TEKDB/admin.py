@@ -166,8 +166,8 @@ class ResourceAltIndigenousNameInline(admin.TabularInline):
 
 ### MODEL ADMINS ###
 class CitationsAdmin(admin.ModelAdmin):
-    list_display = ('referencetype','title','referencetext','modifiedbydate','enteredbydate')
-    # form = CitationsForm
+    list_display = ('referencetype','title','referencetext',
+    'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
             'classes': ('citation-ref-type',),
@@ -228,9 +228,24 @@ class CitationsAdmin(admin.ModelAdmin):
         CitationresourceseventsInline,
         CitationmediaeventsInline,
     ]
+    search_fields = (
+        'referencetype__documenttype', 'intervieweeid__firstname',
+        'intervieweeid__lastname', 'interviewerid__lastname',
+        'interviewerid__firstname', 'authortype__authortype',
+        'interviewerid__village', 'intervieweeid__village',
+        'interviewerid__relationshiptootherpeople',
+        'intervieweeid__relationshiptootherpeople',
+        'referencetext', 'authorprimary', 'authorsecondary',
+        'placeofinterview', 'title', 'seriestitle',
+        'seriesvolume', 'serieseditor', 'publisher',
+        'publishercity', 'preparedfor', 'comments',
+        'enteredbyname', 'enteredbytribe', 'modifiedbyname',
+        'modifiedbytribe'
+    )
 
 class MediaAdmin(admin.ModelAdmin):
-    list_display = ('medianame','mediatype','modifiedbydate','enteredbydate')
+    list_display = ('medianame','mediatype','modifiedbyname','modifiedbydate',
+    'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
             'fields': (('medianame','mediatype'),'medialink','mediadescription')
@@ -241,9 +256,16 @@ class MediaAdmin(admin.ModelAdmin):
         MediacitationeventsInline,
         MediaresourceseventsInline,
     ]
+    search_fields = (
+        'medianame', 'mediadescription', 'medialink',
+        'mediatype__mediatype', 'mediatype__mediacategory',
+        'enteredbyname', 'enteredbytribe', 'modifiedbyname',
+        'modifiedbytribe'
+    )
 
 class PlacesAdmin(admin.ModelAdmin):
-    list_display = ('indigenousplacename','englishplacename','modifiedbydate','enteredbydate')
+    list_display = ('indigenousplacename','englishplacename','modifiedbyname',
+    'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
             'fields':(
@@ -260,11 +282,19 @@ class PlacesAdmin(admin.ModelAdmin):
         PlacesmediaeventsInline,
         PlacescitationeventsInline,
         PlaceslocalityInline,
-        PlaceGISSelectionsInline,
+        # PlaceGISSelectionsInline,
     ]
+    search_fields = (
+        'englishplacename', 'indigenousplacename', 'indigenousplacenamemeaning',
+        'planningunitid__planningunitname', 'primaryhabitat__habitat',
+        'tribeid__tribeunit','tribeid__tribe','tribeid__federaltribe',
+        'enteredbyname', 'enteredbytribe', 'modifiedbyname',
+        'modifiedbytribe'
+    )
 
 class ResourcesAdmin(admin.ModelAdmin):
-    list_display = ('commonname','indigenousname', 'modifiedbydate', 'enteredbydate')
+    list_display = ('commonname','indigenousname', 'modifiedbyname',
+        'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
             'fields':(
@@ -281,8 +311,32 @@ class ResourcesAdmin(admin.ModelAdmin):
         ResourcesPlaceEventsInline,
         ResourceResourceEventsInline,
         ResourceAltIndigenousNameInline,
+        # ResourceGISSelectionsInline,          #TODO: make this work
     ]
+    search_fields = (
+        'commonname', 'indigenousname', 'genus', 'species',
+        'resourceclassificationgroup__resourceclassificationgroup',
+        'enteredbyname', 'enteredbytribe', 'modifiedbyname',
+        'modifiedbytribe'
+    )
 
+
+class UsersAdmin(admin.ModelAdmin):
+    list_display = (
+        'username', 'firstname', 'lastname', 'affiliation',
+        'accesslevel','title')
+    fieldsets = (
+        (None, {
+            'fields':(
+                'username', 'password', 'firstname', 'lastname',
+                'affiliation', 'accesslevel', 'title'
+            )
+        }),
+    )
+    search_fields = (
+        'username', 'firstname', 'lastname', 'affiliation',
+        'title', 'accesslevel__accesslevel'
+    )
 
 admin.site.register(Resources, ResourcesAdmin)
 admin.site.register(Places, PlacesAdmin)
@@ -302,4 +356,4 @@ admin.site.register(Media, MediaAdmin)
 # admin.site.register(ResourcesActivityEvents)
 # admin.site.register(ResourcesCitationEvents)
 # admin.site.register(ResourcesMediaEvents)
-admin.site.register(Users)
+admin.site.register(Users, UsersAdmin)
