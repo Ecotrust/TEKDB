@@ -18,6 +18,7 @@ from .models import (
     PlacesResourceMediaEvents,
     ResourceActivityCitationEvents,
     ResourceActivityMediaEvents,
+    ResourceAltIndigenousName,
     ResourceResourceEvents,
     ResourcesActivityEvents,
     ResourcesCitationEvents,
@@ -85,8 +86,7 @@ class PlacesresourceeventsInline(admin.StackedInline):
     fieldsets = (
         ('', {
             'fields': ('resourceid', 'relationshipdescription', 'partused',
-                'customaryuse', 'barterresource', 'season',
-                # 'timing',
+                'customaryuse', 'barterresource', 'season', 'timing',
                 ('january', 'february', 'march'), ('april', 'may', 'june'),
                 ('july', 'august', 'september'), ('october', 'november',
                 'december'), 'year', 'islocked'
@@ -117,6 +117,52 @@ class PlacescitationeventsInline(admin.TabularInline):
     classes = ['collapse', 'open']
     max_num = 9999
     verbose_name_plural = 'related citations'
+
+#### RESOURCES ####
+class ResourcesMediaEventsInline(admin.TabularInline):
+    model = ResourcesMediaEvents
+    fields = ('mediaid', 'relationshipdescription', 'pages')
+    extra = 0
+    classes = ['collapse', 'open']
+    verbose_name_plural = 'related media'
+
+class ResourcesCitationEventsInline(admin.TabularInline):
+    model = ResourcesCitationEvents
+    fields = ('citationid', 'relationshipdescription', 'pages')
+    extra = 0
+    classes = ['collapse', 'open']
+    verbose_name_plural = 'related citations'
+
+class ResourcesPlaceEventsInline(admin.TabularInline):
+    model = PlacesResourceEvents
+    fieldsets = (
+        ('', {
+            'fields': ('placeid', 'relationshipdescription', 'partused',
+                'customaryuse', 'barterresource', 'season', 'timing',
+                ('january', 'february', 'march'), ('april', 'may', 'june'),
+                ('july', 'august', 'september'), ('october', 'november',
+                'december'), 'year', 'islocked'
+            )
+        }),
+    )
+    extra = 0
+    classes = ['collapse', 'open']
+    verbose_name_plural = 'related places'
+
+class ResourceResourceEventsInline(admin.TabularInline):
+    model = ResourceResourceEvents
+    fields = ('altresourceid', 'relationshipdescription')
+    fk_name = 'resourceid'
+    extra = 0
+    classes = ['collapse', 'open']
+    verbose_name_plural = 'related resources'
+
+class ResourceAltIndigenousNameInline(admin.TabularInline):
+    model = ResourceAltIndigenousName
+    fields = ('resourceid', 'altindigenousname')
+    extra = 0
+    classes = ['collapse', 'open']
+    verbose_name_plural = 'Alternate Indigenous Name'
 
 ### MODEL ADMINS ###
 class CitationsAdmin(admin.ModelAdmin):
@@ -217,7 +263,28 @@ class PlacesAdmin(admin.ModelAdmin):
         PlaceGISSelectionsInline,
     ]
 
-admin.site.register(Resources)
+class ResourcesAdmin(admin.ModelAdmin):
+    list_display = ('commonname','indigenousname', 'modifiedbydate', 'enteredbydate')
+    fieldsets = (
+        (None, {
+            'fields':(
+                ('commonname', 'indigenousname'),
+                ('genus', 'species'),
+                'resourceclassificationgroup'
+            )
+        }),
+    )
+    inlines = [
+        # ResourcesActivityEventsInline,        #tied to place-resource
+        ResourcesMediaEventsInline,
+        ResourcesCitationEventsInline,
+        ResourcesPlaceEventsInline,
+        ResourceResourceEventsInline,
+        ResourceAltIndigenousNameInline,
+    ]
+
+
+admin.site.register(Resources, ResourcesAdmin)
 admin.site.register(Places, PlacesAdmin)
 # admin.site.register(Locality)
 admin.site.register(Citations, CitationsAdmin)

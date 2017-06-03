@@ -1484,6 +1484,23 @@ class ResourceResourceEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    # Need to create two-sided pairs for these relationships to show up correctly in the admin - this could fuzz-up the querying, though
+    def save(self, *args, **kwargs):
+        super(ResourceResourceEvents, self).save(*args, **kwargs)
+        relatedResources = ResourceResourceEvents.objects.filter(resourceid=self.altresourceid, altresourceid=self.resourceid)
+        if len(relatedResources) == 1:
+            relatedResources[0].relationshipdescription=self.relationshipdescription
+            super(ResourceResourceEvents, relatedResources[0]).save()
+        else:
+            ResourceResourceEvents.objects.create(resourceid=self.altresourceid, altresourceid=self.resourceid, relationshipdescription=self.relationshipdescription)
+
+    def delete(self, *args, **kwargs):
+        super(ResourceResourceEvents, self).delete(*args, **kwargs)
+        try:
+            pair = ResourceResourceEvents.objects.get(resourceid=self.altresourceid, altresourceid=self.resourceid)
+            pair.delete()
+        except Exception as e:
+            pass
 
 class ResourcesCitationEvents(Queryable):
     resourceid = models.ForeignKey(Resources, models.DO_NOTHING, db_column='ResourceID', primary_key=True, verbose_name='resource')
