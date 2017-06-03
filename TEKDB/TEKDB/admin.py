@@ -321,6 +321,23 @@ class ResourcesAdmin(admin.ModelAdmin):
     )
 
 
+class UsersAdmin(admin.ModelAdmin):
+    list_display = (
+        'username', 'firstname', 'lastname', 'affiliation',
+        'accesslevel','title')
+    fieldsets = (
+        (None, {
+            'fields':(
+                'username', 'password', 'firstname', 'lastname',
+                'affiliation', 'accesslevel', 'title'
+            )
+        }),
+    )
+    search_fields = (
+        'username', 'firstname', 'lastname', 'affiliation',
+        'title', 'accesslevel__accesslevel'
+    )
+
 admin.site.register(Resources, ResourcesAdmin)
 admin.site.register(Places, PlacesAdmin)
 # admin.site.register(Locality)
@@ -339,4 +356,4 @@ admin.site.register(Media, MediaAdmin)
 # admin.site.register(ResourcesActivityEvents)
 # admin.site.register(ResourcesCitationEvents)
 # admin.site.register(ResourcesMediaEvents)
-admin.site.register(Users)
+admin.site.register(Users, UsersAdmin)
