@@ -1637,12 +1637,12 @@ class UserAccess(models.Model):
 class Users(AbstractUser):
     userid = models.AutoField(db_column='UserID', primary_key=True)
     username = models.CharField(db_column='UserName', max_length=20, verbose_name='username', unique=True)
-    password = models.CharField(db_column='Password', max_length=255)
+    password = models.CharField(_('password'), max_length=128, db_column='Password')
     first_name = models.CharField(db_column='FirstName', max_length=255, verbose_name='first name')
     last_name = models.CharField(db_column='LastName', max_length=255, verbose_name='last name')
     affiliation = models.CharField(db_column='Affiliation', max_length=255)
     title = models.CharField(db_column='Title', max_length=255)
-    accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel', verbose_name='access level')
+    accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel', verbose_name='access level', null=True, blank=True)
     is_superuser = models.BooleanField(
         _('superuser status'),
         default=False,
