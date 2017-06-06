@@ -230,7 +230,7 @@ TEST_QUERY_RESULTS = {
 }
 
 #TODO - make this work
-# AUTH_USER_MODEL = 'TEKDB.User'
+AUTH_USER_MODEL = 'TEKDB.Users'
 
 
 from TEKDB.local_settings import *

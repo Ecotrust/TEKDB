@@ -6,10 +6,11 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
-
 from django.db import models
-
 from django.db.models import Q
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 MANAGED = True
 
@@ -1633,15 +1634,38 @@ class UserAccess(models.Model):
         return self.accesslevel
 
 
-class Users(models.Model):
+class Users(AbstractUser):
     userid = models.AutoField(db_column='UserID', primary_key=True)
-    username = models.CharField(db_column='UserName', max_length=20, verbose_name='username')
-    password = models.CharField(db_column='Password', max_length=20)
-    firstname = models.CharField(db_column='FirstName', max_length=255, verbose_name='first name')
-    lastname = models.CharField(db_column='LastName', max_length=255, verbose_name='last name')
+    username = models.CharField(db_column='UserName', max_length=20, verbose_name='username', unique=True)
+    password = models.CharField(db_column='Password', max_length=255)
+    first_name = models.CharField(db_column='FirstName', max_length=255, verbose_name='first name')
+    last_name = models.CharField(db_column='LastName', max_length=255, verbose_name='last name')
     affiliation = models.CharField(db_column='Affiliation', max_length=255)
     title = models.CharField(db_column='Title', max_length=255)
     accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel', verbose_name='access level')
+    is_superuser = models.BooleanField(
+        _('superuser status'),
+        default=False,
+        help_text=_(
+            'Designates that this user has all permissions without '
+            'explicitly assigning them.'
+        ),
+    )
+    email = models.EmailField(_('email address'), blank=True, null=True)
+    is_staff = models.BooleanField(
+        _('staff status'),
+        default=False,
+        help_text=_('Designates whether the user can log into this admin site.'),
+    )
+    is_active = models.BooleanField(
+        _('active'),
+        default=True,
+        help_text=_(
+            'Designates whether this user should be treated as active. '
+            'Unselect this instead of deleting accounts.'
+        ),
+    )
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     class Meta:
         managed = MANAGED
