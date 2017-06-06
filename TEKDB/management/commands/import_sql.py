@@ -114,18 +114,18 @@ class Command(BaseCommand):
                 pass
 
         ############################################
-        print("Dropping Database")
+        # print("Dropping Database")
         ############################################
-        import psycopg2
-        dbname = 'tekdb'
-        conn_psql = psycopg2.connect("dbname=postgres user=postgres")
-        cur_psql = conn_psql.cursor()
-        conn_psql.set_isolation_level(0)
-        cur_psql.execute('DROP DATABASE if exists %s;' % dbname)
-        print("Recreating Database")
-        cur_psql.execute('CREATE DATABASE %s;' % dbname)
-        cur_psql.close()
-        conn_psql.close()
+        # import psycopg2
+        # dbname = 'tekdb'
+        # conn_psql = psycopg2.connect("dbname=postgres user=postgres")
+        # cur_psql = conn_psql.cursor()
+        # conn_psql.set_isolation_level(0)
+        # cur_psql.execute('DROP DATABASE if exists %s;' % dbname)
+        # print("Recreating Database")
+        # cur_psql.execute('CREATE DATABASE %s;' % dbname)
+        # cur_psql.close()
+        # conn_psql.close()
 
         ############################################
         print("Making updated migration files")
