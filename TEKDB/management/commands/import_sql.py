@@ -19,6 +19,7 @@ class Command(BaseCommand):
         insert_script = os.path.join('scripts','insert.sql')
         import_output = os.path.join('scripts','import_output.txt')
         import_error = os.path.join('scripts','import_output.txt')
+        dbname = 'tekdb'
 
         now = timezone.now()
 
@@ -117,7 +118,6 @@ class Command(BaseCommand):
         # print("Dropping Database")
         ############################################
         # import psycopg2
-        # dbname = 'tekdb'
         # conn_psql = psycopg2.connect("dbname=postgres user=postgres")
         # cur_psql = conn_psql.cursor()
         # conn_psql.set_isolation_level(0)
