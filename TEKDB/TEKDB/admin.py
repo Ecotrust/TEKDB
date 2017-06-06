@@ -2,31 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import (
-    Resources,
-    Places,
-    Locality,
-    Citations,
-    Media,
-    LocalityPlaceResourceEvent,
-    MediaCitationEvents,
-    PlaceAltIndigenousName,
-    PlaceGISSelections,
-    PlacesCitationEvents,
-    PlacesMediaEvents,
-    PlacesResourceCitationEvents,
-    PlacesResourceEvents,
-    PlacesResourceMediaEvents,
-    ResourceActivityCitationEvents,
-    ResourceActivityMediaEvents,
-    ResourceAltIndigenousName,
-    ResourceResourceEvents,
-    ResourcesActivityEvents,
-    ResourcesCitationEvents,
-    ResourcesMediaEvents,
-    Users,
-    People
-)
+from .models import *
 
 ### INLINES ###
 #### CITATIONS ####
@@ -134,7 +110,7 @@ class ResourcesCitationEventsInline(admin.TabularInline):
     classes = ['collapse', 'open']
     verbose_name_plural = 'related citations'
 
-class ResourcesPlaceEventsInline(admin.TabularInline):
+class ResourcesPlaceEventsInline(admin.StackedInline):
     model = PlacesResourceEvents
     fieldsets = (
         ('', {
@@ -338,6 +314,14 @@ class UsersAdmin(admin.ModelAdmin):
         'title', 'accesslevel__accesslevel'
     )
 
+class LookupPlanningUnitAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+            'fields':('planningunitname',)
+        }),
+    )
+
+
 admin.site.register(Resources, ResourcesAdmin)
 admin.site.register(Places, PlacesAdmin)
 # admin.site.register(Locality)
@@ -358,3 +342,15 @@ admin.site.register(Media, MediaAdmin)
 # admin.site.register(ResourcesMediaEvents)
 # admin.site.register(Users, UsersAdmin)
 admin.site.register(Users, UserAdmin)
+admin.site.register(LookupResourceGroup)
+admin.site.register(LookupMediaType)
+admin.site.register(LookupReferenceType)
+admin.site.register(LookupPlanningUnit)
+admin.site.register(LookupTribe)
+admin.site.register(LookupHabitat)
+admin.site.register(LookupPartUsed)
+admin.site.register(LookupCustomaryUse)
+admin.site.register(LookupSeason)
+admin.site.register(LookupTiming)
+admin.site.register(People)
+admin.site.register(LookupLocalityType)

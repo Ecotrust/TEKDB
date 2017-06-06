@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'explore',
     'login',
     'TEKDB',
+    'Lookup',
 ]
 
 MIDDLEWARE_CLASSES = [
