@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from .models import (
     Resources,
@@ -320,7 +321,6 @@ class ResourcesAdmin(admin.ModelAdmin):
         'modifiedbytribe'
     )
 
-
 class UsersAdmin(admin.ModelAdmin):
     list_display = (
         'username', 'firstname', 'lastname', 'affiliation',
@@ -356,4 +356,5 @@ admin.site.register(Media, MediaAdmin)
 # admin.site.register(ResourcesActivityEvents)
 # admin.site.register(ResourcesCitationEvents)
 # admin.site.register(ResourcesMediaEvents)
-admin.site.register(Users, UsersAdmin)
+# admin.site.register(Users, UsersAdmin)
+admin.site.register(Users, UserAdmin)
