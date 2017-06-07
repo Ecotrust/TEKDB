@@ -308,14 +308,14 @@ class ResourcesAdmin(admin.ModelAdmin):
         'modifiedbytribe'
     )
 
-class UsersAdmin(admin.ModelAdmin):
+class UsersAdmin(UserAdmin):
     list_display = (
-        'username', 'firstname', 'lastname', 'affiliation',
+        'username', 'first_name', 'last_name', 'affiliation',
         'accesslevel','title')
     fieldsets = (
         (None, {
             'fields':(
-                'username', 'password', 'firstname', 'lastname',
+                'username', 'password', 'first_name', 'last_name',
                 'affiliation', 'accesslevel', 'title'
             )
         }),
@@ -351,8 +351,8 @@ admin.site.register(Media, MediaAdmin)
 # admin.site.register(ResourcesActivityEvents)
 # admin.site.register(ResourcesCitationEvents)
 # admin.site.register(ResourcesMediaEvents)
-# admin.site.register(Users, UsersAdmin)
-admin.site.register(Users, UserAdmin)
+admin.site.register(Users, UsersAdmin)
+admin.site.register(UserAccess)
 admin.site.register(LookupResourceGroup)
 admin.site.register(LookupMediaType)
 admin.site.register(LookupReferenceType)

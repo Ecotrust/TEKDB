@@ -1678,6 +1678,9 @@ class UserAccess(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'UserAccess'
+        app_label = 'Accounts'
+        verbose_name = 'user access'
+        verbose_name_plural = 'user access'
 
     def __unicode__(self):
         return unicode('%s' % (self.accesslevel))
@@ -1722,6 +1725,7 @@ class Users(AbstractUser):
     class Meta:
         managed = MANAGED
         db_table = 'Users'
+        app_label = 'Accounts'
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
