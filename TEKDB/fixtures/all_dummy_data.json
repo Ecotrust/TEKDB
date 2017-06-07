@@ -1,34 +1,34 @@
 [
 {
-  "model": "TEKDB.lookupplanningunit",
+  "model": "Lookup.lookupplanningunit",
   "pk": 0,
   "fields": {
     "planningunitname": "Undefined"
   }
 },
 {
-  "model": "TEKDB.lookupplanningunit",
+  "model": "Lookup.lookupplanningunit",
   "pk": 1,
   "fields": {
     "planningunitname": "Southern"
   }
 },
 {
-  "model": "TEKDB.lookupplanningunit",
+  "model": "Lookup.lookupplanningunit",
   "pk": 2,
   "fields": {
     "planningunitname": "Northern"
   }
 },
 {
-  "model": "TEKDB.lookupplanningunit",
+  "model": "Lookup.lookupplanningunit",
   "pk": 3,
   "fields": {
     "planningunitname": "Middle"
   }
 },
 {
-  "model": "TEKDB.lookuptribe",
+  "model": "Lookup.lookuptribe",
   "pk": 1,
   "fields": {
     "tribeunit": "Tolowa Dee-ni\u2019",
@@ -37,64 +37,661 @@
   }
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Coastal Marsh",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Deep Canyon",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Estuary",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Hard-bottom 0-100m",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Hard-bottom >100m",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Offshore Reefs",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Offshore Rock",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Rocky Intertidal",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Sandy Beach",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Soft-bottom 0-100m",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Soft-bottom >100m",
   "fields": {}
 },
 {
-  "model": "TEKDB.lookuphabitat",
+  "model": "Lookup.lookuphabitat",
   "pk": "Tidal Flats",
   "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "anadromous finfish",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "bird",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "coastal watershed mammal",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "crustacean",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "fern & relative",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "flowering plant",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "invertebrate",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "marine finfish",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "marine mammal",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "mollusk",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "seaweed/algae",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": "tree",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Antler",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Bone",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Egg",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Feather",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Flower",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Meat",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Shell",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Tooth",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": "Whisker",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Barter",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Ceremony",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Food",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Regalia",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Song",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Story",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": "Tool",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "All",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Fall",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Fall/Winter",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Spring",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Spring/Summer",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Summer",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Summer/Fall",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Winter",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": "Winter/Spring",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Daytime",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Evening",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Fall",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Morning",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Night",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Seasonal",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Spring",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Summer",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": "Winter",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Children",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Children-boys",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Children-girls",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Everyone",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Men",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Other beings",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": "Women",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "A-frame net",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "canoe",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "club",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "conical basket",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "dip net",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "eel basket",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "eel hook",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "gaff hook",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "gill net",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "hand fishing",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "hand gathered",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "harpoon",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "hook and line",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "net",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "poison",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "seine",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "snare",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "spears with detachable points",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "spears without detachable points",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "V-frame scoop net",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "V-shaped/converging weir",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": "weir/fish dam",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Cemetery",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Customary Fishing and Gathering from Shore",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Customary Fishing and Gathering Offshore",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Customary Hunting from Shore",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Customary Hunting Offshore",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Processing",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Related to Ceremony",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Related to Song",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Related to Story",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Residence/Village",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": "Training",
+  "fields": {}
+},
+{
+  "model": "Lookup.people",
+  "pk": 6,
+  "fields": {
+    "firstname": "Jay",
+    "lastname": "Tosanic",
+    "yearborn": 1978,
+    "village": "T'uu-yaa~-sdvm-dvn",
+    "relationshiptootherpeople": "Cheryl Tosanic, mother"
+  }
+},
+{
+  "model": "Lookup.people",
+  "pk": 7,
+  "fields": {
+    "firstname": "Manahe",
+    "lastname": "Herman",
+    "yearborn": 1978,
+    "village": "None",
+    "relationshiptootherpeople": null
+  }
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": "Book",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": "Edited Volume",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": "Interview",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": "Other",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupauthortype",
+  "pk": "Author",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupauthortype",
+  "pk": "Corporate Author",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupauthortype",
+  "pk": "Editor",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "bay",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "beach",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "creek",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "estuary",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "intertidal",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "lagoon",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "mainstem river",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "offshore rocks",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "open ocean",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "river eddy",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "river mouth",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "side channel river",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": "subtidal",
+  "fields": {}
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": "audio",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": "image",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": "other",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": "PDF",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": "video",
+  "fields": {
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupuserinfo",
+  "pk": 1,
+  "fields": {
+    "username": "gary",
+    "usingcustomusername": false,
+    "usertitle": "gis",
+    "useraffiliation": "fw"
+  }
 },
 {
   "model": "TEKDB.places",
@@ -137,66 +734,6 @@
     "tribeid": 1,
     "islocked": false
   }
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "anadromous finfish",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "bird",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "coastal watershed mammal",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "crustacean",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "fern & relative",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "flowering plant",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "invertebrate",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "marine finfish",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "marine mammal",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "mollusk",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "seaweed/algae",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupresourcegroup",
-  "pk": "tree",
-  "fields": {}
 },
 {
   "model": "TEKDB.resources",
@@ -5176,176 +5713,6 @@
   }
 },
 {
-  "model": "TEKDB.lookuppartused",
-  "pk": "Antler",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Bone",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Egg",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Feather",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Flower",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Meat",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Shell",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Tooth",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuppartused",
-  "pk": "Whisker",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Barter",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Ceremony",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Food",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Regalia",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Song",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Story",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupcustomaryuse",
-  "pk": "Tool",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "All",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Fall",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Fall/Winter",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Spring",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Spring/Summer",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Summer",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Summer/Fall",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Winter",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupseason",
-  "pk": "Winter/Spring",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Daytime",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Evening",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Fall",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Morning",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Night",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Seasonal",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Spring",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Summer",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptiming",
-  "pk": "Winter",
-  "fields": {}
-},
-{
   "model": "TEKDB.placesresourceevents",
   "pk": 20,
   "fields": {
@@ -5526,206 +5893,6 @@
   }
 },
 {
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Children",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Children-boys",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Children-girls",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Everyone",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Men",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Other beings",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupparticipants",
-  "pk": "Women",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "A-frame net",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "canoe",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "club",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "conical basket",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "dip net",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "eel basket",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "eel hook",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "gaff hook",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "gill net",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "hand fishing",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "hand gathered",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "harpoon",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "hook and line",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "net",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "poison",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "seine",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "snare",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "spears with detachable points",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "spears without detachable points",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "V-frame scoop net",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "V-shaped/converging weir",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuptechniques",
-  "pk": "weir/fish dam",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Cemetery",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Customary Fishing and Gathering from Shore",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Customary Fishing and Gathering Offshore",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Customary Hunting from Shore",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Customary Hunting Offshore",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Processing",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Related to Ceremony",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Related to Song",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Related to Story",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Residence/Village",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupactivity",
-  "pk": "Training",
-  "fields": {}
-},
-{
   "model": "TEKDB.resourcesactivityevents",
   "pk": 27,
   "fields": {
@@ -5804,63 +5971,6 @@
   }
 },
 {
-  "model": "TEKDB.people",
-  "pk": 6,
-  "fields": {
-    "firstname": "Jay",
-    "lastname": "Tosanic",
-    "yearborn": 1978,
-    "village": "T'uu-yaa~-sdvm-dvn",
-    "relationshiptootherpeople": "Cheryl Tosanic, mother"
-  }
-},
-{
-  "model": "TEKDB.people",
-  "pk": 7,
-  "fields": {
-    "firstname": "Manahe",
-    "lastname": "Herman",
-    "yearborn": 1978,
-    "village": "None",
-    "relationshiptootherpeople": null
-  }
-},
-{
-  "model": "TEKDB.lookupreferencetype",
-  "pk": "Book",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupreferencetype",
-  "pk": "Edited Volume",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupreferencetype",
-  "pk": "Interview",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupreferencetype",
-  "pk": "Other",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupauthortype",
-  "pk": "Author",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupauthortype",
-  "pk": "Corporate Author",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupauthortype",
-  "pk": "Editor",
-  "fields": {}
-},
-{
   "model": "TEKDB.citations",
   "pk": 11,
   "fields": {
@@ -5928,116 +6038,6 @@
   "fields": {
     "backendversion": 1,
     "frontendversion": 1
-  }
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "bay",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "beach",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "creek",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "estuary",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "intertidal",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "lagoon",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "mainstem river",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "offshore rocks",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "open ocean",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "river eddy",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "river mouth",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "side channel river",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookuplocalitytype",
-  "pk": "subtidal",
-  "fields": {}
-},
-{
-  "model": "TEKDB.lookupmediatype",
-  "pk": "audio",
-  "fields": {
-    "mediacategory": null
-  }
-},
-{
-  "model": "TEKDB.lookupmediatype",
-  "pk": "image",
-  "fields": {
-    "mediacategory": null
-  }
-},
-{
-  "model": "TEKDB.lookupmediatype",
-  "pk": "other",
-  "fields": {
-    "mediacategory": null
-  }
-},
-{
-  "model": "TEKDB.lookupmediatype",
-  "pk": "PDF",
-  "fields": {
-    "mediacategory": null
-  }
-},
-{
-  "model": "TEKDB.lookupmediatype",
-  "pk": "video",
-  "fields": {
-    "mediacategory": null
-  }
-},
-{
-  "model": "TEKDB.lookupuserinfo",
-  "pk": 1,
-  "fields": {
-    "username": "gary",
-    "usingcustomusername": false,
-    "usertitle": "gis",
-    "useraffiliation": "fw"
   }
 },
 {
@@ -6274,33 +6274,33 @@
   }
 },
 {
-  "model": "TEKDB.useraccess",
+  "model": "Accounts.useraccess",
   "pk": 1,
   "fields": {
     "accesslevel": "Administrator"
   }
 },
 {
-  "model": "TEKDB.useraccess",
+  "model": "Accounts.useraccess",
   "pk": 2,
   "fields": {
     "accesslevel": "Editor"
   }
 },
 {
-  "model": "TEKDB.useraccess",
+  "model": "Accounts.useraccess",
   "pk": 3,
   "fields": {
     "accesslevel": "Reader"
   }
 },
 {
-  "model": "TEKDB.users",
+  "model": "Accounts.users",
   "pk": 5,
   "fields": {
-    "last_login": null,
+    "last_login": "2017-06-07T00:46:02.483Z",
     "username": "admin",
-    "password": "pbkdf2_sha256$36000$3fMDSmntZ1zy$/9TpYKqx8kNKThi33HQS/f9hXap+jKfVp0lJd2kN8wU=",
+    "password": "pbkdf2_sha256$36000$J7PIiXI3Gyy4$zSctAGbdoHefGgpBBJayBAz9cHdZC0Xir3mKQnu8irQ=",
     "first_name": "Admin",
     "last_name": "Administrator",
     "affiliation": "General Admin",
@@ -6310,18 +6310,18 @@
     "email": null,
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2017-06-06T21:01:31.871Z",
+    "date_joined": "2017-06-07T00:45:31.001Z",
     "groups": [],
     "user_permissions": []
   }
 },
 {
-  "model": "TEKDB.users",
+  "model": "Accounts.users",
   "pk": 6,
   "fields": {
     "last_login": null,
     "username": "editor",
-    "password": "pbkdf2_sha256$36000$nvTa4CBBQtqh$VjJJnOirUo2ZiYcDqPiLLnzxdQux1biixRoj4wy81eY=",
+    "password": "pbkdf2_sha256$36000$WxKEkNgaDS0k$kmAOQm+lMY/SDxjhGZo1c6IdS0mg7bXNwTaGKH336Lg=",
     "first_name": "Editor",
     "last_name": "Editor",
     "affiliation": "General Admin",
@@ -6331,18 +6331,18 @@
     "email": null,
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2017-06-06T21:01:31.871Z",
+    "date_joined": "2017-06-07T00:45:31.001Z",
     "groups": [],
     "user_permissions": []
   }
 },
 {
-  "model": "TEKDB.users",
+  "model": "Accounts.users",
   "pk": 7,
   "fields": {
     "last_login": null,
     "username": "readonly",
-    "password": "pbkdf2_sha256$36000$BaWB9zLlwuuP$DPxg9oSE3tzQuc42aBqe+nXIBVB4YSANZ5a5FB9DxIA=",
+    "password": "pbkdf2_sha256$36000$bo2JlRnAEOmH$u7ic1AZxDyOdXsMKL+zupVPqRzGOUTlVOuE1hW3ZPn0=",
     "first_name": "Read",
     "last_name": "Only",
     "affiliation": "General Access",
@@ -6352,7 +6352,7 @@
     "email": null,
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2017-06-06T21:01:31.871Z",
+    "date_joined": "2017-06-07T00:45:31.001Z",
     "groups": [],
     "user_permissions": []
   }
