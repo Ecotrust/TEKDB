@@ -1670,8 +1670,9 @@ class ResourcesMediaEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-
+from django.contrib.auth.models import Group
 class UserAccess(models.Model):
+    group = models.OneToOneField(Group)
     accessid = models.AutoField(db_column='AccessID', primary_key=True)
     accesslevel = models.CharField(db_column='AccessLevel', max_length=255, blank=True, null=True, verbose_name='access level')
 
@@ -1734,3 +1735,7 @@ class Users(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        self.groups.set([self.accesslevel.group])
+        super(Users, self).save(*args, **kwargs)
