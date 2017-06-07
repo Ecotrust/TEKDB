@@ -4,6 +4,9 @@ import os
 import sys
 from TEKDB.settings import *
 from django.utils import timezone
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
+from django import db
 
 class Command(BaseCommand):
 
@@ -12,21 +15,30 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('infile', nargs='+', type=str)
 
-    def handle(self, *args, **options):
-        FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        MANAGE_DIR = os.path.join(FILE_DIR,'..','..')
-        infile = os.path.join(MANAGE_DIR, options['infile'][0])
-        insert_script = os.path.join('scripts','insert.sql')
-        import_output = os.path.join('scripts','import_output.txt')
-        import_error = os.path.join('scripts','import_output.txt')
+    def create_groups(self):
+        admin_group, created = Group.objects.get_or_create(name='Administrator')
+        admin_group_id = admin_group.id
+        edit_group, created = Group.objects.get_or_create(name='Editor')
+        edit_group_id = edit_group.id
+        read_group, created = Group.objects.get_or_create(name='Reader')
+        read_group_id = read_group.id
+        admin_add_perms = Permission.objects.all()
+        admin_group.permissions.set(admin_add_perms)
+        from django.db.models import Q
+        cts = ContentType.objects.filter(
+            Q(app_label='TEKDB') |
+            Q(app_label='Lookup')
+        )
+        edit_add_perms = Permission.objects.filter(content_type__in=cts)
+        edit_group.permissions.set(edit_add_perms)
+        return {
+            'admin_id': admin_group_id,
+            'edit_id': edit_group_id,
+            'read_id': read_group_id
+        }
 
-        now = timezone.now()
-
-        ############################################
-        print("Generating insert script")
-        ############################################
-        insert_dict = {}
-        model_list = [
+    def get_model_list(self):
+        return [
             'LookupPlanningUnit',
             'LookupTribe',
             'LookupHabitat',
@@ -70,6 +82,16 @@ class Command(BaseCommand):
             'UserAccess',
             'Users',
         ]
+
+    def create_sql_dict(self,infile):
+        import string
+        now = timezone.now()
+        ############################################
+        print("Generating insert script")
+        ############################################
+        insert_dict = {}
+        model_list = self.get_model_list()
+        group_id_dict = self.create_groups()
         for model in model_list:
             insert_dict[model] = []
         with open(infile) as rf:
@@ -79,26 +101,40 @@ class Command(BaseCommand):
                     model = line_split[1]
                     if model == "Users":
                         users_split = line.split(")")
-                        users_line = "%s, \"is_superuser\", \"is_staff\", \
-                        \"is_active\", \"date_joined\")%s, E'0', E'0', E'1', '%s')%s" % (users_split[0],users_split[1],now,users_split[2])
+                        users_line = "%s, \"is_superuser\", \"is_staff\", \"is_active\", \"date_joined\")%s, E'0', E'0', E'1', '%s')%s" % (users_split[0],users_split[1],now,users_split[2])
                         insert_dict[model].append(users_line)
+                    elif model == "UserAccess":
+                        access_split = line.split(")")
+                        group_name = access_split[1].split(", E'")[1]
+                        if group_name.find('Administrator') >= 0:
+                            group_id = group_id_dict['admin_id']
+                        elif group_name.find('Editor') >= 0:
+                            group_id = group_id_dict['edit_id']
+                        else:
+                            group_id = group_id_dict['read_id']
+                        access_line = "%s, \"group_id\")%s, %s)%s" % (access_split[0],access_split[1],group_id,access_split[2])
+                        insert_dict[model].append(access_line)
                     else:
                         insert_dict[model].append(line)
                 elif "SELECT setval(" in line:
                     model = line_split[5]
                     insert_dict[model].append(line)
+        return insert_dict
 
+    def create_insert_script(self, insert_script,insert_dict):
+        model_list = self.get_model_list()
         with open(insert_script, "w") as wf:
             for model in model_list:
                 for line in insert_dict[model]:
                     wf.write(line)
 
+    def revert_migrations(self, manage_py):
         ############################################
         print("Reverting migrations")
         ############################################
-        manage_py = os.path.join(MANAGE_DIR, 'manage.py')
         os.system("%s migrate --fake TEKDB zero" % manage_py)
 
+    def delete_old_migrations(self, MANAGE_DIR):
         ############################################
         print("Deleting migration files...")
         ############################################
@@ -114,11 +150,12 @@ class Command(BaseCommand):
                 except OSError as e:
                     pass
 
+    def rebuild_db(self, dbname, manage_py):
         ############################################
         print("Dropping Database")
         ############################################
         import psycopg2
-        dbname = 'tekdb'
+        db.connections.close_all()
         conn_psql = psycopg2.connect("dbname=postgres user=postgres")
         cur_psql = conn_psql.cursor()
         conn_psql.set_isolation_level(0)
@@ -138,6 +175,7 @@ class Command(BaseCommand):
         ############################################
         os.system("%s migrate" % manage_py)
 
+    def import_sql_data(self,import_output,import_error,dbname,insert_script):
         ############################################
         print("Transferring old data into new database")
         ############################################
@@ -162,3 +200,22 @@ class Command(BaseCommand):
             if user.accesslevel.accesslevel == 'Editor':
                 user.is_staff = True
             user.save()
+
+    def handle(self, *args, **options):
+        FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        MANAGE_DIR = os.path.join(FILE_DIR,'..','..')
+        infile = os.path.join(MANAGE_DIR, options['infile'][0])
+        insert_script = os.path.join('scripts','insert.sql')
+        import_output = os.path.join('scripts','import_output.txt')
+        import_error = os.path.join('scripts','import_output.txt')
+        manage_py = os.path.join(MANAGE_DIR, 'manage.py')
+
+        self.revert_migrations(manage_py)
+        self.delete_old_migrations(MANAGE_DIR)
+        dbname = 'tekdb'
+        self.rebuild_db(dbname, manage_py)
+
+        insert_dict = self.create_sql_dict(infile)
+        self.create_insert_script(insert_script,insert_dict)
+
+        self.import_sql_data(import_output,import_error,dbname,insert_script)
