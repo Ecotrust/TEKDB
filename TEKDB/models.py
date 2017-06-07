@@ -45,12 +45,15 @@ class Queryable(models.Model):
 
 
 class LookupPlanningUnit(models.Model):
-    planningunitid = models.IntegerField(db_column='PlanningUnitID', primary_key=True)
+    planningunitid = models.AutoField(db_column='PlanningUnitID', primary_key=True)
     planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True, verbose_name='planning unit')
 
     class Meta:
         managed = MANAGED
         db_table = 'LookupPlanningUnit'
+        app_label="Lookup"
+        verbose_name="planning unit"
+        verbose_name_plural="planning units"
 
     def __unicode__(self):
         return unicode("%s" % (self.planningunitname))
@@ -68,6 +71,9 @@ class LookupTribe(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupTribe'
+        app_label="Lookup"
+        verbose_name="tribe"
+        verbose_name_plural="tribes"
 
     def keyword_search(keyword):
         return LookupTribe.objects.filter(
@@ -107,6 +113,9 @@ class LookupHabitat(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupHabitat'
+        app_label="Lookup"
+        verbose_name="habitat"
+        verbose_name_plural="habitats"
 
     def __unicode__(self):
         return unicode('%s' % (self.habitat))
@@ -190,6 +199,9 @@ class LookupResourceGroup(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupResourceGroup'
+        app_label = 'Lookup'
+        verbose_name="resource group"
+        verbose_name_plural="resource groups"
 
     def __unicode__(self):
         return unicode('%s' % (self.resourceclassificationgroup))
@@ -265,6 +277,9 @@ class LookupPartUsed(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupPartUsed'
+        app_label="Lookup"
+        verbose_name="part used"
+        verbose_name_plural="parts used"
 
     def __unicode__(self):
         return unicode('%s' % (self.partused))
@@ -279,6 +294,9 @@ class LookupCustomaryUse(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupCustomaryUse'
+        app_label="Lookup"
+        verbose_name="customary use"
+        verbose_name_plural="customary uses"
 
     def __unicode__(self):
         return unicode('%s' % (self.usedfor))
@@ -293,6 +311,9 @@ class LookupSeason(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupSeason'
+        app_label="Lookup"
+        verbose_name="season"
+        verbose_name_plural="seasons"
 
     def __unicode__(self):
         return unicode('%s' % (self.season))
@@ -307,6 +328,9 @@ class LookupTiming(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupTiming'
+        app_label="Lookup"
+        verbose_name="timing"
+        verbose_name_plural="timings"
 
     def __unicode__(self):
         return unicode('%s' % (self.timing))
@@ -435,6 +459,9 @@ class LookupParticipants(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupParticipants'
+        app_label = "Lookup"
+        verbose_name = "participant"
+        verbose_name_plural = "participants"
 
     def __unicode__(self):
         return unicode('%s' % (self.participants))
@@ -449,6 +476,9 @@ class LookupTechniques(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupTechniques'
+        app_label = "Lookup"
+        verbose_name = "technique"
+        verbose_name_plural = "techniques"
 
     def __unicode__(self):
         return unicode('%s' % (self.techniques))
@@ -463,6 +493,9 @@ class LookupActivity(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupActivity'
+        app_label = 'Lookup'
+        verbose_name = 'activity'
+        verbose_name_plural = 'activities'
 
     def __unicode__(self):
         return unicode('%s' % (self.activity))
@@ -577,6 +610,9 @@ class People(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'People'
+        app_label = "Lookup"
+        verbose_name = "person"
+        verbose_name_plural = "people"
 
     def keyword_search(keyword):
         return People.objects.filter(
@@ -599,6 +635,9 @@ class LookupReferenceType(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupReferenceType'
+        app_label = "Lookup"
+        verbose_name="reference type"
+        verbose_name_plural="reference types"
 
     def __unicode__(self):
         return unicode('%s' % (self.documenttype))
@@ -613,6 +652,10 @@ class LookupAuthorType(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupAuthorType'
+        app_label = 'Lookup'
+        verbose_name = 'author type'
+        verbose_name_plural = 'author types'
+
 
     def __unicode__(self):
         return unicode('%s' % (self.authortype))
@@ -811,6 +854,9 @@ class LookupLocalityType(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupLocalityType'
+        app_label = "Lookup"
+        verbose_name = "locality type"
+        verbose_name_plural = "locality types"
 
     def __unicode__(self):
         return unicode('%s' % (self.localitytype))
@@ -953,6 +999,9 @@ class LookupMediaType(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupMediaType'
+        app_label = 'Lookup'
+        verbose_name="media type"
+        verbose_name_plural="media types"
 
     def __unicode__(self):
         return unicode('%s' % (self.mediatype))
@@ -976,6 +1025,9 @@ class LookupUserInfo(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LookupUserInfo'
+        app_label = 'Lookup'
+        verbose_name = 'user info'
+        verbose_name_plural = 'user info'
 
     def __unicode__(self):
         return unicode('%s' % (self.username))
@@ -1626,6 +1678,9 @@ class UserAccess(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'UserAccess'
+        app_label = 'Accounts'
+        verbose_name = 'user access'
+        verbose_name_plural = 'user access'
 
     def __unicode__(self):
         return unicode('%s' % (self.accesslevel))
@@ -1670,6 +1725,7 @@ class Users(AbstractUser):
     class Meta:
         managed = MANAGED
         db_table = 'Users'
+        app_label = 'Accounts'
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 

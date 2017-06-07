@@ -104,15 +104,16 @@ class Command(BaseCommand):
         print("Deleting migration files...")
         ############################################
         from pathlib import Path
-        migrations_path = os.path.join(MANAGE_DIR,'TEKDB','migrations')
-        migrations = Path(migrations_path)
-        migration_files = [x for x in migrations.iterdir() if not x.name == '__init__.py' and not x.is_dir()]
-        for migration_file in migration_files:
-            try:
-                os.remove(str(migration_file))
-                print('%s deleted' % migration_file.name)
-            except OSError as e:
-                pass
+        for module in ['TEKDB', 'Lookup', 'Accounts']:
+            migrations_path = os.path.join(MANAGE_DIR,module,'migrations')
+            migrations = Path(migrations_path)
+            migration_files = [x for x in migrations.iterdir() if not x.name == '__init__.py' and not x.is_dir()]
+            for migration_file in migration_files:
+                try:
+                    os.remove(str(migration_file))
+                    print('%s deleted' % migration_file.name)
+                except OSError as e:
+                    pass
 
         ############################################
         # print("Dropping Database")
