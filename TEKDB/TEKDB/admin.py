@@ -4,6 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import *
 
+admin.site.site_header = 'Traditional Ethnographic Knowledge DB Administration'
+
 ### INLINES ###
 #### CITATIONS ####
 class CitationplaceseventsInline(admin.TabularInline):
