@@ -141,6 +141,16 @@ class ResourceAltIndigenousNameInline(admin.TabularInline):
     classes = ['collapse', 'open']
     verbose_name_plural = 'Alternate Indigenous Name'
 
+### FORMS ###
+
+class MediaForm(forms.ModelForm):
+    class Meta:
+        model = Media
+        widgets = {
+            'medialink':forms.FileInput
+        }
+        fields = '__all__'
+
 ### MODEL ADMINS ###
 class CitationsAdmin(admin.ModelAdmin):
     list_display = ('referencetype','title','referencetext',
@@ -239,6 +249,7 @@ class MediaAdmin(admin.ModelAdmin):
         'enteredbyname', 'enteredbytribe', 'modifiedbyname',
         'modifiedbytribe'
     )
+    form = MediaForm
 
 class PlacesAdmin(admin.ModelAdmin):
     list_display = ('indigenousplacename','englishplacename','modifiedbyname',
