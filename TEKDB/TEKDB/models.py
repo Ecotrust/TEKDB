@@ -367,6 +367,7 @@ class PlacesResourceEvents(Queryable):
     class Meta:
         managed = MANAGED
         db_table = 'PlacesResourceEvents'
+        app_label = 'Relationships'
         verbose_name = 'Place - Resource'
         verbose_name_plural = 'Places - Resources'
 
@@ -782,6 +783,7 @@ class PlacesCitationEvents(Queryable):
     class Meta:
         managed = MANAGED
         db_table = 'PlacesCitationEvents'
+        app_label = "Relationships"
         verbose_name = 'Place - Citation'
         verbose_name_plural = 'Places - Citations'
         unique_together = (('placeid', 'citationid'),)
@@ -1101,6 +1103,7 @@ class MediaCitationEvents(Queryable):
     class Meta:
         managed = MANAGED
         db_table = 'MediaCitationEvents'
+        app_label = 'Relationships'
         verbose_name = 'Medium - Citation'
         verbose_name_plural = 'Media - Citations'
         unique_together = (('mediaid', 'citationid'),)
@@ -1194,6 +1197,7 @@ class PlacesMediaEvents(Queryable):
         managed = MANAGED
         db_table = 'PlacesMediaEvents'
         verbose_name = 'Place - Medium'
+        app_label = 'Relationships'
         verbose_name_plural = 'Places - Media'
         unique_together = (('placeid', 'mediaid'),)
 
@@ -1252,6 +1256,8 @@ class PlacesResourceCitationEvents(Queryable):
         managed = MANAGED
         db_table = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
+        app_label = 'Relationships'
+        verbose_name_plural = 'Place-Resources - Citations'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.placeresourceid), str(self.citationid)))

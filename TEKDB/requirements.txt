@@ -2,6 +2,7 @@
 django
 django-registration
 psycopg2
+#django-nested-admin
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
 ipython
