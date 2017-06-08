@@ -1737,5 +1737,16 @@ class Users(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        self.groups.set([self.accesslevel.group])
+        if self.accesslevel:
+            self.groups.set([self.accesslevel.group])
+        else:
+            self.groups.set([])
+        if self.accesslevel and len(self.accesslevel.group.permissions.all()) > 0:
+            self.is_staff = True
+        else:
+            self.is_staff = False
+        if self.accesslevel and self.accesslevel.accesslevel == 'Administrator':
+            self.is_superuser = True
+        else:
+            self.is_superuser = False
         super(Users, self).save(*args, **kwargs)

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from .models import *
 
@@ -313,17 +314,17 @@ class ResourcesAdmin(admin.ModelAdmin):
 class UsersAdmin(UserAdmin):
     list_display = (
         'username', 'first_name', 'last_name', 'affiliation',
-        'accesslevel','title')
+        'accesslevel','title','last_login', 'date_joined')
     fieldsets = (
-        (None, {
-            'fields':(
-                'username', 'password', 'first_name', 'last_name',
-                'affiliation', 'accesslevel', 'title'
-            )
-        }),
+        (None, {'fields': ('username', 'password',)}),
+        (_('Personal info'), {'fields': (
+            'first_name', 'last_name', 'email', 'affiliation', 'title',
+        )}),
+        (_('Permissions'), {'fields': ('accesslevel',)}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     search_fields = (
-        'username', 'firstname', 'lastname', 'affiliation',
+        'username', 'first_name', 'last_name', 'affiliation', 'email'
         'title', 'accesslevel__accesslevel'
     )
 
