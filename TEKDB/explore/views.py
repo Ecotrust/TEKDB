@@ -22,19 +22,35 @@ def home(request):
     return render(request, "welcome.html", context)
 
 def about(request):
+    try:
+        page_content_obj = PageContent.objects.get(page="About")
+        if page_content_obj.is_html:
+            page_content = page_content_obj.html_content
+        else:
+            page_content = page_content_obj.content
+    except Exception as e:
+        page_content = "<h1>About</h1><h3>Set About Page Content In Admin</h3>"
     context = {
         'page':'about',
-        'pageTitle':'About',
-        'pageContent':"<p>Proin eu semper libero. Vestibulum in massa nisi. Sed sed leo dolor. Praesent id arcu ornare, tincidunt velit eu, sodales orci. Nulla tincidunt velit nibh, laoreet ornare justo porttitor eu. Ut quam est, porta sed felis eu, viverra aliquam dolor. Curabitur nunc augue, elementum sed metus a, pellentesque vestibulum nisl. Phasellus nec ligula arcu. Duis eu scelerisque leo. Integer volutpat viverra neque at viverra. Etiam vitae sapien in eros porta feugiat in a.</p>",
+        'pageTitle':False,
+        'pageContent':page_content,
         'user': request.user
     }
     return render(request, "tek_index.html", context)
 
 def help(request):
+    try:
+        page_content_obj = PageContent.objects.get(page="Help")
+        if page_content_obj.is_html:
+            page_content = page_content_obj.html_content
+        else:
+            page_content = page_content_obj.content
+    except Exception as e:
+        page_content = "<h1>Help</h1><h3>Set Help Page Content In Admin</h3>"
     context = {
         'page':'help',
-        'pageTitle':'Help',
-        'pageContent':"<p>Morbi suscipit turpis in metus scelerisque accumsan. Curabitur consequat, erat sit amet rhoncus mattis, libero elit tincidunt dui, vel porta augue odio in diam. Morbi tincidunt ligula sem, in vestibulum lectus tincidunt porttitor. Phasellus cursus tortor libero, sit amet scelerisque erat aliquet quis. Aliquam egestas eros leo, eu commodo turpis iaculis id. Quisque consequat consequat nisi et semper. Donec commodo consectetur justo vel rhoncus. Praesent convallis tellus in aliquet dapibus. Nullam nisi lacus, euismod accumsan feugiat quis, placerat aliquet quam. Nulla sed euismod arcu, in commodo diam. Duis ac rhoncus ante, et dictum velit. Nunc sagittis lectus vel tortor sagittis interdum. Aliquam quis pulvinar purus. Mauris in efficitur tellus, dignissim porttitor risus.</p>",
+        'pageTitle':False,
+        'pageContent':page_content,
         'user': request.user
     }
     return render(request, "tek_index.html", context)

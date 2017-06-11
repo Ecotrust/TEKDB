@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% if pageTitle %}
 <h1>{{pageTitle}}</h1>
+{% endif %}
 {{pageContent | safe}}
 {% endblock %}

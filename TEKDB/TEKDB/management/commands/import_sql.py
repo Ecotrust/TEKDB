@@ -129,7 +129,7 @@ class Command(BaseCommand):
                     wf.write(line)
 
     def get_app_list(self):
-        return ['TEKDB', 'Lookup', 'Accounts', 'Relationships']
+        return ['TEKDB', 'Lookup', 'Accounts', 'Relationships', 'explore']
 
     def revert_migrations(self, manage_py):
         ############################################
