@@ -44,11 +44,12 @@ def get_model_by_type(model_type):
     from TEKDB import models as tekmodels
     searchable_models = {
         'resources': [tekmodels.Resources],
-        'places': [tekmodels.Places],
-        'locality': [tekmodels.Locality],
+        'places': [tekmodels.Places, tekmodels.Locality],
+        # 'locality': [tekmodels.Locality],
         'citations': [tekmodels.Citations],
         'media': [tekmodels.Media],
-        'activities': [
+        'activities': [tekmodels.ResourcesActivityEvents],
+        'relationships': [
             tekmodels.LocalityPlaceResourceEvent,
             tekmodels.MediaCitationEvents,
             tekmodels.PlacesCitationEvents,
@@ -81,7 +82,7 @@ def get_model_by_type(model_type):
     if model_type in searchable_models.keys():
         return searchable_models[model_type]
     elif model_type == 'all':
-        return sum([searchable_models[key] for key in ['resources','places','locality','citations', 'media', 'activities']],[])
+        return sum([searchable_models[key] for key in ['resources','places','locality','citations', 'media', 'activities', 'relationships']],[])
     else:
         return []
 
