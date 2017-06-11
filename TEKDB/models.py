@@ -669,7 +669,7 @@ class LookupAuthorType(models.Model):
 
 class Citations(Queryable):
     citationid = models.AutoField(db_column='CitationID', primary_key=True)
-    referencetype = models.ForeignKey(LookupReferenceType, db_column='ReferenceType', max_length=255, verbose_name='reference type', null=True, blank=True)
+    referencetype = models.ForeignKey(LookupReferenceType, db_column='ReferenceType', max_length=255, verbose_name='reference type')
     referencetext = models.CharField(db_column='ReferenceText', max_length=50, blank=True, null=True, verbose_name='description')
     authortype = models.ForeignKey(LookupAuthorType, db_column='AuthorType', max_length=255, blank=True, null=True, verbose_name='author type')
     authorprimary = models.CharField(db_column='AuthorPrimary', max_length=255, blank=True, null=True, verbose_name='primary author')
