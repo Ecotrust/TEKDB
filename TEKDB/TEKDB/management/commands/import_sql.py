@@ -27,7 +27,7 @@ class Command(BaseCommand):
         from django.db.models import Q
         cts = ContentType.objects.filter(
             Q(app_label='TEKDB') |
-            Q(app_label='Lookup')
+            Q(app_label='Relationships')
         )
         edit_add_perms = Permission.objects.filter(content_type__in=cts)
         edit_group.permissions.set(edit_add_perms)
