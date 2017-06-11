@@ -128,18 +128,22 @@ class Command(BaseCommand):
                 for line in insert_dict[model]:
                     wf.write(line)
 
+    def get_app_list(self):
+        return ['TEKDB', 'Lookup', 'Accounts', 'Relationships']
+
     def revert_migrations(self, manage_py):
         ############################################
         print("Reverting migrations")
         ############################################
-        os.system("%s migrate --fake TEKDB zero" % manage_py)
+        for app_module in self.get_app_list():
+            os.system("%s migrate --fake %s zero" % (manage_py, app_module))
 
     def delete_old_migrations(self, MANAGE_DIR):
         ############################################
         print("Deleting migration files...")
         ############################################
         from pathlib import Path
-        for module in ['TEKDB', 'Lookup', 'Accounts']:
+        for module in self.get_app_list():
             migrations_path = os.path.join(MANAGE_DIR,module,'migrations')
             migrations = Path(migrations_path)
             migration_files = [x for x in migrations.iterdir() if not x.name == '__init__.py' and not x.is_dir()]
