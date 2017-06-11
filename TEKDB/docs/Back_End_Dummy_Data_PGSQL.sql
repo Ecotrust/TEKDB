@@ -41,32 +41,32 @@ CREATE DATABASE "movedb";
 DROP TABLE IF EXISTS "Citations";
 
 CREATE TABLE "Citations" (
-  "CitationID" SERIAL NOT NULL, 
-  "ReferenceType" VARCHAR(255), 
-  "ReferenceText" VARCHAR(50), 
-  "AuthorType" VARCHAR(255), 
-  "AuthorPrimary" VARCHAR(255), 
-  "AuthorSecondary" VARCHAR(255), 
-  "IntervieweeID" INTEGER, 
-  "InterviewerID" INTEGER, 
-  "PlaceofInterview" VARCHAR(255), 
-  "Year" INTEGER, 
-  "Title" TEXT, 
-  "SeriesTitle" VARCHAR(255), 
-  "SeriesVolume" VARCHAR(50), 
-  "SeriesEditor" VARCHAR(255), 
-  "Publisher" VARCHAR(100), 
-  "PublisherCity" VARCHAR(255), 
-  "PreparedFor" VARCHAR(100), 
-  "Comments" TEXT, 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "CitationID" SERIAL NOT NULL,
+  "ReferenceType" VARCHAR(255),
+  "ReferenceText" VARCHAR(50),
+  "AuthorType" VARCHAR(255),
+  "AuthorPrimary" VARCHAR(255),
+  "AuthorSecondary" VARCHAR(255),
+  "IntervieweeID" INTEGER,
+  "InterviewerID" INTEGER,
+  "PlaceofInterview" VARCHAR(255),
+  "Year" INTEGER,
+  "Title" TEXT,
+  "SeriesTitle" VARCHAR(255),
+  "SeriesVolume" VARCHAR(50),
+  "SeriesEditor" VARCHAR(255),
+  "Publisher" VARCHAR(100),
+  "PublisherCity" VARCHAR(255),
+  "PreparedFor" VARCHAR(100),
+  "Comments" TEXT,
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("CitationID")
 );
 
@@ -91,9 +91,9 @@ CREATE INDEX "Citations_InteviewerID" ON "Citations" ("InterviewerID");
 DROP TABLE IF EXISTS "CurrentVersion";
 
 CREATE TABLE "CurrentVersion" (
-  "ID" SERIAL NOT NULL, 
-  "BackendVersion" INTEGER, 
-  "FrontendVersion" INTEGER, 
+  "ID" SERIAL NOT NULL,
+  "BackendVersion" INTEGER,
+  "FrontendVersion" INTEGER,
   PRIMARY KEY ("ID")
 );
 
@@ -113,19 +113,19 @@ SELECT setval('"CurrentVersion_ID_seq"', MAX("ID")) FROM "CurrentVersion";
 DROP TABLE IF EXISTS "Locality";
 
 CREATE TABLE "Locality" (
-  "LocalityID" SERIAL NOT NULL, 
-  "PlaceID" INTEGER, 
-  "EnglishName" VARCHAR(255), 
-  "IndigenousName" VARCHAR(255), 
-  "LocalityType" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "LocalityID" SERIAL NOT NULL,
+  "PlaceID" INTEGER,
+  "EnglishName" VARCHAR(255),
+  "IndigenousName" VARCHAR(255),
+  "LocalityType" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("LocalityID")
 );
 
@@ -148,8 +148,8 @@ CREATE INDEX "Locality_PlaceID" ON "Locality" ("PlaceID");
 DROP TABLE IF EXISTS "LocalityGISSelections";
 
 CREATE TABLE "LocalityGISSelections" (
-  "LocalityID" INTEGER, 
-  "LocalityLabel" VARCHAR(255), 
+  "LocalityID" INTEGER,
+  "LocalityLabel" VARCHAR(255),
   "SourceFC" VARCHAR(255)
 );
 
@@ -166,16 +166,16 @@ CREATE TABLE "LocalityGISSelections" (
 DROP TABLE IF EXISTS "LocalityPlaceResourceEvent";
 
 CREATE TABLE "LocalityPlaceResourceEvent" (
-  "PlaceResourceID" INTEGER NOT NULL, 
-  "LocalityID" INTEGER NOT NULL, 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceResourceID" INTEGER NOT NULL,
+  "LocalityID" INTEGER NOT NULL,
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceResourceID", "LocalityID")
 );
 
@@ -196,7 +196,7 @@ CREATE INDEX "LocalityPlaceResourceEvent_PlaceResourceID" ON "LocalityPlaceResou
 DROP TABLE IF EXISTS "LookupActivity";
 
 CREATE TABLE "LookupActivity" (
-  "Activity" VARCHAR(255) NOT NULL, 
+  "Activity" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("Activity")
 );
 
@@ -224,7 +224,7 @@ INSERT INTO "LookupActivity" ("Activity") VALUES (E'Training');
 DROP TABLE IF EXISTS "LookupAuthorType";
 
 CREATE TABLE "LookupAuthorType" (
-  "AuthorType" VARCHAR(50) NOT NULL, 
+  "AuthorType" VARCHAR(50) NOT NULL,
   PRIMARY KEY ("AuthorType")
 );
 
@@ -244,7 +244,7 @@ INSERT INTO "LookupAuthorType" ("AuthorType") VALUES (E'Editor');
 DROP TABLE IF EXISTS "LookupCustomaryUse";
 
 CREATE TABLE "LookupCustomaryUse" (
-  "UsedFor" VARCHAR(255) NOT NULL, 
+  "UsedFor" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("UsedFor")
 );
 
@@ -268,7 +268,7 @@ INSERT INTO "LookupCustomaryUse" ("UsedFor") VALUES (E'Tool');
 DROP TABLE IF EXISTS "LookupHabitat";
 
 CREATE TABLE "LookupHabitat" (
-  "Habitat" VARCHAR(100) NOT NULL, 
+  "Habitat" VARCHAR(100) NOT NULL,
   PRIMARY KEY ("Habitat")
 );
 
@@ -299,7 +299,7 @@ CREATE INDEX "LookupHabitat_LookupHabitatID" ON "LookupHabitat" ("Habitat");
 DROP TABLE IF EXISTS "LookupLocalityType";
 
 CREATE TABLE "LookupLocalityType" (
-  "LocalityType" VARCHAR(255) NOT NULL, 
+  "LocalityType" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("LocalityType")
 );
 
@@ -329,8 +329,8 @@ INSERT INTO "LookupLocalityType" ("LocalityType") VALUES (E'subtidal');
 DROP TABLE IF EXISTS "LookupMediaType";
 
 CREATE TABLE "LookupMediaType" (
-  "MediaType" VARCHAR(255) NOT NULL, 
-  "MediaCategory" VARCHAR(255), 
+  "MediaType" VARCHAR(255) NOT NULL,
+  "MediaCategory" VARCHAR(255),
   PRIMARY KEY ("MediaType")
 );
 
@@ -352,7 +352,7 @@ INSERT INTO "LookupMediaType" ("MediaType", "MediaCategory") VALUES (E'video', N
 DROP TABLE IF EXISTS "LookupParticipants";
 
 CREATE TABLE "LookupParticipants" (
-  "Participants" VARCHAR(255) NOT NULL, 
+  "Participants" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("Participants")
 );
 
@@ -376,7 +376,7 @@ INSERT INTO "LookupParticipants" ("Participants") VALUES (E'Women');
 DROP TABLE IF EXISTS "LookupPartUsed";
 
 CREATE TABLE "LookupPartUsed" (
-  "PartUsed" VARCHAR(255) NOT NULL, 
+  "PartUsed" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("PartUsed")
 );
 
@@ -402,8 +402,8 @@ INSERT INTO "LookupPartUsed" ("PartUsed") VALUES (E'Whisker');
 DROP TABLE IF EXISTS "LookupPlanningUnit";
 
 CREATE TABLE "LookupPlanningUnit" (
-  "PlanningUnitID" INTEGER NOT NULL, 
-  "PlanningUnitName" VARCHAR(100), 
+  "PlanningUnitID" INTEGER NOT NULL,
+  "PlanningUnitName" VARCHAR(100),
   PRIMARY KEY ("PlanningUnitID")
 );
 
@@ -426,7 +426,7 @@ CREATE INDEX "LookupPlanningUnit_PlanningUnitID" ON "LookupPlanningUnit" ("Plann
 DROP TABLE IF EXISTS "LookupReferenceType";
 
 CREATE TABLE "LookupReferenceType" (
-  "DocumentType" VARCHAR(25) NOT NULL, 
+  "DocumentType" VARCHAR(25) NOT NULL,
   PRIMARY KEY ("DocumentType")
 );
 
@@ -447,7 +447,7 @@ INSERT INTO "LookupReferenceType" ("DocumentType") VALUES (E'Interview');
 DROP TABLE IF EXISTS "LookupResourceGroup";
 
 CREATE TABLE "LookupResourceGroup" (
-  "ResourceClassificationGroup" VARCHAR(255) NOT NULL, 
+  "ResourceClassificationGroup" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("ResourceClassificationGroup")
 );
 
@@ -476,7 +476,7 @@ INSERT INTO "LookupResourceGroup" ("ResourceClassificationGroup") VALUES (E'tree
 DROP TABLE IF EXISTS "LookupSeason";
 
 CREATE TABLE "LookupSeason" (
-  "Season" VARCHAR(255) NOT NULL, 
+  "Season" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("Season")
 );
 
@@ -502,7 +502,7 @@ INSERT INTO "LookupSeason" ("Season") VALUES (E'Winter/Spring');
 DROP TABLE IF EXISTS "LookupTechniques";
 
 CREATE TABLE "LookupTechniques" (
-  "Techniques" VARCHAR(255) NOT NULL, 
+  "Techniques" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("Techniques")
 );
 
@@ -541,7 +541,7 @@ INSERT INTO "LookupTechniques" ("Techniques") VALUES (E'weir/fish dam');
 DROP TABLE IF EXISTS "LookupTiming";
 
 CREATE TABLE "LookupTiming" (
-  "Timing" VARCHAR(255) NOT NULL, 
+  "Timing" VARCHAR(255) NOT NULL,
   PRIMARY KEY ("Timing")
 );
 
@@ -567,10 +567,10 @@ INSERT INTO "LookupTiming" ("Timing") VALUES (E'Winter');
 DROP TABLE IF EXISTS "LookupTribe";
 
 CREATE TABLE "LookupTribe" (
-  "ID" SERIAL NOT NULL, 
-  "TribeUnit" VARCHAR(50), 
-  "Tribe" VARCHAR(100), 
-  "FederalTribe" VARCHAR(100), 
+  "ID" SERIAL NOT NULL,
+  "TribeUnit" VARCHAR(50),
+  "Tribe" VARCHAR(100),
+  "FederalTribe" VARCHAR(100),
   PRIMARY KEY ("ID")
 );
 
@@ -590,9 +590,9 @@ SELECT setval('"LookupTribe_ID_seq"', MAX("ID")) FROM "LookupTribe";
 DROP TABLE IF EXISTS "LookupUserInfo";
 
 CREATE TABLE "LookupUserInfo" (
-  "UserName" VARCHAR(100), 
-  "UsingCustomUsername" BOOLEAN DEFAULT E'0', 
-  "UserTitle" VARCHAR(100), 
+  "UserName" VARCHAR(100),
+  "UsingCustomUsername" BOOLEAN DEFAULT E'0',
+  "UserTitle" VARCHAR(100),
   "UserAffiliation" VARCHAR(100)
 );
 
@@ -610,19 +610,19 @@ INSERT INTO "LookupUserInfo" ("UserName", "UsingCustomUsername", "UserTitle", "U
 DROP TABLE IF EXISTS "Media";
 
 CREATE TABLE "Media" (
-  "MediaID" SERIAL NOT NULL, 
-  "MediaType" VARCHAR(255), 
-  "MediaName" VARCHAR(255), 
-  "MediaDescription" TEXT, 
-  "MediaLink" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "MediaID" SERIAL NOT NULL,
+  "MediaType" VARCHAR(255),
+  "MediaName" VARCHAR(255),
+  "MediaDescription" TEXT,
+  "MediaLink" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("MediaID")
 );
 
@@ -647,18 +647,18 @@ CREATE INDEX "Media_MediaID" ON "Media" ("MediaID");
 DROP TABLE IF EXISTS "MediaCitationEvents";
 
 CREATE TABLE "MediaCitationEvents" (
-  "MediaID" INTEGER NOT NULL, 
-  "CitationID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "MediaID" INTEGER NOT NULL,
+  "CitationID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("MediaID", "CitationID")
 );
 
@@ -680,12 +680,12 @@ CREATE INDEX "MediaCitationEvents_SpeciesID" ON "MediaCitationEvents" ("Citation
 DROP TABLE IF EXISTS "People";
 
 CREATE TABLE "People" (
-  "PersonID" SERIAL NOT NULL, 
-  "FirstName" VARCHAR(255), 
-  "LastName" VARCHAR(255), 
-  "YearBorn" INTEGER, 
-  "Village" VARCHAR(255), 
-  "RelationshipToOtherPeople" TEXT, 
+  "PersonID" SERIAL NOT NULL,
+  "FirstName" VARCHAR(255),
+  "LastName" VARCHAR(255),
+  "YearBorn" INTEGER,
+  "Village" VARCHAR(255),
+  "RelationshipToOtherPeople" TEXT,
   PRIMARY KEY ("PersonID")
 );
 
@@ -708,9 +708,9 @@ CREATE INDEX "People_PersonID" ON "People" ("PersonID");
 DROP TABLE IF EXISTS "PlaceAltIndigenousName";
 
 CREATE TABLE "PlaceAltIndigenousName" (
-  "AltIndigenousNameID" SERIAL NOT NULL, 
-  "PlaceID" INTEGER, 
-  "AltIndigenousName" VARCHAR(255), 
+  "AltIndigenousNameID" SERIAL NOT NULL,
+  "PlaceID" INTEGER,
+  "AltIndigenousName" VARCHAR(255),
   PRIMARY KEY ("AltIndigenousNameID")
 );
 
@@ -733,8 +733,8 @@ CREATE INDEX "PlaceAltIndigenousName_PlaceID" ON "PlaceAltIndigenousName" ("Plac
 DROP TABLE IF EXISTS "PlaceGISSelections";
 
 CREATE TABLE "PlaceGISSelections" (
-  "PlaceID" INTEGER, 
-  "PlaceLabel" VARCHAR(255), 
+  "PlaceID" INTEGER,
+  "PlaceLabel" VARCHAR(255),
   "SourceFC" VARCHAR(255)
 );
 
@@ -751,22 +751,22 @@ CREATE TABLE "PlaceGISSelections" (
 DROP TABLE IF EXISTS "Places";
 
 CREATE TABLE "Places" (
-  "PlaceID" SERIAL NOT NULL, 
-  "IndigenousPlaceName" VARCHAR(255), 
-  "IndigenousPlaceNameMeaning" VARCHAR(255), 
-  "EnglishPlaceName" VARCHAR(255), 
-  "PlanningUnitID" INTEGER DEFAULT 0, 
-  "PrimaryHabitat" VARCHAR(100), 
-  "TribeID" INTEGER, 
-  "IsLocked" BOOLEAN DEFAULT E'0', 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceID" SERIAL NOT NULL,
+  "IndigenousPlaceName" VARCHAR(255),
+  "IndigenousPlaceNameMeaning" VARCHAR(255),
+  "EnglishPlaceName" VARCHAR(255),
+  "PlanningUnitID" INTEGER DEFAULT 0,
+  "PrimaryHabitat" VARCHAR(100),
+  "TribeID" INTEGER,
+  "IsLocked" BOOLEAN DEFAULT E'0',
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceID")
 );
 
@@ -791,18 +791,18 @@ CREATE INDEX "Places_PlanningUnitID" ON "Places" ("PlanningUnitID");
 DROP TABLE IF EXISTS "PlacesCitationEvents";
 
 CREATE TABLE "PlacesCitationEvents" (
-  "PlaceID" INTEGER NOT NULL, 
-  "CitationID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceID" INTEGER NOT NULL,
+  "CitationID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceID", "CitationID")
 );
 
@@ -823,18 +823,18 @@ CREATE INDEX "PlacesCitationEvents_SpeciesID" ON "PlacesCitationEvents" ("Citati
 DROP TABLE IF EXISTS "PlacesMediaEvents";
 
 CREATE TABLE "PlacesMediaEvents" (
-  "PlaceID" INTEGER NOT NULL, 
-  "MediaID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(50), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceID" INTEGER NOT NULL,
+  "MediaID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(50),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceID", "MediaID")
 );
 
@@ -855,18 +855,18 @@ CREATE INDEX "PlacesMediaEvents_PlacesID" ON "PlacesMediaEvents" ("PlaceID");
 DROP TABLE IF EXISTS "PlacesResourceCitationEvents";
 
 CREATE TABLE "PlacesResourceCitationEvents" (
-  "PlaceResourceID" INTEGER NOT NULL, 
-  "CitationID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceResourceID" INTEGER NOT NULL,
+  "CitationID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceResourceID", "CitationID")
 );
 
@@ -889,37 +889,37 @@ CREATE INDEX "PlacesResourceCitationEvents_SpeciesID" ON "PlacesResourceCitation
 DROP TABLE IF EXISTS "PlacesResourceEvents";
 
 CREATE TABLE "PlacesResourceEvents" (
-  "PlaceResourceID" SERIAL NOT NULL, 
-  "PlaceID" INTEGER NOT NULL, 
-  "ResourceID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "PartUsed" VARCHAR(255), 
-  "CustomaryUse" VARCHAR(255), 
-  "BarterResource" BOOLEAN DEFAULT E'0', 
-  "Season" VARCHAR(255), 
-  "Timing" VARCHAR(255), 
-  "January" BOOLEAN DEFAULT E'0', 
-  "February" BOOLEAN DEFAULT E'0', 
-  "March" BOOLEAN DEFAULT E'0', 
-  "April" BOOLEAN DEFAULT E'0', 
-  "May" BOOLEAN DEFAULT E'0', 
-  "June" BOOLEAN DEFAULT E'0', 
-  "July" BOOLEAN DEFAULT E'0', 
-  "August" BOOLEAN DEFAULT E'0', 
-  "September" BOOLEAN DEFAULT E'0', 
-  "October" BOOLEAN DEFAULT E'0', 
-  "November" BOOLEAN DEFAULT E'0', 
-  "December" BOOLEAN DEFAULT E'0', 
-  "Year" INTEGER, 
-  "IsLocked" BOOLEAN DEFAULT E'0', 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceResourceID" SERIAL NOT NULL,
+  "PlaceID" INTEGER NOT NULL,
+  "ResourceID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "PartUsed" VARCHAR(255),
+  "CustomaryUse" VARCHAR(255),
+  "BarterResource" BOOLEAN DEFAULT E'0',
+  "Season" VARCHAR(255),
+  "Timing" VARCHAR(255),
+  "January" BOOLEAN DEFAULT E'0',
+  "February" BOOLEAN DEFAULT E'0',
+  "March" BOOLEAN DEFAULT E'0',
+  "April" BOOLEAN DEFAULT E'0',
+  "May" BOOLEAN DEFAULT E'0',
+  "June" BOOLEAN DEFAULT E'0',
+  "July" BOOLEAN DEFAULT E'0',
+  "August" BOOLEAN DEFAULT E'0',
+  "September" BOOLEAN DEFAULT E'0',
+  "October" BOOLEAN DEFAULT E'0',
+  "November" BOOLEAN DEFAULT E'0',
+  "December" BOOLEAN DEFAULT E'0',
+  "Year" INTEGER,
+  "IsLocked" BOOLEAN DEFAULT E'0',
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceResourceID")
 );
 
@@ -951,18 +951,18 @@ CREATE INDEX "PlacesResourceEvents_ResourceID" ON "PlacesResourceEvents" ("Resou
 DROP TABLE IF EXISTS "PlacesResourceMediaEvents";
 
 CREATE TABLE "PlacesResourceMediaEvents" (
-  "PlaceResourceID" INTEGER NOT NULL, 
-  "MediaID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(50), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "PlaceResourceID" INTEGER NOT NULL,
+  "MediaID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(50),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("PlaceResourceID", "MediaID")
 );
 
@@ -983,18 +983,18 @@ CREATE INDEX "PlacesResourceMediaEvents_SpeciesID" ON "PlacesResourceMediaEvents
 DROP TABLE IF EXISTS "ResourceActivityCitationEvents";
 
 CREATE TABLE "ResourceActivityCitationEvents" (
-  "ResourceActivityID" INTEGER NOT NULL, 
-  "CitationID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceActivityID" INTEGER NOT NULL,
+  "CitationID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceActivityID", "CitationID")
 );
 
@@ -1018,18 +1018,18 @@ CREATE INDEX "ResourceActivityCitationEvents_SpeciesID" ON "ResourceActivityCita
 DROP TABLE IF EXISTS "ResourceActivityMediaEvents";
 
 CREATE TABLE "ResourceActivityMediaEvents" (
-  "ResourceActivityID" INTEGER NOT NULL, 
-  "MediaID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(50), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceActivityID" INTEGER NOT NULL,
+  "MediaID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(50),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceActivityID", "MediaID")
 );
 
@@ -1050,9 +1050,9 @@ CREATE INDEX "ResourceActivityMediaEvents_SpeciesID" ON "ResourceActivityMediaEv
 DROP TABLE IF EXISTS "ResourceAltIndigenousName";
 
 CREATE TABLE "ResourceAltIndigenousName" (
-  "AltIndigenousNameID" SERIAL NOT NULL, 
-  "ResourceID" INTEGER, 
-  "AltIndigenousName" VARCHAR(255), 
+  "AltIndigenousNameID" SERIAL NOT NULL,
+  "ResourceID" INTEGER,
+  "AltIndigenousName" VARCHAR(255),
   PRIMARY KEY ("AltIndigenousNameID")
 );
 
@@ -1076,17 +1076,17 @@ CREATE INDEX "ResourceAltIndigenousName_ResourceID" ON "ResourceAltIndigenousNam
 DROP TABLE IF EXISTS "ResourceResourceEvents";
 
 CREATE TABLE "ResourceResourceEvents" (
-  "ResourceID" INTEGER NOT NULL, 
-  "AltResourceID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceID" INTEGER NOT NULL,
+  "AltResourceID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceID", "AltResourceID")
 );
 
@@ -1107,22 +1107,22 @@ CREATE INDEX "ResourceResourceEvents_SpeciesID" ON "ResourceResourceEvents" ("Al
 DROP TABLE IF EXISTS "Resources";
 
 CREATE TABLE "Resources" (
-  "ResourceID" SERIAL NOT NULL, 
-  "CommonName" VARCHAR(255), 
-  "IndigenousName" VARCHAR(255), 
-  "Genus" VARCHAR(255), 
-  "Species" VARCHAR(255), 
-  "Specific" BOOLEAN DEFAULT E'0', 
-  "ResourceClassificationGroup" VARCHAR(255), 
-  "IsLocked" BOOLEAN DEFAULT E'0', 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceID" SERIAL NOT NULL,
+  "CommonName" VARCHAR(255),
+  "IndigenousName" VARCHAR(255),
+  "Genus" VARCHAR(255),
+  "Species" VARCHAR(255),
+  "Specific" BOOLEAN DEFAULT E'0',
+  "ResourceClassificationGroup" VARCHAR(255),
+  "IsLocked" BOOLEAN DEFAULT E'0',
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceID")
 );
 
@@ -1155,7 +1155,7 @@ INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", 
 INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (172, E'Black turban snails', NULL, E'Tegula ', E'funebralis', E'1', NULL, E'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (173, E'blackberry, Evergreen', NULL, E'Rubus', E'laciniatus', E'1', NULL, E'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (174, E'blackberry, Trailing/ Dewberry', NULL, E'Rubus', E'ursinus', E'1', NULL, E'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (175, E'blueberry', NULL, E'Vaccinium', E'sp.', E'0', E'plant', E'0', NULL, NULL, NULL, NULL, E'paul', E'gis', E'fw', '2014-06-20 13:49:22');
+INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (175, E'blueberry', NULL, E'Vaccinium', E'sp.', E'0', E'flowering plant', E'0', NULL, NULL, NULL, NULL, E'paul', E'gis', E'fw', '2014-06-20 13:49:22');
 INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (176, E'bobcat', NULL, E'Lynx', E'rufus', E'1', NULL, E'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (177, E'Bocaccio ', NULL, E'Sebastes ', E'paucispinus', E'1', NULL, E'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "Resources" ("ResourceID", "CommonName", "IndigenousName", "Genus", "Species", "Specific", "ResourceClassificationGroup", "IsLocked", "EnteredByName", "EnteredByTribe", "EnteredByTitle", "EnteredByDate", "ModifiedByName", "ModifiedByTitle", "ModifiedByTribe", "ModifiedByDate") VALUES (178, E'bull trout', NULL, E'Salvelinus', E'confluentus', E'1', NULL, E'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -1380,27 +1380,27 @@ CREATE INDEX "Resources_SpeciesID" ON "Resources" ("ResourceID");
 DROP TABLE IF EXISTS "ResourcesActivityEvents";
 
 CREATE TABLE "ResourcesActivityEvents" (
-  "ResourceActivityID" SERIAL NOT NULL, 
-  "PlaceResourceID" INTEGER NOT NULL, 
-  "RelationshipDescription" TEXT, 
-  "PartUsed" VARCHAR(255), 
-  "ActivityShortDescription" VARCHAR(255), 
-  "ActivityLongDescription" TEXT, 
-  "Participants" VARCHAR(50), 
-  "Technique" VARCHAR(255), 
-  "Gear" VARCHAR(255), 
-  "CustomaryUse" VARCHAR(255), 
-  "Timing" VARCHAR(255), 
-  "TimingDescription" VARCHAR(255), 
-  "IsLocked" BOOLEAN DEFAULT E'0', 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceActivityID" SERIAL NOT NULL,
+  "PlaceResourceID" INTEGER NOT NULL,
+  "RelationshipDescription" TEXT,
+  "PartUsed" VARCHAR(255),
+  "ActivityShortDescription" VARCHAR(255),
+  "ActivityLongDescription" TEXT,
+  "Participants" VARCHAR(50),
+  "Technique" VARCHAR(255),
+  "Gear" VARCHAR(255),
+  "CustomaryUse" VARCHAR(255),
+  "Timing" VARCHAR(255),
+  "TimingDescription" VARCHAR(255),
+  "IsLocked" BOOLEAN DEFAULT E'0',
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceActivityID")
 );
 
@@ -1426,18 +1426,18 @@ CREATE INDEX "ResourcesActivityEvents_ResourcesActivityEventsPlaceResourceID" ON
 DROP TABLE IF EXISTS "ResourcesCitationEvents";
 
 CREATE TABLE "ResourcesCitationEvents" (
-  "ResourceID" INTEGER NOT NULL, 
-  "CitationID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(255), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceID" INTEGER NOT NULL,
+  "CitationID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(255),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceID", "CitationID")
 );
 
@@ -1458,18 +1458,18 @@ CREATE INDEX "ResourcesCitationEvents_SpeciesID" ON "ResourcesCitationEvents" ("
 DROP TABLE IF EXISTS "ResourcesMediaEvents";
 
 CREATE TABLE "ResourcesMediaEvents" (
-  "ResourceID" INTEGER NOT NULL, 
-  "MediaID" INTEGER NOT NULL, 
-  "RelationshipDescription" VARCHAR(255), 
-  "Pages" VARCHAR(50), 
-  "EnteredByName" VARCHAR(25), 
-  "EnteredByTribe" VARCHAR(100), 
-  "EnteredByTitle" VARCHAR(100), 
-  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  "ModifiedByName" VARCHAR(25), 
-  "ModifiedByTitle" VARCHAR(100), 
-  "ModifiedByTribe" VARCHAR(100), 
-  "ModifiedByDate" TIMESTAMP, 
+  "ResourceID" INTEGER NOT NULL,
+  "MediaID" INTEGER NOT NULL,
+  "RelationshipDescription" VARCHAR(255),
+  "Pages" VARCHAR(50),
+  "EnteredByName" VARCHAR(25),
+  "EnteredByTribe" VARCHAR(100),
+  "EnteredByTitle" VARCHAR(100),
+  "EnteredByDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "ModifiedByName" VARCHAR(25),
+  "ModifiedByTitle" VARCHAR(100),
+  "ModifiedByTribe" VARCHAR(100),
+  "ModifiedByDate" TIMESTAMP,
   PRIMARY KEY ("ResourceID", "MediaID")
 );
 
@@ -1493,8 +1493,8 @@ CREATE INDEX "ResourcesMediaEvents_SpeciesID" ON "ResourcesMediaEvents" ("MediaI
 DROP TABLE IF EXISTS "UserAccess";
 
 CREATE TABLE "UserAccess" (
-  "AccessID" SERIAL NOT NULL, 
-  "AccessLevel" VARCHAR(255), 
+  "AccessID" SERIAL NOT NULL,
+  "AccessLevel" VARCHAR(255),
   PRIMARY KEY ("AccessID")
 );
 
@@ -1518,14 +1518,14 @@ CREATE INDEX "UserAccess_AccessID" ON "UserAccess" ("AccessID");
 DROP TABLE IF EXISTS "Users";
 
 CREATE TABLE "Users" (
-  "UserID" SERIAL NOT NULL, 
-  "UserName" VARCHAR(20) NOT NULL, 
-  "Password" VARCHAR(20) NOT NULL, 
-  "FirstName" VARCHAR(255) NOT NULL, 
-  "LastName" VARCHAR(255) NOT NULL, 
-  "Affiliation" VARCHAR(255) NOT NULL, 
-  "Title" VARCHAR(255) NOT NULL, 
-  "AccessLevel" INTEGER NOT NULL, 
+  "UserID" SERIAL NOT NULL,
+  "UserName" VARCHAR(20) NOT NULL,
+  "Password" VARCHAR(20) NOT NULL,
+  "FirstName" VARCHAR(255) NOT NULL,
+  "LastName" VARCHAR(255) NOT NULL,
+  "Affiliation" VARCHAR(255) NOT NULL,
+  "Title" VARCHAR(255) NOT NULL,
+  "AccessLevel" INTEGER NOT NULL,
   PRIMARY KEY ("UserID")
 );
 
@@ -1541,4 +1541,3 @@ INSERT INTO "Users" ("UserID", "UserName", "Password", "FirstName", "LastName", 
 SELECT setval('"Users_UserID_seq"', MAX("UserID")) FROM "Users";
 
 CREATE INDEX "Users_UserID" ON "Users" ("UserID");
-
