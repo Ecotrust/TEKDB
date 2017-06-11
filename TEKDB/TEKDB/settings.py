@@ -40,13 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'nested_admin',
+    'ckeditor',
     'explore',
     'login',
     'TEKDB',
     'Lookup',
     'Accounts',
     'Relationships',
-    'nested_admin',
 ]
 
 MIDDLEWARE_CLASSES = [

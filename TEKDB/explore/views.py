@@ -1,12 +1,22 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import *
 
 # Create your views here.
 def home(request):
+    try:
+        page_content_obj = PageContent.objects.get(page="Welcome")
+        if page_content_obj.is_html:
+            page_content = page_content_obj.html_content
+        else:
+            page_content = page_content_obj.content
+    except Exception as e:
+        page_content = "<h1>Welcome</h1><h3>Set Welcome Page Content In Admin</h3>"
+
     context = {
         'page':'home',
         'pageTitle':'Welcome',
-        'pageContent':"<p>Nullam pellentesque aliquet lectus vel ornare. Praesent lacus lorem, varius vitae metus et, euismod faucibus quam. Duis egestas consectetur magna at porta. Nulla massa nisl, scelerisque quis suscipit nec, vulputate quis neque. Vestibulum diam risus, feugiat a augue sollicitudin, sodales elementum velit. Nulla iaculis ligula id justo semper lobortis. In dapibus ultricies velit, id vestibulum libero lacinia eget. Sed in purus sed libero fringilla rutrum ut varius lectus. Aliquam lobortis imperdiet felis, at consequat tortor ultrices a.</p>",
+        'pageContent':page_content,
         'user': request.user
     }
     return render(request, "welcome.html", context)
