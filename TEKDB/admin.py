@@ -115,7 +115,7 @@ class NestedPlacesresourcecitationeventsInline(nested_admin.NestedTabularInline)
     fields = ('citationid','relationshipdescription','pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'place-resource citation events'
+    verbose_name_plural = 'related citations'
     form = PlacesResourceCitationEventsForm
 
 class NestedPlacesresourcemediaeventsInline(nested_admin.NestedTabularInline):
@@ -123,7 +123,7 @@ class NestedPlacesresourcemediaeventsInline(nested_admin.NestedTabularInline):
     fields = ('mediaid','relationshipdescription','pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'place-resource media events'
+    verbose_name_plural = 'related media'
     form = PlacesResourceMediaEventsForm
 
 class NestedplaceresourcelocalityeventInline(nested_admin.NestedTabularInline):
@@ -175,6 +175,7 @@ class NestedPlaceslocalityInline(nested_admin.NestedTabularInline):
     fields = ('indigenousname', 'englishname', 'localitytype')
     extra = 0
     classes = ['collapse', 'open']
+    verbose_name_plural = 'related localities'
 
 class NestedPlacesmediaeventsInline(nested_admin.NestedTabularInline):
     model = PlacesMediaEvents
@@ -199,7 +200,7 @@ class CitationplacesresourceeventsInline(admin.TabularInline):
     fields = ('placeresourceid','relationshipdescription','pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'place-resource citation events'
+    verbose_name_plural = 'related place-resources'
     form = PlacesResourceCitationEventsForm
 
 class CitationplaceseventsInline(admin.TabularInline):
@@ -208,6 +209,7 @@ class CitationplaceseventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = PlacesCitationEventsForm
+    verbose_name_plural = 'related places'
 
 class CitationresourceseventsInline(admin.TabularInline):
     model = ResourcesCitationEvents
@@ -215,6 +217,7 @@ class CitationresourceseventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = ResourcesCitationEventsForm
+    verbose_name_plural = 'related resources'
 
 class CitationmediaeventsInline(admin.TabularInline):
     model = MediaCitationEvents
@@ -222,13 +225,14 @@ class CitationmediaeventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = MediaCitationEventsForm
+    verbose_name_plural = 'related media'
 
 class CitationresourcesactivityeventsInline(admin.TabularInline):
     model = ResourceActivityCitationEvents
     fields = ('resourceactivityid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Activity - Citations'
+    verbose_name_plural = 'related activities'
 
 #### MEDIA ####
 class MediaplaceseventsInline(admin.TabularInline):
@@ -237,6 +241,7 @@ class MediaplaceseventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = PlacesMediaEventsForm
+    verbose_name_plural = 'related places'
 
 class MediacitationeventsInline(admin.TabularInline):
     model = MediaCitationEvents
@@ -244,6 +249,7 @@ class MediacitationeventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = MediaCitationEventsForm
+    verbose_name_plural = 'related citations'
 
 class MediaresourceseventsInline(admin.TabularInline):
     model = ResourcesMediaEvents
@@ -251,13 +257,14 @@ class MediaresourceseventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = ResourcesMediaEventsForm
+    verbose_name_plural = 'related resources'
 
 class MediaplacesresourceeventsInline(admin.TabularInline):
     model = PlacesResourceMediaEvents
     fields = ('placeresourceid','relationshipdescription','pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'place-resource media events'
+    verbose_name_plural = 'related place-resources'
     form = PlacesResourceMediaEventsForm
 
 class MediaresourcesactivityeventsInline(admin.TabularInline):
@@ -265,7 +272,7 @@ class MediaresourcesactivityeventsInline(admin.TabularInline):
     fields = ('resourceactivityid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Activity - Media'
+    verbose_name_plural = 'related activities'
 
 #### RESOURCES ####
 class NestedResourcesMediaEventsInline(nested_admin.NestedTabularInline):
@@ -328,14 +335,14 @@ class ResourcesactivitymediaeventsInline(admin.TabularInline):
     fields = ('mediaid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Activity - Media'
+    verbose_name_plural = 'Related Media'
 
 class ResourcesactivitycitationeventsInline(admin.TabularInline):
     model = ResourceActivityCitationEvents
     fields = ('citationid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Activity - Citations'
+    verbose_name_plural = 'Related Citations'
 
 #### LOCALITIES ####
 class LocalityplaceresourceeventInline(admin.TabularInline):
@@ -362,15 +369,29 @@ class RecordAdminProxy(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         instance = form.save(commit=False)
-        if not hasattr(instance, 'enteredbyname') or instance.enteredbyname == None:
-            instance.enteredbyname = request.user.username
-            instance.enteredbytribe = request.user.affiliation
-            instance.enteredbytitle = request.user.title
-        instance.modifiedbyname = request.user.username
-        instance.modifiedbytribe = request.user.affiliation
-        instance.modifiedbytitle = request.user.title
-        instance.save()
+        if hasattr(instance, 'enteredbyname'):
+            if instance.enteredbyname == None:
+                instance.enteredbyname = request.user.username
+                instance.enteredbytribe = request.user.affiliation
+                instance.enteredbytitle = request.user.title
+            instance.modifiedbyname = request.user.username
+            instance.modifiedbytribe = request.user.affiliation
+            instance.modifiedbytitle = request.user.title
+            instance.save()
         return instance
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if hasattr(instance, 'enteredbyname'):
+                if instance.enteredbyname == None:
+                    instance.enteredbyname = request.user.username
+                    instance.enteredbytribe = request.user.affiliation
+                    instance.enteredbytitle = request.user.title
+                instance.modifiedbyname = request.user.username
+                instance.modifiedbytribe = request.user.affiliation
+                instance.modifiedbytitle = request.user.title
+                instance.save()
 
 class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
     readonly_fields = ('enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
@@ -378,15 +399,29 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
 
     def save_model(self, request, obj, form, change):
         instance = form.save(commit=False)
-        if not hasattr(instance, 'enteredbyname') or instance.enteredbyname == None:
-            instance.enteredbyname = request.user.username
-            instance.enteredbytribe = request.user.affiliation
-            instance.enteredbytitle = request.user.title
-        instance.modifiedbyname = request.user.username
-        instance.modifiedbytribe = request.user.affiliation
-        instance.modifiedbytitle = request.user.title
-        instance.save()
+        if hasattr(instance, 'enteredbyname'):
+            if instance.enteredbyname == None:
+                instance.enteredbyname = request.user.username
+                instance.enteredbytribe = request.user.affiliation
+                instance.enteredbytitle = request.user.title
+            instance.modifiedbyname = request.user.username
+            instance.modifiedbytribe = request.user.affiliation
+            instance.modifiedbytitle = request.user.title
+            instance.save()
         return instance
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if hasattr(instance, 'enteredbyname'):
+                if instance.enteredbyname == None:
+                    instance.enteredbyname = request.user.username
+                    instance.enteredbytribe = request.user.affiliation
+                    instance.enteredbytitle = request.user.title
+                instance.modifiedbyname = request.user.username
+                instance.modifiedbytribe = request.user.affiliation
+                instance.modifiedbytitle = request.user.title
+                instance.save()
 
 #### RECORD MODELS ####
 class CitationsAdmin(RecordAdminProxy):
