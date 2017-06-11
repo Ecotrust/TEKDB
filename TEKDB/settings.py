@@ -41,13 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'nested_admin',
+    'ckeditor',
     'explore',
     'login',
     'TEKDB',
     'Lookup',
     'Accounts',
     'Relationships',
-    'nested_admin',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -157,9 +158,26 @@ SEARCH_CATEGORIES = [
     'media',
 ]
 
-
 AUTH_USER_MODEL = 'Accounts.Users'
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Full',
+    },
+    'custom': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Format'],
+            ['Bold', 'Italic', 'Underline','Strike','Subscript','Superscript'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['Image','Table','HorizontalRule','SpecialChar'],
+            [ 'TextColor','BGColor' ],
+            ['Undo','Redo'],
+            ['RemoveFormat', 'Source']
+        ]
+    }
+}
 
 from TEKDB.heroku_settings import *
 

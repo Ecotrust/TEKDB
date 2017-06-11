@@ -6,6 +6,7 @@ configobj==5.0.6
 decorator==4.0.11
 dj-database-url==0.4.2
 Django==1.11
+django-ckeditor
 django-nested-admin
 django-registration==2.2
 gunicorn==19.7.1

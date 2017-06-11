@@ -1,30 +1,56 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import *
 
 # Create your views here.
 def home(request):
+    try:
+        page_content_obj = PageContent.objects.get(page="Welcome")
+        if page_content_obj.is_html:
+            page_content = page_content_obj.html_content
+        else:
+            page_content = page_content_obj.content
+    except Exception as e:
+        page_content = "<h1>Welcome</h1><h3>Set Welcome Page Content In Admin</h3>"
+
     context = {
         'page':'home',
         'pageTitle':'Welcome',
-        'pageContent':"<p>Nullam pellentesque aliquet lectus vel ornare. Praesent lacus lorem, varius vitae metus et, euismod faucibus quam. Duis egestas consectetur magna at porta. Nulla massa nisl, scelerisque quis suscipit nec, vulputate quis neque. Vestibulum diam risus, feugiat a augue sollicitudin, sodales elementum velit. Nulla iaculis ligula id justo semper lobortis. In dapibus ultricies velit, id vestibulum libero lacinia eget. Sed in purus sed libero fringilla rutrum ut varius lectus. Aliquam lobortis imperdiet felis, at consequat tortor ultrices a.</p>",
+        'pageContent':page_content,
         'user': request.user
     }
     return render(request, "welcome.html", context)
 
 def about(request):
+    try:
+        page_content_obj = PageContent.objects.get(page="About")
+        if page_content_obj.is_html:
+            page_content = page_content_obj.html_content
+        else:
+            page_content = page_content_obj.content
+    except Exception as e:
+        page_content = "<h1>About</h1><h3>Set About Page Content In Admin</h3>"
     context = {
         'page':'about',
-        'pageTitle':'About',
-        'pageContent':"<p>Proin eu semper libero. Vestibulum in massa nisi. Sed sed leo dolor. Praesent id arcu ornare, tincidunt velit eu, sodales orci. Nulla tincidunt velit nibh, laoreet ornare justo porttitor eu. Ut quam est, porta sed felis eu, viverra aliquam dolor. Curabitur nunc augue, elementum sed metus a, pellentesque vestibulum nisl. Phasellus nec ligula arcu. Duis eu scelerisque leo. Integer volutpat viverra neque at viverra. Etiam vitae sapien in eros porta feugiat in a.</p>",
+        'pageTitle':False,
+        'pageContent':page_content,
         'user': request.user
     }
     return render(request, "tek_index.html", context)
 
 def help(request):
+    try:
+        page_content_obj = PageContent.objects.get(page="Help")
+        if page_content_obj.is_html:
+            page_content = page_content_obj.html_content
+        else:
+            page_content = page_content_obj.content
+    except Exception as e:
+        page_content = "<h1>Help</h1><h3>Set Help Page Content In Admin</h3>"
     context = {
         'page':'help',
-        'pageTitle':'Help',
-        'pageContent':"<p>Morbi suscipit turpis in metus scelerisque accumsan. Curabitur consequat, erat sit amet rhoncus mattis, libero elit tincidunt dui, vel porta augue odio in diam. Morbi tincidunt ligula sem, in vestibulum lectus tincidunt porttitor. Phasellus cursus tortor libero, sit amet scelerisque erat aliquet quis. Aliquam egestas eros leo, eu commodo turpis iaculis id. Quisque consequat consequat nisi et semper. Donec commodo consectetur justo vel rhoncus. Praesent convallis tellus in aliquet dapibus. Nullam nisi lacus, euismod accumsan feugiat quis, placerat aliquet quam. Nulla sed euismod arcu, in commodo diam. Duis ac rhoncus ante, et dictum velit. Nunc sagittis lectus vel tortor sagittis interdum. Aliquam quis pulvinar purus. Mauris in efficitur tellus, dignissim porttitor risus.</p>",
+        'pageTitle':False,
+        'pageContent':page_content,
         'user': request.user
     }
     return render(request, "tek_index.html", context)
@@ -44,11 +70,12 @@ def get_model_by_type(model_type):
     from TEKDB import models as tekmodels
     searchable_models = {
         'resources': [tekmodels.Resources],
-        'places': [tekmodels.Places],
-        'locality': [tekmodels.Locality],
+        'places': [tekmodels.Places, tekmodels.Locality],
+        # 'locality': [tekmodels.Locality],
         'citations': [tekmodels.Citations],
         'media': [tekmodels.Media],
-        'activities': [
+        'activities': [tekmodels.ResourcesActivityEvents],
+        'relationships': [
             tekmodels.LocalityPlaceResourceEvent,
             tekmodels.MediaCitationEvents,
             tekmodels.PlacesCitationEvents,
@@ -81,7 +108,7 @@ def get_model_by_type(model_type):
     if model_type in searchable_models.keys():
         return searchable_models[model_type]
     elif model_type == 'all':
-        return sum([searchable_models[key] for key in ['resources','places','locality','citations', 'media', 'activities']],[])
+        return sum([searchable_models[key] for key in ['resources','places','locality','citations', 'media', 'activities', 'relationships']],[])
     else:
         return []
 

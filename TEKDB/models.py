@@ -886,10 +886,16 @@ class Locality(Queryable):
         verbose_name_plural = 'Localities'
 
     def __unicode__(self):
-        return unicode('%s' % (self.englishname))
+        if self.englishname:
+            return unicode('%s' % (self.englishname))
+        else:
+            return unicode('Locality in %s' % (self.placeid.englishplacename))
 
     def __str__(self):
-        return self.englishname
+        if self.englishname:
+            return self.englishname
+        else:
+            return ('Locality in %s' % (self.placeid.englishplacename))
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
