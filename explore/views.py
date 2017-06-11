@@ -30,6 +30,8 @@ def help(request):
     return render(request, "tek_index.html", context)
 
 def explore(request):
+    if not request.user.is_authenticated:
+        return home(request)
     context = {
         'page':'explore',
         'pageTitle':'Explore',

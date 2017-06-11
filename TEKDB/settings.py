@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'TEKDB',
     'Lookup',
     'Accounts',
+    'Relationships',
+    'nested_admin',
 ]
 
 MIDDLEWARE_CLASSES = [

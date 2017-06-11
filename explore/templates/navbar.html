@@ -26,11 +26,15 @@
   <div class="col-md-6">
     {% block headerButtons %}
     <div class="row header-button-row">
+      {% if user.is_authenticated %}
       {% ifnotequal pageTitle "Explore" %}
       <a href="/explore" class="col-sm-2 col-md-2 header-button">
       {% else %}
       <a class="col-sm-2 col-md-2 header-button-selected">
       {% endifnotequal %}
+      {% else %}
+      <a class="col-sm-2 col-md-2 header-button-selected">
+      {% endif %}
         Explore
       </a>
       {% ifnotequal pageTitle "About" %}
@@ -56,7 +60,7 @@
           {{ user.username }}
         </button>
         <ul class="dropdown-menu" aria-labelledby="userDropdown">
-          {% if user.is_superuser %}
+          {% if user.is_staff %}
           <li><a class="dropdown-item" href="/admin">Administration</a></li>
           {% endif %}
           <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>

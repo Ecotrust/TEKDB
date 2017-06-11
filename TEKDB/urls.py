@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'', include('explore.urls')),
+    url(r'^nested_admin/', include('nested_admin.urls')),
 ]
 
 #if settings.DEBUG:
