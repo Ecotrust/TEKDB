@@ -523,6 +523,8 @@ class ResourcesActivityEvents(Queryable):
     class Meta:
         managed = MANAGED
         db_table = 'ResourcesActivityEvents'
+        verbose_name = 'Activity'
+        verbose_name_plural = 'Activities'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.placeresourceid), self.activityshortdescription))
@@ -842,6 +844,9 @@ class CurrentVersion(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'CurrentVersion'
+        app_label = 'Lookup'
+        verbose_name = 'current version'
+        verbose_name_plural = 'current versions'
 
     def __unicode__(self):
         return unicode("Back: %d, Front:%d" % (self.backendversion, self.frontendversion))
@@ -867,7 +872,7 @@ class LookupLocalityType(models.Model):
         return self.localitytype
 
 
-class Locality(models.Model):
+class Locality(Queryable):
     localityid = models.AutoField(db_column='LocalityID', primary_key=True)
     placeid = models.ForeignKey(Places, models.DO_NOTHING, db_column='PlaceID', blank=True, null=True, verbose_name='place')
     englishname = models.CharField(db_column='EnglishName', max_length=255, blank=True, null=True, verbose_name='english name')
@@ -934,6 +939,8 @@ class LocalityGISSelections(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'LocalityGISSelections'
+        app_label = 'Relationships'
+        verbose_name_plural = 'Locality GIS Selections'
 
     def __unicode__(self):
         return unicode('%s' % (self.localitylabel))
@@ -950,12 +957,14 @@ class LocalityPlaceResourceEvent(Queryable):
         managed = MANAGED
         db_table = 'LocalityPlaceResourceEvent'
         unique_together = (('placeresourceid', 'localityid'),)
+        app_label = 'Relationships'
+        verbose_name_plural = 'Localities - Place-Resources'
 
     def __unicode__(self):
-        return unicode("%s - %s" % (str(self.localityid), str(self.placeresoureid)))
+        return unicode("%s - %s" % (str(self.localityid), str(self.placeresourceid)))
 
     def __str__(self):
-        return "%s - %s" % (str(self.localityid), str(self.placeresoureid))
+        return "%s - %s" % (str(self.localityid), str(self.placeresourceid))
 
     def keyword_search(keyword):
         locality_qs = Locality.keyword_search(keyword)
@@ -1163,6 +1172,7 @@ class PlaceAltIndigenousName(models.Model):
         db_table = 'PlaceAltIndigenousName'
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
+        app_label = 'Relationships'
 
     def __unicode__(self):
         return unicode('%s' % (self.altindigenousname))
@@ -1179,6 +1189,8 @@ class PlaceGISSelections(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'PlaceGISSelections'
+        app_label = 'Relationships'
+        verbose_name_plural = 'Place GIS Selections'
 
     def __unicode__(self):
         return unicode('%s' % (self.placelabel))
@@ -1315,6 +1327,8 @@ class PlacesResourceMediaEvents(Queryable):
         managed = MANAGED
         db_table = 'PlacesResourceMediaEvents'
         unique_together = (('placeresourceid', 'mediaid'),)
+        app_label = "Relationships"
+        verbose_name_plural = "Place-Resources - Media"
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.placeresourceid), str(self.mediaid)))
@@ -1371,6 +1385,8 @@ class ResourceActivityCitationEvents(Queryable):
         managed = MANAGED
         db_table = 'ResourceActivityCitationEvents'
         unique_together = (('resourceactivityid', 'citationid'),)
+        app_label = 'Relationships'
+        verbose_name_plural = 'Activity - Citations'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.resourceactivityid), str(self.citationid)))
@@ -1428,6 +1444,8 @@ class ResourceActivityMediaEvents(Queryable):
         managed = MANAGED
         db_table = 'ResourceActivityMediaEvents'
         unique_together = (('resourceactivityid', 'mediaid'),)
+        app_label = 'Relationships'
+        verbose_name_plural = 'Activity - Media'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.resourceactivityid), str(self.mediaid)))
@@ -1485,6 +1503,8 @@ class ResourceAltIndigenousName(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'ResourceAltIndigenousName'
+        app_label = 'Relationships'
+        verbose_name_plural = 'Resource Alternative Indigenous Names'
 
     def __unicode__(self):
         return unicode('%s' % (self.altindigenousname))
@@ -1502,6 +1522,8 @@ class ResourceResourceEvents(Queryable):
         managed = MANAGED
         db_table = 'ResourceResourceEvents'
         unique_together = (('resourceid', 'altresourceid'),)
+        app_label = 'Relationships'
+        verbose_name_plural = 'Resources - Resources'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.resourceid), str(self.altresourceid)))
@@ -1573,6 +1595,7 @@ class ResourcesCitationEvents(Queryable):
         verbose_name = 'Resource - Citation'
         verbose_name_plural = 'Resources - Citations'
         unique_together = (('resourceid', 'citationid'),)
+        app_label = 'Relationships'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.resourceid), str(self.citationid)))
@@ -1631,6 +1654,7 @@ class ResourcesMediaEvents(Queryable):
         verbose_name = 'Resource - Medium'
         verbose_name_plural = 'Resources - Media'
         unique_together = (('resourceid', 'mediaid'),)
+        app_label = 'Relationships'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.resourceid), str(self.mediaid)))

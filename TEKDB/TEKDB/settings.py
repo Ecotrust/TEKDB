@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'Lookup',
     'Accounts',
     'Relationships',
-    # 'nested_admin',
+    'nested_admin',
 ]
 
 MIDDLEWARE_CLASSES = [
