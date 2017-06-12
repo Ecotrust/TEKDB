@@ -36,3 +36,13 @@ a:hover {
   text-align: center;
   margin: 80px 150px;
 }
+
+.explore-logo {
+  margin-top: 100px;
+  text-align: center;
+}
+
+.explore-logo img {
+  height: 50px;
+  width: 50px;
+}
