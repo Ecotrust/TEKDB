@@ -1,20 +1,5 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-{{ block.super }}
-<style>
-  .explore-logo {
-    margin-top: 100px;
-    text-align: center;
-  }
-  .explore-logo img {
-    height: 50px;
-    width: 50px;
-  }
-
-</style>
-{% endblock %}
-
 {% block content %}
 <form class="explore-form" method='post' action='/search/'>
   {% csrf_token %}
