@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from TEKDB import settings
 
 MANAGED = True
 
@@ -160,7 +161,7 @@ class Places(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-map.png'
+        return settings.RECORD_ICONS['place']
 
     def subtitle(self):
         return self.indigenousplacenamemeaning
@@ -245,7 +246,7 @@ class Resources(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-resource.png'
+        return settings.RECORD_ICONS['resource']
 
     def subtitle(self):
         return self.species
@@ -407,7 +408,7 @@ class PlacesResourceEvents(Queryable):
         return "%s %s" % (str(self.placeid), str(self.resourceid))
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -569,7 +570,7 @@ class ResourcesActivityEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -723,7 +724,7 @@ class Citations(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-citation.png'
+        return settings.RECORD_ICONS['citation']
 
     def subtitle(self):
         return self.referencetext
@@ -810,7 +811,7 @@ class PlacesCitationEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -912,7 +913,7 @@ class Locality(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-map.png'
+        return settings.RECORD_ICONS['place']
 
     def subtitle(self):
         return self.indigenousname
@@ -985,7 +986,7 @@ class LocalityPlaceResourceEvent(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return ''
@@ -1084,7 +1085,7 @@ class Media(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-media.png'
+        return settings.RECORD_ICONS['media']
 
     def subtitle(self):
         return self.mediatype
@@ -1143,7 +1144,7 @@ class MediaCitationEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1239,7 +1240,7 @@ class PlacesMediaEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1297,7 +1298,7 @@ class PlacesResourceCitationEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1356,7 +1357,7 @@ class PlacesResourceMediaEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1414,7 +1415,7 @@ class ResourceActivityCitationEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1476,7 +1477,7 @@ class ResourceActivityMediaEvents(Queryable):
         return 'resource activity media'
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1548,7 +1549,7 @@ class ResourceResourceEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1623,7 +1624,7 @@ class ResourcesCitationEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
@@ -1682,7 +1683,7 @@ class ResourcesMediaEvents(Queryable):
         )
 
     def image(self):
-        return '/static/explore/img/demo-activity.png'
+        return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
         return self.relationshipdescription
