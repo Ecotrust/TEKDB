@@ -179,8 +179,18 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-from TEKDB.heroku_settings import *
+RECORD_ICONS = {
+    'activity': '/static/explore/img/activity.png',
+    'citation': '/static/explore/img/citation.png',
+    'place': '/static/explore/img/place.png',
+    'media': '/static/explore/img/media.png',
+    'event': '/static/explore/img/activity.png',
+    'resource': '/static/explore/img/resource.png',
+}
 
+# from TEKDB.local_settings import *
+
+from TEKDB.heroku_settings import *
 ### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
 
 ### Update database configuration with $DATABASE_URL.

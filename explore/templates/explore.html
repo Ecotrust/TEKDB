@@ -6,7 +6,7 @@
   <input type="text" id="search-category-type" name="category" value="all" required>
   <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
     <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('all')">Everything</button>
+      <button type="button" class="btn btn-default" onclick="setCategoryType('all')">All</button>
     </div>
     <div class="btn-group" role="category-group">
       <button type="button" class="btn btn-default" onclick="setCategoryType('places')">Place</button>
@@ -31,6 +31,10 @@
       </span>
     </div>
 </form>
+<div class='explore-logo'>
+  <img src='/static/explore/img/compass.png'>
+  <p>Explore</p>
+</div>
 {% endblock %}
 
 {% block extra_js %}
