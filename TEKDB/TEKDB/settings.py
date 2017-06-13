@@ -156,6 +156,7 @@ SEARCH_CATEGORIES = [
     'citations',
     'media',
 ]
+#Locality? People?
 
 AUTH_USER_MODEL = 'Accounts.Users'
 
