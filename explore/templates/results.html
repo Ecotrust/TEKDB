@@ -4,24 +4,62 @@
 <link rel="stylesheet" href="/static/explore/css/results.css">
 {% endblock %}
 
-{% block content %}
-<h1>{{pageTitle}}</h1>
-{{pageContent | safe}}
 
-<div class="well" data-bind="foreach: app.resultViewModel.resultGridArray">
-  <div data-bind="foreach: $data" class="row">
-    <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
-  </div>
+{% block contentwrapper %}
+<div class="container content-container">
+  <form class="query-form" method='post' action='/search/'>
+    {% csrf_token %}
+    <div class="form-group row">
+      <div class="col-md-4">
+        {{ keyword_search_input | safe }}
+      </div>
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4">
+      </div>
+    </div>
+    <div class="row content-row">
+      <div class="col-md-2">
+        <p>Type:</p>
+        {{ category_checkboxes | safe }}
+        <input type="submit" value='Apply Filter'>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-12 well content-well">
+            {% block content %}
+            <h3>Results for search "<b>{{ keyword }}</b>"</h3>
+            <div data-bind="foreach: app.resultViewModel.resultGridArray">
+              <div data-bind="foreach: $data" class="row">
+                <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
+              </div>
+            </div>
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <table>
+          <tr><td>Download</td></tr>
+          <!-- <tr><td>Sort</td></tr>
+          <tr><td>Filter</td></tr> -->
+        </table>
+      </div>
+    </div>
+  </form>
 </div>
 {% endblock %}
+
 
 {% block extra_js %}
 
 <script src="/static/explore/js/results.js"></script>
 <script>
-  app.resultViewModel.category( "{{ category }}" );
+  {% autoescape on %}
+  app.resultViewModel.categories( {{ categories | safe }} );
   app.resultViewModel.db_query( "{{ query }}" );
   app.resultViewModel.loadResults();
+  {% endautoescape %}
 </script>
 
 {% endblock %}

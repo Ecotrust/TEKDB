@@ -70,8 +70,8 @@ def get_model_by_type(model_type):
     from TEKDB import models as tekmodels
     searchable_models = {
         'resources': [tekmodels.Resources],
-        'places': [tekmodels.Places, tekmodels.Locality],
-        # 'locality': [tekmodels.Locality],
+        'places': [tekmodels.Places],
+        'locality': [tekmodels.Locality],
         'citations': [tekmodels.Citations],
         'media': [tekmodels.Media],
         'activities': [tekmodels.ResourcesActivityEvents],
@@ -108,17 +108,11 @@ def get_model_by_type(model_type):
     if model_type in searchable_models.keys():
         return searchable_models[model_type]
     elif model_type == 'all':
-        return sum([searchable_models[key] for key in ['resources','places', 'citations', 'media', 'activities', 'relationships']],[])
+        return sum([searchable_models[key] for key in ['resources','places', 'citations', 'media', 'activities']],[])
     else:
         return []
 
 def get_by_model_type(request, model_type):
-    ### Note: This would be better left done by the normal 'query' process
-    # models = get_model_by_type(model_type)
-    # return_values = []
-    # for model in models:
-    #     for obj in model.objects.all():
-    #         return_values.push(obj.get_query_json())
     context = {
         'query': '',
         'category': model_type,
@@ -154,24 +148,64 @@ def get_by_model_id(request, model_type, id):
 
 
 def search(request):
-    # if request.method == 'GET':
-    #     return explore(request)
-    # else:
+    import json
+    import TEKDB
+    all_categories = ['places','resources','activities','citations','media']
     if request.method == 'POST':
         query_string=request.POST['query']
-        category = request.POST['category']
+        if 'category' in request.POST.keys():
+            categories = [request.POST['category']]
+        else:
+            keys = request.POST.keys()
+            categories = []
+            if 'places' in keys and request.POST['places'] :
+                categories.append('places')
+            if 'resources' in keys and request.POST['resources']:
+                categories.append('resources')
+            if 'activities' in keys and request.POST['activities']:
+                categories.append('activities')
+            if 'citations' in keys and request.POST['citations']:
+                categories.append('citations')
+            if 'media' in keys and request.POST['media']:
+                categories.append('media')
     else:
         if 'query' in request.GET.keys():
             query_string = request.GET.get('query')
         else:
             query_string = None
         if 'category' in request.GET.keys():
-            category = request.GET.get('category')
+            categories = [request.GET.get('category')]
         else:
-            category = '*'
+            categories = ['all']
+
+    if categories == ['all']:
+        categories = all_categories
+
+    category_checkboxes = ''
+    for category in all_categories:
+        if category in categories:
+            checked = ' checked=true'
+        else:
+            checked = ''
+        category_checkboxes = '%s<input type="checkbox" name="%s" value="%s"%s>%s<br>\n' % (category_checkboxes, category, category,checked,category.capitalize())
+
+    if query_string in [None, '', '*']:
+        query_string_visible = 'No keyword search specified.'
+    else:
+        query_string_visible = query_string
+
+    if query_string not in [None, '', '*']:
+        query_value = ' value=%s' % query_string
+    else:
+        query_value = ''
+    keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase"%s>' % query_value
+
     context = {
         'query': query_string,
-        'category': category,
+        'keyword': query_string_visible,
+        'keyword_search_input': keyword_search_input,
+        'categories': json.dumps(categories),
+        'category_checkboxes': category_checkboxes,
         'page':'Results',
         'pageTitle':'Results',
         'pageContent':"<p>Your search results:</p>",
@@ -187,43 +221,34 @@ def query(request):
     else:
         keyword_string = None
     if 'category' in request.GET.keys() and request.GET.get('category') in TEKDB.settings.SEARCH_CATEGORIES:
-        category = request.GET.get('category')
+        categories = [request.GET.get('category')]
     else:
-        category = None
+        categories = []
+        if 'places' in request.GET.keys() and request.GET['places']:
+            categories.append('places')
+        if 'resources' in request.GET.keys() and request.GET['resources']:
+            categories.append('resources')
+        if 'activities' in request.GET.keys() and request.GET['activities']:
+            categories.append('activities')
+        if 'citations' in request.GET.keys() and request.GET['citations']:
+            categories.append('citations')
+        if 'media' in request.GET.keys() and request.GET['media']:
+            categories.append('media')
+    #TODO: need to handle #results/page, page#
 
     resultlist = []
-    query_models = get_model_by_type(category)
-    for model in query_models:
-        # Find all results matching keyword in this model
-        model_results = model.keyword_search(keyword_string)
-        for result in model_results:
-            # Create JSON object to be resturned
-            resultlist.append(result.get_response_format())
+    #TODO: Loop through list of categories
+    for category in categories:
+        query_models = get_model_by_type(category)
+        for model in query_models:
+            # Find all results matching keyword in this model
+            model_results = model.keyword_search(keyword_string)
+            for result in model_results:
+                # Create JSON object to be resturned
+                resultlist.append(result.get_response_format())
 
-    # resultlist.append({
-    #     'id': resource.pk,
-    #     # pk is django keyword for any model's Primary Key
-    #     'type': 'resources',
-    #     'name': resource.commonname,
-    #     'image': '/static/explore/img/demo-resource.png',
-    #     'description': resource.indigenousname,
-    #     'link': '/explore/resource/%d' % resource.pk,
-    # })
     results = {
         'resultList' : resultlist
     }
-
-    #####################################
-    ### START PLACEHOLDER FOR TESTING ###
-    #####################################
-    # from copy import deepcopy
-    # results = deepcopy(TEKDB.settings.TEST_QUERY_RESULTS)
-    # if category and not category == 'all':
-    #     results['resultList'] = [ x for x in results['resultList'] if x['type'] == category]
-    # if keyword_string and not keyword_string == '':
-    #     results['resultList'] = [ x for x in results['resultList'] if keyword_string.lower() in " ".join([x['type'],x['name'],x['description']]).lower()]
-    ###################################
-    ### END PLACEHOLDER FOR TESTING ###
-    ###################################
 
     return JsonResponse(results)

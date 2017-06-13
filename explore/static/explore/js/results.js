@@ -1,6 +1,6 @@
 function resultViewModel() {
   this.results = ko.observableArray([]);
-  this.category = ko.observable('all');
+  this.categories = ko.observableArray(['all']);
   this.db_query = ko.observable('*');
   this.resultGridArray = ko.computed(function () {
       var rows = [], current = [];
@@ -34,9 +34,14 @@ function resultViewModel() {
   }, this);
 
   this.loadResults = function() {
+    filter_categories = ""
+    for (var i=0; i < this.categories().length; i++) {
+      category = this.categories()[i];
+      filter_categories = filter_categories + "&" + category + "=true";
+    }
     $.ajax(
       {
-        url: '/query?query=' + this.db_query() + '&category=' + this.category(),
+        url: '/query?query=' + this.db_query() + filter_categories,
         success: function(result) {
           app.resultViewModel.results(result.resultList);
         },
