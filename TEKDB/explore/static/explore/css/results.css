@@ -19,23 +19,31 @@
 
 .result-img-col {
   width: 100%;
+  height: 185px;
   background-size: cover;
   text-align: center;
   padding: 15px;
-  border-radius: 8px 8px 0 0;
+  border-radius: 0 0 8px 8px;
+}
+.result-img-col:hover .result-img-content-wrapper {
+  background-color: peru;
 }
 
 .result-desc-col {
-  height: 100px;
-  background-color: sandybrown;
+  background-size:cover;
+  height: 50px;
+  background-color: peru;
   text-align: center;
   overflow: hidden;
   /*white-space: nowrap;*/
   text-overflow: ellipsis;
-  border-radius: 0 0 8px 8px;
+  border-radius: 8px 8px 0 0;
 }
 .result-desc-col h3 {
   margin: auto;
+  margin-top: 3px;
+  font-size: 24px;
+  /*font-size: 2vw;*/
 }
 
 .result-img-col img {
@@ -44,4 +52,10 @@
 
 .result-alt-highlight {
   background-color: #CCC;
+}
+
+.result-img-content-wrapper {
+  background-color: #CCC;
+  background-color: rgba(0,0,0,0.7);
+  max-height: 100%;
 }
