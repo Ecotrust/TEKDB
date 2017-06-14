@@ -98,9 +98,11 @@ class LookupTribe(models.Model):
 
     def get_response_format(self):
         type = 'tribes'
+        category_name = "Tribe"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': None,
             'description': None,
@@ -178,9 +180,11 @@ class Places(Queryable):
 
     def get_response_format(self):
         type = 'places'
+        category_name = 'Place'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.indigenousplacenamemeaning,
@@ -262,9 +266,11 @@ class Resources(Queryable):
 
     def get_response_format(self):
         type = 'resources'
+        category_name = 'Resource'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.indigenousname,
@@ -445,9 +451,11 @@ class PlacesResourceEvents(Queryable):
 
     def get_response_format(self):
         type = 'Placesresourceevents'
+        category_name = 'Place - Resource'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -593,9 +601,11 @@ class ResourcesActivityEvents(Queryable):
 
     def get_response_format(self):
         type = 'Resourcesactivityevents'
+        category_name = 'Activity'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -753,9 +763,11 @@ class Citations(Queryable):
 
     def get_response_format(self):
         type = 'citations'
+        category_name = 'Citation'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.referencetext,
@@ -826,9 +838,11 @@ class PlacesCitationEvents(Queryable):
 
     def get_response_format(self):
         type = 'Placescitationevents'
+        category_name = 'Place - Citation'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -928,9 +942,11 @@ class Locality(Queryable):
 
     def get_response_format(self):
         type = 'locality'
+        category_name = "Locality"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.indigenousname,
@@ -1000,9 +1016,11 @@ class LocalityPlaceResourceEvent(Queryable):
 
     def get_response_format(self):
         type = 'Placescitationevents'
+        category_name = "Place - Citation"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': 'locality place resource event',
@@ -1100,9 +1118,11 @@ class Media(Queryable):
 
     def get_response_format(self):
         type = 'media'
+        category_name = 'Media'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.mediadescription,
@@ -1159,9 +1179,11 @@ class MediaCitationEvents(Queryable):
 
     def get_response_format(self):
         type = 'Mediacitationevents'
+        category_name = 'Media - Citation'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1255,9 +1277,11 @@ class PlacesMediaEvents(Queryable):
 
     def get_response_format(self):
         type = 'Placesmediaevents'
+        category_name = "Place - Media"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1314,9 +1338,11 @@ class PlacesResourceCitationEvents(Queryable):
 
     def get_response_format(self):
         type = 'Placesresourcecitationevents'
+        category_name = 'Place/Resource - Citation'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1372,9 +1398,11 @@ class PlacesResourceMediaEvents(Queryable):
 
     def get_response_format(self):
         type = 'Placesresourcemediaevents'
+        category_name = "Place/Resource - Media"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1431,9 +1459,11 @@ class ResourceActivityCitationEvents(Queryable):
 
     def get_response_format(self):
         type = 'Resourceactivitycitationevents'
+        category_name = 'Activity - Citation'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1492,9 +1522,11 @@ class ResourceActivityMediaEvents(Queryable):
 
     def get_response_format(self):
         type = 'Resourceactivitymediaevents'
+        category_name = 'Activity - Media'
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1563,9 +1595,11 @@ class ResourceResourceEvents(Queryable):
 
     def get_response_format(self):
         type = 'Resourceresourceevents'
+        category_name = "Resource - Resource"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1639,9 +1673,11 @@ class ResourcesCitationEvents(Queryable):
 
     def get_response_format(self):
         type = 'Resourcescitationevents'
+        category_name = "Resource - Citation"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,
@@ -1698,9 +1734,11 @@ class ResourcesMediaEvents(Queryable):
 
     def get_response_format(self):
         type = 'Resourcesmediaevents'
+        category_name = "Resource - Media"
         return {
             'id': self.pk,
             'type': type,
+            'category_name': category_name,
             'name': str(self),
             'image': self.image(),
             'description': self.relationshipdescription,

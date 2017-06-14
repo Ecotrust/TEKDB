@@ -10,17 +10,18 @@ function resultViewModel() {
           bg_class = (i%2 == 1) ? '' : 'result-alt-highlight';
           current.push({ result: '\
           <a href="' + result.link + '">\
-            <div class="row result-img-row">\
-              <div class="col-md-12 col-sm-12 result-img-col '+ bg_class + '">\
-                <img src="' + result.image + '"/>\
-              </div>\
-            </div>\
             <div class="row result-desc-row">\
               <div class="col-md-12 col-sm-12 result-desc-col">\
+                <div id="result-title_' + i + '" class="result-desc">\
                 <h3>' + result.name + '</h3>\
-                <p>' + result.type + '</p>\
-                <div class="result-desc">\
-                  <p>' + result.description + '</p>\
+                </div>\
+              </div>\
+            </div>\
+            <div class="row result-img-row">\
+              <div class="col-md-12 col-sm-12 result-img-col '+ bg_class + '" style="background-image: url('+ result.image +')">\
+                <div class="result-img-content-wrapper">\
+                  <p><b>' + result.category_name + '</b></p>\
+                  '+ (result.description===null?'':'<p id="result-img_' + i + '">' + result.description + '</p>') + '\
                 </div>\
               </div>\
             </div>\
@@ -44,6 +45,7 @@ function resultViewModel() {
         url: '/query?query=' + this.db_query() + filter_categories,
         success: function(result) {
           app.resultViewModel.results(result.resultList);
+          resize_to_fit();
         },
         error: function(result) {
           window.alert('error!');
@@ -55,3 +57,36 @@ function resultViewModel() {
 };
 app.resultViewModel = new resultViewModel();
 ko.applyBindings(app.viewModel);
+
+function resize_to_fit(){
+    var titles = $('div.result-desc');
+    for (var i = 0; i < titles.length; i++){
+      var title = titles[i];
+      var id = '#' + title.id;
+      resize_title_to_fit($(id));
+    }
+    var descs = $('div.result-img-content-wrapper');
+    for (var i = 0; i < descs.length; i++){
+      var desc = descs[i];
+      if (desc.children.length > 1) {
+        var id = '#' + desc.children[1].id;
+        resize_desc_to_fit($(id));
+      }
+    }
+}
+
+function resize_title_to_fit(self){
+  var fontsize = self.children().first().css('font-size');
+  self.children().first().css('fontSize', parseFloat(fontsize) - 1);
+  if(self.height() >= self.parent().height()){
+      resize_title_to_fit(self);
+  }
+}
+
+function resize_desc_to_fit(self){
+  if (self.height() >= self.parent().height()-self.siblings().height()){
+    text_length = self.text().length;
+    self.text(self.text().substring(0,text_length-10) + '...');
+    resize_desc_to_fit(self);
+  }
+}
