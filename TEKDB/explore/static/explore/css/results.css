@@ -1,7 +1,7 @@
 .result-cell {
   /*padding: 10px;*/
   margin: 10px 4.166666%;
-  border: 2px solid white;
+  border: 2px solid #888;
   border-radius: 10px;
 }
 
@@ -12,9 +12,11 @@
 .result-cell:hover p {
   font-weight: normal;
 }
-.result-cell:hover p,
 .result-cell:hover h3 {
   color: #336633;
+}
+.result-cell:hover p{
+  color: #696;
 }
 
 .result-img-col {
@@ -24,9 +26,6 @@
   text-align: center;
   padding: 15px;
   border-radius: 0 0 8px 8px;
-}
-.result-img-col:hover .result-img-content-wrapper {
-  background-color: peru;
 }
 
 .result-desc-col {
@@ -54,8 +53,21 @@
   background-color: #CCC;
 }
 
+.result-cell:hover  .result-img-col {
+  background-color: #9EA;
+}
+
+.result-cell:hover .result-alt-highlight {
+  background-color: #AAA;
+}
+
 .result-img-content-wrapper {
-  background-color: #CCC;
+  background-color: #888;
   background-color: rgba(0,0,0,0.7);
   max-height: 100%;
+}
+
+.result-cell:hover .result-img-content-wrapper {
+  background-color: black;
+  background-color: rgba(0,0,0,0.9);
 }

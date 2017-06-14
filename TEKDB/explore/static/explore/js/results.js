@@ -20,8 +20,8 @@ function resultViewModel() {
             <div class="row result-img-row">\
               <div class="col-md-12 col-sm-12 result-img-col '+ bg_class + '" style="background-image: url('+ result.image +')">\
                 <div class="result-img-content-wrapper">\
-                  <p><b>' + result.type + '</b></p>\
-                  <p id="result-img_' + i + '">' + result.description + '</p>\
+                  <p><b>' + result.category_name + '</b></p>\
+                  '+ (result.description===null?'':'<p id="result-img_' + i + '">' + result.description + '</p>') + '\
                 </div>\
               </div>\
             </div>\
@@ -68,8 +68,10 @@ function resize_to_fit(){
     var descs = $('div.result-img-content-wrapper');
     for (var i = 0; i < descs.length; i++){
       var desc = descs[i];
-      var id = '#' + desc.children[1].id;
-      resize_desc_to_fit($(id));
+      if (desc.children.length > 1) {
+        var id = '#' + desc.children[1].id;
+        resize_desc_to_fit($(id));
+      }
     }
 }
 
@@ -85,7 +87,6 @@ function resize_desc_to_fit(self){
   if (self.height() >= self.parent().height()-self.siblings().height()){
     text_length = self.text().length;
     self.text(self.text().substring(0,text_length-10) + '...');
-    console.log(self.height().toString() + ': ' + self.parent().height().toString());
     resize_desc_to_fit(self);
   }
 }
