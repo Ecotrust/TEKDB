@@ -1,0 +1,14 @@
+.record-icon {
+  height: 80px;
+  background-size: cover;
+  float: left;
+  width: 84px;
+}
+
+li a {
+  color: black;
+}
+
+li a:hover {
+  color: #336633;
+}
