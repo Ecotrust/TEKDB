@@ -28,12 +28,29 @@ class Queryable(models.Model):
     class Meta:
         abstract = True
 
+    #Actually a dict, not true JSON.
     def get_query_json(self):
         return {
             'name': str(self),
             'image': self.image(),
             'subtitle': self.subtitle(),
             'data': self.data(),
+            'link': self.link(),
+            'enteredbyname': self.enteredbyname,
+            'enteredbydate': self.enteredbydate,
+            'modifiedbyname': self.modifiedbyname,
+            'modifiedbydate': self.modifiedbydate,
+        }
+
+    def get_record_dict(self):
+        return {
+            'name': str(self),
+            'image': self.image(),
+            'subtitle': self.subtitle(),
+            'data': self.data(),
+            'relationships': self.relationships(),
+            'map': self.map(),
+            # 'link': self.link(),
             'enteredbyname': self.enteredbyname,
             'enteredbydate': self.enteredbydate,
             'modifiedbyname': self.modifiedbyname,
@@ -170,13 +187,29 @@ class Places(Queryable):
 
     def data(self):
         return [
-            {'key':'english place name', 'value': self.englishplacename},
             {'key':'indigenous place name', 'value': self.indigenousplacename},
+            {'key':'english place name', 'value': self.englishplacename},
             {'key':'indigenous place name meaning', 'value': self.indigenousplacenamemeaning},
             {'key':'planning unit', 'value': str(self.planningunitid)},
             {'key':'primary habitat', 'value': str(self.primaryhabitat)},
             {'key':'tribe', 'value': str(self.tribeid)}
         ]
+
+    def relationships(self):
+        return [
+            {'key':'Alternate Indigenous Names', 'value': [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]},
+            {'key':'Resource Relationships', 'value': [res.get_query_json() for res in self.placesresourceevents_set.all()]},
+            {'key':'Media Relationships', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
+            {'key':'Citation Relationships', 'value': [citation.get_query_json() for citation in self.placescitationevents_set.all()]},
+            # {'key':'Localities', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
+        ]
+
+    def map(self):
+        #TODO: spatially enable and return polygon
+        return False
+
+    def link(self):
+        return '/explore/places/%d/' % self.pk
 
     def get_response_format(self):
         type = 'places'
@@ -192,10 +225,10 @@ class Places(Queryable):
         }
 
     def __unicode__(self):
-        return unicode('%s' % (self.englishplacename))
+        return unicode('%s (%s)' % (self.indigenousplacename, self.englishplacename))
 
     def __str__(self):
-        return self.englishplacename
+        return "%s (%s)" % (self.indigenousplacename, self.englishplacename)
 
 
 class LookupResourceGroup(models.Model):
@@ -254,6 +287,33 @@ class Resources(Queryable):
 
     def subtitle(self):
         return self.species
+
+    def relationships(self):
+        relationship_list = []
+        placeresources = self.placesresourceevents_set.all()
+        placeresourceidlist = [x.pk for x in placeresources]
+        activities = [x.get_query_json() for x in ResourcesActivityEvents.objects.filter(placeresourceid__in=placeresourceidlist)]
+        if len(activities) > 0:
+            relationship_list.append({'key':'Activities', 'value': activities })
+        media = [x.get_query_json() for x in self.resourcesmediaevents_set.all()]
+        if len(media) > 0:
+            relationship_list.append({'key':'Media', 'value':media })
+        citations = [x.get_query_json() for x in self.resourcescitationevents_set.all()]
+        if len(citations) > 0:
+            relationship_list.append({'key':'Citations', 'value': citations})
+        places = [x.get_query_json() for x in placeresources]
+        if len(places) > 0:
+            relationship_list.append({'key':'Places', 'value': places})
+        # resources = [x.get_query_json() for x in self.resourceresourceevents_set.all()]
+        # if len(resources) > 0:
+        #     relationship_list.append({'key':'Resources', 'value': resources})
+        return relationship_list
+
+    def map(self):
+        return False
+
+    def link(self):
+        return '/explore/resources/%d/' % self.pk
 
     def data(self):
         return [
@@ -408,10 +468,10 @@ class PlacesResourceEvents(Queryable):
         )
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.placeid), str(self.resourceid)))
+        return unicode("%s at %s" % (str(self.resourceid), str(self.placeid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.placeid), str(self.resourceid))
+        return "%s at %s" % (str(self.resourceid), str(self.placeid))
 
     def image(self):
         return settings.RECORD_ICONS['activity']
@@ -448,6 +508,21 @@ class PlacesResourceEvents(Queryable):
             {'key':'months', 'value': months},
             {'key':'year', 'value': str(self.timing)},
         ]
+
+    def link(self):
+        return '/explore/placesresourceevents/%s' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Place', 'value': [self.placeid.get_query_json()]})
+        relationship_list.append({'key':'Resource', 'value': [self.resourceid.get_query_json()]})
+        activities = [x.get_query_json() for x in self.resourcesactivityevents_set.all()]
+        if len(activities) > 0:
+            relationship_list.append({'key':'Activities', 'value': activities})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def get_response_format(self):
         type = 'Placesresourceevents'
@@ -536,10 +611,10 @@ class ResourcesActivityEvents(Queryable):
         verbose_name_plural = 'Activities'
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.placeresourceid), self.activityshortdescription))
+        return unicode("%s: %s" % (str(self.placeresourceid), self.activityshortdescription))
 
     def __str__(self):
-        return "%s %s" % (str(self.placeresourceid), self.activityshortdescription)
+        return "%s: %s" % (str(self.placeresourceid), self.activityshortdescription)
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -582,6 +657,23 @@ class ResourcesActivityEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/resourcesactivityevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Place-Resource Relationship', 'value': [self.placeresourceid.get_query_json()]})
+        citations = [x.get_query_json() for x in self.resourceactivitycitationevents_set.all()]
+        if len(citations) > 0:
+            relationship_list.append({'key':'Citation Relationships', 'value': citations})
+        media = [x.get_query_json() for x in self.resourceactivitymediaevents_set.all()]
+        if len(media) > 0:
+            relationship_list.append({'key':'Media Relationships', 'value': media})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -641,6 +733,54 @@ class People(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.firstname, self.lastname)
+
+    def image(self):
+        #TODO: Better icon or no icon
+        return '/static/explore/img/activity.png'
+
+    def data(self):
+        return [
+            {'key':'first name', 'value': self.firstname},
+            {'key':'last name', 'value': self.lastname},
+            {'key':'year born', 'value': str(self.yearborn)},
+            {'key':'village', 'value': self.village},
+            {'key':'relationship to others', 'value': self.relationshiptootherpeople}
+        ]
+
+    def link(self):
+        return '/explore/people/%s' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        interviewee_citations = [x.get_query_json() for x in self.interviewee.all()]
+        interviewer_citations = [x.get_query_json() for x in self.interviewer.all()]
+        # citations = list(set(interviewee_citations) | set(interviewer_citations))
+        if len(interviewee_citations) > 0:
+            relationship_list.append({'key': 'Citations as interviewee', 'value': interviewee_citations})
+        if len(interviewer_citations) > 0:
+            relationship_list.append({'key': 'Citations as interviewer', 'value': interviewer_citations})
+        return relationship_list
+
+    #Actually a dict, not true JSON.
+    def get_query_json(self):
+        return {
+            'name': str(self),
+            'image': self.image(),
+            'subtitle': self.village,
+            'data': self.data(),
+            'link': self.link()
+        }
+
+    def get_record_dict(self):
+        return {
+            'name': str(self),
+            'image': self.image(),
+            'subtitle': self.village,
+            'data': self.data(),
+            'relationships': self.relationships(),
+            'map': False,
+            # 'link': self.link(),
+        }
 
 
 class LookupReferenceType(models.Model):
@@ -739,6 +879,37 @@ class Citations(Queryable):
     def subtitle(self):
         return self.referencetext
 
+    def link(self):
+        return '/explore/citations/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        if self.referencetype.documenttype == 'Interview':
+            people = []
+            if not self.intervieweeid == None:
+                people.append(self.intervieweeid.get_query_json())
+            if not self.interviewerid == None:
+                people.append(self.interviewerid.get_query_json())
+            if len(people) > 0:
+                relationship_list.append({'key':'People', 'value': people})
+        places = [x.get_query_json() for x in self.placescitationevents_set.all()]
+        if len(places) > 0:
+            relationship_list.append({'key': 'Place Relationships', 'value': places})
+        resources = [x.get_query_json() for x in self.resourcescitationevents_set.all()]
+        if len(resources) > 0:
+            relationship_list.append({'key': 'Resource Relationships', 'value': resources})
+        media = [x.get_query_json() for x in self.mediacitationevents_set.all()]
+        if len(media) > 0:
+            relationship_list.append({'key': 'Media Relationships', 'value': media})
+        activities = [x.get_query_json() for x in self.resourceactivitycitationevents_set.all()]
+        if len(activities) > 0:
+            relationship_list.append({'key': 'Activity Relationships', 'value': activities})
+
+        return relationship_list
+
+    def map(self):
+        return False
+
     def data(self):
         #TODO: Return different results for different reference types
         return [
@@ -827,6 +998,18 @@ class PlacesCitationEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/placescitationevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key': 'Place', 'value': [self.placeid.get_query_json()]})
+        relationship_list.append({'key': 'Citation', 'value': [self.citationid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -932,6 +1115,23 @@ class Locality(Queryable):
     def subtitle(self):
         return self.indigenousname
 
+    def link(self):
+        return '/explore/locality/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key': 'Place', 'value':[self.placeid.get_query_json()]})
+        placeresources = [x.get_query_json() for x in self.localityplaceresourceevents_set.all()]
+        if len(placeresources) > 0:
+            relationship_list.append({'key': 'Place-resource Relationships', 'value': placeresources})
+        gisselections = [x.get_query_json() for x in self.localitygisselections_set.all()]
+        if len(gisselections) > 0:
+            relationship_list.append({'key': 'GIS Selections', 'value': gisselections})
+        return relationship_list
+
+    def map(self):
+        return False
+
     def data(self):
         return [
             {'key':'english name', 'value': self.englishname},
@@ -1006,6 +1206,18 @@ class LocalityPlaceResourceEvent(Queryable):
 
     def subtitle(self):
         return ''
+
+    def link(self):
+        return '/explore/localityplaceresourceevent/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key': 'Place-Resource', 'value': [self.placeresourceid.get_query_json()]})
+        relationship_list.append({'key': 'Locality', 'value': [self.localityid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -1108,6 +1320,31 @@ class Media(Queryable):
     def subtitle(self):
         return self.mediatype
 
+    def link(self):
+        return '/explore/media/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        places = [x.get_query_json() for x in self.placesmediaevents_set.all()]
+        if len(places) > 0:
+            relationship_list.append({'key': 'Place Relationships', 'value': places})
+        resources = [x.get_query_json() for x in self.resourcesmediaevents_set.all()]
+        if len(resources) > 0:
+            relationship_list.append({'key': 'Resource Relationships', 'value': resources})
+        citations = [x.get_query_json() for x in self.mediacitationevents_set.all()]
+        if len(citations) > 0:
+            relationship_list.append({'key': 'Citation Relationships', 'value': citations})
+        activities = [x.get_query_json() for x in self.resourceactivitymediaevents_set.all()]
+        if len(activities) > 0:
+            relationship_list.append({'key': 'Activity Relationships', 'value': activities})
+        placeresources = [x.get_query_json() for x in self.placesresourcemediaevents_set.all()]
+        if len(placeresources) > 0:
+            relationship_list.append({'key': 'Place-Resource Relationships', 'value': placeresources})
+        return relationship_list
+
+    def map(self):
+        return False
+
     def data(self):
         return [
             {'key':'name', 'value': self.medianame},
@@ -1169,6 +1406,18 @@ class MediaCitationEvents(Queryable):
     def subtitle(self):
         return self.relationshipdescription
 
+    def link(self):
+        return '/explore/mediacitationevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Media','value':[self.mediaid.get_query_json()]})
+        relationship_list.append({'key':'Citation','value':[self.citationid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
+
     def data(self):
         return [
             {'key':'media', 'value': str(self.mediaid)},
@@ -1202,6 +1451,12 @@ class PlaceAltIndigenousName(models.Model):
         verbose_name = 'Place - Indigenous Name'
         verbose_name_plural = 'Places - Indigenous Names'
         app_label = 'Relationships'
+
+    def get_query_json(self):
+        return {
+            'name': str(self),
+            'link': False
+        }
 
     def __unicode__(self):
         return unicode('%s' % (self.altindigenousname))
@@ -1267,6 +1522,18 @@ class PlacesMediaEvents(Queryable):
     def subtitle(self):
         return self.relationshipdescription
 
+    def link(self):
+        return '/explore/placesmediaevents/%s' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Place', 'value':[self.placeid.get_query_json()]})
+        relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
+
     def data(self):
         return [
             {'key':'place', 'value': str(self.placeid)},
@@ -1326,6 +1593,18 @@ class PlacesResourceCitationEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/placesresourcecitationevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Place-Resource', 'value':[self.placeresourceid.get_query_json()]})
+        relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -1388,6 +1667,18 @@ class PlacesResourceMediaEvents(Queryable):
     def subtitle(self):
         return self.relationshipdescription
 
+    def link(self):
+        return '/explore/placesresourcemediaevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Place-Resource', 'value':[self.placeresourceid.get_query_json()]})
+        relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
+
     def data(self):
         return [
             {'key':'place', 'value': str(self.placeresourceid.placeid)},
@@ -1447,6 +1738,18 @@ class ResourceActivityCitationEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/resourceactivitycitationevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Activity', 'value':[self.resourceactivityid.get_query_json()]})
+        relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -1511,6 +1814,18 @@ class ResourceActivityMediaEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/resourceactivitymediaevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Activity', 'value':[self.resourceactivityid.get_query_json()]})
+        relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -1585,6 +1900,18 @@ class ResourceResourceEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/resourceresourceevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Resource', 'value':[self.resourceid.get_query_json()]})
+        relationship_list.append({'key':'Alternate Resource', 'value':[self.altresourceid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [
@@ -1663,6 +1990,19 @@ class ResourcesCitationEvents(Queryable):
     def subtitle(self):
         return self.relationshipdescription
 
+    def link(self):
+        return '/explore/resourcescitationevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Resource', 'value':[self.resourceid.get_query_json()]})
+        relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
+        return relationship_list
+
+
+    def map(self):
+        return False
+
     def data(self):
         return [
             {'key':'resource', 'value': str(self.resourceid)},
@@ -1723,6 +2063,18 @@ class ResourcesMediaEvents(Queryable):
 
     def subtitle(self):
         return self.relationshipdescription
+
+    def link(self):
+        return '/explore/resourcesmediaevents/%d/' % self.pk
+
+    def relationships(self):
+        relationship_list = []
+        relationship_list.append({'key':'Resource', 'value':[self.resourceid.get_query_json()]})
+        relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
+        return relationship_list
+
+    def map(self):
+        return False
 
     def data(self):
         return [

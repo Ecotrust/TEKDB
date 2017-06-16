@@ -2,40 +2,66 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/explore/css/results.css">
+<link rel="stylesheet" href="/static/explore/css/record.css">
 {% endblock %}
 
 {% block content %}
 <div class='row'>
-  <div class='col-md-12'>
-    <img src='{{record.image}}' style="width: 100%; height: 120px; background-color: gray">
-  </div>
-</div>
-<div class='row'>
   <div class="col-md-1">
   </div>
   <div class="col-md-10">
-    <h2>{{record.name}}</h2>
-    <h5>{{record.subtitle}}</h5>
-    <div class='well'>
-      {% for data in record.data %}
-      <p><b>{{ data.key }}:</b> {{ data.value }}</p>
-      {% endfor %}
+    <div class='row'>
+      <div class="col record-icon" style="background-image: url({{ record.image }})">
+      </div>
+      <div class="col-md-10">
+        <h2>{{record.name}}</h2>
+        <h5>{{record.subtitle}}</h5>
+      </div>
     </div>
-    <p>
-      {% if record.enteredbyname %}
-        Entered by: {{record.enteredbyname}} on
-        {% if record.enteredbydate %}
-          {{record.enteredbydate}}
+    <div class='row'>
+      <div class='well'>
+        {% for data in record.data %}
+        <p><b>{{ data.key }}:</b> {{ data.value }}</p>
+        {% endfor %}
+        {% if record.map %}
+        <!-- TODO: Insert Map -->
+        <h3>Map should be here</h3>
         {% endif %}
-        &nbsp &nbsp|&nbsp &nbsp
-      {% endif %}
-      {% if record.modifiedbyname %}
-        Last modified by: {{record.modifiedbyname}}
-        {% if record.modifiedbydate %}
-          on {{record.modifiedbydate}}
+      </div>
+    </div>
+    {% if record.relationships|length > 0 %}
+    <div class='row'>
+      <h4>Relationships</h4>
+      <div class='well relationship-div'>
+        {% for relationship in record.relationships %}
+          {% if relationship.value|length > 0 %}
+          <p><b>{{ relationship.key }}:</b></p>
+          <ul>
+            {% for link in relationship.value %}
+              <li><a href="{{ link.link }}">{{ link.name }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class='row'>
+      <p>
+        {% if record.enteredbyname %}
+          Entered by: {{record.enteredbyname}} on
+          {% if record.enteredbydate %}
+            {{record.enteredbydate}}
+          {% endif %}
+          &nbsp &nbsp|&nbsp &nbsp
         {% endif %}
-      {% endif %}
-    </p>
+        {% if record.modifiedbyname %}
+          Last modified by: {{record.modifiedbyname}}
+          {% if record.modifiedbydate %}
+            on {{record.modifiedbydate}}
+          {% endif %}
+        {% endif %}
+      </p>
+    </div>
   </div>
   <div class="col-md-1">
   </div>

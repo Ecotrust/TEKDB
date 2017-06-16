@@ -86,28 +86,29 @@ def get_model_by_type(model_type):
             tekmodels.ResourceActivityCitationEvents,
             tekmodels.ResourceActivityMediaEvents,
             tekmodels.ResourceResourceEvents,
-            tekmodels.ResourcesActivityEvents,
+            # tekmodels.ResourcesActivityEvents,
             tekmodels.ResourcesCitationEvents,
             tekmodels.ResourcesMediaEvents,
         ],
-        'Localityplaceresourceevents': [tekmodels.LocalityPlaceResourceEvent],
-        'Mediacitationevents': [tekmodels.MediaCitationEvents],
-        'Placescitationevents': [tekmodels.PlacesCitationEvents],
-        'Placesmediaevents': [tekmodels.PlacesMediaEvents],
-        'Placesresourcecitationevents': [tekmodels.PlacesResourceCitationEvents],
-        'Placesresourceevents': [tekmodels.PlacesResourceEvents],
-        'Placesresourcemediaevents': [tekmodels.PlacesResourceMediaEvents],
-        'Resourceactivitycitationevents': [tekmodels.ResourceActivityCitationEvents],
-        'Resourceactivitymediaevents': [tekmodels.ResourceActivityMediaEvents],
-        'Resourceresourceevents': [tekmodels.ResourceResourceEvents],
-        'Resourcesactivityevents': [tekmodels.ResourcesActivityEvents],
-        'Resourcescitationevents': [tekmodels.ResourcesCitationEvents],
-        'Resourcesmediaevents': [tekmodels.ResourcesMediaEvents],
+        'localityplaceresourceevents': [tekmodels.LocalityPlaceResourceEvent],
+        'mediacitationevents': [tekmodels.MediaCitationEvents],
+        'placescitationevents': [tekmodels.PlacesCitationEvents],
+        'placesmediaevents': [tekmodels.PlacesMediaEvents],
+        'placesresourcecitationevents': [tekmodels.PlacesResourceCitationEvents],
+        'placesresourceevents': [tekmodels.PlacesResourceEvents],
+        'placesresourcemediaevents': [tekmodels.PlacesResourceMediaEvents],
+        'resourceactivitycitationevents': [tekmodels.ResourceActivityCitationEvents],
+        'resourceactivitymediaevents': [tekmodels.ResourceActivityMediaEvents],
+        'resourceresourceevents': [tekmodels.ResourceResourceEvents],
+        'resourcesactivityevents': [tekmodels.ResourcesActivityEvents],
+        'resourcescitationevents': [tekmodels.ResourcesCitationEvents],
+        'resourcesmediaevents': [tekmodels.ResourcesMediaEvents],
+        'people': [tekmodels.People],
     }
 
-    if model_type in searchable_models.keys():
-        return searchable_models[model_type]
-    elif model_type == 'all':
+    if model_type.lower() in searchable_models.keys():
+        return searchable_models[model_type.lower()]
+    elif model_type.lower() == 'all':
         return sum([searchable_models[key] for key in ['resources','places', 'citations', 'media', 'activities']],[])
     else:
         return []
@@ -129,19 +130,20 @@ def get_by_model_id(request, model_type, id):
         try:
             model = models[0]
             obj = model.objects.get(pk=id)
-            record_json = obj.get_query_json()
+            record_dict = obj.get_record_dict()
         except Exception as e:
             obj = None
-            record_json = {}
+            record_dict = {}
     else:
         obj = None
-        record_json = {}
+        record_dict = {}
+
 
     context = {
         'page':'Record',
         'pageTitle':'Record',
         'pageContent':"<p>Your record:</p>",
-        'record': record_json,
+        'record': record_dict,
         'user': request.user
     }
     return render(request, "record.html", context)
