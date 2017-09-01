@@ -262,21 +262,46 @@ def query(request):
 def download(request):
     results = getResults(request)
     format_type = request.GET.get('format')
+    filename = 'TEK_RESULTS'
+    fieldnames = ['id','name','description','type']
+    rows = []
+    for row in results['resultList']:
+        row_dict = {}
+        for field in fieldnames:
+            row_dict[field] = row[field] if row[field] else ' '
+        rows.append(row_dict)
+
+    if format_type == 'xlsx':
+        import xlsxwriter, io
+        from xlsxwriter.workbook import Workbook
+        output = io.BytesIO()
+        workbook = Workbook(output, {'in_membory': True})
+        worksheet = workbook.add_worksheet()
+        bold = workbook.add_format({'bold': True})
+        rows.insert(0, fieldnames)
+        row = 0
+        col = 0
+        for entry in rows:
+            for field in fieldnames:
+                if row == 0:
+                    worksheet.write(0, col, field, bold)
+                else:
+                    worksheet.write(row, col, entry[field])
+                col += 1
+            row += 1
+            col = 0
+        workbook.close()
+        output.seek(0)
+        xls_response = HttpResponse(output.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        xls_response['Content-Disposition'] = "attachment; filename=%s.xlsx" % filename
+
+        return xls_response
     if format_type == 'csv':
         import csv
-        from django.http import HttpResponse
         csv_response = HttpResponse(content_type='text/csv')
-        csv_response['Content-Disposition'] = 'attachment; filename="TEK_RESULTS.csv"'
-        fieldnames = ['id','name','description','type']
-
+        csv_response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
         writer = csv.DictWriter(csv_response, fieldnames=fieldnames)
         writer.writeheader()
-        for row in results['resultList']:
-            row_dict = {
-                'id': row['id'] if row['id'] else ' ',
-                'name': row['name'] if row['name'] else ' ',
-                'description': row['description'] if row['description'] else ' ',
-                'type': row['type'] if row['type'] else ' '
-            }
-            writer.writerow(row_dict)
+        for row in rows:
+            writer.writerow(row)
         return csv_response

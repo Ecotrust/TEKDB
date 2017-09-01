@@ -4,6 +4,7 @@ django-registration
 psycopg2
 django-nested-admin
 django-ckeditor
+XlsxWriter
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
 ipython

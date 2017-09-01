@@ -47,6 +47,9 @@
                 <li>
                   <a data-bind="attr: {href: '/export?format=csv&query=' + app.resultViewModel.db_query() + app.resultViewModel.filter_categories()}">.csv</a>
                 </li>
+                <li>
+                  <a data-bind="attr: {href: '/export?format=xlsx&query=' + app.resultViewModel.db_query() + app.resultViewModel.filter_categories()}">.xlsx</a>
+                </li>
               </ul>
             </td>
           </tr>
