@@ -2,6 +2,7 @@ function resultViewModel() {
   this.results = ko.observableArray([]);
   this.categories = ko.observableArray(['all']);
   this.db_query = ko.observable('*');
+  this.filter_categories = ko.observable("");
   this.resultGridArray = ko.computed(function () {
       var rows = [], current = [];
       rows.push(current);
@@ -40,9 +41,10 @@ function resultViewModel() {
       category = this.categories()[i];
       filter_categories = filter_categories + "&" + category + "=true";
     }
+    this.filter_categories(filter_categories)
     $.ajax(
       {
-        url: '/query?query=' + this.db_query() + filter_categories,
+        url: '/query?query=' + this.db_query() + this.filter_categories(),
         success: function(result) {
           app.resultViewModel.results(result.resultList);
           resize_to_fit();

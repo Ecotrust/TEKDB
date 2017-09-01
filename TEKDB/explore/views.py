@@ -215,8 +215,7 @@ def search(request):
     }
     return render(request, "results.html", context)
 
-def query(request):
-    from django.http import JsonResponse
+def getResults(request):
     import TEKDB
     if 'query' in request.GET.keys():
         keyword_string = str(request.GET.get('query'))
@@ -252,5 +251,32 @@ def query(request):
     results = {
         'resultList' : resultlist
     }
+    return results
 
+def query(request):
+    from django.http import JsonResponse
+    print(request)
+    results = getResults(request)
     return JsonResponse(results)
+
+def download(request):
+    results = getResults(request)
+    format_type = request.GET.get('format')
+    if format_type == 'csv':
+        import csv
+        from django.http import HttpResponse
+        csv_response = HttpResponse(content_type='text/csv')
+        csv_response['Content-Disposition'] = 'attachment; filename="TEK_RESULTS.csv"'
+        fieldnames = ['id','name','description','type']
+
+        writer = csv.DictWriter(csv_response, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in results['resultList']:
+            row_dict = {
+                'id': row['id'] if row['id'] else ' ',
+                'name': row['name'] if row['name'] else ' ',
+                'description': row['description'] if row['description'] else ' ',
+                'type': row['type'] if row['type'] else ' '
+            }
+            writer.writerow(row_dict)
+        return csv_response

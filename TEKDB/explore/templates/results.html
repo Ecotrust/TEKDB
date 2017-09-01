@@ -41,6 +41,15 @@
       <div class="col-md-2">
         <table>
           <tr><td>Download</td></tr>
+          <tr>
+            <td>
+              <ul id='export-links'>
+                <li>
+                  <a data-bind="attr: {href: '/export?format=csv&query=' + app.resultViewModel.db_query() + app.resultViewModel.filter_categories()}">.csv</a>
+                </li>
+              </ul>
+            </td>
+          </tr>
           <!-- <tr><td>Sort</td></tr>
           <tr><td>Filter</td></tr> -->
         </table>

@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^query/$', views.query),
     url(r'^explore$', views.explore),
     url(r'^explore/', include(explore_patterns)),
+    url(r'^export/$', views.download),
     url(r'^$', views.home),
 ]
 	#url(r'^logout$', views.logout, name='logout'),
