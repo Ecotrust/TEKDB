@@ -144,10 +144,101 @@ def get_by_model_id(request, model_type, id):
         'pageTitle':'Record',
         'pageContent':"<p>Your record:</p>",
         'record': record_dict,
-        'user': request.user
+        'user': request.user,
+        'model': model_type,
+        'id': id
     }
     return render(request, "record.html", context)
 
+def export_record_csv(record_dict, filename):
+    import csv
+    csv_response = HttpResponse(content_type='text/csv')
+    csv_response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+    writer = csv.writer(csv_response)
+    for key in record_dict.keys():
+        field = record_dict[key]
+        if type(field) == list and type(field[0]) == dict:
+            for item in field:
+                if 'key' in item.keys() and 'value' in item.keys() and len(item.keys()) == 2:
+                    if type(item['value']) == list and len(item['value']) > 0:
+                        for sub_item in item['value']:
+                            if type(sub_item) == dict and 'name' in sub_item.keys():
+                                writer.writerow(['%s - %s' %(key, item['key']), sub_item['name']])
+                            else:
+                                writer.writerow(['%s - %s' %(key, item['key']), str(sub_item)])
+                    else:
+                        writer.writerow(['%s - %s' % (key, item['key']), item['value']])
+                else:
+                    for list_key in item.keys():
+                        writer.writerow(['%s - %s' %(key, list_key), item[list_key]])
+        else:
+            writer.writerow([key, str(field)])
+    return csv_response
+
+def export_record_xls(record_dict, filename):
+    import xlsxwriter, io
+    from xlsxwriter.workbook import Workbook
+    output = io.BytesIO()
+    workbook = Workbook(output, {'in_membory': True})
+    worksheet = workbook.add_worksheet()
+    bold = workbook.add_format({'bold': True})
+    row = 0
+    for key in record_dict.keys():
+        field = record_dict[key]
+        if type(field) == list and type(field[0]) == dict:
+            for item in field:
+                if 'key' in item.keys() and 'value' in item.keys() and len(item.keys()) == 2:
+                    if type(item['value']) == list and len(item['value']) > 0:
+                        for sub_item in item['value']:
+                            if type(sub_item) == dict and 'name' in sub_item.keys():
+                                worksheet.write(row, 0, '%s - %s' %(key, item['key']))
+                                worksheet.write(row, 1, sub_item['name'])
+                                row += 1
+                            else:
+                                worksheet.write(row, 0, '%s - %s' %(key, item['key']))
+                                worksheet.write(row, 1, str(sub_item))
+                                row += 1
+                    else:
+                        worksheet.write(row, 0, '%s - %s' %(key, item['key']))
+                        worksheet.write(row, 1, item['value'])
+                        row += 1
+                else:
+                    for list_key in item.keys():
+                        worksheet.write(row, 0, '%s - %s' %(key, list_key))
+                        worksheet.write(row, 1, item[list_key])
+                        row += 1
+        else:
+            worksheet.write(row, 0, key)
+            worksheet.write(row, 1, str(field))
+            row += 1
+    workbook.close()
+    output.seek(0)
+    xls_response = HttpResponse(output.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    xls_response['Content-Disposition'] = "attachment; filename=%s.xlsx" % filename
+    return xls_response
+
+def export_by_model_id(request, model_type, id, format):
+    models = get_model_by_type(model_type)
+    if len(models) == 1:
+        try:
+            model = models[0]
+            obj = model.objects.get(pk=id)
+            record_dict = obj.get_record_dict()
+        except Exception as e:
+            record_dict = {'error': 'unknown error', 'code': '%s' % e}
+    else:
+        obj = None
+        if len(models) == 0:
+            error = 'No records returned for model: %s, id: %s' % (model_type, str(id))
+        elif len(models) > 0:
+            error = 'More than 1 records returned for model: %s, id: %s' % (model_type, str(id))
+        record_dict = {'error': error}
+
+    filename = "%s_%s_%s" % (model_type, str(id), record_dict['name'])
+    if format == 'xls':
+        return export_record_xls(record_dict, filename)
+    else:       #CSV as default
+        return export_record_csv(record_dict, filename)
 
 def search(request):
     import json
@@ -255,7 +346,7 @@ def getResults(request):
 
 def query(request):
     from django.http import JsonResponse
-    print(request)
+    # print(request)
     results = getResults(request)
     return JsonResponse(results)
 
@@ -294,9 +385,10 @@ def download(request):
         output.seek(0)
         xls_response = HttpResponse(output.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         xls_response['Content-Disposition'] = "attachment; filename=%s.xlsx" % filename
-
         return xls_response
-    if format_type == 'csv':
+
+    else:
+        # if format_type == 'csv':
         import csv
         csv_response = HttpResponse(content_type='text/csv')
         csv_response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
