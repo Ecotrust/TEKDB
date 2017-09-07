@@ -185,7 +185,7 @@ def export_record_xls(record_dict, filename):
     row = 0
     for key in record_dict.keys():
         field = record_dict[key]
-        if type(field) == list and type(field[0]) == dict:
+        if type(field) == list and len(field) > 0 and type(field[0]) == dict:
             for item in field:
                 if 'key' in item.keys() and 'value' in item.keys() and len(item.keys()) == 2:
                     if type(item['value']) == list and len(item['value']) > 0:
