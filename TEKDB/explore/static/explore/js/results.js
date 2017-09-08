@@ -54,6 +54,30 @@ function resultViewModel() {
         }
       }
     );
+    let self = this;
+    $('#pagination').pagination({
+      dataSource: function(done) {
+        $.ajax({
+          url: '/query?query=' + self.db_query() + self.filter_categories(),
+          success: function(result) {
+            done(result.resultList);
+            app.resultViewModel.results(result.resultList);
+            resize_to_fit();
+          },
+          error: function(result) {
+            window.alert('error!');
+          }
+        })
+      },
+      showNavigator: true,
+      pageSize: 9,
+      locator: 'data',
+      callback: function(data, pagination) {
+        // template method of yourself
+        var html = markupResult(data);
+        $('#results-wrap').html(html);
+      }
+    });
   };
 
 };
@@ -91,4 +115,30 @@ function resize_desc_to_fit(self){
     self.text(self.text().substring(0,text_length-10) + '...');
     resize_desc_to_fit(self);
   }
+}
+
+function markupResult(results) {
+  var a = [];
+  for (let i = 0; i < results.length; i++) {
+    let result = results[i];
+    a.push('\
+          <div class="col-md-3 col-sm-3 result-cell"><a href="' + result.link + '">\
+            <div class="row result-desc-row">\
+              <div class="col-md-12 col-sm-12 result-desc-col">\
+                <div id="result-title_' + i + '" class="result-desc">\
+                <h3>' + result.name + '</h3>\
+                </div>\
+              </div>\
+            </div>\
+            <div class="row result-img-row">\
+              <div class="col-md-12 col-sm-12 result-img-col '+ bg_class + '" style="background-image: url('+ result.image +')">\
+                <div class="result-img-content-wrapper">\
+                  <p><b>' + result.category_name + '</b></p>\
+                  '+ (result.description===null?'':'<p id="result-img_' + i + '">' + result.description + '</p>') + '\
+                </div>\
+              </div>\
+            </div>\
+          </a></div>');
+  }
+  return a;
 }
