@@ -150,12 +150,22 @@ def get_by_model_id(request, model_type, id):
     }
     return render(request, "record.html", context)
 
+def get_sorted_keys(keys):
+    sorted_keys = []
+    for key in ['name', 'image', 'subtitle', 'data', 'relationships', 'map', 'link', 'enteredbyname', 'enteredbydate', 'modifiedbyname', 'modifiedbydate']:
+        if key in keys:
+            key_idx = keys.index(key)
+            keys.pop(key_idx)
+            sorted_keys.append(key)
+    sorted_keys = sorted_keys + keys
+    return sorted_keys
+
 def export_record_csv(record_dict, filename):
     import csv
     csv_response = HttpResponse(content_type='text/csv')
     csv_response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
     writer = csv.writer(csv_response)
-    for key in record_dict.keys():
+    for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
         if type(field) == list and len(field) > 0 and type(field[0]) == dict:
             for item in field:
@@ -183,7 +193,7 @@ def export_record_xls(record_dict, filename):
     worksheet = workbook.add_worksheet()
     bold = workbook.add_format({'bold': True})
     row = 0
-    for key in record_dict.keys():
+    for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
         if type(field) == list and len(field) > 0 and type(field[0]) == dict:
             for item in field:
@@ -200,7 +210,10 @@ def export_record_xls(record_dict, filename):
                                 row += 1
                     else:
                         worksheet.write(row, 0, '%s - %s' %(key, item['key']))
-                        worksheet.write(row, 1, item['value'])
+                        try:
+                            worksheet.write(row, 1, str(item['value']))
+                        except Exception:
+                            pass
                         row += 1
                 else:
                     for list_key in item.keys():
