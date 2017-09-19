@@ -12,6 +12,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from TEKDB import settings
+from django.contrib.gis.db.models import GeometryField, GeoManager
 
 MANAGED = True
 
@@ -153,6 +154,13 @@ class Places(Queryable):
     primaryhabitat = models.ForeignKey(LookupHabitat, db_column='PrimaryHabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat')
     tribeid = models.ForeignKey(LookupTribe, db_column='TribeID', blank=True, null=True, verbose_name='tribe')
     islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
+    geometry = GeometryField(
+        srid=3857,
+        null=True, blank=True,
+        verbose_name="Place Geometry",
+        default=None
+    )
+    objects = GeoManager()
 
     class Meta:
         managed = MANAGED
@@ -2166,7 +2174,7 @@ class Users(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.userid:
             super(Users, self).save(*args, **kwargs)
-        
+
         if self.accesslevel:
             self.groups.set([self.accesslevel.group])
         else:

@@ -1,4 +1,9 @@
 REGISTRATION_OPEN = True
+DATABASE_GEOGRAPHY = {
+    'default_lon': 0,
+    'default_lat': 0,
+    'default_zoom': 10
+}
 # SECRET_KEY='fixthisdjango'
 # DATABASES = {
 #     'default': {

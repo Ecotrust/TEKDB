@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'nested_admin',
     'ckeditor',
     'explore',
@@ -186,6 +187,13 @@ RECORD_ICONS = {
     'media': '/static/explore/img/media.png',
     'event': '/static/explore/img/activity.png',
     'resource': '/static/explore/img/resource.png',
+}
+
+# Set this in local_settings.py
+DATABASE_GEOGRAPHY = {
+    'default_lon': 0,
+    'default_lat': 0,
+    'default_zoom': 4
 }
 
 from TEKDB.local_settings import *
