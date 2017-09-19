@@ -2164,6 +2164,9 @@ class Users(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
+        if not self.userid:
+            super(Users, self).save(*args, **kwargs)
+        
         if self.accesslevel:
             self.groups.set([self.accesslevel.group])
         else:
