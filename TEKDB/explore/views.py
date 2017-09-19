@@ -214,7 +214,7 @@ def export_record_xls(record_dict, filename):
     workbook.close()
     output.seek(0)
     xls_response = HttpResponse(output.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    xls_response['Content-Disposition'] = "attachment; filename=%s.xlsx" % filename
+    xls_response['Content-Disposition'] = "attachment; filename=\"%s.xlsx\"" % filename
     return xls_response
 
 def export_by_model_id(request, model_type, id, format):
