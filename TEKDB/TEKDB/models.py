@@ -147,20 +147,30 @@ class LookupHabitat(models.Model):
 
 class Places(Queryable):
     placeid = models.AutoField(db_column='PlaceID', primary_key=True)
+    # PlaceID
     indigenousplacename = models.CharField(db_column='IndigenousPlaceName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
     indigenousplacenamemeaning = models.CharField(db_column='IndigenousPlaceNameMeaning', max_length=255, blank=True, null=True, verbose_name='english translation')
     englishplacename = models.CharField(db_column='EnglishPlaceName', max_length=255, blank=True, null=True, verbose_name='english name')
+    # PlaceLabel = models.CharField(max_length=255, blank=True, null=True, verbose_name='Place Label')
     planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='PlanningUnitID', blank=True, null=True, verbose_name='planning unit')
     primaryhabitat = models.ForeignKey(LookupHabitat, db_column='PrimaryHabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat')
+    # FeatType = models.CharField(choices=FEATURE_TYPE_CHOICES)
     tribeid = models.ForeignKey(LookupTribe, db_column='TribeID', blank=True, null=True, verbose_name='tribe')
     islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
+    ### Updated Geometry Fields ###
+    objects = GeoManager()
     geometry = GeometryField(
         srid=3857,
         null=True, blank=True,
         verbose_name="Place Geometry",
         default=None
     )
-    objects = GeoManager()
+    Source = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='source')
+    DigitizedBy = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='digitized by')
+    DigitizedDate = models.DateTimeField(blank=True, null=True, auto_now_add=False, default=None, verbose_name='digitized date')
+    # PlaceDescription
+    # SHAPE_Length
+    # SHAPE_Area
 
     class Meta:
         managed = MANAGED
@@ -1084,6 +1094,17 @@ class Locality(Queryable):
     englishname = models.CharField(db_column='EnglishName', max_length=255, blank=True, null=True, verbose_name='english name')
     indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
     localitytype = models.ForeignKey(LookupLocalityType, db_column='LocalityType', max_length=255, blank=True, null=True, verbose_name='type')
+    ### Updated Geometry Fields ###
+    objects = GeoManager()
+    geometry = GeometryField(
+        srid=3857,
+        null=True, blank=True,
+        verbose_name="Place Geometry",
+        default=None
+    )
+    Source = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='source')
+    DigitizedBy = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='digitized by')
+    DigitizedDate = models.DateTimeField(blank=True, null=True, auto_now_add=False, default=None, verbose_name='digitized date')
 
     class Meta:
         managed = MANAGED

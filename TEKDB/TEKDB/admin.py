@@ -592,6 +592,7 @@ class PlacesAdmin(NestedRecordAdminProxy, GeoModelAdmin):
             'fields': (
                 ('enteredbyname','enteredbytitle','enteredbytribe','enteredbydate'),
                 ('modifiedbyname','modifiedbytitle','modifiedbytribe','modifiedbydate'),
+                ('Source','DigitizedBy','DigitizedDate')
             )
         }),
     )
@@ -682,17 +683,18 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy):
         ResourcesactivitymediaeventsInline,
     ]
 
-class LocalityAdmin(RecordAdminProxy):
+class LocalityAdmin(RecordAdminProxy, GeoModelAdmin):
     list_display = ('placeid', 'englishname', 'indigenousname',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': ('placeid', 'englishname', 'indigenousname')
+            'fields': ('placeid', 'englishname', 'indigenousname', 'geometry')
         }),
         ('History', {
             'fields': (
                 ('enteredbyname','enteredbytitle','enteredbytribe','enteredbydate'),
                 ('modifiedbyname','modifiedbytitle','modifiedbytribe','modifiedbydate'),
+                ('Source','DigitizedBy','DigitizedDate')
             )
         }),
     )
@@ -703,6 +705,10 @@ class LocalityAdmin(RecordAdminProxy):
         LocalityplaceresourceeventInline,
         LocalityGISSelectionsInline,
     ]
+    from TEKDB.settings import DATABASE_GEOGRAPHY
+    default_lon = DATABASE_GEOGRAPHY['default_lon']
+    default_lat = DATABASE_GEOGRAPHY['default_lat']
+    default_zoom = DATABASE_GEOGRAPHY['default_zoom']
 
 #### RELATIONSHIP MODELS ####
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
