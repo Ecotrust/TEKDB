@@ -223,8 +223,11 @@ class Places(Queryable):
         ]
 
     def map(self):
-        #TODO: spatially enable and return polygon
-        return False
+        try:
+            geom = self.geometry.geojson
+        except Exception:
+            return False
+        return geom
 
     def link(self):
         return '/explore/places/%d/' % self.pk
@@ -1159,7 +1162,11 @@ class Locality(Queryable):
         return relationship_list
 
     def map(self):
-        return False
+        try:
+            geom = self.geometry.geojson
+        except Exception:
+            return False
+        return geom
 
     def data(self):
         return [
