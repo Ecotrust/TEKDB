@@ -194,7 +194,8 @@ RECORD_ICONS = {
 DATABASE_GEOGRAPHY = {
     'default_lon': 0,
     'default_lat': 0,
-    'default_zoom': 4
+    'default_zoom': 4,
+    'map_template': 'gis/admin/ol2osm.html'
 }
 
 from TEKDB.local_settings import *

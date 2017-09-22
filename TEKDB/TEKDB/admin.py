@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.gis.admin import GeoModelAdmin
+from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.translation import ugettext, ugettext_lazy as _
 import nested_admin
 
@@ -575,7 +575,7 @@ class MediaAdmin(RecordAdminProxy):
     )
     form = MediaForm
 
-class PlacesAdmin(NestedRecordAdminProxy, GeoModelAdmin):
+class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
     list_display = ('indigenousplacename','englishplacename','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
@@ -615,6 +615,7 @@ class PlacesAdmin(NestedRecordAdminProxy, GeoModelAdmin):
     default_lon = DATABASE_GEOGRAPHY['default_lon']
     default_lat = DATABASE_GEOGRAPHY['default_lat']
     default_zoom = DATABASE_GEOGRAPHY['default_zoom']
+    map_template = DATABASE_GEOGRAPHY['map_template']
 
 class ResourcesAdmin(NestedRecordAdminProxy):
     list_display = ('commonname','indigenousname', 'modifiedbyname',
@@ -683,7 +684,7 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy):
         ResourcesactivitymediaeventsInline,
     ]
 
-class LocalityAdmin(RecordAdminProxy, GeoModelAdmin):
+class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
     list_display = ('placeid', 'englishname', 'indigenousname',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
     fieldsets = (
@@ -709,6 +710,7 @@ class LocalityAdmin(RecordAdminProxy, GeoModelAdmin):
     default_lon = DATABASE_GEOGRAPHY['default_lon']
     default_lat = DATABASE_GEOGRAPHY['default_lat']
     default_zoom = DATABASE_GEOGRAPHY['default_zoom']
+    map_template = DATABASE_GEOGRAPHY['map_template']
 
 #### RELATIONSHIP MODELS ####
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):

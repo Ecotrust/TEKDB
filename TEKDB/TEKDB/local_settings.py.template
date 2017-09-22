@@ -1,8 +1,14 @@
 REGISTRATION_OPEN = True
 DATABASE_GEOGRAPHY = {
-    'default_lon': 0,
-    'default_lat': 0,
-    'default_zoom': 10
+    ###EPSG:4326###
+    # 'default_lon': -124.2,
+    # 'default_lat': 41.9,
+    ###EPSG:3857###
+    'default_lon': -13825880.7546,
+    'default_lat': 5146011.678566459,
+    'default_zoom': 10,
+    'map_template': 'gis/admin/ol2osm.html',
+    'openlayers_url': 'http://www.google.com',
 }
 # SECRET_KEY='fixthisdjango'
 # DATABASES = {
