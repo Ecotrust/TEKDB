@@ -612,6 +612,7 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
         'modifiedbytribe'
     )
     from TEKDB.settings import DATABASE_GEOGRAPHY
+    #TODO: check SRID from settings, set lat/lon in 4326, then convert to 3857 if necessary
     default_lon = DATABASE_GEOGRAPHY['default_lon']
     default_lat = DATABASE_GEOGRAPHY['default_lat']
     default_zoom = DATABASE_GEOGRAPHY['default_zoom']
