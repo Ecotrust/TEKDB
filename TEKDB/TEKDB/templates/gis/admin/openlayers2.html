@@ -13,17 +13,20 @@
      background-image: url("{% static "admin/img/gis/move_vertex_off.svg" %}");
      background-repeat: no-repeat;
   }
-  .aligned label {
+  .baseLayersDiv label,
+  .dataLayersDiv label {
     color: white;
     font-weight: bold;
   }
-  .aligned label:hover {
+  .baseLayersDiv label:hover,
+  .dataLayersDiv label:hover {
     background-color: cadetblue;
     padding-left: 4px;
     margin-left: -4px;
     border-radius: 5px;
   }
-  .aligned .form-row input {
+  .aligned .baseLayersDiv input,
+  .aligned .dataLayersDiv input {
     margin: 9px 0 9px 0;
   }
   .olControlAttribution, .olControlScaleLine, .olControlMousePosition  {

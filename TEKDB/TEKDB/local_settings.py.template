@@ -8,7 +8,6 @@ DATABASE_GEOGRAPHY = {
     'default_lat': 5146011.678566459,
     'default_zoom': 10,
     'map_template': 'gis/admin/ol2osm.html',
-    'openlayers_url': 'http://www.google.com',
 }
 # SECRET_KEY='fixthisdjango'
 # DATABASES = {
