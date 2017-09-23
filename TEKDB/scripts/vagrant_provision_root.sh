@@ -14,6 +14,18 @@ POSTGRES_VERSION=$3
 
 /usr/bin/apt-get install postgresql-9.5-postgis-2.2 postgresql-contrib-9.5 -y
 
+#install Proj.4
+cd /tmp
+/usr/bin/wget http://download.osgeo.org/proj/proj-4.9.1.tar.gz
+/usr/bin/wget http://download.osgeo.org/proj/proj-datumgrid-1.5.tar.gz
+/bin/tar xzf /tmp/proj-4.9.1.tar.gz
+cd /tmp/proj-4.9.1/nad
+/bin/tar xzf /tmp/proj-datumgrid-1.5.tar.gz
+cd /tmp/proj-4.9.1
+/tmp/proj-4.9.1/configure
+/usr/bin/make
+/usr/bin/make install
+
 # /usr/bin/apt-get install pgadmin3 -y   # Do we really need this?
 /usr/bin/apt-get install binutils libgeos-$GEOS_VER libproj-dev gdal-bin python-gdal -y
 sed -i 's/local   all             postgres                                peer/local   all             postgres                                trust/' /etc/postgresql/$POSTGRES_VERSION/main/pg_hba.conf
