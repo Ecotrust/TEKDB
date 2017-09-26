@@ -148,6 +148,13 @@ def get_by_model_id(request, model_type, id):
         'model': model_type,
         'id': id
     }
+
+    if not record_dict['map'] == None:
+        from TEKDB.settings import DATABASE_GEOGRAPHY
+        context['default_lon'] = DATABASE_GEOGRAPHY['default_lon']
+        context['default_lat'] = DATABASE_GEOGRAPHY['default_lat']
+        context['default_zoom'] = DATABASE_GEOGRAPHY['default_zoom']
+
     return render(request, "record.html", context)
 
 def get_sorted_keys(keys):

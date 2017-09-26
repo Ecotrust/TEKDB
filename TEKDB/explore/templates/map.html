@@ -1,0 +1,52 @@
+<!-- TODO: Insert Map -->
+{% block extra_css %}
+<link rel="stylesheet" href="/static/explore/css/results.css">
+<link rel="stylesheet" href="/static/explore/css/record.css">
+<link rel="stylesheet" href="https://openlayers.org/en/v4.3.4/css/ol.css" type="text/css">
+<style>
+  #map {
+    height: 25em;
+  }
+</style>
+<!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+<script src="https://openlayers.org/en/v4.3.4/build/ol.js"></script>
+{% endblock %}
+
+<div id="map" class="map"></div>
+<script>
+  var esri_aerial = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+        url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
+        attributions: [
+          new ol.Attribution({
+            html: "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
+            Aerial Sources: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community</a>"
+          })
+        ]
+      })
+    });
+  var geometryObject = JSON.parse('{{ record.map | safe }}');
+  var vectorSource = new ol.source.Vector({
+    features: (new ol.format.GeoJSON()).readFeatures(geometryObject)
+  })
+  var vectorLayer = new ol.layer.Vector({
+    source: vectorSource
+  })
+  var map = new ol.Map({
+    layers: [
+      esri_aerial,
+      vectorLayer
+    ],
+    target: 'map',
+    view: new ol.View({
+      center: [{{ default_lon }}, {{ default_lat }}],
+      zoom: {{ default_zoom }}
+    })
+  });
+  if (vectorSource.getFeatures().length > 0) {
+    var geometry_extent = vectorSource.getExtent();
+    map.getView().fit(geometry_extent,map.getSize());
+  }
+
+</script>

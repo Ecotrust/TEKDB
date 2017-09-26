@@ -48,8 +48,7 @@
               <p><b>{{ data.key }}:</b> {{ data.value }}</p>
               {% endfor %}
               {% if record.map %}
-              <!-- TODO: Insert Map -->
-              <h3>Map should be here</h3>
+              {% include "map.html" %}
               {% endif %}
             </div>
           </div>
