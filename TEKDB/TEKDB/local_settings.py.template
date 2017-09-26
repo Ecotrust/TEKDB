@@ -1,4 +1,8 @@
 REGISTRATION_OPEN = True
+ALLOWED_HOSTS = [
+    'localhost',
+    u'tekdb.domain.com',
+]
 DATABASE_GEOGRAPHY = {
     ###EPSG:4326###
     # 'default_lon': -124.2,
@@ -12,7 +16,7 @@ DATABASE_GEOGRAPHY = {
 # SECRET_KEY='fixthisdjango'
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
 #         'NAME': 'DB Name',
 #         'USER': 'add user',
 #         'PASSWORD': 'add password',
