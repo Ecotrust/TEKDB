@@ -12,6 +12,9 @@ DATABASE_GEOGRAPHY = {
     'default_lat': 5146011.678566459,
     'default_zoom': 10,
     'map_template': 'gis/admin/ol2osm.html',
+    'map_extent': [-24000000, 1450000, -6200000, 13000000], #US Territories
+    'min_zoom': 2,
+    'max_zoom': 19,
 }
 # SECRET_KEY='fixthisdjango'
 # DATABASES = {

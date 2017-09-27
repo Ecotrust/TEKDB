@@ -15,7 +15,18 @@
 
 <div id="map" class="map"></div>
 <script>
-  var esri_aerial = new ol.layer.Tile({
+  var esriLabels = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+        url: "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
+        attributions: [
+          new ol.Attribution({
+            html: "<a href='http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
+            Labels Sources: Esri, HERE, DeLorme, MapmyIndia, Â© OpenStreetMap contributors, and the GIS user community</a>"
+          })
+        ]
+      })
+    });
+  var esriAerial = new ol.layer.Tile({
       source: new ol.source.XYZ({
         url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
         attributions: [
@@ -29,19 +40,27 @@
   var geometryObject = JSON.parse('{{ record.map | safe }}');
   var vectorSource = new ol.source.Vector({
     features: (new ol.format.GeoJSON()).readFeatures(geometryObject)
-  })
+  });
   var vectorLayer = new ol.layer.Vector({
     source: vectorSource
-  })
+  });
+  var osmLayer = new ol.layer.Tile({
+    source: new ol.source.OSM()
+  });
   var map = new ol.Map({
     layers: [
-      esri_aerial,
+      esriAerial,
+      // osmLayer,
+      esriLabels,
       vectorLayer
     ],
     target: 'map',
     view: new ol.View({
       center: [{{ default_lon }}, {{ default_lat }}],
-      zoom: {{ default_zoom }}
+      zoom: {{ default_zoom }},
+      minZoom: {{ min_zoom }},
+      maxZoom: {{ max_zoom }},
+      extent: {{ map_extent }}
     })
   });
   if (vectorSource.getFeatures().length > 0) {

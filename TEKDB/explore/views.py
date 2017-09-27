@@ -154,6 +154,9 @@ def get_by_model_id(request, model_type, id):
         context['default_lon'] = DATABASE_GEOGRAPHY['default_lon']
         context['default_lat'] = DATABASE_GEOGRAPHY['default_lat']
         context['default_zoom'] = DATABASE_GEOGRAPHY['default_zoom']
+        context['min_zoom'] = DATABASE_GEOGRAPHY['min_zoom']
+        context['max_zoom'] = DATABASE_GEOGRAPHY['max_zoom']
+        context['map_extent'] = DATABASE_GEOGRAPHY['map_extent']
 
     return render(request, "record.html", context)
 
