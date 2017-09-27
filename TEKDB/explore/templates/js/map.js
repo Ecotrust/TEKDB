@@ -91,7 +91,5 @@ if (vectorLayer.getSource().getFeatures().length > 0) {
   var geometry_extent = vectorLayer.getSource().getExtent();
   map.getView().fit(geometry_extent,map.getSize());
 }
-var layerSwitcher = new ol.control.LayerSwitcher({
-    // tipLabel: 'Légende' // Optional label for button
-});
+var layerSwitcher = new ol.control.LayerSwitcher();
 map.addControl(layerSwitcher);
