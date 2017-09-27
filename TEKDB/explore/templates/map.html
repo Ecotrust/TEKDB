@@ -33,7 +33,7 @@
 <script>
   /* --- LAYERS --*/
   var esriLabels = new ol.layer.Tile({
-      title: 'ESRI Labels',
+      title: 'Place Labels',
       zIndex: 5,
       source: new ol.source.XYZ({
         url: "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
@@ -46,7 +46,7 @@
       })
     });
   var esriAerial = new ol.layer.Tile({
-      title: 'ESRI Aerial',
+      title: 'Aerial Imagery',
       type: 'base',
       visible: 'true',
       source: new ol.source.XYZ({
@@ -68,7 +68,7 @@
   });
   var osmLayer = new ol.layer.Tile({
     source: new ol.source.OSM(),
-    title: 'OSM Base',
+    title: 'Street Map',
     type: 'base'
   });
 
