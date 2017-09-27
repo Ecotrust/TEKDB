@@ -1,0 +1,15 @@
+#map {
+  height: 25em;
+}
+
+.layer-switcher {
+  top: 0.5em;
+}
+
+.ol-attribution.ol-uncollapsible {
+  height: auto;
+}
+
+.ol-mouse-position {
+  position: static;
+}
