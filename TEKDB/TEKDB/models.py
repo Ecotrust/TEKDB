@@ -1382,7 +1382,7 @@ class Media(Queryable):
         if self.mediafile == None:
             mediafile = 'None'
         else:
-            mediafile = "<a class='record-link' href='%s%s'>%s</a>" % (MEDIA_URL, str(self.mediafile), str(self.mediafile))
+            mediafile = "<a class='record-link' href='%s%s' target='_blank'>%s</a>" % (MEDIA_URL, str(self.mediafile), str(self.mediafile))
 
         return [
             {'key':'name', 'value': self.medianame},
@@ -1415,7 +1415,7 @@ class Media(Queryable):
         import os
         # Detect if mediafile field changed
         if self.mediafile != self.__original_file:
-            if self.medialink:
+            if self.medialink and os.path.exists(self.medialink):
                 # remove the old media file
                 os.remove(self.medialink)
             if self.mediafile:
