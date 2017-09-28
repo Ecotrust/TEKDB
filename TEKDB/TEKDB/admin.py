@@ -14,9 +14,9 @@ admin.site.site_header = 'Traditional Ethnographic Knowledge DB Administration'
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
-        widgets = {
-            'medialink':forms.FileInput
-        }
+        # widgets = {
+        #     'medialink':forms.FileInput
+        # }
         fields = '__all__'
 
 class PlacesResourceEventForm(forms.ModelForm):
@@ -547,11 +547,14 @@ class CitationsAdmin(RecordAdminProxy):
     )
 
 class MediaAdmin(RecordAdminProxy):
+    readonly_fields = ('medialink',
+    'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
+    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
     list_display = ('medianame','mediatype','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': (('medianame','mediatype'),'medialink','mediadescription')
+            'fields': (('medianame','mediatype'),'mediafile','medialink','mediadescription')
         }),
         ('History', {
             'fields': (
@@ -560,6 +563,9 @@ class MediaAdmin(RecordAdminProxy):
             )
         }),
     )
+    from TEKDB.settings import BASE_DIR
+    add_form_template = '%s/TEKDB/templates/admin/MediaForm.html' % BASE_DIR
+    change_form_template = '%s/TEKDB/templates/admin/MediaForm.html' % BASE_DIR
     inlines = [
         MediaplaceseventsInline,
         MediacitationeventsInline,

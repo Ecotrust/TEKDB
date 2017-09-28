@@ -6,6 +6,7 @@ explore_patterns = [
     url(r'^$', views.explore),
     url(r'^(?P<model_type>\w+)/$', views.get_by_model_type),
     url(r'^(?P<model_type>\w+)/(?P<id>\w+)/$', views.get_by_model_id),
+    url(r'^(?P<model_type>\w+)/(?P<id>\w+)/download$', views.download_media_file),
 ]
 
 export_patterns = [

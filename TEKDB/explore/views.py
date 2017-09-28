@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
 
@@ -138,7 +138,6 @@ def get_by_model_id(request, model_type, id):
         obj = None
         record_dict = {}
 
-
     context = {
         'page':'Record',
         'pageTitle':'Record',
@@ -159,6 +158,36 @@ def get_by_model_id(request, model_type, id):
         context['map_extent'] = DATABASE_GEOGRAPHY['map_extent']
 
     return render(request, "record.html", context)
+
+def download_media_file(request, model_type, id):
+    models = get_model_by_type(model_type)
+    if len(models) == 1:
+        try:
+            model = models[0]
+            obj = model.objects.get(pk=id)
+        except Exception as e:
+            obj = None
+    else:
+        obj = None
+
+    media = obj.media()
+    if media:
+        import os
+        from django.utils.encoding import smart_str
+        from TEKDB.settings import MEDIA_ROOT
+
+        file_path = os.path.join(MEDIA_ROOT, media['file'])
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type='application/force-download')
+                response['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(file_path)
+                return response
+        else:
+            return Http404
+    else:
+        return Http404
+
+
 
 def get_sorted_keys(keys):
     sorted_keys = []

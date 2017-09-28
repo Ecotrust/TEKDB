@@ -12,3 +12,25 @@ li a {
 li a:hover {
   color: #336633;
 }
+
+.record-link {
+  color: black;
+}
+.record-link:hover {
+  color: black;
+}
+
+.btn-download {
+  background-color: #777;
+  padding: 1em;
+  border-radius: 5px;
+  float: right;
+}
+
+.btn-download:hover {
+  background-color: #555;
+  text-decoration: none;
+  padding: 1.2em;
+  margin-right: -0.4em;
+  margin-top: -0.2em;
+}

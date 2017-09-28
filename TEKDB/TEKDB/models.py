@@ -43,6 +43,9 @@ class Queryable(models.Model):
             'modifiedbydate': self.modifiedbydate,
         }
 
+    def map(self):
+        return None
+
     def get_record_dict(self):
         return {
             'name': str(self),
@@ -51,12 +54,16 @@ class Queryable(models.Model):
             'data': self.data(),
             'relationships': self.relationships(),
             'map': self.map(),
+            'media': self.media(),
             # 'link': self.link(),
             'enteredbyname': self.enteredbyname,
             'enteredbydate': self.enteredbydate,
             'modifiedbyname': self.modifiedbyname,
             'modifiedbydate': self.modifiedbydate,
         }
+
+    def media(self):
+        return False
 
     def save(self, *args, **kwargs):
         #TODO: set entered/modified by info now
@@ -330,9 +337,6 @@ class Resources(Queryable):
         #     relationship_list.append({'key':'Resources', 'value': resources})
         return relationship_list
 
-    def map(self):
-        return False
-
     def link(self):
         return '/explore/resources/%d/' % self.pk
 
@@ -542,9 +546,6 @@ class PlacesResourceEvents(Queryable):
             relationship_list.append({'key':'Activities', 'value': activities})
         return relationship_list
 
-    def map(self):
-        return False
-
     def get_response_format(self):
         type = 'Placesresourceevents'
         category_name = 'Place - Resource'
@@ -692,9 +693,6 @@ class ResourcesActivityEvents(Queryable):
         if len(media) > 0:
             relationship_list.append({'key':'Media Relationships', 'value': media})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -928,9 +926,6 @@ class Citations(Queryable):
 
         return relationship_list
 
-    def map(self):
-        return False
-
     def data(self):
         #TODO: Return different results for different reference types
         return [
@@ -1028,9 +1023,6 @@ class PlacesCitationEvents(Queryable):
         relationship_list.append({'key': 'Place', 'value': [self.placeid.get_query_json()]})
         relationship_list.append({'key': 'Citation', 'value': [self.citationid.get_query_json()]})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -1252,9 +1244,6 @@ class LocalityPlaceResourceEvent(Queryable):
         relationship_list.append({'key': 'Locality', 'value': [self.localityid.get_query_json()]})
         return relationship_list
 
-    def map(self):
-        return False
-
     def data(self):
         return [
             {'key':'place', 'value': str(self.placeresourceid.placeid)},
@@ -1325,7 +1314,8 @@ class Media(Queryable):
     mediatype = models.ForeignKey(LookupMediaType, db_column='MediaType', max_length=255, blank=True, null=True, verbose_name='type')
     medianame = models.CharField(db_column='MediaName', max_length=255, blank=True, null=True, verbose_name='name')
     mediadescription = models.TextField(db_column='MediaDescription', blank=True, null=True, verbose_name='description')
-    medialink = models.CharField(db_column='MediaLink', max_length=255, blank=True, null=True, verbose_name='link')
+    medialink = models.CharField(db_column='MediaLink', max_length=255, blank=True, null=True, verbose_name='historic location')
+    mediafile = models.FileField(db_column='MediaFile', max_length=255, blank=True, null=True, verbose_name='file')
 
     class Meta:
         managed = MANAGED
@@ -1378,15 +1368,28 @@ class Media(Queryable):
             relationship_list.append({'key': 'Place-Resource Relationships', 'value': placeresources})
         return relationship_list
 
-    def map(self):
-        return False
+    def media(self):
+        if not self.medialink == None or not self.mediafile == None:
+            return {
+                'file': str(self.mediafile),
+                'type': str(self.mediatype),
+            }
+        else:
+            return False
 
     def data(self):
+        from TEKDB.settings import MEDIA_URL
+        if self.mediafile == None:
+            mediafile = 'None'
+        else:
+            mediafile = "<a class='record-link' href='%s%s'>%s</a>" % (MEDIA_URL, str(self.mediafile), str(self.mediafile))
+
         return [
             {'key':'name', 'value': self.medianame},
             {'key':'media type', 'value': str(self.mediatype)},
             {'key':'media description', 'value': self.mediadescription},
-            {'key':'link', 'value': self.medialink}
+            # {'key':'link', 'value': self.medialink},
+            {'key':'file', 'value': mediafile},
         ]
 
     def get_response_format(self):
@@ -1401,6 +1404,26 @@ class Media(Queryable):
             'description': self.mediadescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
+
+    __original_file = None
+
+    def __init__(self, *args, **kwargs):
+        super(Media, self).__init__(*args, **kwargs)
+        self.__original_file = self.mediafile
+
+    def save(self, *args, **kwargs):
+        import os
+        # Detect if mediafile field changed
+        if self.mediafile != self.__original_file:
+            if self.medialink:
+                # remove the old media file
+                os.remove(self.medialink)
+            if self.mediafile:
+                # change medialink to track current media file
+                self.medialink = self.mediafile.path
+            else:
+                self.medialink = None
+        super(Media, self).save(*args, **kwargs)
 
 
 class MediaCitationEvents(Queryable):
@@ -1450,9 +1473,6 @@ class MediaCitationEvents(Queryable):
         relationship_list.append({'key':'Media','value':[self.mediaid.get_query_json()]})
         relationship_list.append({'key':'Citation','value':[self.citationid.get_query_json()]})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -1567,9 +1587,6 @@ class PlacesMediaEvents(Queryable):
         relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
         return relationship_list
 
-    def map(self):
-        return False
-
     def data(self):
         return [
             {'key':'place', 'value': str(self.placeid)},
@@ -1638,9 +1655,6 @@ class PlacesResourceCitationEvents(Queryable):
         relationship_list.append({'key':'Place-Resource', 'value':[self.placeresourceid.get_query_json()]})
         relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -1712,9 +1726,6 @@ class PlacesResourceMediaEvents(Queryable):
         relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
         return relationship_list
 
-    def map(self):
-        return False
-
     def data(self):
         return [
             {'key':'place', 'value': str(self.placeresourceid.placeid)},
@@ -1783,9 +1794,6 @@ class ResourceActivityCitationEvents(Queryable):
         relationship_list.append({'key':'Activity', 'value':[self.resourceactivityid.get_query_json()]})
         relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -1859,9 +1867,6 @@ class ResourceActivityMediaEvents(Queryable):
         relationship_list.append({'key':'Activity', 'value':[self.resourceactivityid.get_query_json()]})
         relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -1945,9 +1950,6 @@ class ResourceResourceEvents(Queryable):
         relationship_list.append({'key':'Resource', 'value':[self.resourceid.get_query_json()]})
         relationship_list.append({'key':'Alternate Resource', 'value':[self.altresourceid.get_query_json()]})
         return relationship_list
-
-    def map(self):
-        return False
 
     def data(self):
         return [
@@ -2035,10 +2037,6 @@ class ResourcesCitationEvents(Queryable):
         relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
         return relationship_list
 
-
-    def map(self):
-        return False
-
     def data(self):
         return [
             {'key':'resource', 'value': str(self.resourceid)},
@@ -2109,9 +2107,6 @@ class ResourcesMediaEvents(Queryable):
         relationship_list.append({'key':'Media', 'value':[self.mediaid.get_query_json()]})
         return relationship_list
 
-    def map(self):
-        return False
-
     def data(self):
         return [
             {'key':'resource', 'value': str(self.resourceid)},
@@ -2134,6 +2129,7 @@ class ResourcesMediaEvents(Queryable):
         }
 
 from django.contrib.auth.models import Group
+
 class UserAccess(models.Model):
     group = models.OneToOneField(Group)
     accessid = models.AutoField(db_column='AccessID', primary_key=True)

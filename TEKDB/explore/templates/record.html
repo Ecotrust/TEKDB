@@ -44,8 +44,19 @@
           </div>
           <div class='row'>
             <div class='well'>
+              {% if record.media.file %}
+                <div style="text-align: right">
+                  <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
+                  <a class='btn-download' href="download">Download</a>
+                </div>
+                {% if record.media.type == 'image' %}
+                  <div style="text-align: center">
+                    <img style="max-height: 20em" src="{{ MEDIA_URL }}{{ record.media.file }}" />
+                  </div>
+                {% endif %}
+              {% endif %}
               {% for data in record.data %}
-              <p><b>{{ data.key }}:</b> {{ data.value }}</p>
+              <p><b>{{ data.key }}:</b> {{ data.value | safe }}</p>
               {% endfor %}
               {% if record.map %}
               {% include "map.html" %}

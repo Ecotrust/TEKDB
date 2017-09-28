@@ -1,0 +1,18 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/assets/knockout/knockout-3.4.2.js"></script>
+{% endblock %}
+
+{% block field_sets %}
+{% for fieldset in adminform %}
+  {% include "admin/includes/fieldset.html" %}
+{% endfor %}
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script type="text/javascript" src="/static/TEKDB/js/media_form.js"></script>
+{% endblock %}
