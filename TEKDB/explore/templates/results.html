@@ -70,7 +70,8 @@
   {% autoescape on %}
   app.resultViewModel.categories( {{ categories | safe }} );
   app.resultViewModel.db_query( "{{ query }}" );
-  app.resultViewModel.loadResults();
+  var page = "{{ show_page|safe }}"
+  app.resultViewModel.loadResults({{ results|safe }});
   {% endautoescape %}
 </script>
 

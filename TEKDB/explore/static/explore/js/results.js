@@ -35,25 +35,9 @@ function resultViewModel() {
       return rows;
   }, this);
 
-  this.loadResults = function() {
-    filter_categories = ""
-    for (var i=0; i < this.categories().length; i++) {
-      category = this.categories()[i];
-      filter_categories = filter_categories + "&" + category + "=true";
-    }
-    this.filter_categories(filter_categories)
-    $.ajax(
-      {
-        url: '/query?query=' + this.db_query() + this.filter_categories(),
-        success: function(result) {
-          app.resultViewModel.results(result.resultList);
-          resize_to_fit();
-        },
-        error: function(result) {
-          window.alert('error!');
-        }
-      }
-    );
+  this.loadResults = function(result) {
+    app.resultViewModel.results(result.resultList);
+    resize_to_fit();
   };
 
 };

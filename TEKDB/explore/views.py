@@ -187,8 +187,6 @@ def download_media_file(request, model_type, id):
     else:
         return Http404
 
-
-
 def get_sorted_keys(keys):
     sorted_keys = []
     for key in ['name', 'image', 'subtitle', 'data', 'relationships', 'map', 'link', 'enteredbyname', 'enteredbydate', 'modifiedbyname', 'modifiedbydate']:
@@ -295,6 +293,9 @@ def export_by_model_id(request, model_type, id, format):
 def search(request):
     import json
     import TEKDB
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    from django.shortcuts import render
+
     all_categories = ['places','resources','activities','citations','media']
     if request.method == 'POST':
         query_string=request.POST['query']
@@ -345,7 +346,20 @@ def search(request):
         query_value = ''
     keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase"%s>' % query_value
 
+    resultlist = getResults(query_string, categories)
+    paginator = Paginator(resultlist, 15)
+
+    page = request.GET.get('page')
+    try:
+        page_count = paginator.page(page)
+    except PageNotAnInteger:
+        page_count = paginator.page(1)
+    except EmptyPage:
+        page_count = paginator.page(paginator.num_pages)
+
     context = {
+        'results': json.dumps({'resultList': resultlist}),
+        'show_page': page_count,
         'query': query_string,
         'keyword': query_string_visible,
         'keyword_search_input': keyword_search_input,
@@ -358,30 +372,12 @@ def search(request):
     }
     return render(request, "results.html", context)
 
-def getResults(request):
+def getResults(keyword_string, categories):
     import TEKDB
-    if 'query' in request.GET.keys():
-        keyword_string = str(request.GET.get('query'))
-    else:
-        keyword_string = None
-    if 'category' in request.GET.keys() and request.GET.get('category') in TEKDB.settings.SEARCH_CATEGORIES:
-        categories = [request.GET.get('category')]
-    else:
-        categories = []
-        if 'places' in request.GET.keys() and request.GET['places']:
-            categories.append('places')
-        if 'resources' in request.GET.keys() and request.GET['resources']:
-            categories.append('resources')
-        if 'activities' in request.GET.keys() and request.GET['activities']:
-            categories.append('activities')
-        if 'citations' in request.GET.keys() and request.GET['citations']:
-            categories.append('citations')
-        if 'media' in request.GET.keys() and request.GET['media']:
-            categories.append('media')
-    #TODO: need to handle #results/page, page#
+    if keyword_string == None:
+        keyword_string = ''
 
     resultlist = []
-    #TODO: Loop through list of categories
     for category in categories:
         query_models = get_model_by_type(category)
         for model in query_models:
@@ -391,15 +387,11 @@ def getResults(request):
                 # Create JSON object to be resturned
                 resultlist.append(result.get_response_format())
 
-    results = {
-        'resultList' : resultlist
-    }
-    return results
+    return resultlist
 
 def query(request):
     from django.http import JsonResponse
-    # print(request)
-    results = getResults(request)
+    results = {'resultList': getResults(request)}
     return JsonResponse(results)
 
 def download(request):
