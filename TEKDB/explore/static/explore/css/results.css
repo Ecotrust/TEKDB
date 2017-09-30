@@ -71,3 +71,8 @@
   background-color: black;
   background-color: rgba(0,0,0,0.9);
 }
+
+.pagination {
+  background-color: lightgray;
+  margin: 0 auto 0 -15px;;
+}

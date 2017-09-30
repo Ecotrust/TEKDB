@@ -347,7 +347,13 @@ def search(request):
     keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase"%s>' % query_value
 
     resultlist = getResults(query_string, categories)
-    paginator = Paginator(resultlist, 15)
+    items_per_page = request.GET.get('items_per_page')
+    if not items_per_page:
+        items_per_page = 15
+    if int(items_per_page) < 0:
+        items_per_page = len(resultlist)
+
+    paginator = Paginator(resultlist, items_per_page)
 
     page = request.GET.get('page')
     try:
@@ -358,8 +364,8 @@ def search(request):
         page_count = paginator.page(paginator.num_pages)
 
     context = {
-        'results': json.dumps({'resultList': resultlist}),
-        'show_page': page_count,
+        'items_per_page': items_per_page,
+        'paged_results': page_count,
         'query': query_string,
         'keyword': query_string_visible,
         'keyword_search_input': keyword_search_input,
@@ -370,6 +376,7 @@ def search(request):
         'pageContent':"<p>Your search results:</p>",
         'user': request.user
     }
+
     return render(request, "results.html", context)
 
 def getResults(keyword_string, categories):
