@@ -360,8 +360,14 @@ def search(request):
         page_count = paginator.page(page)
     except PageNotAnInteger:
         page_count = paginator.page(1)
+        page = 1
     except EmptyPage:
         page_count = paginator.page(paginator.num_pages)
+        page = paginator.num_pages
+
+    view = request.GET.get('view')
+    if view == None:
+        view = 'tile'
 
     context = {
         'items_per_page': items_per_page,
@@ -374,7 +380,9 @@ def search(request):
         'page':'Results',
         'pageTitle':'Results',
         'pageContent':"<p>Your search results:</p>",
-        'user': request.user
+        'user': request.user,
+        'view': view,
+        'state_url': "?page=%d&items_per_page=%d" % (int(page), int(items_per_page))
     }
 
     return render(request, "results.html", context)
@@ -401,13 +409,22 @@ def query(request):
     results = {'resultList': getResults(request)}
     return JsonResponse(results)
 
+def get_category_list(request):
+    # http://tdntek.ecotrust.org/export?format=csv&query=&places=true&resources=true&activities=true&citations=true&media=true
+    categories = []
+    for category in ['places','resources','activities','citations','media']:
+        if request.GET.get(category) == 'true':
+            categories.append(category)
+    return categories
+
 def download(request):
-    results = getResults(request)
+    categories = get_category_list(request)
+    results = getResults(request.GET.get('query'), categories)
     format_type = request.GET.get('format')
     filename = 'TEK_RESULTS'
     fieldnames = ['id','name','description','type']
     rows = []
-    for row in results['resultList']:
+    for row in results:
         row_dict = {}
         for field in fieldnames:
             row_dict[field] = row[field] if row[field] else ' '

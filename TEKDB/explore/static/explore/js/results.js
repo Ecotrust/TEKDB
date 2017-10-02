@@ -36,7 +36,13 @@ function resultViewModel() {
   }, this);
 
   this.loadResults = function(result) {
-    app.resultViewModel.results(result.resultList);
+    filter_categories = ""
+    for (var i=0; i < this.categories().length; i++) {
+      category = this.categories()[i];
+      filter_categories = filter_categories + "&" + category + "=true";
+    }
+    this.filter_categories(filter_categories)
+    // app.resultViewModel.results(result.resultList);
     resize_to_fit();
   };
 

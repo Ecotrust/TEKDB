@@ -74,5 +74,41 @@
 
 .pagination {
   background-color: lightgray;
-  margin: 0 auto 0 -15px;;
+  margin: 0 auto 0 auto;
+}
+
+.view-icons {
+  margin: 2px auto 5px auto;
+}
+
+.view-icons a {
+  color: black;
+}
+
+.selected-view {
+  color: white;
+  background-color: black;
+  padding: 5px;
+  border-radius: 14px;
+  margin: 5px;
+}
+.selected-view span {
+  color: white;
+}
+
+.selected-view .glyphicon-th {
+  /*margin-left: 1px;*/
+  margin-right: -4px;
+}
+
+.result-list {
+  background-color: white;
+}
+
+.list-image {
+  height: 25px;
+}
+
+.table-hover>tbody>tr:hover {
+  background-color: #DDD;
 }
