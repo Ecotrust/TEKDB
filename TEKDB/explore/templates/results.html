@@ -3,6 +3,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="/static/explore/css/results.css">
 <link rel="stylesheet" href="/static/assets/bootstrap-sortable-master/Contents/bootstrap-sortable.css">
+<link rel="stylesheet" href="/static/assets/pagination/pagination.css">
 {% endblock %}
 
 
@@ -27,33 +28,23 @@
       </div>
       <div class="col-md-8">
         <div class="pagination-row row">
-          <div class="pagination col-md-4">
-            <span class="step-links">
-                {% if paged_results.has_previous %}
-                    <a href="?page={{ paged_results.previous_page_number }}&items_per_page={{ items_per_page }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ paged_results.number }} of {{ paged_results.paginator.num_pages }}.
-                </span>
-
-                {% if paged_results.has_next %}
-                    <a href="?page={{ paged_results.next_page_number }}&items_per_page={{ items_per_page }}">next</a>
-                {% endif %}
-            </span>
+          <div class="pagination col-md-6">
+            <div class="col-md-12">
+              <div id="pagination-container"></div>
+            </div>
           </div>
           <div class='col-md-3 view-icons'>
             {% if view == 'tile' %}
             <a class='selected-view'>
             {% else %}
-            <a href='{{ state_url }}&view=tile'>
+            <a href='?page={{ state.page }}&items_per_page={{ state.items_per_page }}&view=tile'>
             {% endif %}
               <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
             </a>
             {% if view == 'list' %}
             <a class='selected-view'>
             {% else %}
-            <a href='{{ state_url }}&view=list'>
+            <a href='?page={{ state.page }}&items_per_page={{ state.items_per_page }}&view=list'>
             {% endif %}
               <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
             </a>
@@ -62,11 +53,19 @@
         <div class="row">
           <div class="col-md-12 well content-well">
             {% block content %}
-            {% if paged_results.paginator.num_pages != 1 %}
             <h3>Results for search "<b>{{ keyword }}</b>"</h3>
-            {% endif %}
+            <div class="col-md-12">
+              <div id="results-wrap"></div>
+            </div>
+
             <div>
-            {% if view == 'list' %}
+            {% if view == 'tile' %}
+            <div data-bind="foreach: app.resultViewModel.resultGridArray">
+              <div data-bind="foreach: $data" class="row">
+                <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
+              </div>
+            </div>
+            {% elif view == 'list' %}
             <table class="table table-striped table-hover result-list sortable">
               <thead>
                 <tr>
@@ -76,50 +75,13 @@
                   <th data-defaultsort="disabled" class="nosort">Description</th>
                 </tr>
               </thead>
-              <tbody>
-            {% endif %}
-            {% for result in paged_results %}
-            {% if view == 'tile' %}
-              {% if forloop.counter0|divisibleby:3 %}
-                {% if forloop.counter0 != 0 %}
-                </div>
-                {% endif %}
-                <div class="row">
-              {% endif %}
-                  <div class="col-md-3 col-sm-3 result-cell">
-                    <a href="{{ result.link }}">
-                      <div class="row result-desc-row">
-                        <div class="col-md-12 col-sm-12 result-desc-col">
-                          <div id="result-title_{{ forloop.counter0 }}" class="result-desc">
-                            <h3 style="font-size: 15px;">{{ result.name|upper }}</h3>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row result-img-row">
-                        <div class="col-md-12 col-sm-12 result-img-col {% if forloop.counter0|divisibleby:2 %}result-alt-highlight{% endif %}" style="background-image: url({{ result.image }})">
-                          <div class="result-img-content-wrapper">
-                            <p><b>{{ result.category_name }}</b></p>
-                            {% if result.description %}
-                            <p id="result-img_{{ forloop.counter0 }}">{{ result.description }}</p>
-                            {% endif %}
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-              {% if forloop.last %}
-                </div>
-              {% endif %}
-            {% elif view == 'list' %}
-            <tr>
-              <td><img class='list-image' src="{{ result.image }}" /></td>
-              <td>{{ result.name|upper }}</td>
-              <td>{{ result.category_name|upper }}</td>
-              <td>{{ result.description }}</td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-            {% if view == 'list' %}
+              <tbody data-bind="foreach: app.resultViewModel.paginated_results">
+                <tr data-bind="click: rowclick">
+                  <td><img class='list-image' data-bind="attr: { src: $data.image }" /></td>
+                  <td data-bind='text: $data.name'>name</td>
+                  <td data-bind='text: $data.category_name'></td>
+                  <td data-bind='text: $data.description'></td>
+                </tr>
               </tbody>
             </table>
             {% endif %}
@@ -143,8 +105,6 @@
               </ul>
             </td>
           </tr>
-          <!-- <tr><td>Sort</td></tr>
-          <tr><td>Filter</td></tr> -->
         </table>
       </div>
     </div>
@@ -156,13 +116,28 @@
 {% block extra_js %}
 
 <script src="/static/explore/js/results.js"></script>
+<script src="/static/assets/pagination/pagination.js"></script>
 <script src="/static/assets/bootstrap-sortable-master/Scripts/moment.min.js"></script>
 <script src="/static/assets/bootstrap-sortable-master/Scripts/bootstrap-sortable.js"></script>
 <script>
   {% autoescape on %}
   app.resultViewModel.categories( {{ categories | safe }} );
+  {% if query %}
   app.resultViewModel.db_query( "{{ query }}" );
+  {% else %}
+  app.resultViewModel.db_query( "" );
+  {% endif %}
+  app.resultViewModel.results( {{ results|safe }});
   app.resultViewModel.loadResults();
+  var rowclick = function(record){
+    window.location = record.link;
+  };
+  $('#pagination-container').pagination({
+    dataSource: app.resultViewModel.results(),
+    callback: function(data, pagination) {
+        app.resultViewModel.paginated_results(data);
+    }
+  });
   {% endautoescape %}
 </script>
 

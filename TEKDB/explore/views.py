@@ -353,25 +353,17 @@ def search(request):
     if int(items_per_page) < 0:
         items_per_page = len(resultlist)
 
-    paginator = Paginator(resultlist, items_per_page)
-
     page = request.GET.get('page')
-    try:
-        page_count = paginator.page(page)
-    except PageNotAnInteger:
-        page_count = paginator.page(1)
+    if page == None:
         page = 1
-    except EmptyPage:
-        page_count = paginator.page(paginator.num_pages)
-        page = paginator.num_pages
 
     view = request.GET.get('view')
     if view == None:
-        view = 'tile'
+        view = 'list'
 
     context = {
         'items_per_page': items_per_page,
-        'paged_results': page_count,
+        'results': json.dumps(resultlist),
         'query': query_string,
         'keyword': query_string_visible,
         'keyword_search_input': keyword_search_input,
@@ -382,7 +374,10 @@ def search(request):
         'pageContent':"<p>Your search results:</p>",
         'user': request.user,
         'view': view,
-        'state_url': "?page=%d&items_per_page=%d" % (int(page), int(items_per_page))
+        'state': {
+            'page' : int(page),
+            'items_per_page' : int(items_per_page),
+        },
     }
 
     return render(request, "results.html", context)
@@ -410,7 +405,6 @@ def query(request):
     return JsonResponse(results)
 
 def get_category_list(request):
-    # http://tdntek.ecotrust.org/export?format=csv&query=&places=true&resources=true&activities=true&citations=true&media=true
     categories = []
     for category in ['places','resources','activities','citations','media']:
         if request.GET.get(category) == 'true':

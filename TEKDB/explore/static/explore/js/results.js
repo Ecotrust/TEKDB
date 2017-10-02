@@ -1,13 +1,14 @@
 function resultViewModel() {
   this.results = ko.observableArray([]);
+  this.paginated_results = ko.observableArray([]);
   this.categories = ko.observableArray(['all']);
   this.db_query = ko.observable('*');
   this.filter_categories = ko.observable("");
   this.resultGridArray = ko.computed(function () {
       var rows = [], current = [];
       rows.push(current);
-      for (var i = 0; i < this.results().length; i += 1) {
-          result = this.results()[i];
+      for (var i = 0; i < this.paginated_results().length; i += 1) {
+          result = this.paginated_results()[i];
           bg_class = (i%2 == 1) ? '' : 'result-alt-highlight';
           current.push({ result: '\
           <a href="' + result.link + '">\
