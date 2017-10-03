@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load explore_tags %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/assets/pagination/pagination.css">
@@ -118,6 +119,7 @@
 <script src="/static/explore/js/results.js"></script>
 <script src="/static/assets/pagination/pagination.js"></script>
 <script src="/static/assets/datatables/datatables.min.js"></script>
+<script src="/static/assets/jquery-plugin-query-object-master/jquery.query-object.js"></script>
 <script>
   {% autoescape on %}
   app.resultViewModel.categories( {{ categories | safe }} );
@@ -128,20 +130,49 @@
   {% endif %}
   app.resultViewModel.results( {{ results|safe }});
   app.resultViewModel.loadResults();
+  app.resultViewModel.state_page( {{ state.page }} );
+  app.resultViewModel.state_items_per_page( {{ state.items_per_page }} );
+
   var rowclick = function(record){
     window.location = record.link;
   };
   $('#pagination-container').pagination({
     dataSource: app.resultViewModel.results(),
+    pageSize: {{ items_per_page }},
+    pageNumber: {{ state.page }},
+    pageRange: 1,
     callback: function(data, pagination) {
         app.resultViewModel.paginated_results(data);
     }
   });
   {% if view == 'list' %}
   $(document).ready( function () {
-    $('#results_table').DataTable();
     $('.paginationjs').detach();
+
+    var results_per_page_options = [10, 25, 50, 100, {{ items_per_page }}].sort(function(a, b){return a - b});
+    $('#results_table').DataTable({
+      /* displayStart takes the index of the record to show, not the page, 0-addressed */
+      "displayStart": {{ state.page|add:"-1"|mult:items_per_page}},
+      "pageLength": {{ items_per_page }},
+      "lengthMenu": results_per_page_options
+    });
+
     $('#pagination-container').append( $('#results_table_paginate') );
+
+    var reset_triggers = function() {
+        setTimeout(function() {
+          $('.paginate_button').click(page_click);
+        }, 20);
+    }
+
+    var page_click = function(button){
+      page = button.target.text;
+      window.location.hash = $.query.set('page', page);
+      app.resultViewModel.state_page(parseInt(page));
+      console.log(window.location.pathname+app.resultViewModel.get_state());
+      reset_triggers();
+    }
+    $('.paginate_button').click(page_click);
   } );
   {% endif %}
   {% endautoescape %}

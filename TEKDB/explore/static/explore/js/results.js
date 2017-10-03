@@ -4,6 +4,23 @@ function resultViewModel() {
   this.categories = ko.observableArray(['all']);
   this.db_query = ko.observable('*');
   this.filter_categories = ko.observable("");
+  this.state_page = ko.observable();
+  this.state_items_per_page = ko.observable();
+  this.get_state = function() {
+    state = [];
+    if (this.state_page() != null) {
+      state.push('page='+this.state_page());
+    }
+    if (this.state_items_per_page() != null) {
+      state.push('items_per_page='+this.state_items_per_page());
+    }
+    if (state.length > 0) {
+      return '?'+state.join("&");
+    } else {
+      return '';
+    }
+  }
+
   this.resultGridArray = ko.computed(function () {
       var rows = [], current = [];
       rows.push(current);
