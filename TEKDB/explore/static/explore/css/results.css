@@ -111,3 +111,64 @@
 .table-hover>tbody>tr:hover {
   background-color: #DDD;
 }
+
+.dataTables_wrapper .dataTables_paginate {
+  float: left;
+  text-align: left;
+  /*padding-bottom: 0.5em;*/
+  padding-top: 0;
+  margin-top: -0.5em;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 0.5em;
+}
+
+.paginationjs .paginationjs-pages li:last-child ,
+.paginationjs .paginationjs-pages li {
+  border: none;
+}
+
+/*.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {*/
+.paginationjs .paginationjs-pages li.active > a {
+  min-width: 0;
+  /*width: auto;*/
+  height: 36px;
+  line-height: 20px;
+  padding: 0.5em;
+  color: #333 !important;
+  border: 1px solid #979797;
+  background-color: white;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #dcdcdc));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, white 0%, #dcdcdc 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, white 0%, #dcdcdc 100%);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, white 0%, #dcdcdc 100%);
+  /* IE10+ */
+  background: -o-linear-gradient(top, white 0%, #dcdcdc 100%);
+  /* Opera 11.10+ */
+  background: linear-gradient(to bottom, white 0%, #dcdcdc 100%);
+  /* W3C */
+}
+
+.paginationjs .paginationjs-pages li > a {
+  min-width: 0;
+  width: 1.7em;
+  padding: 0.5em;
+  border-radius: 2px;
+  height: 36px;
+  line-height: 20px;
+}
+
+.paginationjs .paginationjs-pages li {
+  display: inline;
+  margin-left: 2px;
+  height: 36px;
+  line-height: 20px;
+}
+
+.paginationjs-ellipsis {
+  padding: 0 0.5em;
+}
