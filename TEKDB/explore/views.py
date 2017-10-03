@@ -349,7 +349,7 @@ def search(request):
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')
     if not items_per_page:
-        items_per_page = 15
+        items_per_page = 25
     if int(items_per_page) < 0:
         items_per_page = len(resultlist)
 

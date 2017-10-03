@@ -6,6 +6,7 @@ function resultViewModel() {
   this.filter_categories = ko.observable("");
   this.state_page = ko.observable();
   this.state_items_per_page = ko.observable();
+  this.state_order = ko.observableArray([]);
   this.get_state = function() {
     state = [];
     if (this.state_page() != null) {
@@ -15,7 +16,7 @@ function resultViewModel() {
       state.push('items_per_page='+this.state_items_per_page());
     }
     if (state.length > 0) {
-      return '?'+state.join("&");
+      return state.join("&");
     } else {
       return '';
     }

@@ -67,13 +67,13 @@
               </div>
             </div>
             {% elif view == 'list' %}
-            <table id='results_table' class="table table-striped table-hover result-list sortable">
+            <table id='results_table' class="table table-striped table-hover result-list">
               <thead>
                 <tr>
-                  <th data-defaultsort="disabled" class="nosort"></th>
-                  <th data-sortcolumn="1" data-sortkey="1-0">Name</th>
-                  <th data-sortcolumn="2" data-sortkey="2-0">Category</th>
-                  <th data-defaultsort="disabled" class="nosort">Description</th>
+                  <th></th>
+                  <th id='name_col'>Name</th>
+                  <th id='category_col'>Category</th>
+                  <th id='description_col'>Description</th>
                 </tr>
               </thead>
               <tbody data-bind="foreach: app.resultViewModel.results">
@@ -119,6 +119,9 @@
 <script src="/static/explore/js/results.js"></script>
 <script src="/static/assets/pagination/pagination.js"></script>
 <script src="/static/assets/datatables/datatables.min.js"></script>
+<script>
+  $.query = { hash: true };
+</script>
 <script src="/static/assets/jquery-plugin-query-object-master/jquery.query-object.js"></script>
 <script>
   {% autoescape on %}
@@ -145,37 +148,10 @@
         app.resultViewModel.paginated_results(data);
     }
   });
-  {% if view == 'list' %}
-  $(document).ready( function () {
-    $('.paginationjs').detach();
-
-    var results_per_page_options = [10, 25, 50, 100, {{ items_per_page }}].sort(function(a, b){return a - b});
-    $('#results_table').DataTable({
-      /* displayStart takes the index of the record to show, not the page, 0-addressed */
-      "displayStart": {{ state.page|add:"-1"|mult:items_per_page}},
-      "pageLength": {{ items_per_page }},
-      "lengthMenu": results_per_page_options
-    });
-
-    $('#pagination-container').append( $('#results_table_paginate') );
-
-    var reset_triggers = function() {
-        setTimeout(function() {
-          $('.paginate_button').click(page_click);
-        }, 20);
-    }
-
-    var page_click = function(button){
-      page = button.target.text;
-      window.location.hash = $.query.set('page', page);
-      app.resultViewModel.state_page(parseInt(page));
-      console.log(window.location.pathname+app.resultViewModel.get_state());
-      reset_triggers();
-    }
-    $('.paginate_button').click(page_click);
-  } );
-  {% endif %}
   {% endautoescape %}
 </script>
+{% if view == 'list' %}
+<script src="/static/explore/js/list_view.js"></script>
+{% endif %}
 
 {% endblock %}
