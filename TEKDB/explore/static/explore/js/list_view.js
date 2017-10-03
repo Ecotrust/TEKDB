@@ -103,9 +103,9 @@ $(document).ready( function () {
     "displayStart": display_start,
     "pageLength": app.resultViewModel.state_items_per_page(),
     "lengthMenu": results_per_page_options,
-    "search": {
-      "search": initial_filter
-    },
+    // "search": {
+    //   "search": initial_filter
+    // },
     "order": app.resultViewModel.state_order(),
     "columnDefs": [
       { "orderable": false, "targets": 0 }
@@ -113,6 +113,8 @@ $(document).ready( function () {
   });
 
   $('#pagination-container').append( $('#results_table_paginate') );
+  $('#results_table_filter').detach();
+  $('#results_table_length').append( $('#results_table_info') );
 
   //Set up initial state triggers
   reset_triggers();

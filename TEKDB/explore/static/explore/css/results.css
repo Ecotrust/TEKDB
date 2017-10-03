@@ -224,3 +224,12 @@
   background-color: white;
   font-weight: normal;
 }
+
+#results_table_length {
+  width: 100%;
+}
+
+.dataTables_wrapper .dataTables_info {
+  float: right;
+  margin-top: -0.75em;
+}
