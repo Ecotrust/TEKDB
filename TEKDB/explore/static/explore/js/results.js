@@ -74,10 +74,12 @@ function resultViewModel() {
 
   this.setViewTiled = function() {
     app.resultViewModel.state_view('tile');
+    window.location.hash = $.query.SET('view', app.resultViewModel.state_view());
   };
 
   this.setViewList = function() {
     app.resultViewModel.state_view('list');
+    window.location.hash = $.query.SET('view', app.resultViewModel.state_view());
     reset_triggers();
   };
 

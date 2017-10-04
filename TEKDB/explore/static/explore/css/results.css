@@ -82,6 +82,11 @@
 
 .view-icons a {
   color: black;
+  text-decoration: none;
+}
+
+.view-icons a:hover {
+  color: #696;
 }
 
 .selected-view {
