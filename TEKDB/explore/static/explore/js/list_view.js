@@ -5,20 +5,11 @@ var reset_triggers = function() {
       //Change Page
       $('.paginate_button').off('click');
       $('.paginate_button').click(page_click);
-      //Change Items per Page
-      $('#results_table_length > label > select').change(change_items_per_page);
-      //Change Search Filter
-      $('#results_table_filter > label > input').keyup(change_filter);
-      //Change Sorting
-      $("#name_col").click(change_sort);
-      $("#category_col").click(change_sort);
-      $("#description_col").click(change_sort);
     }, 20);
 }
 
 var page_click = function(event){
   page = event.target.text;
-  console.log('page clicked: '+ page);
   if (isNaN(page)) {
     current_page = parseInt(app.resultViewModel.state_page());
     var max_page = app.datatable.page.info().pages;
@@ -133,6 +124,12 @@ $(document).ready( function () {
   $('#pagination-container').append( $('#results_table_paginate') );
   $('#results_table_filter').detach();
   $('#results_table_length').append( $('#results_table_info') );
+  $('#results-controls').append( $('#results_table_length') );
+  $('#results_table_length > label > select').change(change_items_per_page);
+  $("#name_col").click(change_sort);
+  $("#category_col").click(change_sort);
+  $("#description_col").click(change_sort);
+
 
   //Set up initial state triggers
   reset_triggers();

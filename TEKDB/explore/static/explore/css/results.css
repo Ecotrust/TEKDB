@@ -234,7 +234,7 @@
   width: 100%;
 }
 
-.dataTables_wrapper .dataTables_info {
+#results_table_info {
   float: right;
-  margin-top: -0.75em;
+  /*margin-top: -0.75em;*/
 }

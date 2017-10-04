@@ -7,13 +7,25 @@ function resultViewModel() {
   this.state_page = ko.observable();
   this.state_items_per_page = ko.observable();
   this.state_order = ko.observableArray([]);
-  this.state_view = ko.observable('tile');
+  this.state_view = ko.observable('list');
   this.view_is_tiled = ko.computed(function() {
     return this.state_view() == 'tile';
   }, this);
   this.view_is_list = ko.computed(function() {
     return this.state_view() == 'list';
   }, this);
+
+  this.loadStateFromHash = function(){
+    if ($.query.get('view') == 'tile' || $.query.get('view') == 'list'){
+      this.state_view($.query.get('view'));
+    }
+    if ($.query.get('page') != '' && !isNaN($.query.get('page'))) {
+      this.state_page($.query.get('page'));
+    }
+    if ($.query.get('items_per_page') != '' && !isNaN($.query.get('items_per_page'))) {
+      this.state_page($.query.get('items_per_page'));
+    }
+  }
 
   this.show_pagination = function(view) {
       $('.paginationjs').hide();
@@ -23,12 +35,17 @@ function resultViewModel() {
   this.state_view.subscribe(this.show_pagination);
 
   this.state_page.subscribe(function(newPage) {
-    if (app.hasOwnProperty('tilepagination')) {
-      app.tilepagination.pagination(newPage);
+    if (app.tileViewModel && app.tileViewModel.tilepagination()){
+      app.tileViewModel.tilepagination().pagination(newPage);
     }
     if (app.hasOwnProperty('datatable')) {
-      // app.datatable.page(newPage-1);
       app.datatable.page(newPage-1).draw('page');
+    }
+  });
+
+  this.state_items_per_page.subscribe(function(new_ipp){
+    if (app.tileViewModel) {
+      app.tileViewModel.reset_tilepagination();
     }
   });
 
@@ -57,7 +74,6 @@ function resultViewModel() {
 
   this.setViewTiled = function() {
     app.resultViewModel.state_view('tile');
-    reset_tile_triggers();
   };
 
   this.setViewList = function() {
@@ -114,7 +130,6 @@ function resultViewModel() {
 
 };
 app.resultViewModel = new resultViewModel();
-ko.applyBindings(app.viewModel);
 
 function resize_to_fit(){
     var titles = $('div.result-desc');
