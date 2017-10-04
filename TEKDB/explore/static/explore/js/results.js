@@ -16,13 +16,8 @@ function resultViewModel() {
   }, this);
 
   this.show_pagination = function(view) {
-    if (view == 'tile') {
-      // $('#results_table_paginate').hide()
-      $('.paginationjs').show();
-    } else {
       $('.paginationjs').hide();
       $('#results_table_paginate').show()
-    }
   };
 
   this.state_view.subscribe(this.show_pagination);
@@ -62,10 +57,12 @@ function resultViewModel() {
 
   this.setViewTiled = function() {
     app.resultViewModel.state_view('tile');
+    reset_tile_triggers();
   };
 
   this.setViewList = function() {
     app.resultViewModel.state_view('list');
+    reset_triggers();
   };
 
   this.get_url_state = function() {

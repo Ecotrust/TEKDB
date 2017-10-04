@@ -3,6 +3,7 @@
 var reset_triggers = function() {
     setTimeout(function() {
       //Change Page
+      $('.paginate_button').off('click');
       $('.paginate_button').click(page_click);
       //Change Items per Page
       $('#results_table_length > label > select').change(change_items_per_page);
@@ -17,6 +18,25 @@ var reset_triggers = function() {
 
 var page_click = function(event){
   page = event.target.text;
+  console.log('page clicked: '+ page);
+  if (isNaN(page)) {
+    current_page = parseInt(app.resultViewModel.state_page());
+    var max_page = app.datatable.page.info().pages;
+    var min_page = 1;
+    if (page == '«') {
+      page = current_page-1;
+    } else if (page == '»') {
+      page = current_page+1;
+    } else {
+      page = current_page;
+    }
+  }
+  if (page < min_page) {
+    page = min_page;
+  }
+  if (page > max_page) {
+    page = max_page;
+  }
   window.location.hash = $.query.SET('page', page);
   app.resultViewModel.state_page(parseInt(page));
   reset_triggers();

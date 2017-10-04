@@ -124,6 +124,11 @@
   padding: 0.5em;
 }
 
+.paginationjs {
+  display: none;
+  visiblity: hidden;
+}
+
 .paginationjs .paginationjs-pages li:last-child ,
 .paginationjs .paginationjs-pages li {
   border: 1px solid transparent;

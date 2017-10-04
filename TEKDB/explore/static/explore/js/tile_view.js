@@ -1,7 +1,7 @@
 var reset_tile_triggers = function() {
     setTimeout(function() {
       //Change Page
-      $('.paginationjs-page').click(tile_page_click);
+      // managed by datatables pagination handlers
       //Change Items per Page
       // $('#results_table_length > label > select').change(change_items_per_page);
       //Change Search Filter
@@ -11,13 +11,6 @@ var reset_tile_triggers = function() {
       // $("#category_col").click(change_sort);
       // $("#description_col").click(change_sort);
     }, 20);
-}
-
-var tile_page_click = function(event){
-  page = event.currentTarget.children[0].text;
-  window.location.hash = $.query.SET('page', page);
-  app.resultViewModel.state_page(parseInt(page));
-  reset_tile_triggers();
 }
 
 $(document).ready( function () {
