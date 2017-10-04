@@ -148,7 +148,7 @@ def get_by_model_id(request, model_type, id):
         'id': id
     }
 
-    if not record_dict['map'] == None:
+    if 'map' in record_dict.keys() and not record_dict['map'] == None:
         from TEKDB.settings import DATABASE_GEOGRAPHY
         context['default_lon'] = DATABASE_GEOGRAPHY['default_lon']
         context['default_lat'] = DATABASE_GEOGRAPHY['default_lat']

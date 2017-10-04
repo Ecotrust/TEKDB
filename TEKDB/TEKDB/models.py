@@ -37,6 +37,7 @@ class Queryable(models.Model):
             'subtitle': self.subtitle(),
             'data': self.data(),
             'link': self.link(),
+            'issimplerelationship': self.is_simple_relationship(),
             'enteredbyname': self.enteredbyname,
             'enteredbydate': self.enteredbydate,
             'modifiedbyname': self.modifiedbyname,
@@ -69,6 +70,35 @@ class Queryable(models.Model):
         #TODO: set entered/modified by info now
         super(Queryable, self).save(*args, **kwargs)
 
+    def is_simple_relationship(self):
+        return False
+
+    def get_relationship_json(self, req_model):
+        return self.get_query_json()
+
+class SimpleRelationship(Queryable):
+
+    class Meta:
+        abstract = True
+
+    def is_simple_relationship(self):
+        return True
+
+    def get_relationship_model(self, req_model):
+        return self
+
+    def get_relationship_json(self, req_model_type):
+        relationship_model = self.get_relationship_model(req_model_type)
+        rel_model_json = relationship_model.get_query_json()
+        return {
+            'name': rel_model_json['name'],
+            'link': rel_model_json['link'],
+            'issimplerelationship': self.is_simple_relationship(),
+            'data': {
+                'description': self.relationshipdescription,
+                'pages': self.pages,
+            },
+        }
 
 class LookupPlanningUnit(models.Model):
     planningunitid = models.AutoField(db_column='PlanningUnitID', primary_key=True)
@@ -686,9 +716,9 @@ class ResourcesActivityEvents(Queryable):
     def relationships(self):
         relationship_list = []
         relationship_list.append({'key':'Place-Resource Relationship', 'value': [self.placeresourceid.get_query_json()]})
-        citations = [x.get_query_json() for x in self.resourceactivitycitationevents_set.all()]
+        citations = [x.get_relationship_json(type(self)) for x in self.resourceactivitycitationevents_set.all()]
         if len(citations) > 0:
-            relationship_list.append({'key':'Citation Relationships', 'value': citations})
+            relationship_list.append({'key':'Related Citations', 'value': citations})
         media = [x.get_query_json() for x in self.resourceactivitymediaevents_set.all()]
         if len(media) > 0:
             relationship_list.append({'key':'Media Relationships', 'value': media})
@@ -1748,7 +1778,7 @@ class PlacesResourceMediaEvents(Queryable):
         }
 
 
-class ResourceActivityCitationEvents(Queryable):
+class ResourceActivityCitationEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='ResourceActivityID', primary_key=False, verbose_name='resource activity')
     citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1817,6 +1847,11 @@ class ResourceActivityCitationEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == ResourcesActivityEvents:
+            return self.citationid
+        else:
+            return self.resourceactivityid
 
 class ResourceActivityMediaEvents(Queryable):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='ResourceActivityID', primary_key=False, verbose_name='resource activity')
