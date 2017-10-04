@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class='row'>
-            <div class='well'>
+            <div class='well odd-well'>
               {% if record.media.file %}
                 <div style="text-align: right">
                   <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
@@ -66,15 +66,27 @@
           {% if record.relationships|length > 0 %}
           <div class='row'>
             <h4>Relationships</h4>
-            <div class='well relationship-div'>
+            <div class='well odd-well relationship-div'>
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
-                <p><b>{{ relationship.key }}:</b></p>
-                <ul>
+                  <p><b>{{ relationship.key }}:</b></p>
                   {% for link in relationship.value %}
-                    <li><a href="{{ link.link }}">{{ link.name }}</a></li>
+
+                    {% if forloop.counter0 == 0 %}
+                    <div class='relationship-row'>
+                    {% endif %}
+                    {% if link.issimplerelationship %}
+                        <p><a href="{{ link.link }}">{{ link.name }}</a> --
+                          Relationship: {{ link.data.description }}{% if link.data.pages %}; Pages: {{ link.data.pages }}
+                        {% endif %}
+                        </p>
+                    {% else %}
+                      <a href="{{ link.link }}">{{ link.name }}</a>
+                    {% endif %}
+                    {% if forloop.last %}
+                    </div>
+                    {% endif %}
                   {% endfor %}
-                </ul>
                 {% endif %}
               {% endfor %}
             </div>

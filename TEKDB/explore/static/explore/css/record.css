@@ -5,11 +5,15 @@
   width: 84px;
 }
 
-li a {
+.relationship-row {
+  margin-bottom: 0.5em;
+}
+
+.relationship-row a {
   color: black;
 }
 
-li a:hover {
+.relationship-row a:hover {
   color: #336633;
 }
 

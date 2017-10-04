@@ -32,6 +32,10 @@ a:hover {
   letter-spacing: 5px;
 }
 
+.odd-well {
+  background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%);
+}
+
 .explore-form {
   text-align: center;
   margin: 80px 150px;
