@@ -88,8 +88,6 @@ $(document).ready( function () {
     app.resultViewModel.state_order($.query.get('order'));
   }
 
-  $('.paginationjs').detach();
-
   var results_per_page_options = [10, 25, 50, 100];
   if (results_per_page_options.indexOf(app.resultViewModel.state_items_per_page()) < 0) {
     results_per_page_options.push(app.resultViewModel.state_items_per_page());
@@ -99,7 +97,7 @@ $(document).ready( function () {
   var display_start = (app.resultViewModel.state_page() - 1)*app.resultViewModel.state_items_per_page();
   var initial_filter = app.resultViewModel.db_query() == '*' ? '' : app.resultViewModel.db_query();
 
-  $('#results_table').DataTable({
+  app.datatable = $('#results_table').DataTable({
     "displayStart": display_start,
     "pageLength": app.resultViewModel.state_items_per_page(),
     "lengthMenu": results_per_page_options,

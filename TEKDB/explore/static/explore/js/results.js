@@ -7,6 +7,36 @@ function resultViewModel() {
   this.state_page = ko.observable();
   this.state_items_per_page = ko.observable();
   this.state_order = ko.observableArray([]);
+  this.state_view = ko.observable('tile');
+  this.view_is_tiled = ko.computed(function() {
+    return this.state_view() == 'tile';
+  }, this);
+  this.view_is_list = ko.computed(function() {
+    return this.state_view() == 'list';
+  }, this);
+
+  this.show_pagination = function(view) {
+    if (view == 'tile') {
+      // $('#results_table_paginate').hide()
+      $('.paginationjs').show();
+    } else {
+      $('.paginationjs').hide();
+      $('#results_table_paginate').show()
+    }
+  };
+
+  this.state_view.subscribe(this.show_pagination);
+
+  this.state_page.subscribe(function(newPage) {
+    if (app.hasOwnProperty('tilepagination')) {
+      app.tilepagination.pagination(newPage);
+    }
+    if (app.hasOwnProperty('datatable')) {
+      // app.datatable.page(newPage-1);
+      app.datatable.page(newPage-1).draw('page');
+    }
+  });
+
   this.get_state = function() {
     state = [];
     if (this.state_page() != null) {
@@ -15,12 +45,32 @@ function resultViewModel() {
     if (this.state_items_per_page() != null) {
       state.push('items_per_page='+this.state_items_per_page());
     }
+    if (this.db_query() != '*') {
+      state.push('filter='+this.db_query());
+    }
+    if (this.state_order().length > 0) {
+      $.query.EMPTY();
+      state.push($.query.set('order', this.state_order()));
+      $.query.parseNew('', location.hash);
+    }
     if (state.length > 0) {
       return state.join("&");
     } else {
       return '';
     }
   }
+
+  this.setViewTiled = function() {
+    app.resultViewModel.state_view('tile');
+  };
+
+  this.setViewList = function() {
+    app.resultViewModel.state_view('list');
+  };
+
+  this.get_url_state = function() {
+    return $.query.parseNew('', location.hash).toString();
+  };
 
   this.resultGridArray = ko.computed(function () {
       var rows = [], current = [];
