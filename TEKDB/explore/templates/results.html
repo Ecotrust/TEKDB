@@ -29,12 +29,6 @@
           <div class="col-md-12 well content-well">
             {% block content %}
             <h3>Results for search "<b>{{ keyword }}</b>"</h3>
-            <div class="col-md-12">
-              <div id="results-wrap"></div>
-            </div>
-            <div class="col-md-12">
-              <div id="pagination"></div>
-            </div>
             <div data-bind="foreach: app.resultViewModel.resultGridArray">
               <div data-bind="foreach: $data" class="row">
                 <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
@@ -71,7 +65,6 @@
 
 {% block extra_js %}
 
-<script src="/static/assets/pagination/pagination.js"></script>
 <script src="/static/explore/js/results.js"></script>
 <script>
   {% autoescape on %}
