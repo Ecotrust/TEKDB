@@ -92,7 +92,7 @@ $(document).ready( function () {
   if ($.query.get('items_per_page') != "") {
     app.resultViewModel.state_items_per_page(parseInt($.query.get('items_per_page')));
   }
-  if ($.query.get('filter') != "") {
+  if ($.query.get('filter') != "" && $.query.get('filter') != true) {
     app.resultViewModel.db_query($.query.get('filter'));
   }
   if ($.query.get('order') != "") {
