@@ -71,13 +71,13 @@
                 {% if relationship.value|length > 0 %}
                   <p><b>{{ relationship.key }}:</b></p>
                   {% for link in relationship.value %}
-
                     {% if forloop.counter0 == 0 %}
                     <div class='relationship-row'>
                     {% endif %}
                     {% if link.issimplerelationship %}
-                        <p><a href="{{ link.link }}">{{ link.name }}</a> --
+                        <p><a href="{{ link.link }}">{{ link.name }}</a>{% if link.data.description %} --
                           Relationship: {{ link.data.description }}{% if link.data.pages %}; Pages: {{ link.data.pages }}
+                        {% endif %}
                         {% endif %}
                         </p>
                     {% else %}
@@ -86,6 +86,7 @@
                     {% if forloop.last %}
                     </div>
                     {% endif %}
+                  <br />
                   {% endfor %}
                 {% endif %}
               {% endfor %}

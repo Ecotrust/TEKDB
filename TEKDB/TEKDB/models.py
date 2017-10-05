@@ -117,7 +117,6 @@ class LookupPlanningUnit(models.Model):
     def __str__(self):
         return self.planningunitname
 
-
 class LookupTribe(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)
     tribeunit = models.CharField(db_column='TribeUnit', max_length=50, blank=True, null=True, verbose_name='tribe subunit')
@@ -164,7 +163,6 @@ class LookupTribe(models.Model):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-
 class LookupHabitat(models.Model):
     habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)
 
@@ -180,7 +178,6 @@ class LookupHabitat(models.Model):
 
     def __str__(self):
         return self.habitat
-
 
 class Places(Queryable):
     placeid = models.AutoField(db_column='PlaceID', primary_key=True)
@@ -253,9 +250,9 @@ class Places(Queryable):
     def relationships(self):
         return [
             {'key':'Alternate Indigenous Names', 'value': [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]},
-            {'key':'Resource Relationships', 'value': [res.get_query_json() for res in self.placesresourceevents_set.all()]},
-            {'key':'Media Relationships', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
-            {'key':'Citation Relationships', 'value': [citation.get_query_json() for citation in self.placescitationevents_set.all()]},
+            {'key':'Resources', 'value': [res.get_query_json() for res in self.placesresourceevents_set.all()]},
+            {'key':'Media', 'value': [media.get_relationship_json(type(self)) for media in self.placesmediaevents_set.all()]},
+            {'key':'Citations', 'value': [citation.get_relationship_json(type(self)) for citation in self.placescitationevents_set.all()]},
             # {'key':'Localities', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
         ]
 
@@ -288,7 +285,6 @@ class Places(Queryable):
     def __str__(self):
         return "%s (%s)" % (self.indigenousplacename, self.englishplacename)
 
-
 class LookupResourceGroup(models.Model):
     resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', primary_key=True, max_length=255, verbose_name='broad species group')
 
@@ -304,7 +300,6 @@ class LookupResourceGroup(models.Model):
 
     def __str__(self):
         return self.resourceclassificationgroup
-
 
 class Resources(Queryable):
     resourceid = models.AutoField(db_column='ResourceID', primary_key=True)
@@ -353,18 +348,18 @@ class Resources(Queryable):
         activities = [x.get_query_json() for x in ResourcesActivityEvents.objects.filter(placeresourceid__in=placeresourceidlist)]
         if len(activities) > 0:
             relationship_list.append({'key':'Activities', 'value': activities })
-        media = [x.get_query_json() for x in self.resourcesmediaevents_set.all()]
+        media = [x.get_relationship_json(type(self)) for x in self.resourcesmediaevents_set.all()]
         if len(media) > 0:
             relationship_list.append({'key':'Media', 'value':media })
-        citations = [x.get_query_json() for x in self.resourcescitationevents_set.all()]
+        citations = [x.get_relationship_json(type(self)) for x in self.resourcescitationevents_set.all()]
         if len(citations) > 0:
             relationship_list.append({'key':'Citations', 'value': citations})
         places = [x.get_query_json() for x in placeresources]
         if len(places) > 0:
             relationship_list.append({'key':'Places', 'value': places})
-        # resources = [x.get_query_json() for x in self.resourceresourceevents_set.all()]
-        # if len(resources) > 0:
-        #     relationship_list.append({'key':'Resources', 'value': resources})
+        resources = [x.get_relationship_json(type(self)) for x in ResourceResourceEvents.objects.filter(altresourceid=self)]
+        if len(resources) > 0:
+            relationship_list.append({'key':'Resources', 'value': resources})
         return relationship_list
 
     def link(self):
@@ -392,7 +387,6 @@ class Resources(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-
 class LookupPartUsed(models.Model):
     partused = models.CharField(db_column='PartUsed', primary_key=True, max_length=255, verbose_name='part used')
 
@@ -408,7 +402,6 @@ class LookupPartUsed(models.Model):
 
     def __str__(self):
         return self.partused
-
 
 class LookupCustomaryUse(models.Model):
     usedfor = models.CharField(db_column='UsedFor', primary_key=True, max_length=255, verbose_name='used_for')
@@ -426,7 +419,6 @@ class LookupCustomaryUse(models.Model):
     def __str__(self):
         return self.usedfor
 
-
 class LookupSeason(models.Model):
     season = models.CharField(db_column='Season', primary_key=True, max_length=255)
 
@@ -443,7 +435,6 @@ class LookupSeason(models.Model):
     def __str__(self):
         return self.season
 
-
 class LookupTiming(models.Model):
     timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)
 
@@ -459,7 +450,6 @@ class LookupTiming(models.Model):
 
     def __str__(self):
         return self.timing
-
 
 class PlacesResourceEvents(Queryable):
     placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)
@@ -589,7 +579,6 @@ class PlacesResourceEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-
 class LookupParticipants(models.Model):
     participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)
 
@@ -605,7 +594,6 @@ class LookupParticipants(models.Model):
 
     def __str__(self):
         return self.participants
-
 
 class LookupTechniques(models.Model):
     techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)
@@ -623,7 +611,6 @@ class LookupTechniques(models.Model):
     def __str__(self):
         return self.techniques
 
-
 class LookupActivity(models.Model):
     activity = models.CharField(db_column='Activity', primary_key=True, max_length=255)
 
@@ -639,7 +626,6 @@ class LookupActivity(models.Model):
 
     def __str__(self):
         return self.activity
-
 
 class ResourcesActivityEvents(Queryable):
     resourceactivityid = models.AutoField(db_column='ResourceActivityID', primary_key=True)
@@ -715,13 +701,13 @@ class ResourcesActivityEvents(Queryable):
 
     def relationships(self):
         relationship_list = []
-        relationship_list.append({'key':'Place-Resource Relationship', 'value': [self.placeresourceid.get_query_json()]})
+        relationship_list.append({'key':'Place-Resource', 'value': [self.placeresourceid.get_query_json()]})
         citations = [x.get_relationship_json(type(self)) for x in self.resourceactivitycitationevents_set.all()]
         if len(citations) > 0:
-            relationship_list.append({'key':'Related Citations', 'value': citations})
+            relationship_list.append({'key':'Citations', 'value': citations})
         media = [x.get_query_json() for x in self.resourceactivitymediaevents_set.all()]
         if len(media) > 0:
-            relationship_list.append({'key':'Media Relationships', 'value': media})
+            relationship_list.append({'key':'Media', 'value': media})
         return relationship_list
 
     def data(self):
@@ -752,7 +738,6 @@ class ResourcesActivityEvents(Queryable):
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
-
 
 class People(models.Model):
     personid = models.AutoField(db_column='PersonID', primary_key=True)
@@ -831,7 +816,6 @@ class People(models.Model):
             # 'link': self.link(),
         }
 
-
 class LookupReferenceType(models.Model):
     documenttype = models.CharField(db_column='DocumentType', primary_key=True, max_length=25, verbose_name='document type')
 
@@ -847,7 +831,6 @@ class LookupReferenceType(models.Model):
 
     def __str__(self):
         return self.documenttype
-
 
 class LookupAuthorType(models.Model):
     authortype = models.CharField(db_column='AuthorType', primary_key=True, max_length=50, verbose_name='author type')
@@ -865,7 +848,6 @@ class LookupAuthorType(models.Model):
 
     def __str__(self):
         return self.authortype
-
 
 class Citations(Queryable):
     citationid = models.AutoField(db_column='CitationID', primary_key=True)
@@ -941,18 +923,18 @@ class Citations(Queryable):
                 people.append(self.interviewerid.get_query_json())
             if len(people) > 0:
                 relationship_list.append({'key':'People', 'value': people})
-        places = [x.get_query_json() for x in self.placescitationevents_set.all()]
+        places = [x.get_relationship_json(type(self)) for x in self.placescitationevents_set.all()]
         if len(places) > 0:
-            relationship_list.append({'key': 'Place Relationships', 'value': places})
-        resources = [x.get_query_json() for x in self.resourcescitationevents_set.all()]
+            relationship_list.append({'key': 'Places', 'value': places})
+        resources = [x.get_relationship_json(type(self)) for x in self.resourcescitationevents_set.all()]
         if len(resources) > 0:
-            relationship_list.append({'key': 'Resource Relationships', 'value': resources})
-        media = [x.get_query_json() for x in self.mediacitationevents_set.all()]
+            relationship_list.append({'key': 'Resources', 'value': resources})
+        media = [x.get_relationship_json(type(self)) for x in self.mediacitationevents_set.all()]
         if len(media) > 0:
-            relationship_list.append({'key': 'Media Relationships', 'value': media})
-        activities = [x.get_query_json() for x in self.resourceactivitycitationevents_set.all()]
+            relationship_list.append({'key': 'Media', 'value': media})
+        activities = [x.get_relationship_json(type(self)) for x in self.resourceactivitycitationevents_set.all()]
         if len(activities) > 0:
-            relationship_list.append({'key': 'Activity Relationships', 'value': activities})
+            relationship_list.append({'key': 'Activities', 'value': activities})
 
         return relationship_list
 
@@ -1005,8 +987,7 @@ class Citations(Queryable):
     def __unicode__(self):
         return unicode('%s' % (str(self)))
 
-
-class PlacesCitationEvents(Queryable):
+class PlacesCitationEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='PlaceID', primary_key=False, verbose_name='place')
     citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1075,6 +1056,11 @@ class PlacesCitationEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == Places:
+            return self.citationid
+        else:
+            return self.placeid
 
 # Appears to be the version of AccessDB(s). Export gave 1 entry: [1,1,1]
 class CurrentVersion(models.Model):
@@ -1095,7 +1081,6 @@ class CurrentVersion(models.Model):
     def __str__(self):
         return "Back: %d, Front:%d" % (self.backendversion, self.frontendversion)
 
-
 class LookupLocalityType(models.Model):
     localitytype = models.CharField(db_column='LocalityType', primary_key=True, max_length=255, verbose_name='locality type')
 
@@ -1111,7 +1096,6 @@ class LookupLocalityType(models.Model):
 
     def __str__(self):
         return self.localitytype
-
 
 class Locality(Queryable):
     localityid = models.AutoField(db_column='LocalityID', primary_key=True)
@@ -1177,7 +1161,7 @@ class Locality(Queryable):
         relationship_list.append({'key': 'Place', 'value':[self.placeid.get_query_json()]})
         placeresources = [x.get_query_json() for x in self.localityplaceresourceevents_set.all()]
         if len(placeresources) > 0:
-            relationship_list.append({'key': 'Place-resource Relationships', 'value': placeresources})
+            relationship_list.append({'key': 'Place-resources', 'value': placeresources})
         gisselections = [x.get_query_json() for x in self.localitygisselections_set.all()]
         if len(gisselections) > 0:
             relationship_list.append({'key': 'GIS Selections', 'value': gisselections})
@@ -1211,7 +1195,6 @@ class Locality(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-
 class LocalityGISSelections(models.Model):
     localityid = models.ForeignKey(Locality, db_column='LocalityID', blank=True, null=True, verbose_name='locality')
     localitylabel = models.CharField(db_column='LocalityLabel', max_length=255, blank=True, null=True, verbose_name='locality label')
@@ -1228,7 +1211,6 @@ class LocalityGISSelections(models.Model):
 
     def __str__(self):
         return self.localitylabel
-
 
 class LocalityPlaceResourceEvent(Queryable):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', primary_key=False, verbose_name='place resource')
@@ -1294,7 +1276,6 @@ class LocalityPlaceResourceEvent(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-
 class LookupMediaType(models.Model):
     mediatype = models.CharField(db_column='MediaType', primary_key=True, max_length=255, verbose_name='type')
     mediacategory = models.CharField(db_column='MediaCategory', max_length=255, blank=True, null=True, verbose_name='category')
@@ -1318,7 +1299,6 @@ class LookupMediaType(models.Model):
             Q(mediacategory__icontains=keyword),
         )
 
-
 class LookupUserInfo(models.Model):
     username = models.CharField(db_column='UserName', max_length=100, blank=True, null=True, verbose_name='username')
     usingcustomusername = models.BooleanField(db_column='UsingCustomUsername', default=False, verbose_name='using custom username')
@@ -1337,7 +1317,6 @@ class LookupUserInfo(models.Model):
 
     def __str__(self):
         return self.username
-
 
 class Media(Queryable):
     mediaid = models.AutoField(db_column='MediaID', primary_key=True)
@@ -1381,21 +1360,21 @@ class Media(Queryable):
 
     def relationships(self):
         relationship_list = []
-        places = [x.get_query_json() for x in self.placesmediaevents_set.all()]
+        places = [x.get_relationship_json(type(self)) for x in self.placesmediaevents_set.all()]
         if len(places) > 0:
-            relationship_list.append({'key': 'Place Relationships', 'value': places})
-        resources = [x.get_query_json() for x in self.resourcesmediaevents_set.all()]
+            relationship_list.append({'key': 'Places', 'value': places})
+        resources = [x.get_relationship_json(type(self)) for x in self.resourcesmediaevents_set.all()]
         if len(resources) > 0:
-            relationship_list.append({'key': 'Resource Relationships', 'value': resources})
-        citations = [x.get_query_json() for x in self.mediacitationevents_set.all()]
+            relationship_list.append({'key': 'Resources', 'value': resources})
+        citations = [x.get_relationship_json(type(self)) for x in self.mediacitationevents_set.all()]
         if len(citations) > 0:
-            relationship_list.append({'key': 'Citation Relationships', 'value': citations})
-        activities = [x.get_query_json() for x in self.resourceactivitymediaevents_set.all()]
+            relationship_list.append({'key': 'Citations', 'value': citations})
+        activities = [x.get_relationship_json(type(self)) for x in self.resourceactivitymediaevents_set.all()]
         if len(activities) > 0:
-            relationship_list.append({'key': 'Activity Relationships', 'value': activities})
-        placeresources = [x.get_query_json() for x in self.placesresourcemediaevents_set.all()]
+            relationship_list.append({'key': 'Activities', 'value': activities})
+        placeresources = [x.get_relationship_json(type(self)) for x in self.placesresourcemediaevents_set.all()]
         if len(placeresources) > 0:
-            relationship_list.append({'key': 'Place-Resource Relationships', 'value': placeresources})
+            relationship_list.append({'key': 'Place-Resources', 'value': placeresources})
         return relationship_list
 
     def media(self):
@@ -1455,8 +1434,7 @@ class Media(Queryable):
                 self.medialink = None
         super(Media, self).save(*args, **kwargs)
 
-
-class MediaCitationEvents(Queryable):
+class MediaCitationEvents(SimpleRelationship):
     mediaid = models.ForeignKey(Media, db_column='MediaID', primary_key=False, verbose_name='media')
     citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1525,6 +1503,11 @@ class MediaCitationEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == Media:
+            return self.citationid
+        else:
+            return self.mediaid
 
 class PlaceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
@@ -1550,7 +1533,6 @@ class PlaceAltIndigenousName(models.Model):
     def __str__(self):
         return self.altindigenousname
 
-
 class PlaceGISSelections(models.Model):
     placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
     placelabel = models.CharField(db_column='PlaceLabel', max_length=255, blank=True, null=True, verbose_name='label')
@@ -1568,8 +1550,7 @@ class PlaceGISSelections(models.Model):
     def __str__(self):
         return self.placelabel
 
-
-class PlacesMediaEvents(Queryable):
+class PlacesMediaEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='PlaceID', primary_key=False, verbose_name='place')
     mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1638,8 +1619,13 @@ class PlacesMediaEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == Media:
+            return self.placeid
+        else:
+            return self.mediaid
 
-class PlacesResourceCitationEvents(Queryable):
+class PlacesResourceCitationEvents(SimpleRelationship):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', primary_key=False, verbose_name='place resource')
     citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1708,8 +1694,13 @@ class PlacesResourceCitationEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == PlacesResourceEvents:
+            return self.citationid
+        else:
+            return self.placeresourceid
 
-class PlacesResourceMediaEvents(Queryable):
+class PlacesResourceMediaEvents(SimpleRelationship):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', primary_key=False, verbose_name='place - resource')
     mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1777,6 +1768,11 @@ class PlacesResourceMediaEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == PlacesResourceEvents:
+            return self.mediaid
+        else:
+            return self.placeresourceid
 
 class ResourceActivityCitationEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='ResourceActivityID', primary_key=False, verbose_name='resource activity')
@@ -1853,7 +1849,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
         else:
             return self.resourceactivityid
 
-class ResourceActivityMediaEvents(Queryable):
+class ResourceActivityMediaEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='ResourceActivityID', primary_key=False, verbose_name='resource activity')
     mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -1924,6 +1920,11 @@ class ResourceActivityMediaEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == ResourcesActivityEvents:
+            return self.mediaid
+        else:
+            return self.resourceactivityid
 
 class ResourceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
@@ -1942,8 +1943,7 @@ class ResourceAltIndigenousName(models.Model):
     def __str__(self):
         return self.altindigenousname
 
-
-class ResourceResourceEvents(Queryable):
+class ResourceResourceEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=False, related_name="resource_a")
     altresourceid = models.ForeignKey(Resources, db_column='AltResourceID', related_name="resource_b")
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -2024,7 +2024,27 @@ class ResourceResourceEvents(Queryable):
         except Exception as e:
             pass
 
-class ResourcesCitationEvents(Queryable):
+    # This simple relationship is tricky due to both fields being FKs to the same model
+    def get_relationship_model(self, primary_resource):
+        if self.resourceid == primary_resource:
+            return self.altresourceid
+        else:
+            return self.resourceid
+
+    def get_relationship_json(self, req_model_type):
+        other_resource = self.get_relationship_model(self)
+        rel_model_json = other_resource.get_query_json()
+        return {
+            'name': rel_model_json['name'],
+            'link': rel_model_json['link'],
+            'issimplerelationship': self.is_simple_relationship(),
+            'data': {
+                'description': self.relationshipdescription,
+                'pages': None,
+            },
+        }
+
+class ResourcesCitationEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=False, verbose_name='resource')
     citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -2093,8 +2113,13 @@ class ResourcesCitationEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == Resources:
+            return self.citationid
+        else:
+            return self.resourceid
 
-class ResourcesMediaEvents(Queryable):
+class ResourcesMediaEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=False, verbose_name='resource')
     mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
     relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
@@ -2163,6 +2188,12 @@ class ResourcesMediaEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_relationship_model(self, req_model):
+        if req_model == Resources:
+            return self.mediaid
+        else:
+            return self.resourceid
+
 from django.contrib.auth.models import Group
 
 class UserAccess(models.Model):
@@ -2182,7 +2213,6 @@ class UserAccess(models.Model):
 
     def __str__(self):
         return self.accesslevel
-
 
 class Users(AbstractUser):
     userid = models.AutoField(db_column='UserID', primary_key=True)
