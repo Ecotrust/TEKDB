@@ -19,5 +19,17 @@ var label_layer = new OpenLayers.Layer.XYZ( "Place Labels",
       {sphericalMercator: true, isBaseLayer:false, attribution: "<a href='http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'\
       >Labels Sources: Esri, HERE, DeLorme, MapmyIndia, Â© OpenStreetMap contributors, and the GIS user community</a>"} );
 
-{{ module }}.map.addLayers([osmLayer, esri_2d, label_layer]);
+var nautical_charts = new OpenLayers.Layer.ArcGIS93Rest("Nautical Charts",
+      "http://seamlessrnc.nauticalcharts.noaa.gov/arcgis/rest/services/RNC/NOAA_RNC/ImageServer/exportImage",
+      {
+          layers: 'null'
+      }, {
+          isBaseLayer: true,
+          numZoomLevels: 19,
+          projection: "EPSG:3857",
+          buffer: 3,
+          attribution: 'NOAA Office of Coast Survey'
+      });
+
+{{ module }}.map.addLayers([osmLayer, esri_2d, label_layer, nautical_charts]);
 {% endblock %} //extra_layers

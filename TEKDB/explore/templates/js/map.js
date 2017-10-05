@@ -26,6 +26,32 @@ var esriAerial = new ol.layer.Tile({
     ]
   })
 });
+var esri_2d = new ol.layer.Tile({
+  title: 'ESRI Base',
+  type: 'base',
+  source: new ol.source.XYZ({
+      url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+      attributions: [
+        new ol.Attribution({
+          html: "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
+          >Basemap Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
+        })
+      ]
+  })
+});
+var nautical_charts = new ol.layer.Tile({
+  title: 'Nautical Charts',
+  type: 'base',
+  source: new ol.source.TileWMS({
+    url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/services/RNC/NOAA_RNC/ImageServer/WMSServer',
+    params: {'LAYERS': 'NOAA_RNC'},
+    attributions: [
+      new ol.Attribution({
+        html: 'NOAA Office of Coast Survey'
+      })
+    ]
+  })
+});
 var vectorLayer = new ol.layer.Vector({
 source: new ol.source.Vector({
   features: new ol.format.GeoJSON().readFeatures(JSON.parse('{{ record.map | safe }}'))
@@ -72,6 +98,8 @@ var map = new ol.Map({
     new ol.layer.Group({
       'title': 'Base Maps',
       layers: [
+        nautical_charts,
+        esri_2d,
         osmLayer,
         esriAerial
       ],
