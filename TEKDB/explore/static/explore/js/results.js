@@ -65,6 +65,9 @@ function resultViewModel() {
       state.push($.query.set('order', this.state_order()));
       $.query.parseNew('', location.hash);
     }
+    if (this.state_view() == 'tile' || this.state_view() == 'list') {
+      state.push('view='+this.state_view());
+    }
     if (state.length > 0) {
       return state.join("&");
     } else {

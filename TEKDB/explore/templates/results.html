@@ -90,7 +90,7 @@
             <div data-bind="visible: app.resultViewModel.view_is_tiled">
               <div data-bind="foreach: app.resultViewModel.resultGridArray">
                 <div data-bind="foreach: $data" class="row">
-                  <div class="col-md-3 col-sm-3 result-cell" data-bind="html: result"></div>
+                  <div class="col-md-3 col-sm-3 result-cell" data-bind="click: tileclick, html: result"></div>
                 </div>
               </div>
             </div>
@@ -144,8 +144,13 @@
   app.resultViewModel.state_items_per_page( {{ state.items_per_page }} );
   app.resultViewModel.state_view( "{{ view }}" );
 
+  var tileclick = function(record) {
+    link = jQuery.parseHTML(record.result)[1].getAttribute('href');
+    window.location = link+'?'+app.resultViewModel.get_state();
+  }
+
   var rowclick = function(record){
-    window.location = record.link;
+    window.location = record.link+'?'+app.resultViewModel.get_state();
   };
 
   $(document).ready( function () {

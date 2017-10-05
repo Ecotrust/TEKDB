@@ -125,6 +125,10 @@ def get_by_model_type(request, model_type):
     return render(request, "results.html", context)
 
 def get_by_model_id(request, model_type, id):
+    try:
+        back_link = '%s?%s' % (request.META.get('HTTP_REFERER').split('?')[0], request.GET.urlencode())
+    except Exception:
+        back_link = '%s?%s' % ('/search/', request.GET.urlencode())
     models = get_model_by_type(model_type)
     if len(models) == 1:
         try:
@@ -145,7 +149,8 @@ def get_by_model_id(request, model_type, id):
         'record': record_dict,
         'user': request.user,
         'model': model_type,
-        'id': id
+        'id': id,
+        'back_link': back_link
     }
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
@@ -156,6 +161,8 @@ def get_by_model_id(request, model_type, id):
         context['min_zoom'] = DATABASE_GEOGRAPHY['min_zoom']
         context['max_zoom'] = DATABASE_GEOGRAPHY['max_zoom']
         context['map_extent'] = DATABASE_GEOGRAPHY['map_extent']
+
+    request.META.pop('QUERY_STRING')
 
     return render(request, "record.html", context)
 
@@ -317,6 +324,8 @@ def search(request):
     else:
         if 'query' in request.GET.keys():
             query_string = request.GET.get('query')
+        elif 'filter' in request.GET.urlencode():
+            query_string = request.GET.get('filter')
         else:
             query_string = None
         if 'category' in request.GET.keys():
@@ -379,6 +388,8 @@ def search(request):
             'items_per_page' : int(items_per_page),
         },
     }
+
+    request.META.pop('QUERY_STRING')
 
     return render(request, "results.html", context)
 

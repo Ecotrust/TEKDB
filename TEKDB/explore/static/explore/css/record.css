@@ -38,3 +38,13 @@
   margin-right: -0.4em;
   margin-top: -0.2em;
 }
+
+.back-button {
+  color: black;
+  border: 1px solid #777;
+}
+.back-button:hover {
+  color: #363;
+  border-color: #363;
+  background-color: #EEE;
+}
