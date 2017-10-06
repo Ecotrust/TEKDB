@@ -7,7 +7,8 @@ import nested_admin
 
 from .models import *
 
-admin.site.site_header = 'Traditional Ethnographic Knowledge DB Administration'
+from TEKDB.settings import ADMIN_SITE_HEADER
+admin.site.site_header = ADMIN_SITE_HEADER
 #############
 ### FORMS ###
 #############

@@ -203,6 +203,8 @@ DATABASE_GEOGRAPHY = {
     'map_template': 'gis/admin/ol2osm.html'
 }
 
+ADMIN_SITE_HEADER = 'TEK DB Admin'
+
 from TEKDB.local_settings import *
 
 ### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
