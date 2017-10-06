@@ -72,6 +72,7 @@ def get_model_by_type(model_type):
         'resources': [tekmodels.Resources],
         'places': [tekmodels.Places],
         'locality': [tekmodels.Locality],
+        'sources': [tekmodels.Citations],
         'citations': [tekmodels.Citations],
         'media': [tekmodels.Media],
         'activities': [tekmodels.ResourcesActivityEvents],
@@ -109,7 +110,7 @@ def get_model_by_type(model_type):
     if model_type.lower() in searchable_models.keys():
         return searchable_models[model_type.lower()]
     elif model_type.lower() == 'all':
-        return sum([searchable_models[key] for key in ['resources','places', 'citations', 'media', 'activities']],[])
+        return sum([searchable_models[key] for key in ['resources','places', 'sources', 'media', 'activities']],[])
     else:
         return []
 
@@ -303,7 +304,7 @@ def search(request):
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     from django.shortcuts import render
 
-    all_categories = ['places','resources','activities','citations','media']
+    all_categories = ['places','resources','activities','sources','media']
     if request.method == 'POST':
         query_string=request.POST['query']
         if 'category' in request.POST.keys():
@@ -318,7 +319,9 @@ def search(request):
             if 'activities' in keys and request.POST['activities']:
                 categories.append('activities')
             if 'citations' in keys and request.POST['citations']:
-                categories.append('citations')
+                categories.append('sources')
+            if 'sources' in keys and request.POST['sources']:
+                categories.append('sources')
             if 'media' in keys and request.POST['media']:
                 categories.append('media')
     else:
@@ -420,7 +423,7 @@ def query(request):
 
 def get_category_list(request):
     categories = []
-    for category in ['places','resources','activities','citations','media']:
+    for category in ['places','resources','activities','sources','media']:
         if request.GET.get(category) == 'true':
             categories.append(category)
     return categories

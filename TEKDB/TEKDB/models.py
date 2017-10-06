@@ -252,7 +252,7 @@ class Places(Queryable):
             {'key':'Alternate Indigenous Names', 'value': [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]},
             {'key':'Resources', 'value': [res.get_query_json() for res in self.placesresourceevents_set.all()]},
             {'key':'Media', 'value': [media.get_relationship_json(type(self)) for media in self.placesmediaevents_set.all()]},
-            {'key':'Citations', 'value': [citation.get_relationship_json(type(self)) for citation in self.placescitationevents_set.all()]},
+            {'key':'Bibliographic Sources', 'value': [citation.get_relationship_json(type(self)) for citation in self.placescitationevents_set.all()]},
             # {'key':'Localities', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
         ]
 
@@ -353,7 +353,7 @@ class Resources(Queryable):
             relationship_list.append({'key':'Media', 'value':media })
         citations = [x.get_relationship_json(type(self)) for x in self.resourcescitationevents_set.all()]
         if len(citations) > 0:
-            relationship_list.append({'key':'Citations', 'value': citations})
+            relationship_list.append({'key':'Bibliographic Sources', 'value': citations})
         places = [x.get_query_json() for x in placeresources]
         if len(places) > 0:
             relationship_list.append({'key':'Places', 'value': places})
@@ -564,6 +564,9 @@ class PlacesResourceEvents(Queryable):
         activities = [x.get_query_json() for x in self.resourcesactivityevents_set.all()]
         if len(activities) > 0:
             relationship_list.append({'key':'Activities', 'value': activities})
+        citations = [x.get_relationship_json(type(self)) for x in self.placesresourcecitationevents_set.all()]
+        if len(citations) > 0:
+            relationship_list.append({'key':'Bibliographic Sources', 'value': citations})
         return relationship_list
 
     def get_response_format(self):
@@ -704,7 +707,7 @@ class ResourcesActivityEvents(Queryable):
         relationship_list.append({'key':'Place-Resource', 'value': [self.placeresourceid.get_query_json()]})
         citations = [x.get_relationship_json(type(self)) for x in self.resourceactivitycitationevents_set.all()]
         if len(citations) > 0:
-            relationship_list.append({'key':'Citations', 'value': citations})
+            relationship_list.append({'key':'Bibliographic Sources', 'value': citations})
         media = [x.get_query_json() for x in self.resourceactivitymediaevents_set.all()]
         if len(media) > 0:
             relationship_list.append({'key':'Media', 'value': media})
@@ -790,9 +793,9 @@ class People(models.Model):
         interviewer_citations = [x.get_query_json() for x in self.interviewer.all()]
         # citations = list(set(interviewee_citations) | set(interviewer_citations))
         if len(interviewee_citations) > 0:
-            relationship_list.append({'key': 'Citations as interviewee', 'value': interviewee_citations})
+            relationship_list.append({'key': 'Sources as interviewee', 'value': interviewee_citations})
         if len(interviewer_citations) > 0:
-            relationship_list.append({'key': 'Citations as interviewer', 'value': interviewer_citations})
+            relationship_list.append({'key': 'Sources as interviewer', 'value': interviewer_citations})
         return relationship_list
 
     #Actually a dict, not true JSON.
@@ -872,8 +875,8 @@ class Citations(Queryable):
     class Meta:
         managed = MANAGED
         db_table = 'Citations'
-        verbose_name = 'Citation'
-        verbose_name_plural = 'Citations'
+        verbose_name = 'Bibliographic Source'
+        verbose_name_plural = 'Bibliographic Sources'
 
     def keyword_search(keyword):
         reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
@@ -935,6 +938,9 @@ class Citations(Queryable):
         activities = [x.get_relationship_json(type(self)) for x in self.resourceactivitycitationevents_set.all()]
         if len(activities) > 0:
             relationship_list.append({'key': 'Activities', 'value': activities})
+        placesResources = [x.get_relationship_json(type(self)) for x in self.placesresourcecitationevents_set.all()]
+        if len(placesResources) > 0:
+            relationship_list.append({'key': 'Place-Resources', 'value': placesResources})
 
         return relationship_list
 
@@ -962,7 +968,7 @@ class Citations(Queryable):
 
     def get_response_format(self):
         type = 'citations'
-        category_name = 'Citation'
+        category_name = 'Source'
         return {
             'id': self.pk,
             'type': type,
@@ -997,8 +1003,8 @@ class PlacesCitationEvents(SimpleRelationship):
         managed = MANAGED
         db_table = 'PlacesCitationEvents'
         app_label = "Relationships"
-        verbose_name = 'Place - Citation'
-        verbose_name_plural = 'Places - Citations'
+        verbose_name = 'Place - Source'
+        verbose_name_plural = 'Places - Sources'
         unique_together = (('placeid', 'citationid'),)
 
     def __unicode__(self):
@@ -1032,7 +1038,7 @@ class PlacesCitationEvents(SimpleRelationship):
     def relationships(self):
         relationship_list = []
         relationship_list.append({'key': 'Place', 'value': [self.placeid.get_query_json()]})
-        relationship_list.append({'key': 'Citation', 'value': [self.citationid.get_query_json()]})
+        relationship_list.append({'key': 'Bibliographic Source', 'value': [self.citationid.get_query_json()]})
         return relationship_list
 
     def data(self):
@@ -1045,7 +1051,7 @@ class PlacesCitationEvents(SimpleRelationship):
 
     def get_response_format(self):
         type = 'Placescitationevents'
-        category_name = 'Place - Citation'
+        category_name = 'Place - Source'
         return {
             'id': self.pk,
             'type': type,
@@ -1265,7 +1271,7 @@ class LocalityPlaceResourceEvent(Queryable):
 
     def get_response_format(self):
         type = 'Placescitationevents'
-        category_name = "Place - Citation"
+        category_name = "Place - Source"
         return {
             'id': self.pk,
             'type': type,
@@ -1368,7 +1374,7 @@ class Media(Queryable):
             relationship_list.append({'key': 'Resources', 'value': resources})
         citations = [x.get_relationship_json(type(self)) for x in self.mediacitationevents_set.all()]
         if len(citations) > 0:
-            relationship_list.append({'key': 'Citations', 'value': citations})
+            relationship_list.append({'key': 'Bibliographic Sources', 'value': citations})
         activities = [x.get_relationship_json(type(self)) for x in self.resourceactivitymediaevents_set.all()]
         if len(activities) > 0:
             relationship_list.append({'key': 'Activities', 'value': activities})
@@ -1444,8 +1450,8 @@ class MediaCitationEvents(SimpleRelationship):
         managed = MANAGED
         db_table = 'MediaCitationEvents'
         app_label = 'Relationships'
-        verbose_name = 'Medium - Citation'
-        verbose_name_plural = 'Media - Citations'
+        verbose_name = 'Medium - Source'
+        verbose_name_plural = 'Media - Sources'
         unique_together = (('mediaid', 'citationid'),)
 
     def __unicode__(self):
@@ -1479,7 +1485,7 @@ class MediaCitationEvents(SimpleRelationship):
     def relationships(self):
         relationship_list = []
         relationship_list.append({'key':'Media','value':[self.mediaid.get_query_json()]})
-        relationship_list.append({'key':'Citation','value':[self.citationid.get_query_json()]})
+        relationship_list.append({'key':'Bibliographic Source','value':[self.citationid.get_query_json()]})
         return relationship_list
 
     def data(self):
@@ -1492,7 +1498,7 @@ class MediaCitationEvents(SimpleRelationship):
 
     def get_response_format(self):
         type = 'Mediacitationevents'
-        category_name = 'Media - Citation'
+        category_name = 'Media - Sources'
         return {
             'id': self.pk,
             'type': type,
@@ -1636,7 +1642,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
         db_table = 'PlacesResourceCitationEvents'
         unique_together = (('placeresourceid', 'citationid'),)
         app_label = 'Relationships'
-        verbose_name_plural = 'Place-Resources - Citations'
+        verbose_name_plural = 'Place-Resources - Sources'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.placeresourceid), str(self.citationid)))
@@ -1669,7 +1675,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
     def relationships(self):
         relationship_list = []
         relationship_list.append({'key':'Place-Resource', 'value':[self.placeresourceid.get_query_json()]})
-        relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
+        relationship_list.append({'key':'Bibliographic Source', 'value':[self.citationid.get_query_json()]})
         return relationship_list
 
     def data(self):
@@ -1683,7 +1689,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
 
     def get_response_format(self):
         type = 'Placesresourcecitationevents'
-        category_name = 'Place/Resource - Citation'
+        category_name = 'Place/Resource - Sources'
         return {
             'id': self.pk,
             'type': type,
@@ -1785,7 +1791,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
         db_table = 'ResourceActivityCitationEvents'
         unique_together = (('resourceactivityid', 'citationid'),)
         app_label = 'Relationships'
-        verbose_name_plural = 'Activity - Citations'
+        verbose_name_plural = 'Activity - Sources'
 
     def __unicode__(self):
         return unicode("%s %s" % (str(self.resourceactivityid), str(self.citationid)))
@@ -1818,7 +1824,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
     def relationships(self):
         relationship_list = []
         relationship_list.append({'key':'Activity', 'value':[self.resourceactivityid.get_query_json()]})
-        relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
+        relationship_list.append({'key':'Bibliographic Source', 'value':[self.citationid.get_query_json()]})
         return relationship_list
 
     def data(self):
@@ -1832,7 +1838,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
 
     def get_response_format(self):
         type = 'Resourceactivitycitationevents'
-        category_name = 'Activity - Citation'
+        category_name = 'Activity - Source'
         return {
             'id': self.pk,
             'type': type,
@@ -2053,8 +2059,8 @@ class ResourcesCitationEvents(SimpleRelationship):
     class Meta:
         managed = MANAGED
         db_table = 'ResourcesCitationEvents'
-        verbose_name = 'Resource - Citation'
-        verbose_name_plural = 'Resources - Citations'
+        verbose_name = 'Resource - Source'
+        verbose_name_plural = 'Resources - Sources'
         unique_together = (('resourceid', 'citationid'),)
         app_label = 'Relationships'
 
@@ -2089,7 +2095,7 @@ class ResourcesCitationEvents(SimpleRelationship):
     def relationships(self):
         relationship_list = []
         relationship_list.append({'key':'Resource', 'value':[self.resourceid.get_query_json()]})
-        relationship_list.append({'key':'Citation', 'value':[self.citationid.get_query_json()]})
+        relationship_list.append({'key':'Bibliographic Source', 'value':[self.citationid.get_query_json()]})
         return relationship_list
 
     def data(self):
@@ -2102,7 +2108,7 @@ class ResourcesCitationEvents(SimpleRelationship):
 
     def get_response_format(self):
         type = 'Resourcescitationevents'
-        category_name = "Resource - Citation"
+        category_name = "Resource - Source"
         return {
             'id': self.pk,
             'type': type,

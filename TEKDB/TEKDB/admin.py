@@ -111,6 +111,7 @@ class ResourcesMediaEventsForm(forms.ModelForm):
 ###############
 ### INLINES ###
 ###############
+
 #### ACTIVITIES ####
 class ResourcesactivitymediaeventsInline(admin.TabularInline):
     model = ResourceActivityMediaEvents
@@ -131,14 +132,14 @@ class ResourcesactivitycitationeventsInline(admin.TabularInline):
     fields = ('citationid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Related Citations'
+    verbose_name_plural = 'Related Bibliographic Sources'
 
 class NestedResourcesactivitycitationeventsInline(nested_admin.NestedTabularInline):
     model = ResourceActivityCitationEvents
     fields = ('citationid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Related Citations'
+    verbose_name_plural = 'Related Bibliographic Sources'
 
 #### PLACESRESOURCES ####
 class NestedPlacesresourcecitationeventsInline(nested_admin.NestedTabularInline):
@@ -146,7 +147,7 @@ class NestedPlacesresourcecitationeventsInline(nested_admin.NestedTabularInline)
     fields = ('citationid','relationshipdescription','pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'related citations'
+    verbose_name_plural = 'related Bibliographic Sources'
     form = PlacesResourceCitationEventsForm
 
 class NestedPlacesresourcemediaeventsInline(nested_admin.NestedTabularInline):
@@ -241,7 +242,7 @@ class NestedPlacescitationeventsInline(nested_admin.NestedTabularInline):
     extra = 0
     classes = ['collapse', 'open']
     max_num = 9999
-    verbose_name_plural = 'related citations'
+    verbose_name_plural = 'related Bibliographic Sources'
     form = PlacesCitationEventsForm
 
 #### CITATIONS ####
@@ -299,7 +300,7 @@ class MediacitationeventsInline(admin.TabularInline):
     extra = 0
     classes = ['collapse', 'open']
     form = MediaCitationEventsForm
-    verbose_name_plural = 'related citations'
+    verbose_name_plural = 'related Bibliographic Sources'
 
 class MediaresourceseventsInline(admin.TabularInline):
     model = ResourcesMediaEvents
@@ -338,7 +339,7 @@ class NestedResourcesCitationEventsInline(nested_admin.NestedTabularInline):
     fields = ('citationid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'related citations'
+    verbose_name_plural = 'related Bibliographic Sources'
     form = ResourcesCitationEventsForm
 
 class NestedResourcesPlaceEventsInline(nested_admin.NestedStackedInline):
@@ -361,7 +362,7 @@ class NestedResourcesPlaceEventsInline(nested_admin.NestedStackedInline):
     inlines = [
         NestedPlacesresourcecitationeventsInline,
         NestedPlacesresourcemediaeventsInline,
-        NestedPlaceresourcelocalityeventInline,
+        # NestedPlaceresourcelocalityeventInline,
         NestedPlacesresourceactivityeventInline,
     ]
 
