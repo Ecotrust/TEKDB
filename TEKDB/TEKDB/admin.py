@@ -215,7 +215,7 @@ class NestedPlacesresourceeventsInline(nested_admin.NestedStackedInline):
     inlines = [
         NestedPlacesresourcecitationeventsInline,
         NestedPlacesresourcemediaeventsInline,
-        NestedPlaceresourcelocalityeventInline,
+        # NestedPlaceresourcelocalityeventInline,
         NestedPlacesresourceactivityeventInline,
     ]
 
@@ -607,7 +607,7 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
         NestedPlacesresourceeventsInline,
         NestedPlacesmediaeventsInline,
         NestedPlacescitationeventsInline,
-        NestedPlaceslocalityInline,
+        # NestedPlaceslocalityInline,
         PlaceGISSelectionsInline,
     ]
     search_fields = (
@@ -743,7 +743,7 @@ class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
     inlines = [
         NestedPlacesresourcecitationeventsInline,
         NestedPlacesresourcemediaeventsInline,
-        NestedPlaceresourcelocalityeventInline,
+        # NestedPlaceresourcelocalityeventInline,
         NestedPlacesresourceactivityeventInline,
     ]
 
@@ -932,13 +932,13 @@ class UsersAdmin(UserAdmin):
     )
 
 admin.site.register(Citations, CitationsAdmin)
-admin.site.register(Locality, LocalityAdmin)
-admin.site.register(LocalityGISSelections)
-admin.site.register(LocalityPlaceResourceEvent, LocalityPlaceResourceEventAdmin)
+# admin.site.register(Locality, LocalityAdmin)
+# admin.site.register(LocalityGISSelections)
+# admin.site.register(LocalityPlaceResourceEvent, LocalityPlaceResourceEventAdmin)
 admin.site.register(LookupActivity)
 admin.site.register(LookupCustomaryUse)
 admin.site.register(LookupHabitat)
-admin.site.register(LookupLocalityType)
+# admin.site.register(LookupLocalityType)
 admin.site.register(LookupMediaType)
 admin.site.register(LookupParticipants)
 admin.site.register(LookupPartUsed)
