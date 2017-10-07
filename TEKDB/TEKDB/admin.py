@@ -610,7 +610,7 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
         NestedPlacesmediaeventsInline,
         NestedPlacescitationeventsInline,
         # NestedPlaceslocalityInline,
-        PlaceGISSelectionsInline,
+        # PlaceGISSelectionsInline,
     ]
     search_fields = (
         'englishplacename', 'indigenousplacename', 'indigenousplacenamemeaning',
@@ -955,7 +955,7 @@ admin.site.register(Media, MediaAdmin)
 admin.site.register(MediaCitationEvents, MediaCitationEventsAdmin)
 admin.site.register(People)
 admin.site.register(PlaceAltIndigenousName)
-admin.site.register(PlaceGISSelections)
+# admin.site.register(PlaceGISSelections)
 admin.site.register(Places, PlacesAdmin)
 admin.site.register(PlacesCitationEvents, PlacesCitationEventsAdmin)
 admin.site.register(PlacesMediaEvents,PlacesMediaEventsAdmin)
