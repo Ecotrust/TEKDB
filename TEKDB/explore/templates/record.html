@@ -82,7 +82,11 @@
                         {% endif %}
                         </p>
                     {% else %}
+                      {% if link.link %}
                       <a href="{{ link.link }}">{{ link.name }}</a>
+                      {% else %}
+                      {{ link.name }}
+                      {% endif %}
                     {% endif %}
                     {% if forloop.last %}
                     </div>
