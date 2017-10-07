@@ -34,7 +34,7 @@ var esri_2d = new ol.layer.Tile({
       attributions: [
         new ol.Attribution({
           html: "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
-          >Basemap Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
+          >Topo Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
         })
       ]
   })
@@ -47,7 +47,7 @@ var nautical_charts = new ol.layer.Tile({
     params: {'LAYERS': 'NOAA_RNC'},
     attributions: [
       new ol.Attribution({
-        html: 'NOAA Office of Coast Survey'
+        html: 'Natical Source: NOAA Office of Coast Survey'
       })
     ]
   })

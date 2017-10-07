@@ -14,9 +14,12 @@
   position: static;
 }
 
+.ol-attribution > ul > li {
+  font-size: 9px;
+}
+
 .ol-attribution > ul > li > a {
   color: black;
-  font-size: 9px;
 }
 
 .ol-attribution > ul > li > a:hover {
