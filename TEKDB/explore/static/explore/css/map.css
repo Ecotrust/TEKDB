@@ -13,3 +13,16 @@
 .ol-mouse-position {
   position: static;
 }
+
+.ol-attribution > ul > li > a {
+  color: black;
+  font-size: 9px;
+}
+
+.ol-attribution > ul > li > a:hover {
+  font-weight: normal;
+}
+
+.ol-attribution {
+  max-width: 500px;
+}
