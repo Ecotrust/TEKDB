@@ -547,7 +547,6 @@ class PlacesResourceEvents(Queryable):
             {'key':'resource', 'value': str(self.resourceid)},
             {'key':'excerpt', 'value': self.relationshipdescription},
             {'key':'part used', 'value': str(self.partused)},
-            {'key':'customary use', 'value': str(self.customaryuse)},
             {'key':'used for barter', 'value': barter},
             {'key':'season', 'value': str(self.season)},
             {'key':'timing', 'value': str(self.timing)},

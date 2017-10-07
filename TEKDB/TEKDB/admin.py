@@ -723,11 +723,11 @@ class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
 
 #### RELATIONSHIP MODELS ####
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
-    list_display = ('placeid', 'resourceid', 'partused', 'customaryuse', 'season','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
+    list_display = ('placeid', 'resourceid', 'partused', 'season','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
         ('', {
             'fields': (('placeid', 'resourceid'),'relationshipdescription',
-                ('partused', 'customaryuse', 'barterresource'),
+                ('partused', 'barterresource'),
                 ('season', 'timing'),
                 ('january', 'february', 'march', 'april', 'may', 'june'),
                 ('july', 'august', 'september', 'october', 'november',
