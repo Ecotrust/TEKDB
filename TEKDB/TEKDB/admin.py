@@ -188,7 +188,7 @@ class NestedPlacesalternativenameInline(nested_admin.NestedTabularInline):
     fields = ('altindigenousnameid', 'altindigenousname')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'alternate indigenous names'
+    verbose_name_plural = 'alternate names'
 
 class PlaceGISSelectionsInline(nested_admin.NestedTabularInline):
     model = PlaceGISSelections
@@ -380,7 +380,7 @@ class NestedResourceAltIndigenousNameInline(nested_admin.NestedTabularInline):
     fields = ('resourceid', 'altindigenousname')
     extra = 0
     classes = ['collapse', 'open']
-    verbose_name_plural = 'Alternate Indigenous Name'
+    verbose_name_plural = 'Alternate Name'
 
 #### LOCALITIES ####
 class LocalityplaceresourceeventInline(admin.TabularInline):

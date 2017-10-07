@@ -249,7 +249,7 @@ class Places(Queryable):
 
     def relationships(self):
         return [
-            {'key':'Alternate Indigenous Names', 'value': [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]},
+            {'key':'Alternate Names', 'value': [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]},
             {'key':'Resources', 'value': [res.get_query_json() for res in self.placesresourceevents_set.all()]},
             {'key':'Media', 'value': [media.get_relationship_json(type(self)) for media in self.placesmediaevents_set.all()]},
             {'key':'Bibliographic Sources', 'value': [citation.get_relationship_json(type(self)) for citation in self.placescitationevents_set.all()]},
@@ -343,6 +343,7 @@ class Resources(Queryable):
 
     def relationships(self):
         relationship_list = []
+        relationship_list.append({'key':'Alternate Names', 'value': [altname.get_query_json() for altname in  self.resourcealtindigenousname_set.all()]})
         placeresources = self.placesresourceevents_set.all()
         placeresourceidlist = [x.pk for x in placeresources]
         activities = [x.get_query_json() for x in ResourcesActivityEvents.objects.filter(placeresourceid__in=placeresourceidlist)]
@@ -1518,13 +1519,13 @@ class MediaCitationEvents(SimpleRelationship):
 class PlaceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
-    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alternate indigenous name')
+    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alternate name')
 
     class Meta:
         managed = MANAGED
         db_table = 'PlaceAltIndigenousName'
-        verbose_name = 'Place - Indigenous Name'
-        verbose_name_plural = 'Places - Indigenous Names'
+        verbose_name = 'Place - Alternate Name'
+        verbose_name_plural = 'Places - Alternate Names'
         app_label = 'Relationships'
 
     def get_query_json(self):
@@ -1935,13 +1936,19 @@ class ResourceActivityMediaEvents(SimpleRelationship):
 class ResourceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
     resourceid = models.ForeignKey(Resources, db_column='ResourceID', blank=True, null=True, verbose_name='resource')
-    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alt indigenous name')
+    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alt name')
 
     class Meta:
         managed = MANAGED
         db_table = 'ResourceAltIndigenousName'
         app_label = 'Relationships'
-        verbose_name_plural = 'Resource Alternative Indigenous Names'
+        verbose_name_plural = 'Resource Alternative Names'
+
+    def get_query_json(self):
+        return {
+            'name': str(self),
+            'link': False
+        }
 
     def __unicode__(self):
         return unicode('%s' % (self.altindigenousname))
