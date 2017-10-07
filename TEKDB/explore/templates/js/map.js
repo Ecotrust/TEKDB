@@ -1,6 +1,6 @@
 /* --- LAYERS --*/
 var esriLabels = new ol.layer.Tile({
-  title: 'Place Labels',
+  title: 'Labels',
   zIndex: 5,
   source: new ol.source.XYZ({
     url: "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
@@ -13,7 +13,7 @@ var esriLabels = new ol.layer.Tile({
   })
 });
 var esriAerial = new ol.layer.Tile({
-  title: 'Aerial Imagery',
+  title: 'Aerial',
   type: 'base',
   visible: 'true',
   source: new ol.source.XYZ({
@@ -27,7 +27,7 @@ var esriAerial = new ol.layer.Tile({
   })
 });
 var esri_2d = new ol.layer.Tile({
-  title: 'ESRI Base',
+  title: 'Topo',
   type: 'base',
   source: new ol.source.XYZ({
       url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
@@ -40,7 +40,7 @@ var esri_2d = new ol.layer.Tile({
   })
 });
 var nautical_charts = new ol.layer.Tile({
-  title: 'Nautical Charts',
+  title: 'Nautical',
   type: 'base',
   source: new ol.source.TileWMS({
     url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/services/RNC/NOAA_RNC/ImageServer/WMSServer',
@@ -53,16 +53,16 @@ var nautical_charts = new ol.layer.Tile({
   })
 });
 var vectorLayer = new ol.layer.Vector({
-source: new ol.source.Vector({
-  features: new ol.format.GeoJSON().readFeatures(JSON.parse('{{ record.map | safe }}'))
-}),
-title: 'Place',
-zIndex: 100
+  source: new ol.source.Vector({
+    features: new ol.format.GeoJSON().readFeatures(JSON.parse('{{ record.map | safe }}'))
+  }),
+  title: 'Place',
+  zIndex: 100
 });
 var osmLayer = new ol.layer.Tile({
-source: new ol.source.OSM(),
-title: 'Street Map',
-type: 'base'
+  source: new ol.source.OSM(),
+  title: 'Street',
+  type: 'base'
 });
 
 /* --- CONTROLS --*/
