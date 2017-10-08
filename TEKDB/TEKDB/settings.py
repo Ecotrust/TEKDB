@@ -197,9 +197,9 @@ RECORD_ICONS = {
 
 # Set this in local_settings.py
 DATABASE_GEOGRAPHY = {
-    'default_lon': 0,
-    'default_lat': 0,
-    'default_zoom': 4,
+    'default_lon': -11131949.08,
+    'default_lat': 4865942.28,
+    'default_zoom': 3,
     'map_template': 'gis/admin/ol2osm.html'
 }
 
