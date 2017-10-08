@@ -98,24 +98,27 @@ class Command(BaseCommand):
             for line in rf:
                 line_split = line.split("\"")
                 if "INSERT INTO \"" in line:
-                    model = line_split[1]
+                    import re
+                    pattern = re.compile(r'INSERT INTO "(?P<table>.*)" \((?P<columns>.*)\) VALUES \((?P<values>.*)\);')
+                    result = pattern.match(line)
+                    model = result.groupdict()['table']
+                    columns = result.groupdict()['columns'].split(', ')
+                    values = result.groupdict()['values'].split(', ')
                     if model == "Users":
-                        users_split = line.split(")")
-                        users_line = "%s, \"is_superuser\", \"is_staff\", \"is_active\", \"date_joined\")%s, E'0', E'0', E'1', '%s')%s" % (users_split[0],users_split[1],now,users_split[2])
-                        insert_dict[model].append(users_line)
+                        columns = columns + ['"is_superuser"', '"is_staff"', '"is_active"', '"date_joined"']
+                        values = values + ["E'0'", "E'0'", "E'1'", "'%s'" % str(now)]
                     elif model == "UserAccess":
-                        access_split = line.split(")")
-                        group_name = access_split[1].split(", E'")[1]
-                        if group_name.find('Administrator') >= 0:
+                        accessLevelIndex = columns.index('"AccessLevel"')
+                        if values[accessLevelIndex] == "E'Administrator'" :
                             group_id = group_id_dict['admin_id']
-                        elif group_name.find('Editor') >= 0:
+                        elif values[accessLevelIndex] == "E'Editor'":
                             group_id = group_id_dict['edit_id']
                         else:
                             group_id = group_id_dict['read_id']
-                        access_line = "%s, \"group_id\")%s, %s)%s" % (access_split[0],access_split[1],group_id,access_split[2])
-                        insert_dict[model].append(access_line)
-                    else:
-                        insert_dict[model].append(line)
+                        columns = columns + ['"group_id"']
+                        values = values + [str(group_id)]
+                    new_line = "INSERT INTO \"%s\" (%s) VALUES (%s);\n" % (model, str.join(', ', columns), str.join(', ', values))
+                    insert_dict[model].append(new_line)
                 elif "SELECT setval(" in line:
                     model = line_split[5]
                     insert_dict[model].append(line)
