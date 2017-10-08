@@ -76,11 +76,14 @@
                     <div class='relationship-row'>
                     {% endif %}
                     {% if link.issimplerelationship %}
-                        <p><a href="{{ link.link }}">{{ link.name }}</a>{% if link.data.description %} --
-                          Relationship: {{ link.data.description }}{% if link.data.pages %}; Pages: {{ link.data.pages }}
+                        <a href="{{ link.link }}">{{ link.name }}</a>
+                        {% if link.data.description %}
+                          <div class='source-excerpt'>
+                            {{ link.data.description }}
+                            {% if link.data.pages %}&nbsp(Pages: {{ link.data.pages }}){% endif %}
+                          </div>
                         {% endif %}
-                        {% endif %}
-                        </p>
+
                     {% else %}
                       {% if link.link %}
                       <a href="{{ link.link }}">{{ link.name }}</a>
