@@ -92,6 +92,17 @@ class Command(BaseCommand):
         insert_dict = {}
         model_list = self.get_model_list()
         group_id_dict = self.create_groups()
+        #TODO: create lookup indexes (all 0)
+        #TODO: create lookup dict
+        #TODO: create list of models with lookup dependencies
+        #TODO: For each 'INSERT INTO' (lookup) hit:
+        #TODO:          Apply ID
+        #TODO:          Increment Index
+        #TODO:          store id-value lookup in dict as {'value': id}
+        #TODO: when done:
+        #TODO:      For each model that uses lookups:
+        #TODO:          for each lookup used, replace correct value with id based on lookup dict
+        #TODO:
         for model in model_list:
             insert_dict[model] = []
         with open(infile) as rf:
