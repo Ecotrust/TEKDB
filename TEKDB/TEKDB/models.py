@@ -498,16 +498,16 @@ class PlacesResourceEvents(Queryable):
         place_loi = [place.pk for place in place_qs]
 
         part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
-        part_loi = [part.partused for part in part_qs]
+        part_loi = [part.pk for part in part_qs]
 
         use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
-        use_loi = [use.usedfor for use in use_qs]
+        use_loi = [use.pk for use in use_qs]
 
         season_qs = LookupSeason.objects.filter(season__icontains=keyword)
-        season_loi = [season.season for season in season_qs]
+        season_loi = [season.pk for season in season_qs]
 
         timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
-        timing_loi = [timing.timing for timing in timing_qs]
+        timing_loi = [timing.pk for timing in timing_qs]
 
         return PlacesResourceEvents.objects.filter(
             Q(resourceid__in=resource_loi) |
@@ -671,22 +671,22 @@ class ResourcesActivityEvents(Queryable):
         placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
         part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
-        part_loi = [part.partused for part in part_qs]
+        part_loi = [part.pk for part in part_qs]
 
         activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
-        activity_loi = [activity.activity for activity in activity_qs]
+        activity_loi = [activity.pk for activity in activity_qs]
 
         participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
-        participant_loi = [participant.participants for participant in participant_qs]
+        participant_loi = [participant.pk for participant in participant_qs]
 
         technique_qs = LookupTechniques.objects.filter(techniques__icontains=keyword)
-        technique_loi = [technique.techniques for technique in technique_qs]
+        technique_loi = [technique.pk for technique in technique_qs]
 
         use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
-        use_loi = [use.usedfor for use in use_qs]
+        use_loi = [use.pk for use in use_qs]
 
         timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
-        timing_loi = [timing.timing for timing in timing_qs]
+        timing_loi = [timing.pk for timing in timing_qs]
 
         return ResourcesActivityEvents.objects.filter(
             Q(placeresourceid__in=placeresource_loi) |
@@ -891,10 +891,10 @@ class Citations(Queryable):
 
     def keyword_search(keyword):
         reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
-        reference_loi = [reference.documenttype for reference in reference_qs]
+        reference_loi = [reference.pk for reference in reference_qs]
 
         authortype_qs = LookupAuthorType.objects.filter(authortype__icontains=keyword)
-        authortype_loi = [authortype.authortype for authortype in authortype_qs]
+        authortype_loi = [authortype.pk for authortype in authortype_qs]
 
         people_qs = People.keyword_search(keyword)
         people_loi = [person.pk for person in people_qs]
@@ -1156,7 +1156,7 @@ class Locality(Queryable):
         place_loi = [place.pk for place in place_qs]
 
         locality_qs = LookupLocalityType.objects.filter(localitytype__icontains=keyword)
-        locality_loi = [locality.localitytype for locality in locality_qs]
+        locality_loi = [locality.pk for locality in locality_qs]
 
         return Locality.objects.filter(
             Q(placeid__in=place_loi) |
