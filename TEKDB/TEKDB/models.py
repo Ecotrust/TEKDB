@@ -164,7 +164,8 @@ class LookupTribe(models.Model):
         }
 
 class LookupHabitat(models.Model):
-    habitat = models.CharField(db_column='Habitat', primary_key=True, max_length=100)
+    id = models.AutoField(db_column='id', primary_key=True)
+    habitat = models.CharField(db_column='Habitat', max_length=100)
 
     class Meta:
         managed = MANAGED
@@ -286,7 +287,8 @@ class Places(Queryable):
         return "%s (%s)" % (self.indigenousplacename, self.englishplacename)
 
 class LookupResourceGroup(models.Model):
-    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', primary_key=True, max_length=255, verbose_name='broad species group')
+    id = models.AutoField(db_column='id', primary_key=True)
+    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', max_length=255, verbose_name='broad species group')
 
     class Meta:
         managed = MANAGED
@@ -389,7 +391,8 @@ class Resources(Queryable):
         }
 
 class LookupPartUsed(models.Model):
-    partused = models.CharField(db_column='PartUsed', primary_key=True, max_length=255, verbose_name='part used')
+    id = models.AutoField(db_column='id', primary_key=True)
+    partused = models.CharField(db_column='PartUsed', max_length=255, verbose_name='part used')
 
     class Meta:
         managed = MANAGED
@@ -405,7 +408,8 @@ class LookupPartUsed(models.Model):
         return self.partused
 
 class LookupCustomaryUse(models.Model):
-    usedfor = models.CharField(db_column='UsedFor', primary_key=True, max_length=255, verbose_name='used_for')
+    id = models.AutoField(db_column='id', primary_key=True)
+    usedfor = models.CharField(db_column='UsedFor', max_length=255, verbose_name='used_for')
 
     class Meta:
         managed = MANAGED
@@ -421,7 +425,8 @@ class LookupCustomaryUse(models.Model):
         return self.usedfor
 
 class LookupSeason(models.Model):
-    season = models.CharField(db_column='Season', primary_key=True, max_length=255)
+    id = models.AutoField(db_column='id', primary_key=True)
+    season = models.CharField(db_column='Season', max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -437,7 +442,8 @@ class LookupSeason(models.Model):
         return self.season
 
 class LookupTiming(models.Model):
-    timing = models.CharField(db_column='Timing', primary_key=True, max_length=255)
+    id = models.AutoField(db_column='id', primary_key=True)
+    timing = models.CharField(db_column='Timing', max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -583,7 +589,8 @@ class PlacesResourceEvents(Queryable):
         }
 
 class LookupParticipants(models.Model):
-    participants = models.CharField(db_column='Participants', primary_key=True, max_length=255)
+    id = models.AutoField(db_column='id', primary_key=True)
+    participants = models.CharField(db_column='Participants', max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -599,7 +606,8 @@ class LookupParticipants(models.Model):
         return self.participants
 
 class LookupTechniques(models.Model):
-    techniques = models.CharField(db_column='Techniques', primary_key=True, max_length=255)
+    id = models.AutoField(db_column='id', primary_key=True)
+    techniques = models.CharField(db_column='Techniques', max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -615,7 +623,8 @@ class LookupTechniques(models.Model):
         return self.techniques
 
 class LookupActivity(models.Model):
-    activity = models.CharField(db_column='Activity', primary_key=True, max_length=255)
+    id = models.AutoField(db_column='id', primary_key=True)
+    activity = models.CharField(db_column='Activity', max_length=255)
 
     class Meta:
         managed = MANAGED
@@ -820,7 +829,8 @@ class People(models.Model):
         }
 
 class LookupReferenceType(models.Model):
-    documenttype = models.CharField(db_column='DocumentType', primary_key=True, max_length=25, verbose_name='document type')
+    id = models.AutoField(db_column='id', primary_key=True)
+    documenttype = models.CharField(db_column='DocumentType', max_length=25, verbose_name='document type')
 
     class Meta:
         managed = MANAGED
@@ -836,7 +846,8 @@ class LookupReferenceType(models.Model):
         return self.documenttype
 
 class LookupAuthorType(models.Model):
-    authortype = models.CharField(db_column='AuthorType', primary_key=True, max_length=50, verbose_name='author type')
+    id = models.AutoField(db_column='id', primary_key=True)
+    authortype = models.CharField(db_column='AuthorType', max_length=50, verbose_name='author type')
 
     class Meta:
         managed = MANAGED
@@ -1088,7 +1099,8 @@ class CurrentVersion(models.Model):
         return "Back: %d, Front:%d" % (self.backendversion, self.frontendversion)
 
 class LookupLocalityType(models.Model):
-    localitytype = models.CharField(db_column='LocalityType', primary_key=True, max_length=255, verbose_name='locality type')
+    id = models.AutoField(db_column='id', primary_key=True)
+    localitytype = models.CharField(db_column='LocalityType', max_length=255, verbose_name='locality type')
 
     class Meta:
         managed = MANAGED
@@ -1283,7 +1295,8 @@ class LocalityPlaceResourceEvent(Queryable):
         }
 
 class LookupMediaType(models.Model):
-    mediatype = models.CharField(db_column='MediaType', primary_key=True, max_length=255, verbose_name='type')
+    id = models.AutoField(db_column='id', primary_key=True)
+    mediatype = models.CharField(db_column='MediaType', max_length=255, verbose_name='type')
     mediacategory = models.CharField(db_column='MediaCategory', max_length=255, blank=True, null=True, verbose_name='category')
 
     class Meta:

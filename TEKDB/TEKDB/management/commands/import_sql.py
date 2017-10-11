@@ -192,9 +192,8 @@ class Command(BaseCommand):
                     if len(columns) != len(values):
                         import ipdb
                         ipdb.set_trace()
-                    #TODO: Bug below - pattern ', ' may appear in values
-                    # values = result.groupdict()['values'].split(', ')
-
+                        # This is left in place so that any detected mismatches can be fixed by hand now.
+                        print(values)
 
 
                     if model == "Users":
@@ -254,17 +253,6 @@ class Command(BaseCommand):
                         'table': model,
                         'columns': columns
                     })
-
-        print('##########################################')
-        print('testing appropriate order of insert_dict')
-        for model in insert_dict.keys():
-             for action in insert_dict[model].keys():
-                 for record in insert_dict[model][action]:
-                     if record['table'] != model:
-                         print("Model: %s action: %s does not match table: %s -- %s" % (model, action, record['table'], str(record)))
-        print('##########################################')
-        import ipdb
-        ipdb.set_trace()
 
         #TODO: when done:
         #TODO:      For each user:
