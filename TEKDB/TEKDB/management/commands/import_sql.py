@@ -85,6 +85,8 @@ class Command(BaseCommand):
 
     def create_sql_dict(self,infile):
         import string
+        import re
+        import shlex
         now = timezone.now()
         ############################################
         print("Generating insert script")
@@ -92,29 +94,109 @@ class Command(BaseCommand):
         insert_dict = {}
         model_list = self.get_model_list()
         group_id_dict = self.create_groups()
-        #TODO: create lookup indexes (all 0)
-        #TODO: create lookup dict
-        #TODO: create list of models with lookup dependencies
-        #TODO: For each 'INSERT INTO' (lookup) hit:
-        #TODO:          Apply ID
-        #TODO:          Increment Index
-        #TODO:          store id-value lookup in dict as {'value': id}
-        #TODO: when done:
-        #TODO:      For each model that uses lookups:
-        #TODO:          for each lookup used, replace correct value with id based on lookup dict
-        #TODO:
+        # create lookup indexes (all 0)
+        lookups = [
+            # 'LookupPlanningUnit',     #Already has a numeric auto pk
+            # 'LookupTribe',            #Already has a numeric auto pk
+            'LookupHabitat',
+            'LookupResourceGroup',
+            'LookupPartUsed',
+            'LookupCustomaryUse',
+            'LookupSeason',
+            'LookupTiming',
+            'LookupParticipants',
+            'LookupTechniques',
+            'LookupActivity',
+            'LookupReferenceType',
+            'LookupAuthorType',
+            'LookupLocalityType',
+            'LookupMediaType',
+            # 'LookupUserInfo',         #Not used as an FK anywhere
+        ]
+        lookup_pks = {
+            # 'LookupPlanningUnit': '"PlanningUnitID"',   #Already has a numeric auto pk
+            # 'LookupTribe': '"ID"',                      #Already has a numeric auto pk
+            'LookupHabitat': '"Habitat"',
+            'LookupResourceGroup': '"ResourceClassificationGroup"',
+            'LookupPartUsed': '"PartUsed"',
+            'LookupCustomaryUse': '"UsedFor"',
+            'LookupSeason': '"Season"',
+            'LookupTiming': '"Timing"',
+            'LookupParticipants': '"Participants"',
+            'LookupTechniques': '"Techniques"',
+            'LookupActivity': '"Activity"',
+            'LookupReferenceType': '"DocumentType"',
+            'LookupAuthorType': '"AuthorType"',
+            'LookupLocalityType': '"LocalityType"',
+            'LookupMediaType': '"MediaType"',
+            # 'LookupUserInfo': '"pk"',                   #Not used as an FK anywhere
+        }
+        lookup_indices = {}
+        # create lookup dict
+        lookup_values = {}
+        for lookup in lookups:
+            lookup_indices[lookup] = 0
+            lookup_values[lookup] = {
+                'NULL': 'NULL'
+            }
+            # { 'Rocky Shore': 7 }
+        # create list of models with lookup dependencies
+        lookup_dependencies = {
+            'Citations': {
+                '"ReferenceType"': 'LookupReferenceType',
+                '"AuthorType"': 'LookupAuthorType'
+            },
+            'Locality': {
+                '"LocalityType"': 'LookupLocalityType'
+            },
+            'Media': {
+                '"MediaType"': 'LookupMediaType'
+            },
+            'Places': {
+                '"PrimaryHabitat"': 'LookupHabitat',
+            },
+            'PlacesResourceEvents': {
+                '"PartUsed"': 'LookupPartUsed',
+                '"CustomaryUse"': 'LookupCustomaryUse',
+                '"Season"': 'LookupSeason',
+                '"Timing"': 'LookupTiming'
+            },
+            'Resources': {
+                '"ResourceClassificationGroup"': 'LookupResourceGroup',
+            },
+            'ResourcesActivityEvents': {
+                '"PartUsed"': 'LookupPartUsed',
+                '"Timing"': 'LookupTiming',
+                '"Participants"': 'LookupParticipants',
+                '"Technique"': 'LookupTechniques',
+                '"ActivityShortDescription"': 'LookupActivity',
+            }
+        }
         for model in model_list:
-            insert_dict[model] = []
+            insert_dict[model] = {
+                'inserts': [],
+                'selects': [],
+                'indices': [],
+            }
         with open(infile) as rf:
             for line in rf:
-                line_split = line.split("\"")
                 if "INSERT INTO \"" in line:
-                    import re
                     pattern = re.compile(r'INSERT INTO "(?P<table>.*)" \((?P<columns>.*)\) VALUES \((?P<values>.*)\);')
                     result = pattern.match(line)
                     model = result.groupdict()['table']
-                    columns = result.groupdict()['columns'].split(', ')
-                    values = result.groupdict()['values'].split(', ')
+                    columns_lex = shlex.shlex(result.groupdict()['columns'])
+                    columns_lex.quotes = '"'
+                    columns = list(columns_lex)
+                    columns = list(filter((',').__ne__, columns))
+                    values = re.findall(r'(E\'".+?(?!\\)"\'|E\'.*?(?!\\)\'|.+?)(?:,\s|$)', result.groupdict()['values'])
+                    if len(columns) != len(values):
+                        import ipdb
+                        ipdb.set_trace()
+                    #TODO: Bug below - pattern ', ' may appear in values
+                    # values = result.groupdict()['values'].split(', ')
+
+
+
                     if model == "Users":
                         columns = columns + ['"is_superuser"', '"is_staff"', '"is_active"', '"date_joined"']
                         values = values + ["E'0'", "E'0'", "E'1'", "'%s'" % str(now)]
@@ -128,19 +210,105 @@ class Command(BaseCommand):
                             group_id = group_id_dict['read_id']
                         columns = columns + ['"group_id"']
                         values = values + [str(group_id)]
-                    new_line = "INSERT INTO \"%s\" (%s) VALUES (%s);\n" % (model, str.join(', ', columns), str.join(', ', values))
-                    insert_dict[model].append(new_line)
+                    if model in lookups:
+                        record_id = lookup_indices[model]
+                        pk_field = lookup_pks[model]
+                        columns = columns + ['"id"']
+                        values = values + [str(record_id)]
+                        try:
+                            pk_index = columns.index(pk_field)
+                        except Exception:
+                            import ipdb
+                            ipdb.set_trace()
+                        pk_value = values[pk_index]
+                        if not pk_value in lookup_values[model].keys():
+                            lookup_values[model][pk_value] = str(record_id)
+                            lookup_indices[model] = record_id + 1
+
+                    insert_dict[model]['inserts'].append({
+                        'table': model,
+                        'columns': columns,
+                        'values': values
+                    })
                 elif "SELECT setval(" in line:
-                    model = line_split[5]
-                    insert_dict[model].append(line)
+                    # SELECT setval('"Users_UserID_seq"', MAX("UserID")) FROM "Users";
+                    pattern = re.compile(r'SELECT setval\(\'(?P<sequence>.*)\', MAX\((?P<column>.*)\)\) FROM "(?P<table>.*)";')
+                    result = pattern.match(line)
+                    model = result.groupdict()['table']
+                    column = result.groupdict()['column']
+                    sequence = result.groupdict()['sequence']
+                    insert_dict[model]['selects'].append({
+                        'sequence': sequence,
+                        'table': model,
+                        'column': column
+                    })
+                elif "CREATE INDEX " in line:
+                    # CREATE INDEX "Users_UserID" ON "Users" ("UserID");
+                    pattern = re.compile(r'CREATE INDEX "(?P<index>.*)" ON "(?P<table>.*)" \((?P<columns>.*)\);')
+                    result = pattern.match(line)
+                    model = result.groupdict()['table']
+                    columns = result.groupdict()['columns']
+                    index = result.groupdict()['index']
+                    insert_dict[model]['indices'].append({
+                        'index': index,
+                        'table': model,
+                        'columns': columns
+                    })
+
+        print('##########################################')
+        print('testing appropriate order of insert_dict')
+        for model in insert_dict.keys():
+             for action in insert_dict[model].keys():
+                 for record in insert_dict[model][action]:
+                     if record['table'] != model:
+                         print("Model: %s action: %s does not match table: %s -- %s" % (model, action, record['table'], str(record)))
+        print('##########################################')
+        import ipdb
+        ipdb.set_trace()
+
+        #TODO: when done:
+        #TODO:      For each user:
+        #TODO:          Check access-level and adjust 'is_superuser' and 'is_staff' accordingly
+        #TODO:          or see that groups are appropriate
+
+        for model in lookup_dependencies.keys():
+            for insert_rec in insert_dict[model]['inserts']:
+                for lookup in lookup_dependencies[model].keys():
+                    # get index of lookup fk field
+                    lookup_index = insert_rec['columns'].index(lookup)
+                    # get old char pk value for fk lookup model
+                    char_pk_value = insert_rec['values'][lookup_index]
+                    # get model of lookup fk
+                    lookup_model = lookup_dependencies[model][lookup]
+                    # Check to be sure lookup_value exists and has an associated ID
+                    if not char_pk_value in lookup_values[lookup_model].keys():
+                        lookup_record_id = lookup_indices[lookup_model]
+                        lookup_values[lookup_model][char_pk_value] = str(lookup_record_id)
+                        lookup_indices[lookup_model] = lookup_record_id + 1
+                        insert_dict[lookup_model]['inserts'].append({
+                            'table': lookup_model,
+                            'columns': ['"id"', lookup_pks[lookup_model]],
+                            'values': [str(lookup_record_id), char_pk_value]
+                        })
+                    # get int pk value from old char pk value
+                    lookup_id = lookup_values[lookup_model][char_pk_value]
+                    insert_rec['values'][lookup_index] = lookup_id
         return insert_dict
 
     def create_insert_script(self, insert_script,insert_dict):
         model_list = self.get_model_list()
         with open(insert_script, "w") as wf:
             for model in model_list:
-                for line in insert_dict[model]:
+                for insert in insert_dict[model]['inserts']:
+                    line = 'INSERT INTO "%s" (%s) VALUES (%s);\n' % (insert['table'], ', '.join(insert['columns']), ', '.join(insert['values']))
                     wf.write(line)
+                for select in insert_dict[model]['selects']:
+                    line = 'SELECT setval(\'%s\', MAX(%s)) FROM "%s";\n' % (select['sequence'], select['column'], select['table'])
+                    wf.write(line)
+                for index in insert_dict[model]['indices']:
+                    line = 'CREATE INDEX "%s" ON "%s" (%s);\n' % (index['index'], index['table'], index['columns'])
+                    wf.write(line)
+
 
     def get_app_list(self):
         return ['TEKDB', 'Lookup', 'Accounts', 'Relationships', 'explore']
