@@ -126,10 +126,8 @@ def get_by_model_type(request, model_type):
     return render(request, "results.html", context)
 
 def get_by_model_id(request, model_type, id):
-    try:
-        back_link = '%s?%s' % (request.META.get('HTTP_REFERER').split('?')[0], request.GET.urlencode())
-    except Exception:
-        back_link = '%s?%s' % ('/search/', request.GET.urlencode())
+    state = "?%s" % request.GET.urlencode()
+    back_link = '%s%s' % ('/search/', state)
     models = get_model_by_type(model_type)
     if len(models) == 1:
         try:
@@ -143,6 +141,9 @@ def get_by_model_id(request, model_type, id):
         obj = None
         record_dict = {}
 
+    if state == "?":
+        state = ''
+
     context = {
         'page':'Record',
         'pageTitle':'Record',
@@ -151,7 +152,8 @@ def get_by_model_id(request, model_type, id):
         'user': request.user,
         'model': model_type,
         'id': id,
-        'back_link': back_link
+        'back_link': back_link,
+        'state': state,
     }
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
