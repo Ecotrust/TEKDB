@@ -47,12 +47,24 @@ class Queryable(models.Model):
     def map(self):
         return None
 
-    def get_record_dict(self):
+    def restrict_data(self, user):
+        return False
+
+    def limited_data(self):
+        return self.data()
+
+    def get_record_dict(self, user):
+        if self.restrict_data(user):
+            data = self.limited_data()
+            restricted = True
+        else:
+            data = self.data()
+            restricted = False
         return {
             'name': str(self),
             'image': self.image(),
             'subtitle': self.subtitle(),
-            'data': self.data(),
+            'data': data,
             'relationships': self.relationships(),
             'map': self.map(),
             'media': self.media(),
@@ -61,6 +73,7 @@ class Queryable(models.Model):
             'enteredbydate': self.enteredbydate,
             'modifiedbyname': self.modifiedbyname,
             'modifiedbydate': self.modifiedbydate,
+            'restricted': restricted,
         }
 
     def media(self):
@@ -817,7 +830,7 @@ class People(models.Model):
             'link': self.link()
         }
 
-    def get_record_dict(self):
+    def get_record_dict(self, user):
         return {
             'name': str(self),
             'image': self.image(),
@@ -1344,6 +1357,7 @@ class Media(Queryable):
     mediadescription = models.TextField(db_column='MediaDescription', blank=True, null=True, verbose_name='description')
     medialink = models.CharField(db_column='MediaLink', max_length=255, blank=True, null=True, verbose_name='historic location')
     mediafile = models.FileField(db_column='MediaFile', max_length=255, blank=True, null=True, verbose_name='file')
+    limitedaccess = models.NullBooleanField(db_column='LimitedAccess', null=True, default=False, verbose_name='limited access?')
 
     class Meta:
         managed = MANAGED
@@ -1395,6 +1409,25 @@ class Media(Queryable):
         if len(placeresources) > 0:
             relationship_list.append({'key': 'Place-Resources', 'value': placeresources})
         return relationship_list
+
+    def restrict_data(self, user):
+        if self.limitedaccess and user.accesslevel.accesslevel not in ['Administrator', 'Editor']:
+            return True
+        else:
+            return False
+
+    def limited_data(self):
+        if self.mediafile == None:
+            mediafile = 'None'
+        else:
+            mediafile = "Please ask an administrator if you need access to this file."
+
+        return [
+            {'key':'name', 'value': self.medianame},
+            {'key':'media type', 'value': str(self.mediatype)},
+            {'key':'media description', 'value': self.mediadescription},
+            {'key':'file', 'value': mediafile},
+        ]
 
     def media(self):
         if not self.medialink == None or not self.mediafile == None:

@@ -556,7 +556,7 @@ class MediaAdmin(RecordAdminProxy):
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': (('medianame','mediatype'),'mediafile','medialink','mediadescription')
+            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription')
         }),
         ('History', {
             'fields': (

@@ -135,7 +135,7 @@ def get_by_model_id(request, model_type, id):
         try:
             model = models[0]
             obj = model.objects.get(pk=id)
-            record_dict = obj.get_record_dict()
+            record_dict = obj.get_record_dict(request.user)
         except Exception as e:
             obj = None
             record_dict = {}
@@ -281,7 +281,7 @@ def export_by_model_id(request, model_type, id, format):
         try:
             model = models[0]
             obj = model.objects.get(pk=id)
-            record_dict = obj.get_record_dict()
+            record_dict = obj.get_record_dict(request.user)
         except Exception as e:
             record_dict = {'error': 'unknown error', 'code': '%s' % e}
     else:

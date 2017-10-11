@@ -46,10 +46,12 @@
           <div class='row'>
             <div class='well odd-well'>
               {% if record.media.file %}
+                {% if not record.restricted %}
                 <div style="text-align: right">
                   <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
                   <a class='btn-download' href="download">Download</a>
                 </div>
+                {% endif %}
                 {% if record.media.type == 'image' %}
                   <div style="text-align: center">
                     <img style="max-height: 20em" src="{{ MEDIA_URL }}{{ record.media.file }}" />
