@@ -23,7 +23,7 @@ show_reftype_form = function(reftype) {
   }
 }
 
-show_reftype_form($('#id_referencetype').val());
+show_reftype_form($('#id_referencetype option:selected').text());
 
 // $( "form" ).submit(function( event ) {
 //   event.preventDefault();
@@ -32,7 +32,7 @@ show_reftype_form($('#id_referencetype').val());
 
 // update_referencetype = function() {
 $('#id_referencetype').change(function() {
-  var reftype = $('#id_referencetype').val();
+  var reftype = $('#id_referencetype option:selected').text();
   show_reftype_form(reftype);
 });
 
