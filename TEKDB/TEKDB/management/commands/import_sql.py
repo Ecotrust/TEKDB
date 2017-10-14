@@ -39,48 +39,48 @@ class Command(BaseCommand):
 
     def get_model_list(self):
         return [
-            'LookupPlanningUnit',
-            'LookupTribe',
-            'LookupHabitat',
-            'Places',
-            'LookupResourceGroup',
-            'Resources',
-            'LookupPartUsed',
-            'LookupCustomaryUse',
-            'LookupSeason',
-            'LookupTiming',
-            'PlacesResourceEvents',
-            'LookupParticipants',
-            'LookupTechniques',
-            'LookupActivity',
-            'ResourcesActivityEvents',
-            'People',
-            'LookupReferenceType',
-            'LookupAuthorType',
-            'Citations',
-            'PlacesCitationEvents',
-            'CurrentVersion',
-            'LookupLocalityType',
-            'Locality',
-            'LocalityGISSelections',
-            'LocalityPlaceResourceEvent',
-            'LookupMediaType',
-            'LookupUserInfo',
-            'Media',
-            'MediaCitationEvents',
-            'PlaceAltIndigenousName',
-            'PlaceGISSelections',
-            'PlacesMediaEvents',
-            'PlacesResourceCitationEvents',
-            'PlacesResourceMediaEvents',
-            'ResourceActivityCitationEvents',
-            'ResourceActivityMediaEvents',
-            'ResourceAltIndigenousName',
-            'ResourceResourceEvents',
-            'ResourcesCitationEvents',
-            'ResourcesMediaEvents',
-            'UserAccess',
-            'Users',
+            'lookupplanningunit',
+            'lookuptribe',
+            'lookuphabitat',
+            'places',
+            'lookupresourcegroup',
+            'resources',
+            'lookuppartused',
+            'lookupcustomaryuse',
+            'lookupseason',
+            'lookuptiming',
+            'placesresourceevents',
+            'lookupparticipants',
+            'lookuptechniques',
+            'lookupactivity',
+            'resourcesactivityevents',
+            'people',
+            'lookupreferencetype',
+            'lookupauthortype',
+            'citations',
+            'placescitationevents',
+            'currentversion',
+            'lookuplocalitytype',
+            'locality',
+            'localitygisselections',
+            'localityplaceresourceevent',
+            'lookupmediatype',
+            'lookupuserinfo',
+            'media',
+            'mediacitationevents',
+            'placealtindigenousname',
+            'placegisselections',
+            'placesmediaevents',
+            'placesresourcecitationevents',
+            'placesresourcemediaevents',
+            'resourceactivitycitationevents',
+            'resourceactivitymediaevents',
+            'resourcealtindigenousname',
+            'resourceresourceevents',
+            'resourcescitationevents',
+            'resourcesmediaevents',
+            'useraccess',
+            'users',
         ]
 
     def create_sql_dict(self,infile):
@@ -96,40 +96,40 @@ class Command(BaseCommand):
         group_id_dict = self.create_groups()
         # create lookup indexes (all 0)
         lookups = [
-            # 'LookupPlanningUnit',     #Already has a numeric auto pk
-            # 'LookupTribe',            #Already has a numeric auto pk
-            'LookupHabitat',
-            'LookupResourceGroup',
-            'LookupPartUsed',
-            'LookupCustomaryUse',
-            'LookupSeason',
-            'LookupTiming',
-            'LookupParticipants',
-            'LookupTechniques',
-            'LookupActivity',
-            'LookupReferenceType',
-            'LookupAuthorType',
-            'LookupLocalityType',
-            'LookupMediaType',
-            # 'LookupUserInfo',         #Not used as an FK anywhere
+            # 'lookupplanningunit',     #Already has a numeric auto pk
+            # 'lookuptribe',            #Already has a numeric auto pk
+            'lookuphabitat',
+            'lookupresourcegroup',
+            'lookuppartused',
+            'lookupcustomaryuse',
+            'lookupseason',
+            'lookuptiming',
+            'lookupparticipants',
+            'lookuptechniques',
+            'lookupactivity',
+            'lookupreferencetype',
+            'lookupauthortype',
+            'lookuplocalitytype',
+            'lookupmediatype',
+            # 'lookupuserinfo',         #Not used as an FK anywhere
         ]
         lookup_pks = {
-            # 'LookupPlanningUnit': '"PlanningUnitID"',   #Already has a numeric auto pk
-            # 'LookupTribe': '"ID"',                      #Already has a numeric auto pk
-            'LookupHabitat': '"Habitat"',
-            'LookupResourceGroup': '"ResourceClassificationGroup"',
-            'LookupPartUsed': '"PartUsed"',
-            'LookupCustomaryUse': '"UsedFor"',
-            'LookupSeason': '"Season"',
-            'LookupTiming': '"Timing"',
-            'LookupParticipants': '"Participants"',
-            'LookupTechniques': '"Techniques"',
-            'LookupActivity': '"Activity"',
-            'LookupReferenceType': '"DocumentType"',
-            'LookupAuthorType': '"AuthorType"',
-            'LookupLocalityType': '"LocalityType"',
-            'LookupMediaType': '"MediaType"',
-            # 'LookupUserInfo': '"pk"',                   #Not used as an FK anywhere
+            # 'lookupplanningunit': '"planningunitid"',   #Already has a numeric auto pk
+            # 'lookuptribe': '"id"',                      #Already has a numeric auto pk
+            'lookuphabitat': '"habitat"',
+            'lookupresourcegroup': '"resourceclassificationgroup"',
+            'lookuppartused': '"partused"',
+            'lookupcustomaryuse': '"usedfor"',
+            'lookupseason': '"season"',
+            'lookuptiming': '"timing"',
+            'lookupparticipants': '"participants"',
+            'lookuptechniques': '"techniques"',
+            'lookupactivity': '"activity"',
+            'lookupreferencetype': '"documenttype"',
+            'lookupauthortype': '"authortype"',
+            'lookuplocalitytype': '"localitytype"',
+            'lookupmediatype': '"mediatype"',
+            # 'lookupuserinfo': '"pk"',                   #Not used as an FK anywhere
         }
         lookup_indices = {}
         # create lookup dict
@@ -142,34 +142,34 @@ class Command(BaseCommand):
             # { 'Rocky Shore': 7 }
         # create list of models with lookup dependencies
         lookup_dependencies = {
-            'Citations': {
-                '"ReferenceType"': 'LookupReferenceType',
-                '"AuthorType"': 'LookupAuthorType'
+            'citations': {
+                '"referencetype"': 'lookupreferencetype',
+                '"authortype"': 'lookupauthortype'
             },
-            'Locality': {
-                '"LocalityType"': 'LookupLocalityType'
+            'locality': {
+                '"localitytype"': 'lookuplocalitytype'
             },
-            'Media': {
-                '"MediaType"': 'LookupMediaType'
+            'media': {
+                '"mediatype"': 'lookupmediatype'
             },
-            'Places': {
-                '"PrimaryHabitat"': 'LookupHabitat',
+            'places': {
+                '"primaryhabitat"': 'lookuphabitat',
             },
-            'PlacesResourceEvents': {
-                '"PartUsed"': 'LookupPartUsed',
-                '"CustomaryUse"': 'LookupCustomaryUse',
-                '"Season"': 'LookupSeason',
-                '"Timing"': 'LookupTiming'
+            'placesresourceevents': {
+                '"partused"': 'lookuppartused',
+                '"customaryuse"': 'lookupcustomaryuse',
+                '"season"': 'lookupseason',
+                '"timing"': 'lookuptiming'
             },
-            'Resources': {
-                '"ResourceClassificationGroup"': 'LookupResourceGroup',
+            'resources': {
+                '"resourceclassificationgroup"': 'lookupresourcegroup',
             },
-            'ResourcesActivityEvents': {
-                '"PartUsed"': 'LookupPartUsed',
-                '"Timing"': 'LookupTiming',
-                '"Participants"': 'LookupParticipants',
-                '"Technique"': 'LookupTechniques',
-                '"ActivityShortDescription"': 'LookupActivity',
+            'resourcesactivityevents': {
+                '"partused"': 'lookuppartused',
+                '"timing"': 'lookuptiming',
+                '"participants"': 'lookupparticipants',
+                '"technique"': 'lookuptechniques',
+                '"activityshortdescription"': 'lookupactivity',
             }
         }
         for model in model_list:
@@ -183,76 +183,89 @@ class Command(BaseCommand):
                 if "INSERT INTO \"" in line:
                     pattern = re.compile(r'INSERT INTO "(?P<table>.*)" \((?P<columns>.*)\) VALUES \((?P<values>.*)\);')
                     result = pattern.match(line)
-                    model = result.groupdict()['table']
-                    columns_lex = shlex.shlex(result.groupdict()['columns'])
-                    columns_lex.quotes = '"'
-                    columns = list(columns_lex)
-                    columns = list(filter((',').__ne__, columns))
-                    values = re.findall(r'(E\'".+?(?!\\)"\'|E\'.*?(?!\\)\'|.+?)(?:,\s|$)', result.groupdict()['values'])
-                    if len(columns) != len(values):
-                        import ipdb
-                        ipdb.set_trace()
-                        # This is left in place so that any detected mismatches can be fixed by hand now.
-                        print(values)
-
-
-                    if model == "Users":
-                        columns = columns + ['"is_superuser"', '"is_staff"', '"is_active"', '"date_joined"']
-                        values = values + ["E'0'", "E'0'", "E'1'", "'%s'" % str(now)]
-                    elif model == "UserAccess":
-                        accessLevelIndex = columns.index('"AccessLevel"')
-                        if values[accessLevelIndex] == "E'Administrator'" :
-                            group_id = group_id_dict['admin_id']
-                        elif values[accessLevelIndex] == "E'Editor'":
-                            group_id = group_id_dict['edit_id']
-                        else:
-                            group_id = group_id_dict['read_id']
-                        columns = columns + ['"group_id"']
-                        values = values + [str(group_id)]
-                    if model in lookups:
-                        record_id = lookup_indices[model]
-                        pk_field = lookup_pks[model]
-                        columns = columns + ['"id"']
-                        values = values + [str(record_id)]
-                        try:
-                            pk_index = columns.index(pk_field)
-                        except Exception:
+                    model = result.groupdict()['table'].lower()
+                    if model in model_list:
+                        columns_lex = shlex.shlex(result.groupdict()['columns'])
+                        columns_lex.quotes = '"'
+                        columns = list(columns_lex)
+                        columns = list(filter((',').__ne__, columns))
+                        columns = [x.lower() for x in columns]
+                        values = re.findall(r'(E\'".+?(?!\\)"\'|E\'.*?(?!\\)\'|.+?)(?:,\s|$)', result.groupdict()['values'])
+                        if len(columns) != len(values):
                             import ipdb
                             ipdb.set_trace()
-                        pk_value = values[pk_index]
-                        if not pk_value in lookup_values[model].keys():
-                            lookup_values[model][pk_value] = str(record_id)
-                            lookup_indices[model] = record_id + 1
+                            # This is left in place so that any detected mismatches can be fixed by hand now.
+                            print(values)
 
-                    insert_dict[model]['inserts'].append({
-                        'table': model,
-                        'columns': columns,
-                        'values': values
-                    })
+
+                        if model == "users":
+                            columns = columns + ['"is_superuser"', '"is_staff"', '"is_active"', '"date_joined"']
+                            values = values + ["E'0'", "E'0'", "E'1'", "'%s'" % str(now)]
+                        elif model == "useraccess":
+                            accessLevelIndex = columns.index('"accesslevel"')
+                            if values[accessLevelIndex] == "E'Administrator'" :
+                                group_id = group_id_dict['admin_id']
+                            elif values[accessLevelIndex] == "E'Editor'":
+                                group_id = group_id_dict['edit_id']
+                            else:
+                                group_id = group_id_dict['read_id']
+                            columns = columns + ['"group_id"']
+                            values = values + [str(group_id)]
+                        if model in lookups:
+                            record_id = lookup_indices[model]
+                            pk_field = lookup_pks[model]
+                            columns = columns + ['"id"']
+                            values = values + [str(record_id)]
+                            try:
+                                pk_index = columns.index(pk_field)
+                            except Exception:
+                                import ipdb
+                                ipdb.set_trace()
+                            pk_value = values[pk_index]
+                            if not pk_value in lookup_values[model].keys():
+                                lookup_values[model][pk_value] = str(record_id)
+                                lookup_indices[model] = record_id + 1
+
+                        insert_dict[model]['inserts'].append({
+                            'table': model,
+                            'columns': columns,
+                            'values': values
+                        })
+                    else:
+                        print('%s - not found in Model List.' % model)
                 elif "SELECT setval(" in line:
                     # SELECT setval('"Users_UserID_seq"', MAX("UserID")) FROM "Users";
                     pattern = re.compile(r'SELECT setval\(\'(?P<sequence>.*)\', MAX\((?P<column>.*)\)\) FROM "(?P<table>.*)";')
                     result = pattern.match(line)
-                    model = result.groupdict()['table']
-                    column = result.groupdict()['column']
-                    sequence = result.groupdict()['sequence']
-                    insert_dict[model]['selects'].append({
-                        'sequence': sequence,
-                        'table': model,
-                        'column': column
-                    })
+                    model = result.groupdict()['table'].lower()
+                    if model in model_list:
+                        column = result.groupdict()['column'].lower()
+                        sequence = result.groupdict()['sequence'].lower()
+                        insert_dict[model]['selects'].append({
+                            'sequence': sequence,
+                            'table': model,
+                            'column': column
+                        })
+                    else:
+                        print('%s - not found in Model List.' % model)
                 elif "CREATE INDEX " in line:
                     # CREATE INDEX "Users_UserID" ON "Users" ("UserID");
-                    pattern = re.compile(r'CREATE INDEX "(?P<index>.*)" ON "(?P<table>.*)" \((?P<columns>.*)\);')
+                    pattern = re.compile(r'CREATE INDEX "(?P<index>.*)" ON "(?P<table>.*)"\s(?:USING\s.*\s)?\((?P<columns>.*)\);(?:\\n)?')
                     result = pattern.match(line)
-                    model = result.groupdict()['table']
-                    columns = result.groupdict()['columns']
-                    index = result.groupdict()['index']
-                    insert_dict[model]['indices'].append({
-                        'index': index,
-                        'table': model,
-                        'columns': columns
-                    })
+                    if result:
+                        model = result.groupdict()['table'].lower()
+                        if model in model_list:
+                            columns = result.groupdict()['columns'].lower()
+                            index = result.groupdict()['index'].lower()
+                            insert_dict[model]['indices'].append({
+                                'index': index,
+                                'table': model,
+                                'columns': columns
+                            })
+                        else:
+                            print('%s - not found in Model List.' % model)
+                    # else:
+                    #     print('Line does not match CREATE INDEX pattern: %s' % line)
 
         #TODO: when done:
         #TODO:      For each user:

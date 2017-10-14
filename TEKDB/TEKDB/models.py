@@ -17,14 +17,14 @@ from django.contrib.gis.db.models import GeometryField, GeoManager
 MANAGED = True
 
 class Queryable(models.Model):
-    enteredbyname = models.CharField(db_column='EnteredByName', max_length=25, blank=True, null=True, verbose_name='entered by name')
-    enteredbytribe = models.CharField(db_column='EnteredByTribe', max_length=100, blank=True, null=True, verbose_name='entered by tribe')
-    enteredbytitle = models.CharField(db_column='EnteredByTitle', max_length=100, blank=True, null=True, verbose_name='entered by title')
-    enteredbydate = models.DateTimeField(db_column='EnteredByDate', blank=True, null=True, auto_now_add=True, verbose_name='entered by date')
-    modifiedbyname = models.CharField(db_column='ModifiedByName', max_length=25, blank=True, null=True, verbose_name='modified by name')
-    modifiedbytitle = models.CharField(db_column='ModifiedByTitle', max_length=100, blank=True, null=True, verbose_name='modified by title')
-    modifiedbytribe = models.CharField(db_column='ModifiedByTribe', max_length=100, blank=True, null=True, verbose_name='modified by tribe')
-    modifiedbydate = models.DateTimeField(db_column='ModifiedByDate', blank=True, null=True, auto_now=True, verbose_name='modified by date')
+    enteredbyname = models.CharField(db_column='enteredbyname', max_length=25, blank=True, null=True, verbose_name='entered by name')
+    enteredbytribe = models.CharField(db_column='enteredbytribe', max_length=100, blank=True, null=True, verbose_name='entered by tribe')
+    enteredbytitle = models.CharField(db_column='enteredbytitle', max_length=100, blank=True, null=True, verbose_name='entered by title')
+    enteredbydate = models.DateTimeField(db_column='enteredbydate', blank=True, null=True, auto_now_add=True, verbose_name='entered by date')
+    modifiedbyname = models.CharField(db_column='modifiedbyname', max_length=25, blank=True, null=True, verbose_name='modified by name')
+    modifiedbytitle = models.CharField(db_column='modifiedbytitle', max_length=100, blank=True, null=True, verbose_name='modified by title')
+    modifiedbytribe = models.CharField(db_column='modifiedbytribe', max_length=100, blank=True, null=True, verbose_name='modified by tribe')
+    modifiedbydate = models.DateTimeField(db_column='modifiedbydate', blank=True, null=True, auto_now=True, verbose_name='modified by date')
 
     class Meta:
         abstract = True
@@ -114,12 +114,12 @@ class SimpleRelationship(Queryable):
         }
 
 class LookupPlanningUnit(models.Model):
-    planningunitid = models.AutoField(db_column='PlanningUnitID', primary_key=True)
-    planningunitname = models.CharField(db_column='PlanningUnitName', max_length=100, blank=True, null=True, verbose_name='planning unit')
+    planningunitid = models.AutoField(db_column='planningunitid', primary_key=True)
+    planningunitname = models.CharField(db_column='planningunitname', max_length=100, blank=True, null=True, verbose_name='planning unit')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupPlanningUnit'
+        db_table = 'lookupplanningunit'
         app_label="Lookup"
         verbose_name="planning unit"
         verbose_name_plural="planning units"
@@ -131,14 +131,14 @@ class LookupPlanningUnit(models.Model):
         return self.planningunitname
 
 class LookupTribe(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)
-    tribeunit = models.CharField(db_column='TribeUnit', max_length=50, blank=True, null=True, verbose_name='tribe subunit')
-    tribe = models.CharField(db_column='Tribe', max_length=100, blank=True, null=True, verbose_name='tribe')
-    federaltribe = models.CharField(db_column='FederalTribe', max_length=100, blank=True, null=True, verbose_name='tribal government')
+    id = models.AutoField(db_column='id', primary_key=True)
+    tribeunit = models.CharField(db_column='tribeunit', max_length=50, blank=True, null=True, verbose_name='tribe subunit')
+    tribe = models.CharField(db_column='tribe', max_length=100, blank=True, null=True, verbose_name='tribe')
+    federaltribe = models.CharField(db_column='federaltribe', max_length=100, blank=True, null=True, verbose_name='tribal government')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupTribe'
+        db_table = 'lookuptribe'
         app_label="Lookup"
         verbose_name="tribe"
         verbose_name_plural="tribes"
@@ -178,11 +178,11 @@ class LookupTribe(models.Model):
 
 class LookupHabitat(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    habitat = models.CharField(db_column='Habitat', max_length=100)
+    habitat = models.CharField(db_column='habitat', max_length=100)
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupHabitat'
+        db_table = 'lookuphabitat'
         app_label="Lookup"
         verbose_name="habitat"
         verbose_name_plural="habitats"
@@ -194,17 +194,17 @@ class LookupHabitat(models.Model):
         return self.habitat
 
 class Places(Queryable):
-    placeid = models.AutoField(db_column='PlaceID', primary_key=True)
+    placeid = models.AutoField(db_column='placeid', primary_key=True)
     # PlaceID
-    indigenousplacename = models.CharField(db_column='IndigenousPlaceName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
-    indigenousplacenamemeaning = models.CharField(db_column='IndigenousPlaceNameMeaning', max_length=255, blank=True, null=True, verbose_name='english translation')
-    englishplacename = models.CharField(db_column='EnglishPlaceName', max_length=255, blank=True, null=True, verbose_name='english name')
+    indigenousplacename = models.CharField(db_column='indigenousplacename', max_length=255, blank=True, null=True, verbose_name='indigenous name')
+    indigenousplacenamemeaning = models.CharField(db_column='indigenousplacenamemeaning', max_length=255, blank=True, null=True, verbose_name='english translation')
+    englishplacename = models.CharField(db_column='englishplacename', max_length=255, blank=True, null=True, verbose_name='english name')
     # PlaceLabel = models.CharField(max_length=255, blank=True, null=True, verbose_name='Place Label')
-    planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='PlanningUnitID', blank=True, null=True, verbose_name='planning unit')
-    primaryhabitat = models.ForeignKey(LookupHabitat, db_column='PrimaryHabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat')
+    planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='planningunitid', blank=True, null=True, verbose_name='planning unit')
+    primaryhabitat = models.ForeignKey(LookupHabitat, db_column='primaryhabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat')
     # FeatType = models.CharField(choices=FEATURE_TYPE_CHOICES)
-    tribeid = models.ForeignKey(LookupTribe, db_column='TribeID', blank=True, null=True, verbose_name='tribe')
-    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
+    tribeid = models.ForeignKey(LookupTribe, db_column='tribeid', blank=True, null=True, verbose_name='tribe')
+    islocked = models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')
     ### Updated Geometry Fields ###
     objects = GeoManager()
     geometry = GeometryField(
@@ -213,16 +213,16 @@ class Places(Queryable):
         verbose_name="Place Geometry",
         default=None
     )
-    Source = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='source')
-    DigitizedBy = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='digitized by')
-    DigitizedDate = models.DateTimeField(blank=True, null=True, auto_now_add=False, default=None, verbose_name='digitized date')
+    Source = models.CharField(db_column='source', max_length=255, blank=True, null=True, default=None, verbose_name='source')
+    DigitizedBy = models.CharField(db_column='digitizedby', max_length=255, blank=True, null=True, default=None, verbose_name='digitized by')
+    DigitizedDate = models.DateTimeField(db_column='digitizeddate', blank=True, null=True, auto_now_add=False, default=None, verbose_name='digitized date')
     # PlaceDescription
     # SHAPE_Length
     # SHAPE_Area
 
     class Meta:
         managed = MANAGED
-        db_table = 'Places'
+        db_table = 'places'
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
 
@@ -301,11 +301,11 @@ class Places(Queryable):
 
 class LookupResourceGroup(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    resourceclassificationgroup = models.CharField(db_column='ResourceClassificationGroup', max_length=255, verbose_name='broad species group')
+    resourceclassificationgroup = models.CharField(db_column='resourceclassificationgroup', max_length=255, verbose_name='broad species group')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupResourceGroup'
+        db_table = 'lookupresourcegroup'
         app_label = 'Lookup'
         verbose_name="resource group"
         verbose_name_plural="resource groups"
@@ -317,18 +317,18 @@ class LookupResourceGroup(models.Model):
         return self.resourceclassificationgroup
 
 class Resources(Queryable):
-    resourceid = models.AutoField(db_column='ResourceID', primary_key=True)
-    commonname = models.CharField(db_column='CommonName', max_length=255, blank=True, null=True, unique=True, verbose_name='common name')
-    indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
-    genus = models.CharField(db_column='Genus', max_length=255, blank=True, null=True, verbose_name='genus')
-    species = models.CharField(db_column='Species', max_length=255, blank=True, null=True)
-    specific = models.BooleanField(db_column='Specific', default=False)
-    resourceclassificationgroup = models.ForeignKey(LookupResourceGroup, db_column='ResourceClassificationGroup', max_length=255, blank=True, null=True, verbose_name='broad species group')
-    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
+    resourceid = models.AutoField(db_column='resourceid', primary_key=True)
+    commonname = models.CharField(db_column='commonname', max_length=255, blank=True, null=True, unique=True, verbose_name='common name')
+    indigenousname = models.CharField(db_column='indigenousname', max_length=255, blank=True, null=True, verbose_name='indigenous name')
+    genus = models.CharField(db_column='genus', max_length=255, blank=True, null=True, verbose_name='genus')
+    species = models.CharField(db_column='species', max_length=255, blank=True, null=True)
+    specific = models.BooleanField(db_column='specific', default=False)
+    resourceclassificationgroup = models.ForeignKey(LookupResourceGroup, db_column='resourceclassificationgroup', max_length=255, blank=True, null=True, verbose_name='broad species group')
+    islocked = models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')
 
     class Meta:
         managed = MANAGED
-        db_table = 'Resources'
+        db_table = 'resources'
         verbose_name = 'Resource'
         verbose_name_plural = 'Resources'
 
@@ -405,11 +405,11 @@ class Resources(Queryable):
 
 class LookupPartUsed(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    partused = models.CharField(db_column='PartUsed', max_length=255, verbose_name='part used')
+    partused = models.CharField(db_column='partused', max_length=255, verbose_name='part used')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupPartUsed'
+        db_table = 'lookuppartused'
         app_label="Lookup"
         verbose_name="part used"
         verbose_name_plural="parts used"
@@ -422,11 +422,11 @@ class LookupPartUsed(models.Model):
 
 class LookupCustomaryUse(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    usedfor = models.CharField(db_column='UsedFor', max_length=255, verbose_name='used_for')
+    usedfor = models.CharField(db_column='usedfor', max_length=255, verbose_name='used_for')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupCustomaryUse'
+        db_table = 'lookupcustomaryuse'
         app_label="Lookup"
         verbose_name="customary use"
         verbose_name_plural="customary uses"
@@ -439,11 +439,11 @@ class LookupCustomaryUse(models.Model):
 
 class LookupSeason(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    season = models.CharField(db_column='Season', max_length=255)
+    season = models.CharField(db_column='season', max_length=255)
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupSeason'
+        db_table = 'lookupseason'
         app_label="Lookup"
         verbose_name="season"
         verbose_name_plural="seasons"
@@ -456,11 +456,11 @@ class LookupSeason(models.Model):
 
 class LookupTiming(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    timing = models.CharField(db_column='Timing', max_length=255)
+    timing = models.CharField(db_column='timing', max_length=255)
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupTiming'
+        db_table = 'lookuptiming'
         app_label="Lookup"
         verbose_name="timing"
         verbose_name_plural="timings"
@@ -472,33 +472,33 @@ class LookupTiming(models.Model):
         return self.timing
 
 class PlacesResourceEvents(Queryable):
-    placeresourceid = models.AutoField(db_column='PlaceResourceID', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='PlaceID', verbose_name='place')
-    resourceid = models.ForeignKey(Resources, db_column='ResourceID', verbose_name='resource')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='excerpt')
-    partused = models.ForeignKey(LookupPartUsed, db_column='PartUsed', max_length=255, blank=True, null=True, verbose_name='part used')
-    customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='CustomaryUse', max_length=255, blank=True, null=True, verbose_name='customary use')
-    barterresource = models.BooleanField(db_column='BarterResource', verbose_name='barter resource?', default=False)
-    season = models.ForeignKey(LookupSeason, db_column='Season', max_length=255, blank=True, null=True)
-    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)
-    january = models.BooleanField(db_column='January', default=False)
-    february = models.BooleanField(db_column='February', default=False)
-    march = models.BooleanField(db_column='March', default=False)
-    april = models.BooleanField(db_column='April', default=False)
-    may = models.BooleanField(db_column='May', default=False)
-    june = models.BooleanField(db_column='June', default=False)
-    july = models.BooleanField(db_column='July', default=False)
-    august = models.BooleanField(db_column='August', default=False)
-    september = models.BooleanField(db_column='September', default=False)
-    october = models.BooleanField(db_column='October', default=False)
-    november = models.BooleanField(db_column='November', default=False)
-    december = models.BooleanField(db_column='December', default=False)
-    year = models.IntegerField(db_column='Year', blank=True, null=True)
-    islocked = models.BooleanField(db_column='IsLocked', verbose_name='locked?', default=False)
+    placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
+    placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place')
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt')
+    partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
+    customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use')
+    barterresource = models.BooleanField(db_column='barterresource', verbose_name='barter resource?', default=False)
+    season = models.ForeignKey(LookupSeason, db_column='season', max_length=255, blank=True, null=True)
+    timing = models.ForeignKey(LookupTiming, db_column='timing', max_length=255, blank=True, null=True)
+    january = models.BooleanField(db_column='january', default=False)
+    february = models.BooleanField(db_column='february', default=False)
+    march = models.BooleanField(db_column='march', default=False)
+    april = models.BooleanField(db_column='april', default=False)
+    may = models.BooleanField(db_column='may', default=False)
+    june = models.BooleanField(db_column='june', default=False)
+    july = models.BooleanField(db_column='july', default=False)
+    august = models.BooleanField(db_column='august', default=False)
+    september = models.BooleanField(db_column='september', default=False)
+    october = models.BooleanField(db_column='october', default=False)
+    november = models.BooleanField(db_column='november', default=False)
+    december = models.BooleanField(db_column='december', default=False)
+    year = models.IntegerField(db_column='year', blank=True, null=True)
+    islocked = models.BooleanField(db_column='islocked', verbose_name='locked?', default=False)
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlacesResourceEvents'
+        db_table = 'placesresourceevents'
         app_label = 'Relationships'
         verbose_name = 'Place - Resource'
         verbose_name_plural = 'Places - Resources'
@@ -603,11 +603,11 @@ class PlacesResourceEvents(Queryable):
 
 class LookupParticipants(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    participants = models.CharField(db_column='Participants', max_length=255)
+    participants = models.CharField(db_column='participants', max_length=255)
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupParticipants'
+        db_table = 'lookupparticipants'
         app_label = "Lookup"
         verbose_name = "participant"
         verbose_name_plural = "participants"
@@ -620,11 +620,11 @@ class LookupParticipants(models.Model):
 
 class LookupTechniques(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    techniques = models.CharField(db_column='Techniques', max_length=255)
+    techniques = models.CharField(db_column='techniques', max_length=255)
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupTechniques'
+        db_table = 'lookuptechniques'
         app_label = "Lookup"
         verbose_name = "technique"
         verbose_name_plural = "techniques"
@@ -637,11 +637,11 @@ class LookupTechniques(models.Model):
 
 class LookupActivity(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    activity = models.CharField(db_column='Activity', max_length=255)
+    activity = models.CharField(db_column='activity', max_length=255)
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupActivity'
+        db_table = 'lookupactivity'
         app_label = 'Lookup'
         verbose_name = 'activity'
         verbose_name_plural = 'activities'
@@ -653,23 +653,23 @@ class LookupActivity(models.Model):
         return self.activity
 
 class ResourcesActivityEvents(Queryable):
-    resourceactivityid = models.AutoField(db_column='ResourceActivityID', primary_key=True)
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', verbose_name='place resource')
-    relationshipdescription = models.TextField(db_column='RelationshipDescription', blank=True, null=True, verbose_name='excerpt')
-    partused = models.ForeignKey(LookupPartUsed, db_column='PartUsed', max_length=255, blank=True, null=True, verbose_name='part used')
-    activityshortdescription = models.ForeignKey(LookupActivity, db_column='ActivityShortDescription', max_length=255, blank=True, null=True, verbose_name='activity type')
-    activitylongdescription = models.TextField(db_column='ActivityLongDescription', blank=True, null=True, verbose_name='full activity description')
-    participants = models.ForeignKey(LookupParticipants, db_column='Participants', max_length=50, blank=True, null=True)
-    technique = models.ForeignKey(LookupTechniques, db_column='Technique', max_length=255, blank=True, null=True)
-    gear = models.CharField(db_column='Gear', max_length=255, blank=True, null=True)
-    customaryuse = models.CharField(db_column='CustomaryUse', max_length=255, blank=True, null=True, verbose_name='customary use')
-    timing = models.ForeignKey(LookupTiming, db_column='Timing', max_length=255, blank=True, null=True)
-    timingdescription = models.CharField(db_column='TimingDescription', max_length=255, blank=True, null=True, verbose_name='timing description')
-    islocked = models.BooleanField(db_column='IsLocked', default=False, verbose_name='locked?')
+    resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt')
+    partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
+    activityshortdescription = models.ForeignKey(LookupActivity, db_column='activityshortdescription', max_length=255, blank=True, null=True, verbose_name='activity type')
+    activitylongdescription = models.TextField(db_column='activitylongdescription', blank=True, null=True, verbose_name='full activity description')
+    participants = models.ForeignKey(LookupParticipants, db_column='participants', max_length=50, blank=True, null=True)
+    gear = models.CharField(db_column='gear', max_length=255, blank=True, null=True)
+    technique = models.ForeignKey(LookupTechniques, db_column='technique', max_length=255, blank=True, null=True)
+    customaryuse = models.CharField(db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use')
+    timing = models.ForeignKey(LookupTiming, db_column='timing', max_length=255, blank=True, null=True)
+    timingdescription = models.CharField(db_column='timingdescription', max_length=255, blank=True, null=True, verbose_name='timing description')
+    islocked = models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourcesActivityEvents'
+        db_table = 'resourcesactivityevents'
         verbose_name = 'Activity'
         verbose_name_plural = 'Activities'
 
@@ -765,16 +765,16 @@ class ResourcesActivityEvents(Queryable):
         }
 
 class People(models.Model):
-    personid = models.AutoField(db_column='PersonID', primary_key=True)
-    firstname = models.CharField(db_column='FirstName', max_length=255, blank=True, null=True, verbose_name='first name')
-    lastname = models.CharField(db_column='LastName', max_length=255, blank=True, null=True, verbose_name='last name')
-    yearborn = models.IntegerField(db_column='YearBorn', blank=True, null=True, verbose_name='year born')
-    village = models.CharField(db_column='Village', max_length=255, blank=True, null=True)
-    relationshiptootherpeople = models.TextField(db_column='RelationshipToOtherPeople', blank=True, null=True, verbose_name='relationship to other people')
+    personid = models.AutoField(db_column='personid', primary_key=True)
+    firstname = models.CharField(db_column='firstname', max_length=255, blank=True, null=True, verbose_name='first name')
+    lastname = models.CharField(db_column='lastname', max_length=255, blank=True, null=True, verbose_name='last name')
+    village = models.CharField(db_column='village', max_length=255, blank=True, null=True)
+    yearborn = models.IntegerField(db_column='yearborn', blank=True, null=True, verbose_name='year born')
+    relationshiptootherpeople = models.TextField(db_column='relationshiptootherpeople', blank=True, null=True, verbose_name='relationship to other people')
 
     class Meta:
         managed = MANAGED
-        db_table = 'People'
+        db_table = 'people'
         app_label = "Lookup"
         verbose_name = "person"
         verbose_name_plural = "people"
@@ -843,11 +843,11 @@ class People(models.Model):
 
 class LookupReferenceType(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    documenttype = models.CharField(db_column='DocumentType', max_length=25, verbose_name='document type')
+    documenttype = models.CharField(db_column='documenttype', max_length=25, verbose_name='document type')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupReferenceType'
+        db_table = 'lookupreferencetype'
         app_label = "Lookup"
         verbose_name="reference type"
         verbose_name_plural="reference types"
@@ -860,11 +860,11 @@ class LookupReferenceType(models.Model):
 
 class LookupAuthorType(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    authortype = models.CharField(db_column='AuthorType', max_length=50, verbose_name='author type')
+    authortype = models.CharField(db_column='authortype', max_length=50, verbose_name='author type')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupAuthorType'
+        db_table = 'lookupauthortype'
         app_label = 'Lookup'
         verbose_name = 'author type'
         verbose_name_plural = 'author types'
@@ -877,28 +877,28 @@ class LookupAuthorType(models.Model):
         return self.authortype
 
 class Citations(Queryable):
-    citationid = models.AutoField(db_column='CitationID', primary_key=True)
-    referencetype = models.ForeignKey(LookupReferenceType, db_column='ReferenceType', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue")
-    referencetext = models.CharField(db_column='ReferenceText', max_length=50, blank=True, null=True, verbose_name='description')
-    authortype = models.ForeignKey(LookupAuthorType, db_column='AuthorType', max_length=255, blank=True, null=True, verbose_name='author type')
-    authorprimary = models.CharField(db_column='AuthorPrimary', max_length=255, blank=True, null=True, verbose_name='primary author')
-    authorsecondary = models.CharField(db_column='AuthorSecondary', max_length=255, blank=True, null=True, verbose_name='secondary author')
-    intervieweeid = models.ForeignKey(People, db_column='IntervieweeID', related_name='interviewee', blank=True, null=True, verbose_name='interviewee')
-    interviewerid = models.ForeignKey(People, db_column='InterviewerID', related_name='interviewer', blank=True, null=True, verbose_name='interviewer')
-    placeofinterview = models.CharField(db_column='PlaceofInterview', max_length=255, blank=True, null=True, verbose_name='place of interview')
-    year = models.IntegerField(db_column='Year', blank=True, null=True)
-    title = models.TextField(db_column='Title', blank=True, null=True)
-    seriestitle = models.CharField(db_column='SeriesTitle', max_length=255, blank=True, null=True, verbose_name='series title')
-    seriesvolume = models.CharField(db_column='SeriesVolume', max_length=50, blank=True, null=True, verbose_name='series volume')
-    serieseditor = models.CharField(db_column='SeriesEditor', max_length=255, blank=True, null=True, verbose_name='series editor')
-    publisher = models.CharField(db_column='Publisher', max_length=100, blank=True, null=True)
-    publishercity = models.CharField(db_column='PublisherCity', max_length=255, blank=True, null=True, verbose_name='city')
-    preparedfor = models.CharField(db_column='PreparedFor', max_length=100, blank=True, null=True, verbose_name='prepared_for')
-    comments = models.TextField(db_column='Comments', blank=True, null=True)
+    citationid = models.AutoField(db_column='citationid', primary_key=True)
+    referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue")
+    referencetext = models.CharField(db_column='referencetext', max_length=50, blank=True, null=True, verbose_name='description')
+    authortype = models.ForeignKey(LookupAuthorType, db_column='authortype', max_length=255, blank=True, null=True, verbose_name='author type')
+    authorprimary = models.CharField(db_column='authorprimary', max_length=255, blank=True, null=True, verbose_name='primary author')
+    authorsecondary = models.CharField(db_column='authorsecondary', max_length=255, blank=True, null=True, verbose_name='secondary author')
+    intervieweeid = models.ForeignKey(People, db_column='intervieweeid', related_name='interviewee', blank=True, null=True, verbose_name='interviewee')
+    interviewerid = models.ForeignKey(People, db_column='interviewerid', related_name='interviewer', blank=True, null=True, verbose_name='interviewer')
+    placeofinterview = models.CharField(db_column='placeofinterview', max_length=255, blank=True, null=True, verbose_name='place of interview')
+    year = models.IntegerField(db_column='year', blank=True, null=True)
+    title = models.TextField(db_column='title', blank=True, null=True)
+    seriestitle = models.CharField(db_column='seriestitle', max_length=255, blank=True, null=True, verbose_name='series title')
+    seriesvolume = models.CharField(db_column='seriesvolume', max_length=50, blank=True, null=True, verbose_name='series volume')
+    serieseditor = models.CharField(db_column='serieseditor', max_length=255, blank=True, null=True, verbose_name='series editor')
+    publisher = models.CharField(db_column='publisher', max_length=100, blank=True, null=True)
+    publishercity = models.CharField(db_column='publishercity', max_length=255, blank=True, null=True, verbose_name='city')
+    preparedfor = models.CharField(db_column='preparedfor', max_length=100, blank=True, null=True, verbose_name='prepared_for')
+    comments = models.TextField(db_column='comments', blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'Citations'
+        db_table = 'citations'
         verbose_name = 'Bibliographic Source'
         verbose_name_plural = 'Bibliographic Sources'
 
@@ -1018,14 +1018,14 @@ class Citations(Queryable):
         return unicode('%s' % (str(self)))
 
 class PlacesCitationEvents(SimpleRelationship):
-    placeid = models.ForeignKey(Places, db_column='PlaceID', primary_key=False, verbose_name='place')
-    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
+    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlacesCitationEvents'
+        db_table = 'placescitationevents'
         app_label = "Relationships"
         verbose_name = 'Place - Source'
         verbose_name_plural = 'Places - Sources'
@@ -1094,13 +1094,13 @@ class PlacesCitationEvents(SimpleRelationship):
 
 # Appears to be the version of AccessDB(s). Export gave 1 entry: [1,1,1]
 class CurrentVersion(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)
-    backendversion = models.IntegerField(db_column='BackendVersion', blank=True, null=True, verbose_name='backend version')
-    frontendversion = models.IntegerField(db_column='FrontendVersion', blank=True, null=True, verbose_name='frontend version')
+    id = models.AutoField(db_column='id', primary_key=True)
+    backendversion = models.IntegerField(db_column='backendversion', blank=True, null=True, verbose_name='backend version')
+    frontendversion = models.IntegerField(db_column='frontendversion', blank=True, null=True, verbose_name='frontend version')
 
     class Meta:
         managed = MANAGED
-        db_table = 'CurrentVersion'
+        db_table = 'currentversion'
         app_label = 'Lookup'
         verbose_name = 'current version'
         verbose_name_plural = 'current versions'
@@ -1113,11 +1113,11 @@ class CurrentVersion(models.Model):
 
 class LookupLocalityType(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    localitytype = models.CharField(db_column='LocalityType', max_length=255, verbose_name='locality type')
+    localitytype = models.CharField(db_column='localitytype', max_length=255, verbose_name='locality type')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupLocalityType'
+        db_table = 'lookuplocalitytype'
         app_label = "Lookup"
         verbose_name = "locality type"
         verbose_name_plural = "locality types"
@@ -1129,11 +1129,11 @@ class LookupLocalityType(models.Model):
         return self.localitytype
 
 class Locality(Queryable):
-    localityid = models.AutoField(db_column='LocalityID', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
-    englishname = models.CharField(db_column='EnglishName', max_length=255, blank=True, null=True, verbose_name='english name')
-    indigenousname = models.CharField(db_column='IndigenousName', max_length=255, blank=True, null=True, verbose_name='indigenous name')
-    localitytype = models.ForeignKey(LookupLocalityType, db_column='LocalityType', max_length=255, blank=True, null=True, verbose_name='type')
+    localityid = models.AutoField(db_column='localityid', primary_key=True)
+    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
+    englishname = models.CharField(db_column='englishname', max_length=255, blank=True, null=True, verbose_name='english name')
+    indigenousname = models.CharField(db_column='indigenousname', max_length=255, blank=True, null=True, verbose_name='indigenous name')
+    localitytype = models.ForeignKey(LookupLocalityType, db_column='localitytype', max_length=255, blank=True, null=True, verbose_name='type')
     ### Updated Geometry Fields ###
     objects = GeoManager()
     geometry = GeometryField(
@@ -1142,13 +1142,13 @@ class Locality(Queryable):
         verbose_name="Place Geometry",
         default=None
     )
-    Source = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='source')
-    DigitizedBy = models.CharField(max_length=255, blank=True, null=True, default=None, verbose_name='digitized by')
-    DigitizedDate = models.DateTimeField(blank=True, null=True, auto_now_add=False, default=None, verbose_name='digitized date')
+    Source = models.CharField(db_column='source', max_length=255, blank=True, null=True, default=None, verbose_name='source')
+    DigitizedBy = models.CharField(db_column='digitizedby', max_length=255, blank=True, null=True, default=None, verbose_name='digitized by')
+    DigitizedDate = models.DateTimeField(db_column='digitizeddate', blank=True, null=True, auto_now_add=False, default=None, verbose_name='digitized date')
 
     class Meta:
         managed = MANAGED
-        db_table = 'Locality'
+        db_table = 'locality'
         verbose_name = 'Locality'
         verbose_name_plural = 'Localities'
 
@@ -1227,13 +1227,13 @@ class Locality(Queryable):
         }
 
 class LocalityGISSelections(models.Model):
-    localityid = models.ForeignKey(Locality, db_column='LocalityID', blank=True, null=True, verbose_name='locality')
-    localitylabel = models.CharField(db_column='LocalityLabel', max_length=255, blank=True, null=True, verbose_name='locality label')
-    sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True, verbose_name='source fc')
+    localityid = models.ForeignKey(Locality, db_column='localityid', blank=True, null=True, verbose_name='locality')
+    localitylabel = models.CharField(db_column='localitylabel', max_length=255, blank=True, null=True, verbose_name='locality label')
+    sourcefc = models.CharField(db_column='sourcefc', max_length=255, blank=True, null=True, verbose_name='source fc')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LocalityGISSelections'
+        db_table = 'localitygisselections'
         app_label = 'Relationships'
         verbose_name_plural = 'Locality GIS Selections'
 
@@ -1244,12 +1244,12 @@ class LocalityGISSelections(models.Model):
         return self.localitylabel
 
 class LocalityPlaceResourceEvent(Queryable):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', primary_key=False, verbose_name='place resource')
-    localityid = models.ForeignKey(Locality, db_column='LocalityID', verbose_name='locality')
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
+    localityid = models.ForeignKey(Locality, db_column='localityid', verbose_name='locality')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LocalityPlaceResourceEvent'
+        db_table = 'localityplaceresourceevent'
         unique_together = (('placeresourceid', 'localityid'),)
         app_label = 'Relationships'
         verbose_name_plural = 'Localities - Place-Resources'
@@ -1309,12 +1309,12 @@ class LocalityPlaceResourceEvent(Queryable):
 
 class LookupMediaType(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
-    mediatype = models.CharField(db_column='MediaType', max_length=255, verbose_name='type')
-    mediacategory = models.CharField(db_column='MediaCategory', max_length=255, blank=True, null=True, verbose_name='category')
+    mediatype = models.CharField(db_column='mediatype', max_length=255, verbose_name='type')
+    mediacategory = models.CharField(db_column='mediacategory', max_length=255, blank=True, null=True, verbose_name='category')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupMediaType'
+        db_table = 'lookupmediatype'
         app_label = 'Lookup'
         verbose_name="media type"
         verbose_name_plural="media types"
@@ -1332,14 +1332,14 @@ class LookupMediaType(models.Model):
         )
 
 class LookupUserInfo(models.Model):
-    username = models.CharField(db_column='UserName', max_length=100, blank=True, null=True, verbose_name='username')
-    usingcustomusername = models.BooleanField(db_column='UsingCustomUsername', default=False, verbose_name='using custom username')
-    usertitle = models.CharField(db_column='UserTitle', max_length=100, blank=True, null=True, verbose_name='title')
-    useraffiliation = models.CharField(db_column='UserAffiliation', max_length=100, blank=True, null=True, verbose_name='affiliation')
+    username = models.CharField(db_column='username', max_length=100, blank=True, null=True, verbose_name='username')
+    usingcustomusername = models.BooleanField(db_column='usingcustomusername', default=False, verbose_name='using custom username')
+    usertitle = models.CharField(db_column='usertitle', max_length=100, blank=True, null=True, verbose_name='title')
+    useraffiliation = models.CharField(db_column='useraffiliation', max_length=100, blank=True, null=True, verbose_name='affiliation')
 
     class Meta:
         managed = MANAGED
-        db_table = 'LookupUserInfo'
+        db_table = 'lookupuserinfo'
         app_label = 'Lookup'
         verbose_name = 'user info'
         verbose_name_plural = 'user info'
@@ -1351,17 +1351,17 @@ class LookupUserInfo(models.Model):
         return self.username
 
 class Media(Queryable):
-    mediaid = models.AutoField(db_column='MediaID', primary_key=True)
-    mediatype = models.ForeignKey(LookupMediaType, db_column='MediaType', max_length=255, blank=True, null=True, verbose_name='type')
-    medianame = models.CharField(db_column='MediaName', max_length=255, blank=True, null=True, verbose_name='name')
-    mediadescription = models.TextField(db_column='MediaDescription', blank=True, null=True, verbose_name='description')
-    medialink = models.CharField(db_column='MediaLink', max_length=255, blank=True, null=True, verbose_name='historic location')
-    mediafile = models.FileField(db_column='MediaFile', max_length=255, blank=True, null=True, verbose_name='file')
-    limitedaccess = models.NullBooleanField(db_column='LimitedAccess', null=True, default=False, verbose_name='limited access?')
+    mediaid = models.AutoField(db_column='mediaid', primary_key=True)
+    mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type')
+    medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
+    mediadescription = models.TextField(db_column='mediadescription', blank=True, null=True, verbose_name='description')
+    medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
+    mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
+    limitedaccess = models.NullBooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
     class Meta:
         managed = MANAGED
-        db_table = 'Media'
+        db_table = 'media'
         verbose_name = 'Medium'
         verbose_name_plural = 'Media'
 
@@ -1487,14 +1487,14 @@ class Media(Queryable):
         super(Media, self).save(*args, **kwargs)
 
 class MediaCitationEvents(SimpleRelationship):
-    mediaid = models.ForeignKey(Media, db_column='MediaID', primary_key=False, verbose_name='media')
-    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
+    mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media')
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'MediaCitationEvents'
+        db_table = 'mediacitationevents'
         app_label = 'Relationships'
         verbose_name = 'Medium - Source'
         verbose_name_plural = 'Media - Sources'
@@ -1562,13 +1562,13 @@ class MediaCitationEvents(SimpleRelationship):
             return self.mediaid
 
 class PlaceAltIndigenousName(models.Model):
-    altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
-    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alternate name')
+    altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
+    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
+    altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alternate name')
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlaceAltIndigenousName'
+        db_table = 'placealtindigenousname'
         verbose_name = 'Place - Alternate Name'
         verbose_name_plural = 'Places - Alternate Names'
         app_label = 'Relationships'
@@ -1586,13 +1586,13 @@ class PlaceAltIndigenousName(models.Model):
         return self.altindigenousname
 
 class PlaceGISSelections(models.Model):
-    placeid = models.ForeignKey(Places, db_column='PlaceID', blank=True, null=True, verbose_name='place')
-    placelabel = models.CharField(db_column='PlaceLabel', max_length=255, blank=True, null=True, verbose_name='label')
-    sourcefc = models.CharField(db_column='SourceFC', max_length=255, blank=True, null=True, verbose_name='source fc')
+    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
+    placelabel = models.CharField(db_column='placelabel', max_length=255, blank=True, null=True, verbose_name='label')
+    sourcefc = models.CharField(db_column='sourcefc', max_length=255, blank=True, null=True, verbose_name='source fc')
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlaceGISSelections'
+        db_table = 'placegisselections'
         app_label = 'Relationships'
         verbose_name_plural = 'Place GIS Selections'
 
@@ -1603,14 +1603,14 @@ class PlaceGISSelections(models.Model):
         return self.placelabel
 
 class PlacesMediaEvents(SimpleRelationship):
-    placeid = models.ForeignKey(Places, db_column='PlaceID', primary_key=False, verbose_name='place')
-    mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
+    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlacesMediaEvents'
+        db_table = 'placesmediaevents'
         verbose_name = 'Place - Medium'
         app_label = 'Relationships'
         verbose_name_plural = 'Places - Media'
@@ -1678,14 +1678,14 @@ class PlacesMediaEvents(SimpleRelationship):
             return self.mediaid
 
 class PlacesResourceCitationEvents(SimpleRelationship):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', primary_key=False, verbose_name='place resource')
-    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlacesResourceCitationEvents'
+        db_table = 'placesresourcecitationevents'
         unique_together = (('placeresourceid', 'citationid'),)
         app_label = 'Relationships'
         verbose_name_plural = 'Place-Resources - Sources'
@@ -1753,14 +1753,14 @@ class PlacesResourceCitationEvents(SimpleRelationship):
             return self.placeresourceid
 
 class PlacesResourceMediaEvents(SimpleRelationship):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='PlaceResourceID', primary_key=False, verbose_name='place - resource')
-    mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place - resource')
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'PlacesResourceMediaEvents'
+        db_table = 'placesresourcemediaevents'
         unique_together = (('placeresourceid', 'mediaid'),)
         app_label = "Relationships"
         verbose_name_plural = "Place-Resources - Media"
@@ -1827,14 +1827,14 @@ class PlacesResourceMediaEvents(SimpleRelationship):
             return self.placeresourceid
 
 class ResourceActivityCitationEvents(SimpleRelationship):
-    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='ResourceActivityID', primary_key=False, verbose_name='resource activity')
-    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
+    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourceActivityCitationEvents'
+        db_table = 'resourceactivitycitationevents'
         unique_together = (('resourceactivityid', 'citationid'),)
         app_label = 'Relationships'
         verbose_name_plural = 'Activity - Sources'
@@ -1902,14 +1902,14 @@ class ResourceActivityCitationEvents(SimpleRelationship):
             return self.resourceactivityid
 
 class ResourceActivityMediaEvents(SimpleRelationship):
-    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='ResourceActivityID', primary_key=False, verbose_name='resource activity')
-    mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
+    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourceActivityMediaEvents'
+        db_table = 'resourceactivitymediaevents'
         unique_together = (('resourceactivityid', 'mediaid'),)
         app_label = 'Relationships'
         verbose_name_plural = 'Activity - Media'
@@ -1979,13 +1979,13 @@ class ResourceActivityMediaEvents(SimpleRelationship):
             return self.resourceactivityid
 
 class ResourceAltIndigenousName(models.Model):
-    altindigenousnameid = models.AutoField(db_column='AltIndigenousNameID', primary_key=True)
-    resourceid = models.ForeignKey(Resources, db_column='ResourceID', blank=True, null=True, verbose_name='resource')
-    altindigenousname = models.CharField(db_column='AltIndigenousName', max_length=255, blank=True, null=True, verbose_name='alt name')
+    altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', blank=True, null=True, verbose_name='resource')
+    altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alt name')
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourceAltIndigenousName'
+        db_table = 'resourcealtindigenousname'
         app_label = 'Relationships'
         verbose_name_plural = 'Resource Alternative Names'
 
@@ -2002,13 +2002,13 @@ class ResourceAltIndigenousName(models.Model):
         return self.altindigenousname
 
 class ResourceResourceEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=False, related_name="resource_a")
-    altresourceid = models.ForeignKey(Resources, db_column='AltResourceID', related_name="resource_b")
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a")
+    altresourceid = models.ForeignKey(Resources, db_column='altresourceid', related_name="resource_b")
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourceResourceEvents'
+        db_table = 'resourceresourceevents'
         unique_together = (('resourceid', 'altresourceid'),)
         app_label = 'Relationships'
         verbose_name_plural = 'Resources - Resources'
@@ -2103,14 +2103,14 @@ class ResourceResourceEvents(SimpleRelationship):
         }
 
 class ResourcesCitationEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=False, verbose_name='resource')
-    citationid = models.ForeignKey(Citations, db_column='CitationID', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
-    pages = models.CharField(db_column='Pages', max_length=255, blank=True, null=True)
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourcesCitationEvents'
+        db_table = 'resourcescitationevents'
         verbose_name = 'Resource - Source'
         verbose_name_plural = 'Resources - Sources'
         unique_together = (('resourceid', 'citationid'),)
@@ -2178,14 +2178,14 @@ class ResourcesCitationEvents(SimpleRelationship):
             return self.resourceid
 
 class ResourcesMediaEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='ResourceID', primary_key=False, verbose_name='resource')
-    mediaid = models.ForeignKey(Media, db_column='MediaID', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='RelationshipDescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
-    pages = models.CharField(db_column='Pages', max_length=50, blank=True, null=True)
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
         managed = MANAGED
-        db_table = 'ResourcesMediaEvents'
+        db_table = 'resourcesmediaevents'
         verbose_name = 'Resource - Medium'
         verbose_name_plural = 'Resources - Media'
         unique_together = (('resourceid', 'mediaid'),)
@@ -2255,13 +2255,13 @@ class ResourcesMediaEvents(SimpleRelationship):
 from django.contrib.auth.models import Group
 
 class UserAccess(models.Model):
-    group = models.OneToOneField(Group)
-    accessid = models.AutoField(db_column='AccessID', primary_key=True)
-    accesslevel = models.CharField(db_column='AccessLevel', max_length=255, blank=True, null=True, verbose_name='access level')
+    group = models.OneToOneField(Group, db_column='group_id')
+    accessid = models.AutoField(db_column='accessid', primary_key=True)
+    accesslevel = models.CharField(db_column='accesslevel', max_length=255, blank=True, null=True, verbose_name='access level')
 
     class Meta:
         managed = MANAGED
-        db_table = 'UserAccess'
+        db_table = 'useraccess'
         app_label = 'Accounts'
         verbose_name = 'user access'
         verbose_name_plural = 'user access'
@@ -2273,14 +2273,14 @@ class UserAccess(models.Model):
         return self.accesslevel
 
 class Users(AbstractUser):
-    userid = models.AutoField(db_column='UserID', primary_key=True)
-    username = models.CharField(db_column='UserName', max_length=20, verbose_name='username', unique=True)
-    password = models.CharField(_('password'), max_length=128, db_column='Password')
-    first_name = models.CharField(db_column='FirstName', max_length=255, verbose_name='first name')
-    last_name = models.CharField(db_column='LastName', max_length=255, verbose_name='last name')
-    affiliation = models.CharField(db_column='Affiliation', max_length=255)
-    title = models.CharField(db_column='Title', max_length=255)
-    accesslevel = models.ForeignKey(UserAccess, db_column='AccessLevel', verbose_name='access level', null=True, blank=True)
+    userid = models.AutoField(db_column='userid', primary_key=True)
+    username = models.CharField(db_column='username', max_length=20, verbose_name='username', unique=True)
+    password = models.CharField(_('password'), max_length=128, db_column='password')
+    first_name = models.CharField(db_column='firstname', max_length=255, verbose_name='first name')
+    last_name = models.CharField(db_column='lastname', max_length=255, verbose_name='last name')
+    affiliation = models.CharField(db_column='affiliation', max_length=255)
+    title = models.CharField(db_column='title', max_length=255)
+    accesslevel = models.ForeignKey(UserAccess, db_column='accesslevel', verbose_name='access level', null=True, blank=True)
     is_superuser = models.BooleanField(
         _('superuser status'),
         default=False,
@@ -2288,12 +2288,14 @@ class Users(AbstractUser):
             'Designates that this user has all permissions without '
             'explicitly assigning them.'
         ),
+        db_column='is_superuser'
     )
-    email = models.EmailField(_('email address'), blank=True, null=True)
+    email = models.EmailField(_('email address'), blank=True, null=True, db_column='email')
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into this admin site.'),
+        db_column='is_staff'
     )
     is_active = models.BooleanField(
         _('active'),
@@ -2302,12 +2304,13 @@ class Users(AbstractUser):
             'Designates whether this user should be treated as active. '
             'Unselect this instead of deleting accounts.'
         ),
+        db_column='is_active'
     )
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now, db_column='date_joined')
 
     class Meta:
         managed = MANAGED
-        db_table = 'Users'
+        db_table = 'users'
         app_label = 'Accounts'
         verbose_name = 'User'
         verbose_name_plural = 'Users'
