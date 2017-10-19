@@ -392,9 +392,9 @@ class Command(BaseCommand):
         FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         MANAGE_DIR = os.path.join(FILE_DIR,'..','..')
         infile = os.path.join(MANAGE_DIR, options['infile'][0])
-        insert_script = os.path.join('scripts','insert.sql')
-        import_output = os.path.join('scripts','import_output.txt')
-        import_error = os.path.join('scripts','import_output.txt')
+        insert_script = os.path.join(MANAGE_DIR, 'scripts','insert.sql')
+        import_output = os.path.join(MANAGE_DIR, 'scripts','import_output.txt')
+        import_error = os.path.join(MANAGE_DIR, 'scripts','import_output.txt')
         manage_py = os.path.join(MANAGE_DIR, 'manage.py')
 
         self.revert_migrations(manage_py)
