@@ -1,11 +1,11 @@
 #REQUIRED
 django
+django-ckeditor
+django-leaflet
+django-nested-admin
 django-registration
 psycopg2
-django-nested-admin
-django-ckeditor
 XlsxWriter
-django-leaflet
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
 ipython
