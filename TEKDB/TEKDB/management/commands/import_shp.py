@@ -12,13 +12,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from django.contrib.gis.gdal import DataSource
+        import pytz
+        from pytz import timezone
+        from datetime import datetime
 
         FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         MANAGE_DIR = os.path.join(FILE_DIR,'..','..')
         import_output = os.path.join(MANAGE_DIR, 'scripts','import_shp_output.txt')
         import_error = os.path.join(MANAGE_DIR, 'scripts','import_shp_output.txt')
         manage_py = os.path.join(MANAGE_DIR, 'manage.py')
-        infile = os.path.join(MANAGE_DIR, options['infile'][0])
+        infile = os.path.normpath(os.path.join(MANAGE_DIR, options['infile'][0]))
+        if not os.path.exists(infile):
+            print('File not found: %s' % infile)
+            quit()
         if not infile[-4:] == '.shp':
             print('Please provide shapefile name ending in ".shp".')
             quit()
@@ -46,18 +52,19 @@ class Command(BaseCommand):
                 label_field = 'PlaceLabel'
                 description_field = 'PlaceDescr'
 
-            # import ipdb
-            # ipdb.set_trace()
             for geom_index, feature in enumerate(layer.get_geoms()):
                 pk = layer.get_fields(pk_field)[geom_index]
                 try:
                     (record, created) = model.objects.get_or_create(pk=pk)
+                    from TEKDB.settings import TIME_ZONE
+                    local_tz = timezone(TIME_ZONE)
+                    record_date = local_tz.localize(datetime.combine(layer.get_fields('DigitizedD')[geom_index], datetime.min.time()))
                     if created:
                         print('No DB record for %s (ID: %s) found. Creating a new one...' % (layer.get_fields(label_field)[geom_index], str(pk)))
                         if model == Locality:
                             place = Places.objects.filter(pk=layer.get_fields('PlaceID')[geom_index])
                             if len(place) == 1:
-                                record.placeid = layer.get_fields('PlaceID')[geom_index]
+                                record.placeid = place[0]
                             record.englishname = layer.get_fields(label_field)[geom_index]
                             record.indigenousname = layer.get_fields(label_field)[geom_index]
                             (localitytype, lt_created) = LookupLocalityType.objects.get_or_create(localitytype__iexact=layer.get_fields('FeatType')[geom_index])
@@ -77,13 +84,13 @@ class Command(BaseCommand):
                                 print('Created Habitat: %s (ID: %s)' % (habitat.habitat, habitat.id))
                             record.primaryhabitat = habitat
                         record.enteredbyname = layer.get_fields('DigitizedB')[geom_index]
-                        record.enteredbydate = layer.get_fields('DigitizedD')[geom_index]
+                        record.enteredbydate = record_date
                         record.modifiedbyname = layer.get_fields('DigitizedB')[geom_index]
-                        record.modifiedbydate = layer.get_fields('DigitizedD')[geom_index]
+                        record.modifiedbydate = record_date
                     record.geometry = feature.geos
                     record.Source = layer.get_fields('Source')[geom_index]
                     record.DigitizedBy = layer.get_fields('DigitizedB')[geom_index]
-                    record.DigitizedDate = layer.get_fields('DigitizedD')[geom_index]
+                    record.DigitizedDate = record_date
                     record.save()
 
                 except:

@@ -1,3 +1,4 @@
+TIME_ZONE = 'America/Los_Angeles' # To see all Timezone options, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
 REGISTRATION_OPEN = True
 ALLOWED_HOSTS = [
     'localhost',

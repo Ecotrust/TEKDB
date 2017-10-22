@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from TEKDB.models import *
-import os
-import sys
+import os, sys
 from TEKDB.settings import *
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
@@ -14,6 +13,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('infile', nargs='+', type=str)
+        parser.add_argument('revert', nargs='*', type=bool)
 
     def create_groups(self):
         admin_group, created = Group.objects.get_or_create(name='Administrator')
@@ -366,16 +366,13 @@ class Command(BaseCommand):
         ############################################
         print("Transferring old data into new database")
         ############################################
-        from subprocess import Popen, PIPE
-        out = open(import_output, 'w')
-        sys.stdout = out
-        error = open(import_error, 'w')
-
-        p = Popen(['psql', '-U', 'postgres', '-d', dbname, '-f', insert_script], stdout=out)#, stderr=error)
-        p.wait()
+        from subprocess import call
+        stdout = open(import_output, 'wb')
+        stderr = open(import_error, 'wb')
+        call(['psql', '-U', 'postgres', '-d', dbname, '-f', insert_script], stdout=stdout, stderr=stderr)
 
         ############################################
-        # Setting Passwords
+        print('Setting up access privileges')
         ############################################
         from TEKDB.models import Users
         users = Users.objects.all()
@@ -388,21 +385,52 @@ class Command(BaseCommand):
                 user.is_staff = True
             user.save()
 
+    def set_auto_pk_initial_values(self,import_output,import_error,dbname,update_script):
+        ############################################
+        print("Resetting AutoIncrement Values")
+        ############################################
+        from subprocess import call
+        stdout = open(import_output, 'ab')
+        stderr = open(import_error, 'ab')
+        call(['psql', '-U', 'postgres', '-d', dbname, '-f', update_script], stdout=stdout, stderr=stderr)
+
     def handle(self, *args, **options):
+        try:
+            revert = os.path.join(MANAGE_DIR, options['revert'][0])
+        except Exception:
+            revert = False
         FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        MANAGE_DIR = os.path.join(FILE_DIR,'..','..')
-        infile = os.path.join(MANAGE_DIR, options['infile'][0])
+        MANAGE_DIR = os.path.normpath(os.path.join(FILE_DIR,os.pardir,os.pardir))
+        infile = os.path.normpath(os.path.join(MANAGE_DIR, options['infile'][0]))
         insert_script = os.path.join(MANAGE_DIR, 'scripts','insert.sql')
+        update_script = os.path.join(MANAGE_DIR, 'scripts','update_sequences.sql')
         import_output = os.path.join(MANAGE_DIR, 'scripts','import_output.txt')
         import_error = os.path.join(MANAGE_DIR, 'scripts','import_output.txt')
         manage_py = os.path.join(MANAGE_DIR, 'manage.py')
+        if not os.path.exists(infile):
+            print('File not found: %s' % infile)
+            quit()
 
-        self.revert_migrations(manage_py)
-        self.delete_old_migrations(MANAGE_DIR)
-        dbname = 'tekdb'
+        if revert:
+            self.revert_migrations(manage_py)
+            self.delete_old_migrations(MANAGE_DIR)
+        try:
+            from TEKDB.settings import DATABASES
+            dbname = DATABASES['default']['NAME']
+        except Exception:
+            dbname = 'tekdb'
+            print('Failed to set DB name from Local Settings!')
+            print('Enter c to contine, or type your desired dbname as `dbname = _____` hit enter, then c, then enter again.')
+            import ipdb
+            ipdb.set_trace()
         self.rebuild_db(dbname, manage_py)
 
         insert_dict = self.create_sql_dict(infile)
         self.create_insert_script(insert_script,insert_dict)
 
         self.import_sql_data(import_output,import_error,dbname,insert_script)
+
+        self.set_auto_pk_initial_values(import_output,import_error,dbname,update_script)
+        ############################################
+        print("Import Complete")
+        ############################################
