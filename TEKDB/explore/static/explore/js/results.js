@@ -68,6 +68,14 @@ function resultViewModel() {
     if (this.state_view() == 'tile' || this.state_view() == 'list') {
       state.push('view='+this.state_view());
     }
+    if (this.filter_categories().length > 0) {
+      category_states = this.filter_categories().split('&')
+      for (var i = 0; i < category_states.length; i++) {
+        if (category_states[i].length > 0) {
+          state.push(category_states[i]);
+        }
+      }
+    }
     if (state.length > 0) {
       return state.join("&");
     } else {

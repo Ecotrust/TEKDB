@@ -336,10 +336,26 @@ def search(request):
 
         else:
             query_string = None
+
         if 'category' in request.GET.keys():
             categories = [request.GET.get('category')]
         else:
-            categories = ['all']
+            keys = request.GET.keys()
+            categories = []
+            if 'places' in keys and request.GET['places'] :
+                categories.append('places')
+            if 'resources' in keys and request.GET['resources']:
+                categories.append('resources')
+            if 'activities' in keys and request.GET['activities']:
+                categories.append('activities')
+            if 'citations' in keys and request.GET['citations']:
+                categories.append('sources')
+            if 'sources' in keys and request.GET['sources']:
+                categories.append('sources')
+            if 'media' in keys and request.GET['media']:
+                categories.append('media')
+            if categories == []:
+                categories = ['all']
 
     if categories == ['all']:
         categories = all_categories
