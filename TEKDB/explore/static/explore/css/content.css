@@ -1,0 +1,5 @@
+a { color: #336633; }
+a:hover {
+  color: #336633;
+  font-weight: bold;
+}
