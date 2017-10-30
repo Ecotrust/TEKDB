@@ -179,6 +179,11 @@ class Command(BaseCommand):
                 'indices': [],
             }
         with open(infile) as rf:
+            reg_match = r'(E\'".+?(?!\\)"\'|E\'.*?(?!\\)\'|.+?)(?:,\s|$)'
+            # TODO: Does not work for strings with double quotes or strings that have "''," in them
+            
+            # reg_match = r'(E\'".+?(?!\\)"\'{0,2}\'|E\'.*?(?!\\)\'{0,2}\'|.+?)(?:,\s|$)'
+
             for line in rf:
                 if "INSERT INTO \"" in line:
                     pattern = re.compile(r'INSERT INTO "(?P<table>.*)" \((?P<columns>.*)\) VALUES \((?P<values>.*)\);')
@@ -190,7 +195,7 @@ class Command(BaseCommand):
                         columns = list(columns_lex)
                         columns = list(filter((',').__ne__, columns))
                         columns = [x.lower() for x in columns]
-                        values = re.findall(r'(E\'".+?(?!\\)"\'|E\'.*?(?!\\)\'|.+?)(?:,\s|$)', result.groupdict()['values'])
+                        values = re.findall(reg_match, result.groupdict()['values'])
                         if len(columns) != len(values):
                             import ipdb
                             ipdb.set_trace()
