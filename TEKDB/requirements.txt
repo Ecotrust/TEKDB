@@ -5,6 +5,7 @@ django-leaflet
 django-nested-admin
 django-registration
 psycopg2
+uwsgi
 XlsxWriter
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
