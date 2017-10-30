@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 #ExecStart=/usr/local/apps/TEKDB/env/bin/uwsgi --emperor /etc/uwsgi/sites-enabled
-ExecStart=/usr/local/apps/TEKDB/env/bin/uwsgi --ini /etc/uwsgi/sites-enabled/tekdb.ini
+ExecStart=/usr/local/apps/TEKDB/env/bin/uwsgi --ini /etc/uwsgi/apps-enabled/tekdb.ini
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
