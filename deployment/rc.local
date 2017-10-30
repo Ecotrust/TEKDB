@@ -2,13 +2,7 @@
 
 TIME=`/bin/date +20%y/%m/%d-%H:%M:%S`
 
-/bin/echo $TIME' - running uwsgi' >> /var/log/rc.local.log 2>&1
-
-if [ ! -e /usr/local/apps/TEKDB/deployment/tekdb.ini ]; then
-  # More important for vagrant instances that may not have loaded synced folders yet.
-  /bin/sleep 5
-fi
-/usr/bin/uwsgi --ini /usr/local/apps/TEKDB/deployment/tekdb.ini  >> /var/log/rc.local.log 2>&1 &
+/usr/sbin/service uwsgi start
 
 /usr/local/apps/TEKDB/deployment/restart_nginx.sh &
 
