@@ -1,4 +1,5 @@
 #REQUIRED
+confusable-homoglyphs>=3.0
 django
 django-ckeditor
 django-leaflet
