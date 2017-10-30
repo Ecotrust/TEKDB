@@ -136,10 +136,10 @@ def get_by_model_id(request, model_type, id):
             record_dict = obj.get_record_dict(request.user)
         except Exception as e:
             obj = None
-            record_dict = {}
+            record_dict = {'name': "Error retrieving %s record with ID %s" % (model_type, id)}
     else:
         obj = None
-        record_dict = {}
+        record_dict = {'name': 'Incorrect number of models returned for %s' % model_type}
 
     if state == "?":
         state = ''
