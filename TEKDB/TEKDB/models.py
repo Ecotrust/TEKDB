@@ -128,7 +128,7 @@ class LookupPlanningUnit(models.Model):
         return unicode("%s" % (self.planningunitname))
 
     def __str__(self):
-        return self.planningunitname
+        return self.planningunitname or ''
 
 class LookupTribe(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -154,7 +154,7 @@ class LookupTribe(models.Model):
         return unicode("%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe))
 
     def __str__(self):
-        return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe)
+        return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe) or ''
 
     def data(self):
         return [
@@ -191,7 +191,7 @@ class LookupHabitat(models.Model):
         return unicode('%s' % (self.habitat))
 
     def __str__(self):
-        return self.habitat
+        return self.habitat or ''
 
 class Places(Queryable):
     placeid = models.AutoField(db_column='placeid', primary_key=True)
@@ -297,7 +297,7 @@ class Places(Queryable):
         return unicode('%s (%s)' % (self.indigenousplacename, self.englishplacename))
 
     def __str__(self):
-        return "%s (%s)" % (self.indigenousplacename, self.englishplacename)
+        return "%s (%s)" % (self.indigenousplacename, self.englishplacename) or ''
 
 class LookupResourceGroup(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -314,7 +314,7 @@ class LookupResourceGroup(models.Model):
         return unicode('%s' % (self.resourceclassificationgroup))
 
     def __str__(self):
-        return self.resourceclassificationgroup
+        return self.resourceclassificationgroup or ''
 
 class Resources(Queryable):
     resourceid = models.AutoField(db_column='resourceid', primary_key=True)
@@ -336,7 +336,7 @@ class Resources(Queryable):
         return unicode('%s' % (self.commonname))
 
     def __str__(self):
-        return self.commonname
+        return self.commonname or ''
 
     def keyword_search(keyword):
         group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
@@ -418,7 +418,7 @@ class LookupPartUsed(models.Model):
         return unicode('%s' % (self.partused))
 
     def __str__(self):
-        return self.partused
+        return self.partused or ''
 
 class LookupCustomaryUse(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -435,7 +435,7 @@ class LookupCustomaryUse(models.Model):
         return unicode('%s' % (self.usedfor))
 
     def __str__(self):
-        return self.usedfor
+        return self.usedfor or ''
 
 class LookupSeason(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -452,7 +452,7 @@ class LookupSeason(models.Model):
         return unicode('%s' % (self.season))
 
     def __str__(self):
-        return self.season
+        return self.season or ''
 
 class LookupTiming(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -469,7 +469,7 @@ class LookupTiming(models.Model):
         return unicode('%s' % (self.timing))
 
     def __str__(self):
-        return self.timing
+        return self.timing or ''
 
 class PlacesResourceEvents(Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
@@ -536,7 +536,7 @@ class PlacesResourceEvents(Queryable):
         return unicode("%s at %s" % (str(self.resourceid), str(self.placeid)))
 
     def __str__(self):
-        return "%s at %s" % (str(self.resourceid), str(self.placeid))
+        return "%s at %s" % (str(self.resourceid), str(self.placeid)) or ''
 
     def image(self):
         return settings.RECORD_ICONS['activity']
@@ -616,7 +616,7 @@ class LookupParticipants(models.Model):
         return unicode('%s' % (self.participants))
 
     def __str__(self):
-        return self.participants
+        return self.participants or ''
 
 class LookupTechniques(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -633,7 +633,7 @@ class LookupTechniques(models.Model):
         return unicode('%s' % (self.techniques))
 
     def __str__(self):
-        return self.techniques
+        return self.techniques or ''
 
 class LookupActivity(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -650,7 +650,7 @@ class LookupActivity(models.Model):
         return unicode('%s' % (self.activity))
 
     def __str__(self):
-        return self.activity
+        return self.activity or ''
 
 class ResourcesActivityEvents(Queryable):
     resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
@@ -677,7 +677,7 @@ class ResourcesActivityEvents(Queryable):
         return unicode("%s: %s" % (str(self.placeresourceid), self.activityshortdescription))
 
     def __str__(self):
-        return "%s: %s" % (str(self.placeresourceid), self.activityshortdescription)
+        return "%s: %s" % (str(self.placeresourceid), self.activityshortdescription) or ''
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -791,7 +791,7 @@ class People(models.Model):
         return unicode("%s %s" % (self.firstname, self.lastname))
 
     def __str__(self):
-        return "%s %s" % (self.firstname, self.lastname)
+        return "%s %s" % (self.firstname, self.lastname) or ''
 
     def image(self):
         #TODO: Better icon or no icon
@@ -856,7 +856,7 @@ class LookupReferenceType(models.Model):
         return unicode('%s' % (self.documenttype))
 
     def __str__(self):
-        return self.documenttype
+        return self.documenttype or ''
 
 class LookupAuthorType(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -874,7 +874,7 @@ class LookupAuthorType(models.Model):
         return unicode('%s' % (self.authortype))
 
     def __str__(self):
-        return self.authortype
+        return self.authortype or ''
 
 class Citations(Queryable):
     citationid = models.AutoField(db_column='citationid', primary_key=True)
@@ -1010,9 +1010,9 @@ class Citations(Queryable):
             except Exception as e:
                 interviewee = 'Unknown Interviewee'
             # return '[%s] %s (%d) - %d' % (str(self.referencetype), interviewee, self.year, self.pk)
-            return '[%s] %s (%s)' % (str(self.referencetype), str(interviewee), str(self.year))
+            return '[%s] %s (%s)' % (str(self.referencetype), str(interviewee), str(self.year)) or ''
         else:
-            return '[%s] %s (%s)' % (str(self.referencetype), str(self.title), str(self.year))
+            return '[%s] %s (%s)' % (str(self.referencetype), str(self.title), str(self.year)) or ''
 
     def __unicode__(self):
         return unicode('%s' % (str(self)))
@@ -1035,7 +1035,7 @@ class PlacesCitationEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.placeid), str(self.citationid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.placeid), str(self.citationid))
+        return "%s %s" % (str(self.placeid), str(self.citationid)) or ''
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
@@ -1109,7 +1109,7 @@ class CurrentVersion(models.Model):
         return unicode("Back: %d, Front:%d" % (self.backendversion, self.frontendversion))
 
     def __str__(self):
-        return "Back: %d, Front:%d" % (self.backendversion, self.frontendversion)
+        return "Back: %d, Front:%d" % (self.backendversion, self.frontendversion) or ''
 
 class LookupLocalityType(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -1126,7 +1126,7 @@ class LookupLocalityType(models.Model):
         return unicode('%s' % (self.localitytype))
 
     def __str__(self):
-        return self.localitytype
+        return self.localitytype or ''
 
 class Locality(Queryable):
     localityid = models.AutoField(db_column='localityid', primary_key=True)
@@ -1160,9 +1160,9 @@ class Locality(Queryable):
 
     def __str__(self):
         if self.englishname:
-            return self.englishname
+            return self.englishname or ''
         else:
-            return ('Locality in %s' % (self.placeid.englishplacename))
+            return ('Locality in %s' % (self.placeid.englishplacename)) or ''
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
@@ -1241,7 +1241,7 @@ class LocalityGISSelections(models.Model):
         return unicode('%s' % (self.localitylabel))
 
     def __str__(self):
-        return self.localitylabel
+        return self.localitylabel or ''
 
 class LocalityPlaceResourceEvent(Queryable):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
@@ -1258,7 +1258,7 @@ class LocalityPlaceResourceEvent(Queryable):
         return unicode("%s - %s" % (str(self.localityid), str(self.placeresourceid)))
 
     def __str__(self):
-        return "%s - %s" % (str(self.localityid), str(self.placeresourceid))
+        return "%s - %s" % (str(self.localityid), str(self.placeresourceid)) or ''
 
     def keyword_search(keyword):
         locality_qs = Locality.keyword_search(keyword)
@@ -1323,7 +1323,7 @@ class LookupMediaType(models.Model):
         return unicode('%s' % (self.mediatype))
 
     def __str__(self):
-        return self.mediatype
+        return self.mediatype or ''
 
     def keyword_search(keyword):
         return LookupMediaType.objects.filter(
@@ -1348,7 +1348,7 @@ class LookupUserInfo(models.Model):
         return unicode('%s' % (self.username))
 
     def __str__(self):
-        return self.username
+        return self.username or ''
 
 class Media(Queryable):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
@@ -1369,7 +1369,7 @@ class Media(Queryable):
         return unicode('%s' % (self.medianame))
 
     def __str__(self):
-        return self.medianame
+        return self.medianame or ''
 
     def keyword_search(keyword):
         type_qs = LookupMediaType.keyword_search(keyword)
@@ -1504,7 +1504,7 @@ class MediaCitationEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.mediaid), str(self.citationid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.mediaid), str(self.citationid))
+        return "%s %s" % (str(self.mediaid), str(self.citationid)) or ''
 
     def keyword_search(keyword):
         media_qs = Media.keyword_search(keyword)
@@ -1583,7 +1583,7 @@ class PlaceAltIndigenousName(models.Model):
         return unicode('%s' % (self.altindigenousname))
 
     def __str__(self):
-        return self.altindigenousname
+        return self.altindigenousname or ''
 
 class PlaceGISSelections(models.Model):
     placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
@@ -1600,7 +1600,7 @@ class PlaceGISSelections(models.Model):
         return unicode('%s' % (self.placelabel))
 
     def __str__(self):
-        return self.placelabel
+        return self.placelabel or ''
 
 class PlacesMediaEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
@@ -1620,7 +1620,7 @@ class PlacesMediaEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.placeid), str(self.mediaid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.placeid), str(self.mediaid))
+        return "%s %s" % (str(self.placeid), str(self.mediaid)) or ''
 
     def keyword_search(keyword):
         place_qs = Places.keyword_search(keyword)
@@ -1694,7 +1694,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.placeresourceid), str(self.citationid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.placeresourceid), str(self.citationid))
+        return "%s %s" % (str(self.placeresourceid), str(self.citationid)) or ''
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -1769,7 +1769,7 @@ class PlacesResourceMediaEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.placeresourceid), str(self.mediaid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.placeresourceid), str(self.mediaid))
+        return "%s %s" % (str(self.placeresourceid), str(self.mediaid)) or ''
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -1843,7 +1843,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.resourceactivityid), str(self.citationid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.resourceactivityid), str(self.citationid))
+        return "%s %s" % (str(self.resourceactivityid), str(self.citationid)) or ''
 
     def keyword_search(keyword):
         resourceactivity_qs = ResourcesActivityEvents.keyword_search(keyword)
@@ -1918,7 +1918,7 @@ class ResourceActivityMediaEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.resourceactivityid), str(self.mediaid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.resourceactivityid), str(self.mediaid))
+        return "%s %s" % (str(self.resourceactivityid), str(self.mediaid)) or ''
 
     def keyword_search(keyword):
         resourceactivity_qs = ResourcesActivityEvents.keyword_search(keyword)
@@ -1999,7 +1999,7 @@ class ResourceAltIndigenousName(models.Model):
         return unicode('%s' % (self.altindigenousname))
 
     def __str__(self):
-        return self.altindigenousname
+        return self.altindigenousname or ''
 
 class ResourceResourceEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a")
@@ -2017,7 +2017,7 @@ class ResourceResourceEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.resourceid), str(self.altresourceid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.resourceid), str(self.altresourceid))
+        return "%s %s" % (str(self.resourceid), str(self.altresourceid)) or ''
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
@@ -2120,7 +2120,7 @@ class ResourcesCitationEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.resourceid), str(self.citationid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.resourceid), str(self.citationid))
+        return "%s %s" % (str(self.resourceid), str(self.citationid)) or ''
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
@@ -2195,7 +2195,7 @@ class ResourcesMediaEvents(SimpleRelationship):
         return unicode("%s %s" % (str(self.resourceid), str(self.mediaid)))
 
     def __str__(self):
-        return "%s %s" % (str(self.resourceid), str(self.mediaid))
+        return "%s %s" % (str(self.resourceid), str(self.mediaid)) or ''
 
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
@@ -2270,7 +2270,7 @@ class UserAccess(models.Model):
         return unicode('%s' % (self.accesslevel))
 
     def __str__(self):
-        return self.accesslevel
+        return self.accesslevel or ''
 
 class Users(AbstractUser):
     userid = models.AutoField(db_column='userid', primary_key=True)
@@ -2319,7 +2319,7 @@ class Users(AbstractUser):
         return unicode('%s' % (self.username))
 
     def __str__(self):
-        return self.username
+        return self.username or ''
 
     def save(self, *args, **kwargs):
         if not self.userid:
