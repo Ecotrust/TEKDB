@@ -475,7 +475,7 @@ class PlacesResourceEvents(Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place')
     resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt')
     partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
     customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use')
     barterresource = models.BooleanField(db_column='barterresource', verbose_name='barter resource?', default=False)
@@ -895,6 +895,8 @@ class Citations(Queryable):
     publishercity = models.CharField(db_column='publishercity', max_length=255, blank=True, null=True, verbose_name='city')
     preparedfor = models.CharField(db_column='preparedfor', max_length=100, blank=True, null=True, verbose_name='prepared_for')
     comments = models.TextField(db_column='comments', blank=True, null=True)
+    journal = models.TextField(db_column='journal', blank=True, null=True, verbose_name='journal')
+    journalpages = models.TextField(db_column='journalpages', blank=True, null=True, verbose_name='journal pages')
 
     class Meta:
         managed = MANAGED
@@ -928,7 +930,8 @@ class Citations(Queryable):
             Q(publisher__icontains=keyword) |
             Q(publishercity__icontains=keyword) |
             Q(preparedfor__icontains=keyword) |
-            Q(comments__icontains=keyword)
+            Q(comments__icontains=keyword) |
+            Q(journal__icontains=keyword)
         )
 
     def image(self):
@@ -2004,7 +2007,7 @@ class ResourceAltIndigenousName(models.Model):
 class ResourceResourceEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a")
     altresourceid = models.ForeignKey(Resources, db_column='altresourceid', related_name="resource_b")
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription',blank=True, null=True, verbose_name='relationship description')
 
     class Meta:
         managed = MANAGED
