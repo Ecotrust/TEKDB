@@ -181,7 +181,7 @@ class Command(BaseCommand):
         with open(infile) as rf:
             reg_match = r'(E\'".+?(?!\\)"\'|E\'.*?(?!\\)\'|.+?)(?:,\s|$)'
             # TODO: Does not work for strings with double quotes or strings that have "''," in them
-            
+
             # reg_match = r'(E\'".+?(?!\\)"\'{0,2}\'|E\'.*?(?!\\)\'{0,2}\'|.+?)(?:,\s|$)'
 
             for line in rf:
@@ -400,6 +400,10 @@ class Command(BaseCommand):
         call(['psql', '-U', 'postgres', '-d', dbname, '-f', update_script], stdout=stdout, stderr=stderr)
 
     def handle(self, *args, **options):
+        import ipdb
+        ipdb.set_trace()
+        #
+        # Running this will delete your database. If you are okay with this, press 'c' and enter. If not, press 'q' and enter
         try:
             revert = os.path.join(MANAGE_DIR, options['revert'][0])
         except Exception:
