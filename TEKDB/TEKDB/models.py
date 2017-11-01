@@ -341,13 +341,16 @@ class Resources(Queryable):
     def keyword_search(keyword):
         group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
         group_loi = [group.pk for group in group_qs]
+        alt_name_qs =ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
+        alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
 
         return Resources.objects.filter(
             Q(commonname__icontains=keyword) |
             Q(indigenousname__icontains=keyword) |
             Q(genus__icontains=keyword) |
             Q(species__icontains=keyword) |
-            Q(resourceclassificationgroup__in=group_loi)
+            Q(resourceclassificationgroup__in=group_loi) |
+            Q(pk__in=alt_name_loi)
         )
 
     def image(self):
