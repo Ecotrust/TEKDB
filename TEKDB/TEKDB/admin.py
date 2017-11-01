@@ -511,6 +511,9 @@ class CitationsAdmin(RecordAdminProxy):
                 ('authorprimary', 'year'),
                 'authorsecondary',
                 ('publisher', 'publishercity'),
+                'seriestitle',
+                ('seriesvolume','serieseditor'),
+                ('journal', 'journalpages'),
                 'preparedfor',
                 'referencetext',
                 'comments'
@@ -544,6 +547,7 @@ class CitationsAdmin(RecordAdminProxy):
         'placeofinterview', 'title', 'seriestitle',
         'seriesvolume', 'serieseditor', 'publisher',
         'publishercity', 'preparedfor', 'comments',
+        'journal',
         'enteredbyname', 'enteredbytribe', 'modifiedbyname',
         'modifiedbytribe'
     )

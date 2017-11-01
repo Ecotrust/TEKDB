@@ -6,6 +6,8 @@ show_reftype_form = function(reftype) {
   $('.citation-interview-form').hide();
   $('.citation-other-form').hide();
   switch(reftype) {
+    case '---------':
+      break;
     case 'Book':
       $('.citation-book-form').show();
       break;
@@ -19,6 +21,7 @@ show_reftype_form = function(reftype) {
       $('.citation-other-form').show();
       break;
     default:
+      $('.citation-other-form').show();
       break;
   }
 }
