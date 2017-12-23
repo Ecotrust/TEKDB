@@ -1,0 +1,53 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+<style>
+  .collapse {
+    display: block !important;
+  }
+  .deletelink {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+  }
+  .btn-info {
+    width: 100%;
+    margin: 0 -25px;
+    /*padding: 0;*/
+  }
+</style>
+<script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/assets/knockout/knockout-3.4.2.js"></script>
+<script type="text/javascript" src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% load i18n admin_urls static %}
+{% block inline_field_sets %}
+  <h1>{{ foo }}</h1>
+  {% for object in related_objects %}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#inline_{{ forloop.counter }}">
+              {{ object.title|capfirst }}
+            </button>
+            <div id="inline_{{ forloop.counter }}" class="collapse">
+              <table>
+                {% for item in object.data %}
+                <tr>
+                  <td>{{ item }}</td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% comment %}
+      <!-- {% include inline_admin_formset.opts.template %} -->
+      {% endcomment %}
+  {% endfor %}
+{% endblock %}

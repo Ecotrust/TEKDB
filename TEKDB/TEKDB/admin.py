@@ -9,6 +9,9 @@ from .models import *
 
 from TEKDB.settings import ADMIN_SITE_HEADER
 admin.site.site_header = ADMIN_SITE_HEADER
+
+from TEKDB.settings import BASE_DIR
+
 #############
 ### FORMS ###
 #############
@@ -365,6 +368,8 @@ class NestedResourcesPlaceEventsInline(nested_admin.NestedStackedInline):
         # NestedPlaceresourcelocalityeventInline,
         NestedPlacesresourceactivityeventInline,
     ]
+class ResourcesPlaceEventsStackedInline(admin.StackedInline):
+    model= PlacesResourceEvents
 
 class NestedResourceResourceEventsInline(nested_admin.NestedTabularInline):
     model = ResourceResourceEvents
@@ -526,7 +531,7 @@ class CitationsAdmin(RecordAdminProxy):
             )
         })
     )
-    from TEKDB.settings import BASE_DIR
+
     add_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
     change_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
     inlines = [
@@ -608,6 +613,42 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
             )
         }),
     )
+    places_form = '%s/TEKDB/templates/admin/PlacesForm.html' % BASE_DIR
+    add_form_template = places_form
+    change_form_template = places_form
+    def change_view(self, request, object_id, form_url='', extra_context={}):
+        extra_context['foo'] = 'FOO'
+
+        alt_names = [{}]
+        related_resources = [{}]
+        related_media = [{}]
+        related_citations = [{}]
+        place = Places.objects.get(pk=object_id)
+        # import ipdb
+        # ipdb.set_trace()
+        alt_names = place.placealtindigenousname_set.all()
+        related_resources = place.placesresourceevents_set.all()
+        related_media = place.placesmediaevents_set.all()
+        related_citations = place.placescitationevents_set.all()
+        extra_context['related_objects'] = [
+            {
+                'title': 'Alternate Names',
+                'data': alt_names,
+            },
+            {
+                'title': 'Resource Relationships',
+                'data': related_resources,
+            },
+            {
+                'title': 'Media Relationships',
+                'data': related_media,
+            },
+            {
+                'title': 'Citation Relationships',
+                'data': related_citations,
+            },
+        ]
+        return super(PlacesAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
     inlines = [
         NestedPlacesalternativenameInline,
         NestedPlacesresourceeventsInline,
@@ -652,7 +693,10 @@ class ResourcesAdmin(NestedRecordAdminProxy):
         # ResourcesActivityEventsInline,        #tied to place-resource
         NestedResourcesMediaEventsInline,
         NestedResourcesCitationEventsInline,
-        NestedResourcesPlaceEventsInline,
+
+        # NestedResourcesPlaceEventsInline,     #Original
+        ResourcesPlaceEventsStackedInline,
+
         NestedResourceResourceEventsInline,
         NestedResourceAltIndigenousNameInline,
         # ResourceGISSelectionsInline,          #TODO: make this work
