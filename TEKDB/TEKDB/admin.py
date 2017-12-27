@@ -467,6 +467,23 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
             instance.save()
 
 #### RECORD MODELS ####
+class RecordModelAdmin(admin.ModelAdmin):
+    record_form = '%s/TEKDB/templates/admin/RecordForm.html' % BASE_DIR
+    add_form_template = record_form
+    change_form_template = record_form
+    def get_related_objects(self, object_id):
+        # For each record with external relationships:
+        #   1. get the record
+        #       place = Places.objects.get(pk=object_id)
+        #   2. get the relationship sets ()
+        #       alt_names = place.placealtindigenousname_set.all()
+        #   3. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': alt_names}, {...}...]
+        return []
+    def change_view(self, request, object_id, form_url='', extra_context={}):
+        extra_context['related_objects'] = self.get_related_objects(object_id)
+        return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
+
 class CitationsAdmin(RecordAdminProxy):
     list_display = ('referencetype','title','referencetext',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
@@ -592,7 +609,7 @@ class MediaAdmin(RecordAdminProxy):
     )
     form = MediaForm
 
-class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
+class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
     list_display = ('indigenousplacename','englishplacename','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
@@ -613,24 +630,28 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
             )
         }),
     )
-    places_form = '%s/TEKDB/templates/admin/PlacesForm.html' % BASE_DIR
-    add_form_template = places_form
-    change_form_template = places_form
-    def change_view(self, request, object_id, form_url='', extra_context={}):
-        extra_context['foo'] = 'FOO'
-
-        alt_names = [{}]
-        related_resources = [{}]
-        related_media = [{}]
-        related_citations = [{}]
+    inlines = [
+        NestedPlacesalternativenameInline,
+        NestedPlacesresourceeventsInline,
+        NestedPlacesmediaeventsInline,
+        NestedPlacescitationeventsInline,
+        # NestedPlaceslocalityInline,
+        # PlaceGISSelectionsInline,
+    ]
+    search_fields = (
+        'englishplacename', 'indigenousplacename', 'indigenousplacenamemeaning',
+        'planningunitid__planningunitname', 'primaryhabitat__habitat',
+        'tribeid__tribeunit','tribeid__tribe','tribeid__federaltribe',
+        'enteredbyname', 'enteredbytribe', 'modifiedbyname',
+        'modifiedbytribe'
+    )
+    def get_related_objects(self, object_id):
         place = Places.objects.get(pk=object_id)
-        # import ipdb
-        # ipdb.set_trace()
         alt_names = place.placealtindigenousname_set.all()
         related_resources = place.placesresourceevents_set.all()
         related_media = place.placesmediaevents_set.all()
         related_citations = place.placescitationevents_set.all()
-        extra_context['related_objects'] = [
+        return [
             {
                 'title': 'Alternate Names',
                 'data': alt_names,
@@ -648,22 +669,6 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin):
                 'data': related_citations,
             },
         ]
-        return super(PlacesAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
-    inlines = [
-        NestedPlacesalternativenameInline,
-        NestedPlacesresourceeventsInline,
-        NestedPlacesmediaeventsInline,
-        NestedPlacescitationeventsInline,
-        # NestedPlaceslocalityInline,
-        # PlaceGISSelectionsInline,
-    ]
-    search_fields = (
-        'englishplacename', 'indigenousplacename', 'indigenousplacenamemeaning',
-        'planningunitid__planningunitname', 'primaryhabitat__habitat',
-        'tribeid__tribeunit','tribeid__tribe','tribeid__federaltribe',
-        'enteredbyname', 'enteredbytribe', 'modifiedbyname',
-        'modifiedbytribe'
-    )
     from TEKDB.settings import DATABASE_GEOGRAPHY
     #TODO: check SRID from settings, set lat/lon in 4326, then convert to 3857 if necessary
     default_lon = DATABASE_GEOGRAPHY['default_lon']
