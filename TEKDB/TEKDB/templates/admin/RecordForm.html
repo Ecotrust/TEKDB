@@ -4,10 +4,10 @@
   {{ block.super }}
   <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+  <script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/static/assets/knockout/knockout-3.4.2.js"></script>
+  <script type="text/javascript" src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
   <style>
-    .collapse {
-      display: block !important;
-    }
     .deletelink {
       -webkit-box-sizing: content-box;
       -moz-box-sizing: content-box;
@@ -16,12 +16,27 @@
     .btn-info {
       width: 100%;
       margin: 0 -25px;
-      /*padding: 0;*/
+    }
+    .relationship-table {
+      width: 95%;
+    }
+    .relationship-row td {
+      padding: 10px;
+    }
+    .change-related img,
+    .delete-related img {
+      height: 1.5em;
+    }
+    .change-col,
+    .delete-col {
+      max-width: 60px;
+      width: 60px;
+    }
+    a.btn-success {
+      color: white;
+      margin: 10px;
     }
   </style>
-  <script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="/static/assets/knockout/knockout-3.4.2.js"></script>
-  <script type="text/javascript" src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% load i18n admin_urls static %}
@@ -33,20 +48,42 @@
             <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#inline_{{ forloop.counter }}">
               {{ object.title|capfirst }}
             </button>
-            <div id="inline_{{ forloop.counter }}" class="collapse">
-              <table>
-                {% for item in object.data %}
-                <tr>
-                  <td>{{ item }}</td>
-                </tr>
-                {% endfor %}
-              </table>
+            <div id="inline_{{ forloop.counter }}" class="collapse in">
+              {% if object.data.rows %}
+                <table class="relationship-table">
+                  <tr>
+                    {% for column in object.data.columns %}
+                      {% if forloop.counter != 1 %}
+                        <th>{{ column|capfirst }}</th>
+                      {% endif %}
+                    {% endfor %}
+                      <th class="change-col">Edit</th>
+                      <th class="delete-col">Delete</th>
+                  </tr>
+                  {% for row in object.data.rows %}
+                    <tr class="relationship-row">
+                      {% for cell in row %}
+                        {% if forloop.counter != 1 %}
+                          <td>{{ cell }}</td>
+                          {% endif %}
+                      {% endfor %}
+                      <td class="change-col"> <!-- edit -->
+                        <a class="related-widget-wrapper-link change-related" title="Change selected {{ object.title }}" href="/admin/{{ object.data.module }}/{{ object.data.model }}/{{ row.0 }}/change/?_to_field={{ object.data.id_field}}&amp;_popup=1"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>
+                      </td>
+                      <td class="delete-col"> <!-- delete -->
+                        <a class="related-widget-wrapper-link delete-related" title="Delete selected {{ object.title }}" href="/admin/{{ object.data.module }}/{{ object.data.model }}/{{ row.0 }}/delete/"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </table>
+              {% endif %}
+              <a class="btn btn-success related-widget-wrapper-link add-related" title="Add {{ object.title }}" href="/admin/{{ object.data.module }}/{{ object.data.model }}/add/?_popup=1" type="button">Add {{ object.title|capfirst }}</a>
             </div>
           </div>
         </div>
       </div>
       {% comment %}
-      <!-- {% include inline_admin_formset.opts.template %} -->
+      <!-- { include inline_admin_formset.opts.template %} -->
       {% endcomment %}
   {% endfor %}
 {% endblock %}

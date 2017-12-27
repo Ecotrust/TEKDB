@@ -471,6 +471,44 @@ class RecordModelAdmin(admin.ModelAdmin):
     record_form = '%s/TEKDB/templates/admin/RecordForm.html' % BASE_DIR
     add_form_template = record_form
     change_form_template = record_form
+    def format_data(self, data_set, ignore_columns=[]):
+        columns = ['id']
+        rows = []
+        model = data_set.model
+        model_name = model._meta.model_name
+        module = model._meta.app_label
+        id_field = model._meta.pk.name
+        if len(data_set) == 0:
+            model_instances = model.objects.all()
+            if len(model_instances) > 0:
+                model_instance = model_instances[0]
+            else:
+                model_instance = None
+        else:
+            model_instance = data_set.all()[0]
+        if model_instance:
+            columns = columns + [field['key'] for field in model_instance.data()]
+            for ignore_column in ignore_columns:
+                try:
+                    columns.pop(columns.index(ignore_column))
+                except:
+                    pass
+        for item in data_set:
+            row = [item.pk]
+            for column in columns:
+                for field in item.data():
+                    if field['key'] == column:
+                        row.append(field['value'])
+                        break
+            rows.append(row)
+        return {
+            'object': self,
+            'columns': columns,
+            'rows': rows,
+            'module': module,
+            'model': model_name,
+            'id_field': id_field,
+        }
     def get_related_objects(self, object_id):
         # For each record with external relationships:
         #   1. get the record
@@ -478,7 +516,7 @@ class RecordModelAdmin(admin.ModelAdmin):
         #   2. get the relationship sets ()
         #       alt_names = place.placealtindigenousname_set.all()
         #   3. return a list of the relationship "title, data" sets:
-        #       [{'title': 'Alternate Names','data': alt_names}, {...}...]
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
         return []
     def change_view(self, request, object_id, form_url='', extra_context={}):
         extra_context['related_objects'] = self.get_related_objects(object_id)
@@ -630,14 +668,14 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
             )
         }),
     )
-    inlines = [
-        NestedPlacesalternativenameInline,
-        NestedPlacesresourceeventsInline,
-        NestedPlacesmediaeventsInline,
-        NestedPlacescitationeventsInline,
-        # NestedPlaceslocalityInline,
-        # PlaceGISSelectionsInline,
-    ]
+    # inlines = [
+    #     NestedPlacesalternativenameInline,
+    #     NestedPlacesresourceeventsInline,
+    #     NestedPlacesmediaeventsInline,
+    #     NestedPlacescitationeventsInline,
+    #     # NestedPlaceslocalityInline,
+    #     # PlaceGISSelectionsInline,
+    # ]
     search_fields = (
         'englishplacename', 'indigenousplacename', 'indigenousplacenamemeaning',
         'planningunitid__planningunitname', 'primaryhabitat__habitat',
@@ -654,19 +692,19 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
         return [
             {
                 'title': 'Alternate Names',
-                'data': alt_names,
+                'data': self.format_data(alt_names, ['place'])
             },
             {
                 'title': 'Resource Relationships',
-                'data': related_resources,
+                'data': self.format_data(related_resources, ['place','excerpt','months'])
             },
             {
                 'title': 'Media Relationships',
-                'data': related_media,
+                'data': self.format_data(related_media, ['place'])
             },
             {
                 'title': 'Citation Relationships',
-                'data': related_citations,
+                'data': self.format_data(related_citations, ['place'])
             },
         ]
     from TEKDB.settings import DATABASE_GEOGRAPHY
@@ -699,8 +737,8 @@ class ResourcesAdmin(NestedRecordAdminProxy):
         NestedResourcesMediaEventsInline,
         NestedResourcesCitationEventsInline,
 
-        # NestedResourcesPlaceEventsInline,     #Original
-        ResourcesPlaceEventsStackedInline,
+        NestedResourcesPlaceEventsInline,     #Original
+        # ResourcesPlaceEventsStackedInline,
 
         NestedResourceResourceEventsInline,
         NestedResourceAltIndigenousNameInline,

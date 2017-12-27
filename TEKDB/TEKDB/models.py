@@ -1591,6 +1591,12 @@ class PlaceAltIndigenousName(models.Model):
     def __str__(self):
         return self.altindigenousname or ''
 
+    def data(self):
+        return [
+            {'key':'place', 'value': str(self.placeid)},
+            {'key':'alternate name', 'value':str(self.altindigenousname)},
+        ]
+
 class PlaceGISSelections(models.Model):
     placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
     placelabel = models.CharField(db_column='placelabel', max_length=255, blank=True, null=True, verbose_name='label')
