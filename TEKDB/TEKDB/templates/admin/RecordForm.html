@@ -4,10 +4,21 @@
   {{ block.super }}
   <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
-  <script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+  <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+  <!-- <script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script> -->
+  <script>
+    // django, bootstrap, and I all have different ways of using jQuery
+    var $ = django.jQuery;
+    var jQuery = django.jQuery;
+  </script>
+  <!-- <script type="text/javascript" src="/static/admin/js/SelectBox.js"></script> -->
   <script type="text/javascript" src="/static/assets/knockout/knockout-3.4.2.js"></script>
-  <script type="text/javascript" src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
   <style>
+    th {
+      text-transform: capitalize;
+    }
     .deletelink {
       -webkit-box-sizing: content-box;
       -moz-box-sizing: content-box;
@@ -32,15 +43,33 @@
       max-width: 60px;
       width: 60px;
     }
-    a.btn-success {
-      color: white;
-      margin: 10px;
+    .btn-success {
+      margin: 15px;
     }
   </style>
+  <script type="text/javascript" src="/static/TEKDB/js/record_form.js"></script>
 {% endblock %}
 
 {% load i18n admin_urls static %}
 {% block inline_field_sets %}
+
+    <!-- Form Modal -->
+    <div class="modal fade" id="inlineFormModal" tabindex="-1" role="dialog" aria-labelledby="Relationship Form" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="inlineModalLabel">Relationship Form</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="form-modal-body">
+              <!-- To be replaced via AJAX call -->
+            </div>
+        </div>
+      </div>
+    </div>
+
   {% for object in related_objects %}
       <div class="container">
         <div class="row">
@@ -50,40 +79,23 @@
             </button>
             <div id="inline_{{ forloop.counter }}" class="collapse in">
               {% if object.data.rows %}
-                <table class="relationship-table">
-                  <tr>
-                    {% for column in object.data.columns %}
-                      {% if forloop.counter != 1 %}
-                        <th>{{ column|capfirst }}</th>
-                      {% endif %}
-                    {% endfor %}
-                      <th class="change-col">Edit</th>
-                      <th class="delete-col">Delete</th>
-                  </tr>
-                  {% for row in object.data.rows %}
-                    <tr class="relationship-row">
-                      {% for cell in row %}
-                        {% if forloop.counter != 1 %}
-                          <td>{{ cell }}</td>
-                          {% endif %}
-                      {% endfor %}
-                      <td class="change-col"> <!-- edit -->
-                        <a class="related-widget-wrapper-link change-related" title="Change selected {{ object.title }}" href="/admin/{{ object.data.module }}/{{ object.data.model }}/{{ row.0 }}/change/?_to_field={{ object.data.id_field}}&amp;_popup=1"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>
-                      </td>
-                      <td class="delete-col"> <!-- delete -->
-                        <a class="related-widget-wrapper-link delete-related" title="Delete selected {{ object.title }}" href="/admin/{{ object.data.module }}/{{ object.data.model }}/{{ row.0 }}/delete/"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </table>
+                <table class="relationship-table" id="inline_table_{{ object.data.model }}"></table>
               {% endif %}
-              <a class="btn btn-success related-widget-wrapper-link add-related" title="Add {{ object.title }}" href="/admin/{{ object.data.module }}/{{ object.data.model }}/add/?_popup=1" type="button">Add {{ object.title|capfirst }}</a>
+              <div class="related-widget-wrapper">
+                <button class="btn btn-success" type="button"
+                  id="add_id_{{ object.data.model }}"
+                  title="Add {{ object.title }}" data-toggle="modal"
+                  data-target="#inlineFormModal"
+                  onclick="loadFormModal('{{ object.data.module }}', '{{ object.data.model }}', null, 'add', '{{ opts.verbose_name_plural|lower }}', '{{ object_id }}')">
+                    Add {{ object.title|capfirst }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      {% comment %}
-      <!-- { include inline_admin_formset.opts.template %} -->
-      {% endcomment %}
   {% endfor %}
+  <script>
+    $(document).ready(loadInlineTables.bind($, '{{ opts.verbose_name_plural|lower }}', '{{ object_id }}'));
+  </script>
 {% endblock %}

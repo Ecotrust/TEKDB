@@ -16,6 +16,58 @@ from django.contrib.gis.db.models import GeometryField, GeoManager
 
 MANAGED = True
 
+class Record(models.Model):
+    def format_data(self, data_set, ignore_columns=[]):
+        columns = ['id']
+        rows = []
+        model = data_set.model
+        model_name = model._meta.model_name
+        module = model._meta.app_label
+        id_field = model._meta.pk.name
+        if len(data_set) == 0:
+            model_instances = model.objects.all()
+            if len(model_instances) > 0:
+                model_instance = model_instances[0]
+            else:
+                model_instance = None
+        else:
+            model_instance = data_set.all()[0]
+        if model_instance:
+            columns = columns + [field['key'] for field in model_instance.data()]
+            for ignore_column in ignore_columns:
+                try:
+                    columns.pop(columns.index(ignore_column))
+                except:
+                    pass
+        for item in data_set:
+            row = [item.pk]
+            for column in columns:
+                for field in item.data():
+                    if field['key'] == column:
+                        row.append(field['value'])
+                        break
+            rows.append(row)
+        return {
+            # 'object': self,
+            'columns': columns,
+            'rows': rows,
+            'module': module,
+            'model': model_name,
+            'id_field': id_field,
+        }
+    def get_related_objects(self, object_id):
+        # For each record with external relationships:
+        #   1. get the record
+        #       place = Places.objects.get(pk=object_id)
+        #   2. get the relationship sets ()
+        #       alt_names = place.placealtindigenousname_set.all()
+        #   3. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
+        return []
+
+    class Meta:
+        abstract = True
+
 class Queryable(models.Model):
     enteredbyname = models.CharField(db_column='enteredbyname', max_length=25, blank=True, null=True, verbose_name='entered by name')
     enteredbytribe = models.CharField(db_column='enteredbytribe', max_length=100, blank=True, null=True, verbose_name='entered by tribe')
@@ -193,7 +245,7 @@ class LookupHabitat(models.Model):
     def __str__(self):
         return self.habitat or ''
 
-class Places(Queryable):
+class Places(Queryable, Record):
     placeid = models.AutoField(db_column='placeid', primary_key=True)
     # PlaceID
     indigenousplacename = models.CharField(db_column='indigenousplacename', max_length=255, blank=True, null=True, verbose_name='indigenous name')
@@ -293,6 +345,31 @@ class Places(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_related_objects(self, object_id):
+        # place = Places.objects.get(pk=object_id)
+        alt_names = self.placealtindigenousname_set.all()
+        related_resources = self.placesresourceevents_set.all()
+        related_media = self.placesmediaevents_set.all()
+        related_citations = self.placescitationevents_set.all()
+        return [
+            {
+                'title': 'Alternate Names',
+                'data': self.format_data(alt_names, ['place'])
+            },
+            {
+                'title': 'Resource Relationships',
+                'data': self.format_data(related_resources, ['place','excerpt','months'])
+            },
+            {
+                'title': 'Media Relationships',
+                'data': self.format_data(related_media, ['place'])
+            },
+            {
+                'title': 'Citation Relationships',
+                'data': self.format_data(related_citations, ['place'])
+            },
+        ]
+
     def __unicode__(self):
         return unicode('%s (%s)' % (self.indigenousplacename, self.englishplacename))
 
@@ -316,7 +393,7 @@ class LookupResourceGroup(models.Model):
     def __str__(self):
         return self.resourceclassificationgroup or ''
 
-class Resources(Queryable):
+class Resources(Queryable, Record):
     resourceid = models.AutoField(db_column='resourceid', primary_key=True)
     commonname = models.CharField(db_column='commonname', max_length=255, blank=True, null=True, unique=True, verbose_name='common name')
     indigenousname = models.CharField(db_column='indigenousname', max_length=255, blank=True, null=True, verbose_name='indigenous name')
@@ -405,6 +482,16 @@ class Resources(Queryable):
             'description': self.indigenousname,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
+
+    def get_related_objects(self, object_id):
+        # For each record with external relationships:
+        #   1. get the record
+        #       place = Places.objects.get(pk=object_id)
+        #   2. get the relationship sets ()
+        #       alt_names = place.placealtindigenousname_set.all()
+        #   3. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
+        return []
 
 class LookupPartUsed(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -655,7 +742,7 @@ class LookupActivity(models.Model):
     def __str__(self):
         return self.activity or ''
 
-class ResourcesActivityEvents(Queryable):
+class ResourcesActivityEvents(Queryable, Record):
     resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource')
     relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt')
@@ -766,6 +853,16 @@ class ResourcesActivityEvents(Queryable):
             'description': self.relationshipdescription,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
+
+    def get_related_objects(self, object_id):
+        # For each record with external relationships:
+        #   1. get the record
+        #       place = Places.objects.get(pk=object_id)
+        #   2. get the relationship sets ()
+        #       alt_names = place.placealtindigenousname_set.all()
+        #   3. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
+        return []
 
 class People(models.Model):
     personid = models.AutoField(db_column='personid', primary_key=True)
@@ -879,7 +976,7 @@ class LookupAuthorType(models.Model):
     def __str__(self):
         return self.authortype or ''
 
-class Citations(Queryable):
+class Citations(Queryable, Record):
     citationid = models.AutoField(db_column='citationid', primary_key=True)
     referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue")
     referencetext = models.CharField(db_column='referencetext', max_length=50, blank=True, null=True, verbose_name='description')
@@ -1008,6 +1105,16 @@ class Citations(Queryable):
             'description': self.referencetext,
             'link': '/explore/%s/%d' % (type, self.pk)
         }
+
+    def get_related_objects(self, object_id):
+        # For each record with external relationships:
+        #   1. get the record
+        #       place = Places.objects.get(pk=object_id)
+        #   2. get the relationship sets ()
+        #       alt_names = place.placealtindigenousname_set.all()
+        #   3. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
+        return []
 
     def __str__(self):
         if str(self.referencetype) == 'Interview':
@@ -1356,7 +1463,7 @@ class LookupUserInfo(models.Model):
     def __str__(self):
         return self.username or ''
 
-class Media(Queryable):
+class Media(Queryable, Record):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type')
     medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
@@ -1491,6 +1598,16 @@ class Media(Queryable):
             else:
                 self.medialink = None
         super(Media, self).save(*args, **kwargs)
+
+    def get_related_objects(self, object_id):
+        # For each record with external relationships:
+        #   1. get the record
+        #       place = Places.objects.get(pk=object_id)
+        #   2. get the relationship sets ()
+        #       alt_names = place.placealtindigenousname_set.all()
+        #   3. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
+        return []
 
 class MediaCitationEvents(SimpleRelationship):
     mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media')

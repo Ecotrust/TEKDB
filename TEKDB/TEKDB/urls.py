@@ -29,14 +29,17 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from login import views as login_views
 
+from . import views
+
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
     url(r'^login/$', login_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'', include('explore.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
+    url(r'^tekdb/(?P<model_name>\w+)/(?P<id>\w+)/get_related$', views.get_related),
+    url(r'', include('explore.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
