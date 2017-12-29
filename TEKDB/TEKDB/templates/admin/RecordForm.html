@@ -48,9 +48,7 @@
               {{ object.title|capfirst }}
             </button>
             <div id="inline_{{ forloop.counter }}" class="collapse in">
-              {% if object.data.rows %}
-                <table class="relationship-table" id="inline_table_{{ object.data.model }}"></table>
-              {% endif %}
+              <table class="relationship-table" id="inline_table_{{ object.data.model }}"></table>
               <div class="related-widget-wrapper">
                 <button class="btn btn-success" type="button"
                   id="add_id_{{ object.data.model }}"
