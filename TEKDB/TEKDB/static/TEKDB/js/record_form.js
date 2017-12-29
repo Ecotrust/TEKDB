@@ -13,29 +13,32 @@ loadInlineTables = function(model, id) {
           relationship = data[i];
           inline_table = $('#inline_table_' + relationship.data.model);
           inline_table.html('');
-          html = '<tr>';
-          // Start columns on index 1 - ignore id column
-          for (var col_idx = 1; col_idx < relationship.data.columns.length; col_idx++) {
-            html += '<th>' + relationship.data.columns[col_idx] + '</th>';
-          }
-          html += '<th class="change-col">Edit</th>'
-          html += '<th class="delete-col">Delete</th>'
-          html += '</tr>';
-          for (var row_idx = 0; row_idx < relationship.data.rows.length; row_idx++) {
-            row = relationship.data.rows[row_idx];
-            html += '<tr class="relationship-row">';
-            // Start cells on index 1 - ignore id column
-            for (var cell_idx = 1; cell_idx < row.length; cell_idx++) {
-              cell = row[cell_idx];
-              html += '<td>' + cell + '</td>';
+          html = '';
+          if (relationship.data.rows.length > 0) {
+            html = '<tr>';
+            // Start columns on index 1 - ignore id column
+            for (var col_idx = 1; col_idx < relationship.data.columns.length; col_idx++) {
+              html += '<th>' + relationship.data.columns[col_idx] + '</th>';
             }
-            html += '<td class="change-col">'
-            html += '<a title="Change selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'edit\', \'' + model + '\', \'' + id + '\')"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>'
-            html += '</td>'
-            html += '<td class="delete-col">'
-            html += '<a title="Delete selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'delete\', \'' + model + '\', \'' + id +'\')"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>'
-            html += '</td>'
+            html += '<th class="change-col">Edit</th>'
+            html += '<th class="delete-col">Delete</th>'
             html += '</tr>';
+            for (var row_idx = 0; row_idx < relationship.data.rows.length; row_idx++) {
+              row = relationship.data.rows[row_idx];
+              html += '<tr class="relationship-row">';
+              // Start cells on index 1 - ignore id column
+              for (var cell_idx = 1; cell_idx < row.length; cell_idx++) {
+                cell = row[cell_idx];
+                html += '<td>' + cell + '</td>';
+              }
+              html += '<td class="change-col">'
+              html += '<a title="Change selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'edit\', \'' + model + '\', \'' + id + '\')"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>'
+              html += '</td>'
+              html += '<td class="delete-col">'
+              html += '<a title="Delete selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'delete\', \'' + model + '\', \'' + id +'\')"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>'
+              html += '</td>'
+              html += '</tr>';
+            }
           }
           inline_table.html(html);
         }

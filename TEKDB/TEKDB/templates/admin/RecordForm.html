@@ -4,6 +4,7 @@
   {{ block.super }}
   <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/static/TEKDB/css/record_form.css">
   <script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
   <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
   <!-- <script type="text/javascript" src="/static/assets/jquery/jquery-3.2.1.min.js"></script> -->
@@ -15,38 +16,7 @@
   <!-- <script type="text/javascript" src="/static/admin/js/SelectBox.js"></script> -->
   <script type="text/javascript" src="/static/assets/knockout/knockout-3.4.2.js"></script>
   <script type="text/javascript" src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
-  <style>
-    th {
-      text-transform: capitalize;
-    }
-    .deletelink {
-      -webkit-box-sizing: content-box;
-      -moz-box-sizing: content-box;
-      box-sizing: content-box;
-    }
-    .btn-info {
-      width: 100%;
-      margin: 0 -25px;
-    }
-    .relationship-table {
-      width: 95%;
-    }
-    .relationship-row td {
-      padding: 10px;
-    }
-    .change-related img,
-    .delete-related img {
-      height: 1.5em;
-    }
-    .change-col,
-    .delete-col {
-      max-width: 60px;
-      width: 60px;
-    }
-    .btn-success {
-      margin: 15px;
-    }
-  </style>
+
   <script type="text/javascript" src="/static/TEKDB/js/record_form.js"></script>
 {% endblock %}
 
@@ -89,6 +59,7 @@
                   onclick="loadFormModal('{{ object.data.module }}', '{{ object.data.model }}', null, 'add', '{{ opts.verbose_name_plural|lower }}', '{{ object_id }}')">
                     Add {{ object.title|capfirst }}
                 </button>
+                <button class="btn" type="button" onclick="loadInlineTables('{{ opts.verbose_name_plural|lower }}', '{{ object_id }}')">Refresh</button>
               </div>
             </div>
           </div>

@@ -1,0 +1,30 @@
+th {
+  text-transform: capitalize;
+}
+.deletelink {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+.btn-info {
+  width: 100%;
+  margin: 4px -25px;
+}
+.relationship-table {
+  width: 95%;
+}
+.relationship-row td {
+  padding: 10px;
+}
+.change-related img,
+.delete-related img {
+  height: 1.5em;
+}
+.change-col,
+.delete-col {
+  max-width: 60px;
+  width: 60px;
+}
+.btn-success {
+  margin: 15px;
+}
