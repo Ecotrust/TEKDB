@@ -56,10 +56,10 @@
                   id="add_id_{{ object.data.model }}"
                   title="Add {{ object.title }}" data-toggle="modal"
                   data-target="#inlineFormModal"
-                  onclick="loadFormModal('{{ object.data.module }}', '{{ object.data.model }}', null, 'add', '{{ opts.verbose_name_plural|lower }}', '{{ object_id }}')">
+                  onclick="loadFormModal('{{ object.data.module }}', '{{ object.data.model }}', null, 'add', '{{ opts.model_name|lower }}', '{{ object_id }}')">
                     Add {{ object.title|capfirst }}
                 </button>
-                <button class="btn" type="button" onclick="loadInlineTables('{{ opts.verbose_name_plural|lower }}', '{{ object_id }}')">Refresh</button>
+                <button class="btn" type="button" onclick="loadInlineTables('{{ opts.model_name|lower }}', '{{ object_id }}')">Refresh</button>
               </div>
             </div>
           </div>
@@ -67,6 +67,6 @@
       </div>
   {% endfor %}
   <script>
-    $(document).ready(loadInlineTables.bind($, '{{ opts.verbose_name_plural|lower }}', '{{ object_id }}'));
+    $(document).ready(loadInlineTables.bind($, '{{ opts.model_name|lower }}', '{{ object_id }}'));
   </script>
 {% endblock %}

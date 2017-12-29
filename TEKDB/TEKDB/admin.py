@@ -477,7 +477,7 @@ class RecordModelAdmin(admin.ModelAdmin):
         extra_context['related_objects'] = object_instance.get_related_objects(object_id)
         return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
-class CitationsAdmin(RecordAdminProxy):
+class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('referencetype','title','referencetext',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
@@ -544,13 +544,6 @@ class CitationsAdmin(RecordAdminProxy):
 
     add_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
     change_form_template = '%s/TEKDB/templates/admin/CitationsForm.html' % BASE_DIR
-    inlines = [
-        CitationplaceseventsInline,
-        CitationresourceseventsInline,
-        CitationmediaeventsInline,
-        CitationplacesresourceeventsInline,
-        CitationresourcesactivityeventsInline,
-    ]
     search_fields = (
         'referencetype__documenttype', 'intervieweeid__firstname',
         'intervieweeid__lastname', 'interviewerid__lastname',
@@ -567,7 +560,7 @@ class CitationsAdmin(RecordAdminProxy):
         'modifiedbytribe'
     )
 
-class MediaAdmin(RecordAdminProxy):
+class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
     'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
@@ -587,13 +580,6 @@ class MediaAdmin(RecordAdminProxy):
     from TEKDB.settings import BASE_DIR
     add_form_template = '%s/TEKDB/templates/admin/MediaForm.html' % BASE_DIR
     change_form_template = '%s/TEKDB/templates/admin/MediaForm.html' % BASE_DIR
-    inlines = [
-        MediaplaceseventsInline,
-        MediacitationeventsInline,
-        MediaresourceseventsInline,
-        MediaplacesresourceeventsInline,
-        MediaresourcesactivityeventsInline,
-    ]
     search_fields = (
         'medianame', 'mediadescription', 'medialink',
         'mediatype__mediatype', 'mediatype__mediacategory',
@@ -639,7 +625,7 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
     default_zoom = DATABASE_GEOGRAPHY['default_zoom']
     map_template = DATABASE_GEOGRAPHY['map_template']
 
-class ResourcesAdmin(NestedRecordAdminProxy):
+class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('commonname','indigenousname', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
@@ -657,18 +643,6 @@ class ResourcesAdmin(NestedRecordAdminProxy):
             )
         }),
     )
-    inlines = [
-        # ResourcesActivityEventsInline,        #tied to place-resource
-        NestedResourcesMediaEventsInline,
-        NestedResourcesCitationEventsInline,
-
-        NestedResourcesPlaceEventsInline,     #Original
-        # ResourcesPlaceEventsStackedInline,
-
-        NestedResourceResourceEventsInline,
-        NestedResourceAltIndigenousNameInline,
-        # ResourceGISSelectionsInline,          #TODO: make this work
-    ]
     search_fields = (
         'commonname', 'indigenousname', 'genus', 'species',
         'resourceclassificationgroup__resourceclassificationgroup',
@@ -677,7 +651,7 @@ class ResourcesAdmin(NestedRecordAdminProxy):
     )
     ordering = ('commonname',)
 
-class ResourcesActivityEventsAdmin(RecordAdminProxy):
+class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('placeresourceid', 'relationshipdescription',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
     fieldsets = (
@@ -704,10 +678,6 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy):
         'enteredbyname', 'enteredbytribe', 'enteredbytitle', 'modifiedbyname',
         'modifiedbytribe', 'modifiedbytitle'
     )
-    inlines = [
-        ResourcesactivitycitationeventsInline,
-        ResourcesactivitymediaeventsInline,
-    ]
 
 class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
     list_display = ('placeid', 'englishname', 'indigenousname',
