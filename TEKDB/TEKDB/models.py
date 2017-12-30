@@ -288,13 +288,17 @@ class Places(Queryable, Record):
         tribe_qs = LookupTribe.keyword_search(keyword)
         tribe_loi = [tribe.pk for tribe in tribe_qs]
 
+        alt_name_qs = PlaceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
+        alt_name_loi = [pan.placeid.pk for pan in alt_name_qs]
+
         return Places.objects.filter(
             Q(indigenousplacename__icontains=keyword) |
             Q(indigenousplacenamemeaning__icontains=keyword)|
             Q(englishplacename__icontains=keyword)|
             Q(planningunitid__in=planningunit_loi) |
             Q(primaryhabitat__in=habitat_loi) |
-            Q(tribeid__in=tribe_loi)
+            Q(tribeid__in=tribe_loi) |
+            Q(pk__in=alt_name_loi)
         )
 
     def image(self):
@@ -418,7 +422,7 @@ class Resources(Queryable, Record):
     def keyword_search(keyword):
         group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
         group_loi = [group.pk for group in group_qs]
-        alt_name_qs =ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
+        alt_name_qs = ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
         alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
 
         return Resources.objects.filter(
