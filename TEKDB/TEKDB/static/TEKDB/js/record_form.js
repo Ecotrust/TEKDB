@@ -32,10 +32,10 @@ loadInlineTables = function(model, id) {
                 html += '<td>' + cell + '</td>';
               }
               html += '<td class="change-col">'
-              html += '<a title="Change selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'edit\', \'' + model + '\', \'' + id + '\')"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>'
+              html += '<a title="Change selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'edit\', \'' + model + '\', \'' + id + '\', \'' + relationship.data.fk_field_id + '\')"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>'
               html += '</td>'
               html += '<td class="delete-col">'
-              html += '<a title="Delete selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'delete\', \'' + model + '\', \'' + id +'\')"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>'
+              html += '<a title="Delete selected '+ relationship.title + '" data-toggle="modal" data-target="#inlineFormModal" onclick="loadFormModal(\''+ relationship.data.module + '\', \'' + relationship.data.model + '\', \'' + row[0] + '\', \'delete\', \'' + model + '\', \'' + id + '\', \'' + relationship.data.fk_field_id + '\')"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>'
               html += '</td>'
               html += '</tr>';
             }
@@ -51,16 +51,17 @@ loadInlineTables = function(model, id) {
 }
 
 iframeButtonClicked = function (model, id) {
+  // hide the modal
   if ($('#inlineFormModal').hasClass('in')){
     $('#inlineFormModal').modal('toggle');
   }
   setTimeout(function() {
-    // Give the record half a second to save.
+    // Give the record half a second to save before reloading tables.
     loadInlineTables(model, id);
   }, 500);
 }
 
-loadFormModal = function(module, model, id, action, base_model, base_id) {
+loadFormModal = function(module, model, id, action, base_model, base_id, fk_field_id) {
   html = '<iframe id="popup-iframe-form" style="width: 100%; height: 350px;" src="/admin/' + module + '/' + model + '/';
   if (action == 'add') {
      html += 'add';
@@ -73,6 +74,13 @@ loadFormModal = function(module, model, id, action, base_model, base_id) {
   $('#form-modal-body').html(html);
   $('#popup-iframe-form').load(function(){
       if (action != 'delete') {
+        if (action == 'add') {
+          $('#popup-iframe-form').contents().find('#id_' + fk_field_id).val(base_id);
+        }
+        // If below only shown for 'add', users could move relationships to new records
+        // For now I'm not sure this feature is intuitive or desired.
+        $('#popup-iframe-form').contents().find('#id_' + fk_field_id).hide();
+        $('#popup-iframe-form').contents().find('.field-box.field-' + fk_field_id).hide();
         all_buttons = $('#popup-iframe-form').contents().find('.submit-row input');
       } else {
         all_buttons = $('#popup-iframe-form').contents().find('form div').children(':not([type="hidden"])');

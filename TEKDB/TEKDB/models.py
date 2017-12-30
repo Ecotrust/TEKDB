@@ -17,7 +17,7 @@ from django.contrib.gis.db.models import GeometryField, GeoManager
 MANAGED = True
 
 class Record(models.Model):
-    def format_data(self, data_set, ignore_columns=[]):
+    def format_data(self, data_set, fk_field_id, ignore_columns=[]):
         columns = ['id']
         rows = []
         model = data_set.model
@@ -54,15 +54,15 @@ class Record(models.Model):
             'module': module,
             'model': model_name,
             'id_field': id_field,
+            'fk_field_id': fk_field_id,
         }
     def get_related_objects(self, object_id):
         # For each record with external relationships:
-        #   1. get the record
-        #       place = Places.objects.get(pk=object_id)
-        #   2. get the relationship sets ()
-        #       alt_names = place.placealtindigenousname_set.all()
-        #   3. return a list of the relationship "title, data" sets:
-        #       [{'title': 'Alternate Names','data': self.format_data(alt_names)
+        #   1. get the relationship sets ()
+        #       alt_names = self.placealtindigenousname_set.all()
+        #   2. return a list of the relationship "title, data" sets:
+        #       [{'title': 'Alternate Names','data': self.format_data(alt_names, fk_field_id, [ignore_columns])
+        #       Where 'fk_field_id' is the formfield ID of the FK's form pointing at 'self'
         return []
 
     class Meta:
@@ -354,19 +354,19 @@ class Places(Queryable, Record):
         return [
             {
                 'title': 'Alternate Names',
-                'data': self.format_data(alt_names, ['place'])
+                'data': self.format_data(alt_names, 'placeid', ['place'])
             },
             {
                 'title': 'Resource Relationships',
-                'data': self.format_data(related_resources, ['place','excerpt','months'])
+                'data': self.format_data(related_resources, 'placeid', ['place','excerpt','months'])
             },
             {
                 'title': 'Media Relationships',
-                'data': self.format_data(related_media, ['place'])
+                'data': self.format_data(related_media, 'placeid', ['place'])
             },
             {
                 'title': 'Citation Relationships',
-                'data': self.format_data(related_citations, ['place'])
+                'data': self.format_data(related_citations, 'placeid', ['place'])
             },
         ]
 
@@ -487,15 +487,14 @@ class Resources(Queryable, Record):
         media_events = self.resourcesmediaevents_set.all()
         citation_events = self.resourcescitationevents_set.all()
         place_events = self.placesresourceevents_set.all()
-        from django.db.models import Q
         resource_events = ResourceResourceEvents.objects.filter(resourceid=self.pk)
         alt_names = self.resourcealtindigenousname_set.all()
         return [
-            {'title': 'Media Relationships', 'data': self.format_data(media_events, ['resource'])},
-            {'title': 'Citation Relationships', 'data': self.format_data(citation_events, ['resource'])},
-            {'title': 'Place Relationships', 'data': self.format_data(place_events, ['resource','months'])},
-            {'title': 'Resource Relationships', 'data': self.format_data(resource_events, ['resource a'])},
-            {'title': 'Alternate Names', 'data': self.format_data(alt_names, ['resource'])},
+            {'title': 'Media Relationships', 'data': self.format_data(media_events, 'resourceid', ['resource'])},
+            {'title': 'Citation Relationships', 'data': self.format_data(citation_events, 'resourceid', ['resource'])},
+            {'title': 'Place Relationships', 'data': self.format_data(place_events, 'resourceid', ['resource','months'])},
+            {'title': 'Resource Relationships', 'data': self.format_data(resource_events, 'resourceid', ['resource a'])},
+            {'title': 'Alternate Names', 'data': self.format_data(alt_names, 'resourceid', ['resource'])},
         ]
 
 class LookupPartUsed(models.Model):
@@ -863,8 +862,8 @@ class ResourcesActivityEvents(Queryable, Record):
         citation_events = self.resourceactivitycitationevents_set.all()
         media_events = self.resourceactivitymediaevents_set.all()
         return [
-            {'title': 'Citation Relationships', 'data': self.format_data(citation_events, ['resource activity'])},
-            {'title': 'Media Relationships', 'data': self.format_data(media_events, ['resource activity'])},
+            {'title': 'Citation Relationships', 'data': self.format_data(citation_events, 'resourceactivityid', ['resource activity'])},
+            {'title': 'Media Relationships', 'data': self.format_data(media_events, 'resourceactivityid', ['resource activity'])},
         ]
 
 class People(models.Model):
@@ -1116,11 +1115,11 @@ class Citations(Queryable, Record):
         place_resource_events = self.placesresourcecitationevents_set.all()
         activity_events = self.resourceactivitycitationevents_set.all()
         return [
-            {'title': 'Place Relationships', 'data': self.format_data(place_events, ['citation'])},
-            {'title': 'Resource Relationships', 'data': self.format_data(resource_events, [])},
-            {'title': 'Media Relationships', 'data': self.format_data(media_events, [])},
-            {'title': 'Place-Resource Relationships', 'data': self.format_data(place_resource_events, [])},
-            {'title': 'Activity Relationships', 'data': self.format_data(activity_events, [])},
+            {'title': 'Place Relationships', 'data': self.format_data(place_events, 'citationid', ['citation'])},
+            {'title': 'Resource Relationships', 'data': self.format_data(resource_events, 'citationid', ['citation'])},
+            {'title': 'Media Relationships', 'data': self.format_data(media_events, 'citationid', ['citation'])},
+            {'title': 'Place-Resource Relationships', 'data': self.format_data(place_resource_events, 'citationid', ['citation'])},
+            {'title': 'Activity Relationships', 'data': self.format_data(activity_events, 'citationid', ['citation'])},
         ]
 
     def __str__(self):
@@ -1613,11 +1612,11 @@ class Media(Queryable, Record):
         place_res_events = self.placesresourcemediaevents_set.all()
         activity_events = self.resourceactivitymediaevents_set.all()
         return [
-            {'title': 'Place Relationships', 'data': self.format_data(place_events, ['media'])},
-            {'title': 'Citation Relationships', 'data': self.format_data(citation_events, ['media'])},
-            {'title': 'Resource Relationships', 'data': self.format_data(resource_events, ['media'])},
-            {'title': 'Place-Resource Relationships', 'data': self.format_data(place_res_events, ['media'])},
-            {'title': 'Activity Relationships', 'data': self.format_data(activity_events, ['media'])},
+            {'title': 'Place Relationships', 'data': self.format_data(place_events, 'mediaid', ['media'])},
+            {'title': 'Citation Relationships', 'data': self.format_data(citation_events, 'mediaid', ['media'])},
+            {'title': 'Resource Relationships', 'data': self.format_data(resource_events, 'mediaid', ['media'])},
+            {'title': 'Place-Resource Relationships', 'data': self.format_data(place_res_events, 'mediaid', ['media'])},
+            {'title': 'Activity Relationships', 'data': self.format_data(activity_events, 'mediaid', ['media'])},
         ]
 
 class MediaCitationEvents(SimpleRelationship):
@@ -2127,6 +2126,7 @@ class ResourceAltIndigenousName(models.Model):
         managed = MANAGED
         db_table = 'resourcealtindigenousname'
         app_label = 'Relationships'
+        verbose_name = 'Resource Alternative Name'
         verbose_name_plural = 'Resource Alternative Names'
 
     def get_query_json(self):

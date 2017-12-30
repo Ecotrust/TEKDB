@@ -116,26 +116,12 @@ class ResourcesMediaEventsForm(forms.ModelForm):
 ###############
 
 #### ACTIVITIES ####
-class ResourcesactivitymediaeventsInline(admin.TabularInline):
-    model = ResourceActivityMediaEvents
-    fields = ('mediaid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'Related Media'
-
 class NestedResourcesactivitymediaeventsInline(nested_admin.NestedTabularInline):
     model = ResourceActivityMediaEvents
     fields = ('mediaid', 'relationshipdescription', 'pages')
     extra = 0
     classes = ['collapse', 'open']
     verbose_name_plural = 'Related Media'
-
-class ResourcesactivitycitationeventsInline(admin.TabularInline):
-    model = ResourceActivityCitationEvents
-    fields = ('citationid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'Related Bibliographic Sources'
 
 class NestedResourcesactivitycitationeventsInline(nested_admin.NestedTabularInline):
     model = ResourceActivityCitationEvents
@@ -184,208 +170,6 @@ class NestedPlacesresourceactivityeventInline(nested_admin.NestedStackedInline):
         NestedResourcesactivitycitationeventsInline,
         NestedResourcesactivitymediaeventsInline,
     ]
-
-#### PLACES ####
-class NestedPlacesalternativenameInline(nested_admin.NestedTabularInline):
-    model = PlaceAltIndigenousName
-    fields = ('altindigenousnameid', 'altindigenousname')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'alternate names'
-
-class PlaceGISSelectionsInline(nested_admin.NestedTabularInline):
-    model = PlaceGISSelections
-    fields = ('placelabel', 'sourcefc')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'Place GIS Selections'
-
-class NestedPlacesresourceeventsInline(nested_admin.NestedStackedInline):
-    model = PlacesResourceEvents
-    fieldsets = (
-        ('', {
-            'fields': ('resourceid', 'relationshipdescription',
-                ('partused', 'customaryuse', 'barterresource'),
-                ('season', 'timing'),
-                ('january', 'february', 'march'), ('april', 'may', 'june'),
-                ('july', 'august', 'september'), ('october', 'november',
-                'december'), 'year', 'islocked'
-            )
-        }),
-    )
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related resources'
-    form = PlacesResourceEventForm
-    inlines = [
-        NestedPlacesresourcecitationeventsInline,
-        NestedPlacesresourcemediaeventsInline,
-        # NestedPlaceresourcelocalityeventInline,
-        NestedPlacesresourceactivityeventInline,
-    ]
-
-class NestedPlaceslocalityInline(nested_admin.NestedTabularInline):
-    model = Locality
-    fields = ('indigenousname', 'englishname', 'localitytype')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related localities'
-
-class NestedPlacesmediaeventsInline(nested_admin.NestedTabularInline):
-    model = PlacesMediaEvents
-    fields = ('mediaid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related media'
-    form = PlacesMediaEventsForm
-
-class NestedPlacescitationeventsInline(nested_admin.NestedTabularInline):
-    model = PlacesCitationEvents
-    fields = ('citationid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    max_num = 9999
-    verbose_name_plural = 'related Bibliographic Sources'
-    form = PlacesCitationEventsForm
-
-#### CITATIONS ####
-class CitationplacesresourceeventsInline(admin.TabularInline):
-    model = PlacesResourceCitationEvents
-    fields = ('placeresourceid','relationshipdescription','pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related place-resources'
-    form = PlacesResourceCitationEventsForm
-
-class CitationplaceseventsInline(admin.TabularInline):
-    model = PlacesCitationEvents
-    fields = ('placeid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    form = PlacesCitationEventsForm
-    verbose_name_plural = 'related places'
-
-class CitationresourceseventsInline(admin.TabularInline):
-    model = ResourcesCitationEvents
-    fields = ('resourceid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    form = ResourcesCitationEventsForm
-    verbose_name_plural = 'related resources'
-
-class CitationmediaeventsInline(admin.TabularInline):
-    model = MediaCitationEvents
-    fields = ('mediaid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    form = MediaCitationEventsForm
-    verbose_name_plural = 'related media'
-
-class CitationresourcesactivityeventsInline(admin.TabularInline):
-    model = ResourceActivityCitationEvents
-    fields = ('resourceactivityid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related activities'
-
-#### MEDIA ####
-class MediaplaceseventsInline(admin.TabularInline):
-    model = PlacesMediaEvents
-    fields = ('placeid','relationshipdescription','pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    form = PlacesMediaEventsForm
-    verbose_name_plural = 'related places'
-
-class MediacitationeventsInline(admin.TabularInline):
-    model = MediaCitationEvents
-    fields = ('citationid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    form = MediaCitationEventsForm
-    verbose_name_plural = 'related Bibliographic Sources'
-
-class MediaresourceseventsInline(admin.TabularInline):
-    model = ResourcesMediaEvents
-    fields = ('resourceid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    form = ResourcesMediaEventsForm
-    verbose_name_plural = 'related resources'
-
-class MediaplacesresourceeventsInline(admin.TabularInline):
-    model = PlacesResourceMediaEvents
-    fields = ('placeresourceid','relationshipdescription','pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related place-resources'
-    form = PlacesResourceMediaEventsForm
-
-class MediaresourcesactivityeventsInline(admin.TabularInline):
-    model = ResourceActivityMediaEvents
-    fields = ('resourceactivityid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related activities'
-
-#### RESOURCES ####
-class NestedResourcesMediaEventsInline(nested_admin.NestedTabularInline):
-    model = ResourcesMediaEvents
-    fields = ('mediaid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related media'
-    form = ResourcesMediaEventsForm
-
-class NestedResourcesCitationEventsInline(nested_admin.NestedTabularInline):
-    model = ResourcesCitationEvents
-    fields = ('citationid', 'relationshipdescription', 'pages')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related Bibliographic Sources'
-    form = ResourcesCitationEventsForm
-
-class NestedResourcesPlaceEventsInline(nested_admin.NestedStackedInline):
-    model = PlacesResourceEvents
-    fieldsets = (
-        ('', {
-            'fields': ('placeid', 'relationshipdescription',
-                ('partused', 'customaryuse', 'barterresource'),
-                ('season', 'timing'),
-                ('january', 'february', 'march'), ('april', 'may', 'june'),
-                ('july', 'august', 'september'), ('october', 'november',
-                'december'), 'year', 'islocked'
-            )
-        }),
-    )
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related places'
-    form = PlacesResourceEventForm
-    inlines = [
-        NestedPlacesresourcecitationeventsInline,
-        NestedPlacesresourcemediaeventsInline,
-        # NestedPlaceresourcelocalityeventInline,
-        NestedPlacesresourceactivityeventInline,
-    ]
-class ResourcesPlaceEventsStackedInline(admin.StackedInline):
-    model= PlacesResourceEvents
-
-class NestedResourceResourceEventsInline(nested_admin.NestedTabularInline):
-    model = ResourceResourceEvents
-    fields = ('altresourceid', 'relationshipdescription')
-    fk_name = 'resourceid'
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'related resources'
-    form = ResourceResourceEventsForm
-
-class NestedResourceAltIndigenousNameInline(nested_admin.NestedTabularInline):
-    model = ResourceAltIndigenousName
-    fields = ('resourceid', 'altindigenousname')
-    extra = 0
-    classes = ['collapse', 'open']
-    verbose_name_plural = 'Alternate Name'
 
 #### LOCALITIES ####
 class LocalityplaceresourceeventInline(admin.TabularInline):
@@ -780,6 +564,13 @@ class PlacesMediaEventsAdmin(RecordAdminProxy):
     )
     form = PlacesMediaEventsForm
 
+class PlaceAltIndigenousNameAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('', {
+            'fields': (('placeid', 'altindigenousname'),),
+        }),
+    )
+
 class PlacesResourceCitationEventsAdmin(RecordAdminProxy):
     list_display = ('placeresourceid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -885,6 +676,13 @@ class ResourcesMediaEventsAdmin(RecordAdminProxy):
     )
     form = ResourcesMediaEventsForm
 
+class ResourceAltIndigenousNameAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('', {
+            'fields': (('resourceid', 'altindigenousname'),),
+        }),
+    )
+
 class LocalityPlaceResourceEventAdmin(RecordAdminProxy):
     list_display = ('localityid','placeresourceid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -940,7 +738,7 @@ admin.site.register(LookupTribe)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(MediaCitationEvents, MediaCitationEventsAdmin)
 admin.site.register(People)
-admin.site.register(PlaceAltIndigenousName)
+admin.site.register(PlaceAltIndigenousName, PlaceAltIndigenousNameAdmin)
 # admin.site.register(PlaceGISSelections)
 admin.site.register(Places, PlacesAdmin)
 admin.site.register(PlacesCitationEvents, PlacesCitationEventsAdmin)
@@ -950,7 +748,7 @@ admin.site.register(PlacesResourceEvents, PlacesResourceEventsAdmin)
 admin.site.register(PlacesResourceMediaEvents, PlacesResourceMediaEventsAdmin)
 admin.site.register(ResourceActivityCitationEvents, ResourceActivityCitationEventsAdmin)
 admin.site.register(ResourceActivityMediaEvents, ResourceActivityMediaEventsAdmin)
-admin.site.register(ResourceAltIndigenousName)
+admin.site.register(ResourceAltIndigenousName, ResourceAltIndigenousNameAdmin)
 admin.site.register(ResourceResourceEvents, ResourceResourceEventsAdmin)
 admin.site.register(Resources, ResourcesAdmin)
 admin.site.register(ResourcesActivityEvents, ResourcesActivityEventsAdmin)

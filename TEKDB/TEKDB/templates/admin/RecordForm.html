@@ -54,7 +54,7 @@
                   id="add_id_{{ object.data.model }}"
                   title="Add {{ object.title }}" data-toggle="modal"
                   data-target="#inlineFormModal"
-                  onclick="loadFormModal('{{ object.data.module }}', '{{ object.data.model }}', null, 'add', '{{ opts.model_name|lower }}', '{{ object_id }}')">
+                  onclick="loadFormModal('{{ object.data.module }}', '{{ object.data.model }}', null, 'add', '{{ opts.model_name|lower }}', '{{ object_id }}', '{{ object.data.fk_field_id }}')">
                     Add {{ object.title|capfirst }}
                 </button>
                 <button class="btn" type="button" onclick="loadInlineTables('{{ opts.model_name|lower }}', '{{ object_id }}')">Refresh</button>
