@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django.contrib.sites',
     'leaflet',
     'nested_admin',
     'ckeditor',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'Lookup',
     'Accounts',
     'Relationships',
+    'moderation',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -204,6 +206,8 @@ DATABASE_GEOGRAPHY = {
 }
 
 ADMIN_SITE_HEADER = 'TEK DB Admin'
+
+SITE_ID = 1
 
 from TEKDB.local_settings import *
 
