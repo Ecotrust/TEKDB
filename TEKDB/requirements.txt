@@ -1,6 +1,6 @@
 #REQUIRED
 confusable-homoglyphs>=3.0
-django
+django<2.0
 django-ckeditor
 django-leaflet
 django-nested-admin
