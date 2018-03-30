@@ -28,26 +28,26 @@
     <div class="row header-button-row">
       {% if user.is_authenticated %}
       {% ifnotequal pageTitle "Explore" %}
-      <a href="/explore" class="col-sm-2 col-md-2 header-button">
+      <a href="/explore" class="col-sm-2 col-md-2 header-button" id = "header-nav-button">
       {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected" id = "header-nav-button">
       {% endifnotequal %}
       {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected" id = "header-nav-button">
       {% endif %}
         Explore
       </a>
       {% ifnotequal pageTitle "About" %}
-      <a href="/about" class="col-sm-2 col-md-2 header-button">
+      <a href="/about" class="col-sm-2 col-md-2 header-button" id = "header-nav-button">
       {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected" id = "header-nav-button">
       {% endifnotequal %}
         About
       </a>
       {% ifnotequal pageTitle "Help" %}
-      <a href="/help" class="col-sm-2 col-md-2 header-button">
+      <a href="/help" class="col-sm-2 col-md-2 header-button" id = "header-nav-button">
       {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
+      <a class="col-sm-2 col-md-2 header-button-selected" id = "header-nav-button">
       {% endifnotequal %}
         Help
       </a>
