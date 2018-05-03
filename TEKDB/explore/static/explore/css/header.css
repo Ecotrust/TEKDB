@@ -1,24 +1,32 @@
-#header-nav-button {
+#header-button {
   width: 17%;
   padding-right: 0;
   padding-left: 0;
+  box-shadow: 3px 3px 8px 0 #ccc;
 }
 
-/*test changes are above this comment. Changed March 30, 2018*/
+div.container {
+  padding-top:10px;
+  padding-bottom:10px;
+}
+
+/*P's changes are above this comment.*/
 
 .header-title h1 {
   padding-bottom: 0px;
   margin-bottom: 0px;
   margin-top: 3px;
 }
+
 .header-title-content {
   margin: 5px 0;
   text-align: center;
   color: white;
   background-color: #777;
   border-radius: 10px;
-  /*padding: 5px;*/
+  box-shadow: 3px 3px 8px 0 #ccc;
 }
+
 .header-title-content a,
 .header-title-content h1,
 .header-title-content p {
