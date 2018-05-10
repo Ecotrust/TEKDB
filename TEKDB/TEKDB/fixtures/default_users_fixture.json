@@ -263,7 +263,7 @@
   "model": "Accounts.users",
   "pk": 1,
   "fields": {
-    "last_login": "2018-05-10T20:16:13Z",
+    "last_login": "2018-05-10T20:35:52.295Z",
     "username": "admin",
     "password": "pbkdf2_sha256$36000$VvL4d3WNXkAy$ttRCDQrPK2cFd2gcU4MssvpzvZZ+ycjrccRFmV9Jom0=",
     "first_name": "Administrator",
@@ -286,9 +286,9 @@
   "model": "Accounts.users",
   "pk": 2,
   "fields": {
-    "last_login": null,
+    "last_login": "2018-05-10T20:41:54.414Z",
     "username": "editor",
-    "password": "pbkdf2_sha256$36000$lgQ6OU3aS4mq$AcMWrmQv7BxMZQU6gEkdroLW9E+mwo8nn0HLHnw6Sh4=",
+    "password": "pbkdf2_sha256$36000$R7w9wwTqfq61$dEXy1md2Q+n+yuEXdlPy2wDATaqaiiA44lj/qAbSLno=",
     "first_name": "Editor",
     "last_name": "Editor",
     "affiliation": "Tribe",
@@ -309,9 +309,9 @@
   "model": "Accounts.users",
   "pk": 3,
   "fields": {
-    "last_login": null,
+    "last_login": "2018-05-10T20:42:16.254Z",
     "username": "readonly",
-    "password": "pbkdf2_sha256$36000$BxdmavGI0Xzo$mpTKdQlpFe/Wgxc+z044fyyVJHDs6pri+gSt5MLaBdg=",
+    "password": "pbkdf2_sha256$36000$KFvr3p7TvIk9$goR7I4zS1xxNAXfZRbAbJDG1bydqvsedgzZODcX/7jg=",
     "first_name": "Read",
     "last_name": "Only",
     "affiliation": "Tribe",
