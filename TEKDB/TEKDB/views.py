@@ -5,7 +5,7 @@ from .models import *
 def get_related(request, model_name, id):
     from django.apps import apps
     import json
-    if not (request.user.is_authenticated() and request.user.has_perm('tekdb.chage_%s' % model_name.lower())):
+    if not (request.user.is_authenticated() and request.user.has_perm('TEKDB.change_%s' % model_name.lower())):
         return HttpResponse('Unauthorized', status=401)
     data = json.dumps([])
     try:
