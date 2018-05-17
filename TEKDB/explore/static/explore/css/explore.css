@@ -1,3 +1,7 @@
+.content-well p {
+  font-size: 25px;
+}
+
 body { padding-top: 90px; }
 
 h1 { text-align: center; }
