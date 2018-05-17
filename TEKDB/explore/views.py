@@ -32,7 +32,7 @@ def about(request):
         page_content = "<h1>About</h1><h3>Set About Page Content In Admin</h3>"
     context = {
         'page':'about',
-        'pageTitle':False,
+        'pageTitle':'About',
         'pageContent':page_content,
         'user': request.user
     }
@@ -49,7 +49,7 @@ def help(request):
         page_content = "<h1>Help</h1><h3>Set Help Page Content In Admin</h3>"
     context = {
         'page':'help',
-        'pageTitle':False,
+        'pageTitle':'Help',
         'pageContent':page_content,
         'user': request.user
     }
