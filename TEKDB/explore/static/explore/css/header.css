@@ -1,10 +1,3 @@
-#header-button {
-  width: 17%;
-  padding-right: 0;
-  padding-left: 0;
-  box-shadow: 3px 3px 8px 0 #ccc;
-}
-
 div.container {
   padding-top:10px;
   padding-bottom:10px;
@@ -51,12 +44,17 @@ div.container {
   margin-top: 15px;
 }
 
-.header-button, .header-button-selected {
+.header-button, 
+.header-button-selected {
   font-size: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 10px;
   text-align: center;
+  width: 17%;
+  padding-right: 0;
+  padding-left: 0;
+  box-shadow: 3px 3px 8px 0 #ccc;
 }
 .header-button {
   color: #000;
