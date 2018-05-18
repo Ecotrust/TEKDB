@@ -26,6 +26,7 @@
   <div class="col-md-6">
     {% block headerButtons %}
     <div class="row header-button-row">
+              {{pageTitle}}
       {% if user.is_authenticated %}
       {% ifnotequal pageTitle "Explore" %}
       <a href="/explore" class="col-sm-2 col-md-2 header-button" id = "header-nav-button">
@@ -33,7 +34,7 @@
       <a class="col-sm-2 col-md-2 header-button-selected" id = "header-nav-button">
       {% endifnotequal %}
       {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected" id = "header-nav-button">
+      <a class="col-sm-2 col-md-2 header-button" id = "header-nav-button">
       {% endif %}
         Explore
       </a>
@@ -52,7 +53,6 @@
         Help
       </a>
       <a class="col-sm-1 col-md-1">
-
       </a>
       {% if user.is_authenticated %}
       <div class="dropdown col-sm-3 col-md-3">
