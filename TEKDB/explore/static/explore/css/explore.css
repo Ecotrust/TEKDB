@@ -1,11 +1,25 @@
-.content-well p {
-  font-size: 25px;
+.btn-group {
+  border-spacing: 3px;
+  display:inline-block;
+  text-align: center;
 }
+
+.btn-default {
+  box-shadow: 3px 3px 8px 0 #ccc;
+}
+
+.content-well p {
+  font-size: 10px;
+}
+
+/*P's changes are above this comment.*/
 
 body { padding-top: 90px; }
 
 h1 { text-align: center; }
+
 a { color: white; }
+
 a:hover {
   color: white;
   font-weight: bold;
