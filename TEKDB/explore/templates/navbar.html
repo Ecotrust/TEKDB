@@ -26,7 +26,6 @@
   <div class="col-md-6">
     {% block headerButtons %}
     <div class="row header-button-row">
-              {{pageTitle}}
       {% if user.is_authenticated %}
       {% ifnotequal pageTitle "Explore" %}
       <a href="/explore" class="col-sm-2 col-md-2 header-button" id = "header-nav-button">
