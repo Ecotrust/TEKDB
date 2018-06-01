@@ -1,11 +1,17 @@
+
+.input-group-btn {
+  border: 5px;
+  box-shadow: 3px 3px 8px 0 #ccc;
+}
+
 .btn-group {
-  border-spacing: 3px;
-  display:inline-block;
-  text-align: center;
+  border-spacing: 5px;
+  table-layout: auto;
 }
 
 .btn-default {
   box-shadow: 3px 3px 8px 0 #ccc;
+  text-align: center;
 }
 
 .content-well p {
