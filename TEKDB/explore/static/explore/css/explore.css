@@ -1,12 +1,16 @@
-
 .input-group-btn {
   border: 5px;
   box-shadow: 3px 3px 8px 0 #ccc;
 }
+.btn-group, .btn-group-justified {
+
+  text-align: center;
+  width: 100%;
+}
 
 .btn-group {
-  border-spacing: 5px;
-  table-layout: auto;
+  border-spacing: 2px;
+  padding: 2px;
 }
 
 .btn-default {
