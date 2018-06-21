@@ -78,7 +78,7 @@ div.container {
 }
 
 .header-button-row .dropdown button {
-  width: 100%;
+  padding: 6px 6px;
 }
 .header-button-row .dropdown .dropdown-menu {
   background-color: #DDFFDD;
