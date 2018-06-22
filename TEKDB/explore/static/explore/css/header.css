@@ -61,11 +61,19 @@ div.container {
   margin-left: 3px;
   margin-right: 3px;
 }
+
+.header-button-row .dropdown button {
+  padding: 6px 6px;
+  box-shadow: 3px 3px 8px 0 #ccc;
+  text-align: center;
+}
+
 .header-button-selected, .header-button-selected:hover {
   margin-left: 5px;
-  color: #999;
+  color: #000;
   background-color: white;
   border: 1px solid black;
+  background-color: #DDFFDD;
 }
 
 .header-button:hover, .header-button-selected:hover {
@@ -77,9 +85,15 @@ div.container {
   color: #000;
 }
 
-.header-button-row .dropdown button {
-  padding: 6px 6px;
+.header-button-selected:hover {
+  background-color: #DDFFDD;
 }
+
+.btn.dropdown-toggle:hover {
+  background-color: #DDFFDD;
+  border: 1px solid black;
+}
+
 .header-button-row .dropdown .dropdown-menu {
   background-color: #DDFFDD;
   margin-left: 15px;
