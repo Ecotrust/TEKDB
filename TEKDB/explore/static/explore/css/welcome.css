@@ -2,12 +2,19 @@
   text-align: center;
 }
 .welcome-login-btn {
-  box-shadow: 3px 3px 8px 0 #ccc;
+  box-shadow: 3px 3px 8px 5px #ccc;
   margin: 50px auto;
-  width: 200px;
+  width: 120px;
   padding: 15px;
-  background-color: #777;
-  color: white;
+  background-color: white;
+  color: #000;
   font: icon;
   font-size: 25px;
+  border-radius: 10px;
+}
+
+.welcome-login-btn:hover {
+	background-color: #DDFFDD;
+	border: 1px solid black;
+	box-shadow: 3px 3px 10px 0;
 }
