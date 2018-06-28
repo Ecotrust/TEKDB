@@ -1,34 +1,33 @@
-.input-group-btn {
-  border: 1px solid;
-  border-color: #ccc;
-  left: 3px;
-  background-image: linear-gradient(#fff 0, #e0e0e0);
-}
-
-.input-group-btn:hover {
-  font-weight: bold;
-}
-
-.btn-group, .btn-group-justified {
-  table-layout: auto;
-  width: 100%;
-}
-
-.expore-form .btn-group {
-  border-spacing: 2px;
-  padding: 2px;
-}
-
-.explore-form .btn {
-  box-shadow: 3px 3px 8px 0 #ccc;
-  text-align: center;
-}
 
 .content-well p {
   font-size: 10px;
 }
 
-/*P's changes are above this comment.*/
+.btn-group.btn-group-justified {
+  table-layout: auto;
+  width: 100%;
+}
+
+
+.btn-group.btn-group-justified .btn-group:hover {
+  /*Why is this linear-gradient not being applied?*/
+  background-image: linear-gradient (#fff 0, #ccffcc);
+  font-weight: bold;
+}
+
+.input-group-btn .btn {
+  border: 1px solid;
+  border-color: #ccc;
+  background-image: linear-gradient(#fff 0, #e0e0e0);
+  box-shadow: 3px 3px 8px 0 #ccc;
+  text-align: center;
+  font-size: 16px;
+}
+
+.input-group-btn .btn:hover {
+  font-weight: bold;
+  background-image: linear-gradient(#fff 0, #ccffcc);
+}
 
 body { padding-top: 90px; }
 

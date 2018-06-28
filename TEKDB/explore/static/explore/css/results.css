@@ -1,3 +1,12 @@
+input[type=submit] {
+  border-radius: 8px;
+}
+
+input[type=submit]:hover {
+   background-image: linear-gradient(#fff 0, #ccffcc);
+   font-weight: bold;
+}
+
 .result-cell {
   /*padding: 10px;*/
   margin: 10px 4.166666%;
@@ -97,7 +106,7 @@
   margin: 5px;
 }
 .selected-view span {
-  color: white;
+  color: ccffcc;
 }
 
 .selected-view .glyphicon-th {

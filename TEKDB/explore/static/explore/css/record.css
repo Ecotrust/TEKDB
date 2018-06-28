@@ -41,12 +41,14 @@
 
 .back-button {
   color: black;
-  border: 1px solid #777;
+  border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 3px 3px 8px 0 #ccc;
 }
 .back-button:hover {
-  color: #363;
-  border-color: #363;
-  background-color: #EEE;
+  background-image: linear-gradient(#fff 0, #ccffcc);
+  font-weight: bold;
 }
 
 .source-excerpt {
