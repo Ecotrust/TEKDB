@@ -1,5 +1,11 @@
+.td {
+  cursor: pointer;
+}
+
 input[type=submit] {
   border-radius: 8px;
+  box-shadow: 3px 3px 8px 0 #ccc;
+  background-image: linear-gradient(#fff 0, #e0e0e0);
 }
 
 input[type=submit]:hover {
