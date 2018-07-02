@@ -1,0 +1,939 @@
+[
+{
+  "model": "Lookup.lookupplanningunit",
+  "pk": 0,
+  "fields": {
+    "planningunitname": "Undefined"
+  }
+},
+{
+  "model": "Lookup.lookupplanningunit",
+  "pk": 1,
+  "fields": {
+    "planningunitname": "Southern"
+  }
+},
+{
+  "model": "Lookup.lookupplanningunit",
+  "pk": 2,
+  "fields": {
+    "planningunitname": "Northern"
+  }
+},
+{
+  "model": "Lookup.lookupplanningunit",
+  "pk": 3,
+  "fields": {
+    "planningunitname": "Middle"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 0,
+  "fields": {
+    "habitat": "Coastal Marsh"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 1,
+  "fields": {
+    "habitat": "Deep Canyon"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 2,
+  "fields": {
+    "habitat": "Estuary"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 3,
+  "fields": {
+    "habitat": "Hard-bottom >100m"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 4,
+  "fields": {
+    "habitat": "Hard-bottom 0-100m"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 5,
+  "fields": {
+    "habitat": "Offshore Reefs"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 6,
+  "fields": {
+    "habitat": "Offshore Rock"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 7,
+  "fields": {
+    "habitat": "Rocky Intertidal"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 8,
+  "fields": {
+    "habitat": "Sandy Beach"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 9,
+  "fields": {
+    "habitat": "Soft-bottom >100m"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 10,
+  "fields": {
+    "habitat": "Soft-bottom 0-100m"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 11,
+  "fields": {
+    "habitat": "Tidal Flats"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 12,
+  "fields": {
+    "habitat": "lagoon"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 13,
+  "fields": {
+    "habitat": "river_eddy"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 14,
+  "fields": {
+    "habitat": "creek"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 15,
+  "fields": {
+    "habitat": "bay"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 0,
+  "fields": {
+    "resourceclassificationgroup": "anadromous finfish"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 1,
+  "fields": {
+    "resourceclassificationgroup": "bird"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 2,
+  "fields": {
+    "resourceclassificationgroup": "coastal watershed mammal"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 3,
+  "fields": {
+    "resourceclassificationgroup": "crustacean"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 4,
+  "fields": {
+    "resourceclassificationgroup": "fern & relative"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 5,
+  "fields": {
+    "resourceclassificationgroup": "flowering plant"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 6,
+  "fields": {
+    "resourceclassificationgroup": "invertebrate"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 7,
+  "fields": {
+    "resourceclassificationgroup": "marine finfish"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 8,
+  "fields": {
+    "resourceclassificationgroup": "marine mammal"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 9,
+  "fields": {
+    "resourceclassificationgroup": "mollusk"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 10,
+  "fields": {
+    "resourceclassificationgroup": "seaweed/algae"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 11,
+  "fields": {
+    "resourceclassificationgroup": "tree"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 12,
+  "fields": {
+    "resourceclassificationgroup": "plant"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 0,
+  "fields": {
+    "partused": "Antler"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 1,
+  "fields": {
+    "partused": "Bone"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 2,
+  "fields": {
+    "partused": "Egg"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 3,
+  "fields": {
+    "partused": "Feather"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 4,
+  "fields": {
+    "partused": "Flower"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 5,
+  "fields": {
+    "partused": "Meat"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 6,
+  "fields": {
+    "partused": "Shell"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 7,
+  "fields": {
+    "partused": "Tooth"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 8,
+  "fields": {
+    "partused": "Whisker"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 0,
+  "fields": {
+    "usedfor": "Barter"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 1,
+  "fields": {
+    "usedfor": "Ceremony"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 2,
+  "fields": {
+    "usedfor": "Food"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 3,
+  "fields": {
+    "usedfor": "Regalia"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 4,
+  "fields": {
+    "usedfor": "Song"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 5,
+  "fields": {
+    "usedfor": "Story"
+  }
+},
+{
+  "model": "Lookup.lookupcustomaryuse",
+  "pk": 6,
+  "fields": {
+    "usedfor": "Tool"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 0,
+  "fields": {
+    "season": "All"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 1,
+  "fields": {
+    "season": "Fall"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 2,
+  "fields": {
+    "season": "Fall/Winter"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 3,
+  "fields": {
+    "season": "Spring"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 4,
+  "fields": {
+    "season": "Spring/Summer"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 5,
+  "fields": {
+    "season": "Summer"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 6,
+  "fields": {
+    "season": "Summer/Fall"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 7,
+  "fields": {
+    "season": "Winter"
+  }
+},
+{
+  "model": "Lookup.lookupseason",
+  "pk": 8,
+  "fields": {
+    "season": "Winter/Spring"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 0,
+  "fields": {
+    "timing": "Daytime"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 1,
+  "fields": {
+    "timing": "Evening"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 2,
+  "fields": {
+    "timing": "Fall"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 3,
+  "fields": {
+    "timing": "Morning"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 4,
+  "fields": {
+    "timing": "Night"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 5,
+  "fields": {
+    "timing": "Seasonal"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 6,
+  "fields": {
+    "timing": "Spring"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 7,
+  "fields": {
+    "timing": "Summer"
+  }
+},
+{
+  "model": "Lookup.lookuptiming",
+  "pk": 8,
+  "fields": {
+    "timing": "Winter"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 0,
+  "fields": {
+    "participants": "Children"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 1,
+  "fields": {
+    "participants": "Children-boys"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 2,
+  "fields": {
+    "participants": "Children-girls"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 3,
+  "fields": {
+    "participants": "Everyone"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 4,
+  "fields": {
+    "participants": "Men"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 5,
+  "fields": {
+    "participants": "Other beings"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 6,
+  "fields": {
+    "participants": "Women"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 0,
+  "fields": {
+    "techniques": "A-frame net"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 1,
+  "fields": {
+    "techniques": "canoe"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 2,
+  "fields": {
+    "techniques": "club"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 3,
+  "fields": {
+    "techniques": "conical basket"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 4,
+  "fields": {
+    "techniques": "dip net"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 5,
+  "fields": {
+    "techniques": "eel basket"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 6,
+  "fields": {
+    "techniques": "eel hook"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 7,
+  "fields": {
+    "techniques": "gaff hook"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 8,
+  "fields": {
+    "techniques": "gill net"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 9,
+  "fields": {
+    "techniques": "hand fishing"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 10,
+  "fields": {
+    "techniques": "hand gathered"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 11,
+  "fields": {
+    "techniques": "harpoon"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 12,
+  "fields": {
+    "techniques": "hook and line"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 13,
+  "fields": {
+    "techniques": "net"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 14,
+  "fields": {
+    "techniques": "poison"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 15,
+  "fields": {
+    "techniques": "seine"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 16,
+  "fields": {
+    "techniques": "snare"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 17,
+  "fields": {
+    "techniques": "spears with detachable points"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 18,
+  "fields": {
+    "techniques": "spears without detachable points"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 19,
+  "fields": {
+    "techniques": "V-frame scoop net"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 20,
+  "fields": {
+    "techniques": "V-shaped/converging weir"
+  }
+},
+{
+  "model": "Lookup.lookuptechniques",
+  "pk": 21,
+  "fields": {
+    "techniques": "weir/fish dam"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 0,
+  "fields": {
+    "activity": "Cemetery"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 1,
+  "fields": {
+    "activity": "Customary Fishing and Gathering from Shore"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 2,
+  "fields": {
+    "activity": "Customary Fishing and Gathering Offshore"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 3,
+  "fields": {
+    "activity": "Customary Hunting from Shore"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 4,
+  "fields": {
+    "activity": "Customary Hunting Offshore"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 5,
+  "fields": {
+    "activity": "Processing"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 6,
+  "fields": {
+    "activity": "Related to Ceremony"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 7,
+  "fields": {
+    "activity": "Related to Song"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 8,
+  "fields": {
+    "activity": "Related to Story"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 9,
+  "fields": {
+    "activity": "Residence/Village"
+  }
+},
+{
+  "model": "Lookup.lookupactivity",
+  "pk": 10,
+  "fields": {
+    "activity": "Training"
+  }
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": 0,
+  "fields": {
+    "documenttype": "Book"
+  }
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": 1,
+  "fields": {
+    "documenttype": "Other"
+  }
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": 2,
+  "fields": {
+    "documenttype": "Edited Volume"
+  }
+},
+{
+  "model": "Lookup.lookupreferencetype",
+  "pk": 3,
+  "fields": {
+    "documenttype": "Interview"
+  }
+},
+{
+  "model": "Lookup.lookupauthortype",
+  "pk": 0,
+  "fields": {
+    "authortype": "Author"
+  }
+},
+{
+  "model": "Lookup.lookupauthortype",
+  "pk": 1,
+  "fields": {
+    "authortype": "Corporate Author"
+  }
+},
+{
+  "model": "Lookup.lookupauthortype",
+  "pk": 2,
+  "fields": {
+    "authortype": "Editor"
+  }
+},
+{
+  "model": "Lookup.currentversion",
+  "pk": 1,
+  "fields": {
+    "backendversion": 1,
+    "frontendversion": 1
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 0,
+  "fields": {
+    "localitytype": "bay"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 1,
+  "fields": {
+    "localitytype": "beach"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 2,
+  "fields": {
+    "localitytype": "creek"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 3,
+  "fields": {
+    "localitytype": "estuary"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 4,
+  "fields": {
+    "localitytype": "intertidal"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 5,
+  "fields": {
+    "localitytype": "lagoon"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 6,
+  "fields": {
+    "localitytype": "mainstem river"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 7,
+  "fields": {
+    "localitytype": "offshore rocks"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 8,
+  "fields": {
+    "localitytype": "open ocean"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 9,
+  "fields": {
+    "localitytype": "river eddy"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 10,
+  "fields": {
+    "localitytype": "river mouth"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 11,
+  "fields": {
+    "localitytype": "side channel river"
+  }
+},
+{
+  "model": "Lookup.lookuplocalitytype",
+  "pk": 12,
+  "fields": {
+    "localitytype": "subtidal"
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": 0,
+  "fields": {
+    "mediatype": "audio",
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": 1,
+  "fields": {
+    "mediatype": "image",
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": 2,
+  "fields": {
+    "mediatype": "other",
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": 3,
+  "fields": {
+    "mediatype": "PDF",
+    "mediacategory": null
+  }
+},
+{
+  "model": "Lookup.lookupmediatype",
+  "pk": 4,
+  "fields": {
+    "mediatype": "video",
+    "mediacategory": null
+  }
+}
+]
