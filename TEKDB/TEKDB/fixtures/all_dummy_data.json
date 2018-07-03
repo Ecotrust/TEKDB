@@ -1,181 +1,154 @@
 [
 {
-  "model": "explore.pagecontent",
-  "pk": "About",
-  "fields": {
-    "is_html": false,
-    "content": "<h1>About</h1>\r\n\r\n<p>There are many good reasons we build this page like:</p>\r\n\r\n<ul>\r\n\t<li>Reason 1</li>\r\n\t<li>Reason 2</li>\r\n\t<li>Reason 3</li>\r\n</ul>\r\n\r\n<p>If you would like to contact the tribe:</p>\r\n\r\n<p>[Tribe contact info]</p>\r\n\r\n<p>If you&#39;d like to contact the developers of this tool:</p>\r\n\r\n<p>[Ecotrust contact info]</p>",
-    "html_content": ""
-  }
-},
-{
-  "model": "explore.pagecontent",
-  "pk": "Help",
-  "fields": {
-    "is_html": false,
-    "content": "<h1>Help</h1>\r\n\r\n<p>Hey, the world can be a scary place sometimes. Fortunately, if your issues are regarting this Traditional Ethnographic Knowledge Database, you are in the right place.</p>\r\n\r\n<p>If you do not find the help you need on this page, please reach out to either the Tribe or to the developers, depending on who is best suited to answer your question. Contact info can be found on the&nbsp;<a href=\"/about\">About Page</a>.</p>",
-    "html_content": ""
-  }
-},
-{
-  "model": "explore.pagecontent",
-  "pk": "Welcome",
-  "fields": {
-    "is_html": false,
-    "content": "<h1>Welcome</h1>\r\n\r\n<p style=\"text-align:center\">This is the&nbsp;<strong><u>Traditional Ethnographic Knowledge Database</u></strong>, operated by the <u><strong>Tolowa</strong></u> Tribe.&nbsp;</p>\r\n\r\n<p style=\"text-align:center\">Please log in to explore.</p>\r\n\r\n<p style=\"text-align:center\">If you do not have an account, please reach out to an administrator to get set up.</p>",
-    "html_content": ""
-  }
-},
-{
   "model": "auth.group",
   "pk": 1,
   "fields": {
     "name": "Administrator",
     "permissions": [
-      91,
-      92,
-      93,
       94,
       95,
       96,
+      91,
+      92,
+      93,
       1,
       2,
       3,
-      4,
-      5,
-      6,
       7,
       8,
       9,
+      4,
+      5,
+      6,
       10,
       11,
       12,
       16,
       17,
       18,
-      73,
-      74,
-      75,
-      43,
-      44,
-      45,
-      49,
-      50,
-      51,
-      52,
-      53,
-      54,
       76,
       77,
       78,
-      88,
-      89,
-      90,
-      58,
-      59,
-      60,
-      55,
-      56,
-      57,
       79,
       80,
       81,
-      37,
-      38,
-      39,
-      85,
-      86,
-      87,
-      82,
-      83,
-      84,
       46,
       47,
       48,
+      88,
+      89,
+      90,
+      85,
+      86,
+      87,
+      37,
+      38,
+      39,
       61,
       62,
       63,
+      52,
+      53,
+      54,
+      49,
+      50,
+      51,
+      82,
+      83,
+      84,
+      55,
+      56,
+      57,
+      43,
+      44,
+      45,
       70,
       71,
       72,
-      40,
-      41,
-      42,
+      58,
+      59,
+      60,
+      73,
+      74,
+      75,
       64,
       65,
       66,
+      40,
+      41,
+      42,
       67,
       68,
       69,
-      100,
-      101,
-      102,
+      115,
+      116,
+      117,
       124,
       125,
       126,
-      127,
-      128,
-      129,
-      103,
-      104,
-      105,
       118,
       119,
       120,
-      142,
-      143,
-      144,
       130,
       131,
       132,
-      109,
-      110,
-      111,
+      103,
+      104,
+      105,
       139,
       140,
       141,
-      133,
-      134,
-      135,
+      100,
+      101,
+      102,
+      106,
+      107,
+      108,
       97,
       98,
       99,
       136,
       137,
       138,
-      115,
-      116,
-      117,
-      106,
-      107,
-      108,
+      127,
+      128,
+      129,
       112,
       113,
       114,
       121,
       122,
       123,
+      133,
+      134,
+      135,
+      109,
+      110,
+      111,
+      142,
+      143,
+      144,
       13,
       14,
       15,
-      19,
-      20,
-      21,
-      28,
-      29,
-      30,
-      31,
-      32,
-      33,
-      25,
-      26,
-      27,
+      34,
+      35,
+      36,
       22,
       23,
       24,
-      34,
-      35,
-      36
+      31,
+      32,
+      33,
+      28,
+      29,
+      30,
+      19,
+      20,
+      21,
+      25,
+      26,
+      27
     ]
   }
 },
@@ -185,72 +158,72 @@
   "fields": {
     "name": "Editor",
     "permissions": [
-      100,
-      101,
-      102,
+      115,
+      116,
+      117,
       124,
       125,
       126,
-      127,
-      128,
-      129,
-      103,
-      104,
-      105,
       118,
       119,
       120,
-      142,
-      143,
-      144,
       130,
       131,
       132,
-      109,
-      110,
-      111,
+      103,
+      104,
+      105,
       139,
       140,
       141,
-      133,
-      134,
-      135,
+      100,
+      101,
+      102,
+      106,
+      107,
+      108,
       97,
       98,
       99,
       136,
       137,
       138,
-      115,
-      116,
-      117,
-      106,
-      107,
-      108,
+      127,
+      128,
+      129,
       112,
       113,
       114,
       121,
       122,
       123,
-      19,
-      20,
-      21,
-      28,
-      29,
-      30,
-      31,
-      32,
-      33,
-      25,
-      26,
-      27,
+      133,
+      134,
+      135,
+      109,
+      110,
+      111,
+      142,
+      143,
+      144,
+      34,
+      35,
+      36,
       22,
       23,
       24,
-      34,
-      35,
-      36
+      31,
+      32,
+      33,
+      28,
+      29,
+      30,
+      19,
+      20,
+      21,
+      25,
+      26,
+      27
     ]
   }
 },
@@ -301,493 +274,738 @@
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Coastal Marsh",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "habitat": "Coastal Marsh"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Deep Canyon",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "habitat": "Deep Canyon"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Estuary",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "habitat": "Estuary"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Hard-bottom 0-100m",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "habitat": "Hard-bottom >100m"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Hard-bottom >100m",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "habitat": "Hard-bottom 0-100m"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Offshore Reefs",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "habitat": "Offshore Reefs"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Offshore Rock",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "habitat": "Offshore Rock"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Rocky Intertidal",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "habitat": "Rocky Intertidal"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Sandy Beach",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "habitat": "Sandy Beach"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Soft-bottom 0-100m",
-  "fields": {}
+  "pk": 9,
+  "fields": {
+    "habitat": "Soft-bottom >100m"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Soft-bottom >100m",
-  "fields": {}
+  "pk": 10,
+  "fields": {
+    "habitat": "Soft-bottom 0-100m"
+  }
 },
 {
   "model": "Lookup.lookuphabitat",
-  "pk": "Tidal Flats",
-  "fields": {}
+  "pk": 11,
+  "fields": {
+    "habitat": "Tidal Flats"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 12,
+  "fields": {
+    "habitat": "lagoon"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 13,
+  "fields": {
+    "habitat": "river_eddy"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 14,
+  "fields": {
+    "habitat": "creek"
+  }
+},
+{
+  "model": "Lookup.lookuphabitat",
+  "pk": 15,
+  "fields": {
+    "habitat": "bay"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "anadromous finfish",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "resourceclassificationgroup": "anadromous finfish"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "bird",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "resourceclassificationgroup": "bird"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "coastal watershed mammal",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "resourceclassificationgroup": "coastal watershed mammal"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "crustacean",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "resourceclassificationgroup": "crustacean"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "fern & relative",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "resourceclassificationgroup": "fern & relative"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "flowering plant",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "resourceclassificationgroup": "flowering plant"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "invertebrate",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "resourceclassificationgroup": "invertebrate"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "marine finfish",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "resourceclassificationgroup": "marine finfish"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "marine mammal",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "resourceclassificationgroup": "marine mammal"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "mollusk",
-  "fields": {}
+  "pk": 9,
+  "fields": {
+    "resourceclassificationgroup": "mollusk"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "seaweed/algae",
-  "fields": {}
+  "pk": 10,
+  "fields": {
+    "resourceclassificationgroup": "seaweed/algae"
+  }
 },
 {
   "model": "Lookup.lookupresourcegroup",
-  "pk": "tree",
-  "fields": {}
+  "pk": 11,
+  "fields": {
+    "resourceclassificationgroup": "tree"
+  }
+},
+{
+  "model": "Lookup.lookupresourcegroup",
+  "pk": 12,
+  "fields": {
+    "resourceclassificationgroup": "plant"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Antler",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "partused": "Antler"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Bone",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "partused": "Bone"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Egg",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "partused": "Egg"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Feather",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "partused": "Feather"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Flower",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "partused": "Flower"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Meat",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "partused": "Meat"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Shell",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "partused": "Shell"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Tooth",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "partused": "Tooth"
+  }
 },
 {
   "model": "Lookup.lookuppartused",
-  "pk": "Whisker",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "partused": "Whisker"
+  }
+},
+{
+  "model": "Lookup.lookuppartused",
+  "pk": 9,
+  "fields": {
+    "partused": "wood"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Barter",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "usedfor": "Barter"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Ceremony",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "usedfor": "Ceremony"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Food",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "usedfor": "Food"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Regalia",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "usedfor": "Regalia"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Song",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "usedfor": "Song"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Story",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "usedfor": "Story"
+  }
 },
 {
   "model": "Lookup.lookupcustomaryuse",
-  "pk": "Tool",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "usedfor": "Tool"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "All",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "season": "All"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Fall",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "season": "Fall"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Fall/Winter",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "season": "Fall/Winter"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Spring",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "season": "Spring"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Spring/Summer",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "season": "Spring/Summer"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Summer",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "season": "Summer"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Summer/Fall",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "season": "Summer/Fall"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Winter",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "season": "Winter"
+  }
 },
 {
   "model": "Lookup.lookupseason",
-  "pk": "Winter/Spring",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "season": "Winter/Spring"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Daytime",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "timing": "Daytime"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Evening",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "timing": "Evening"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Fall",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "timing": "Fall"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Morning",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "timing": "Morning"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Night",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "timing": "Night"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Seasonal",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "timing": "Seasonal"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Spring",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "timing": "Spring"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Summer",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "timing": "Summer"
+  }
 },
 {
   "model": "Lookup.lookuptiming",
-  "pk": "Winter",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "timing": "Winter"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Children",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "participants": "Children"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Children-boys",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "participants": "Children-boys"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Children-girls",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "participants": "Children-girls"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Everyone",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "participants": "Everyone"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Men",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "participants": "Men"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Other beings",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "participants": "Other beings"
+  }
 },
 {
   "model": "Lookup.lookupparticipants",
-  "pk": "Women",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "participants": "Women"
+  }
+},
+{
+  "model": "Lookup.lookupparticipants",
+  "pk": 7,
+  "fields": {
+    "participants": "Elders"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "A-frame net",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "techniques": "A-frame net"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "canoe",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "techniques": "canoe"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "club",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "techniques": "club"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "conical basket",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "techniques": "conical basket"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "dip net",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "techniques": "dip net"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "eel basket",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "techniques": "eel basket"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "eel hook",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "techniques": "eel hook"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "gaff hook",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "techniques": "gaff hook"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "gill net",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "techniques": "gill net"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "hand fishing",
-  "fields": {}
+  "pk": 9,
+  "fields": {
+    "techniques": "hand fishing"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "hand gathered",
-  "fields": {}
+  "pk": 10,
+  "fields": {
+    "techniques": "hand gathered"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "harpoon",
-  "fields": {}
+  "pk": 11,
+  "fields": {
+    "techniques": "harpoon"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "hook and line",
-  "fields": {}
+  "pk": 12,
+  "fields": {
+    "techniques": "hook and line"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "net",
-  "fields": {}
+  "pk": 13,
+  "fields": {
+    "techniques": "net"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "poison",
-  "fields": {}
+  "pk": 14,
+  "fields": {
+    "techniques": "poison"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "seine",
-  "fields": {}
+  "pk": 15,
+  "fields": {
+    "techniques": "seine"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "snare",
-  "fields": {}
+  "pk": 16,
+  "fields": {
+    "techniques": "snare"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "spears with detachable points",
-  "fields": {}
+  "pk": 17,
+  "fields": {
+    "techniques": "spears with detachable points"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "spears without detachable points",
-  "fields": {}
+  "pk": 18,
+  "fields": {
+    "techniques": "spears without detachable points"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "V-frame scoop net",
-  "fields": {}
+  "pk": 19,
+  "fields": {
+    "techniques": "V-frame scoop net"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "V-shaped/converging weir",
-  "fields": {}
+  "pk": 20,
+  "fields": {
+    "techniques": "V-shaped/converging weir"
+  }
 },
 {
   "model": "Lookup.lookuptechniques",
-  "pk": "weir/fish dam",
-  "fields": {}
+  "pk": 21,
+  "fields": {
+    "techniques": "weir/fish dam"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Cemetery",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "activity": "Cemetery"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Customary Fishing and Gathering from Shore",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "activity": "Customary Fishing and Gathering from Shore"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Customary Fishing and Gathering Offshore",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "activity": "Customary Fishing and Gathering Offshore"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Customary Hunting from Shore",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "activity": "Customary Hunting from Shore"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Customary Hunting Offshore",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "activity": "Customary Hunting Offshore"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Processing",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "activity": "Processing"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Related to Ceremony",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "activity": "Related to Ceremony"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Related to Song",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "activity": "Related to Song"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Related to Story",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "activity": "Related to Story"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Residence/Village",
-  "fields": {}
+  "pk": 9,
+  "fields": {
+    "activity": "Residence/Village"
+  }
 },
 {
   "model": "Lookup.lookupactivity",
-  "pk": "Training",
-  "fields": {}
+  "pk": 10,
+  "fields": {
+    "activity": "Training"
+  }
 },
 {
   "model": "Lookup.people",
@@ -795,8 +1013,8 @@
   "fields": {
     "firstname": "Jay",
     "lastname": "Tosanic",
-    "yearborn": 1978,
     "village": "T'uu-yaa~-sdvm-dvn",
+    "yearborn": 1978,
     "relationshiptootherpeople": "Cheryl Tosanic, mother"
   }
 },
@@ -806,45 +1024,59 @@
   "fields": {
     "firstname": "Manahe",
     "lastname": "Herman",
-    "yearborn": 1978,
     "village": "None",
+    "yearborn": 1978,
     "relationshiptootherpeople": null
   }
 },
 {
   "model": "Lookup.lookupreferencetype",
-  "pk": "Book",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "documenttype": "Book"
+  }
 },
 {
   "model": "Lookup.lookupreferencetype",
-  "pk": "Edited Volume",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "documenttype": "Other"
+  }
 },
 {
   "model": "Lookup.lookupreferencetype",
-  "pk": "Interview",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "documenttype": "Edited Volume"
+  }
 },
 {
   "model": "Lookup.lookupreferencetype",
-  "pk": "Other",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "documenttype": "Interview"
+  }
 },
 {
   "model": "Lookup.lookupauthortype",
-  "pk": "Author",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "authortype": "Author"
+  }
 },
 {
   "model": "Lookup.lookupauthortype",
-  "pk": "Corporate Author",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "authortype": "Corporate Author"
+  }
 },
 {
   "model": "Lookup.lookupauthortype",
-  "pk": "Editor",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "authortype": "Editor"
+  }
 },
 {
   "model": "Lookup.currentversion",
@@ -856,101 +1088,132 @@
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "bay",
-  "fields": {}
+  "pk": 0,
+  "fields": {
+    "localitytype": "bay"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "beach",
-  "fields": {}
+  "pk": 1,
+  "fields": {
+    "localitytype": "beach"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "creek",
-  "fields": {}
+  "pk": 2,
+  "fields": {
+    "localitytype": "creek"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "estuary",
-  "fields": {}
+  "pk": 3,
+  "fields": {
+    "localitytype": "estuary"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "intertidal",
-  "fields": {}
+  "pk": 4,
+  "fields": {
+    "localitytype": "intertidal"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "lagoon",
-  "fields": {}
+  "pk": 5,
+  "fields": {
+    "localitytype": "lagoon"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "mainstem river",
-  "fields": {}
+  "pk": 6,
+  "fields": {
+    "localitytype": "mainstem river"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "offshore rocks",
-  "fields": {}
+  "pk": 7,
+  "fields": {
+    "localitytype": "offshore rocks"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "open ocean",
-  "fields": {}
+  "pk": 8,
+  "fields": {
+    "localitytype": "open ocean"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "river eddy",
-  "fields": {}
+  "pk": 9,
+  "fields": {
+    "localitytype": "river eddy"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "river mouth",
-  "fields": {}
+  "pk": 10,
+  "fields": {
+    "localitytype": "river mouth"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "side channel river",
-  "fields": {}
+  "pk": 11,
+  "fields": {
+    "localitytype": "side channel river"
+  }
 },
 {
   "model": "Lookup.lookuplocalitytype",
-  "pk": "subtidal",
-  "fields": {}
+  "pk": 12,
+  "fields": {
+    "localitytype": "subtidal"
+  }
 },
 {
   "model": "Lookup.lookupmediatype",
-  "pk": "audio",
+  "pk": 0,
   "fields": {
+    "mediatype": "audio",
     "mediacategory": null
   }
 },
 {
   "model": "Lookup.lookupmediatype",
-  "pk": "image",
+  "pk": 1,
   "fields": {
+    "mediatype": "image",
     "mediacategory": null
   }
 },
 {
   "model": "Lookup.lookupmediatype",
-  "pk": "other",
+  "pk": 2,
   "fields": {
+    "mediatype": "other",
     "mediacategory": null
   }
 },
 {
   "model": "Lookup.lookupmediatype",
-  "pk": "PDF",
+  "pk": 3,
   "fields": {
+    "mediatype": "PDF",
     "mediacategory": null
   }
 },
 {
   "model": "Lookup.lookupmediatype",
-  "pk": "video",
+  "pk": 4,
   "fields": {
+    "mediatype": "video",
     "mediacategory": null
   }
 },
@@ -975,18 +1238,18 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T14:41:38Z",
+    "modifiedbydate": "2018-05-11T04:03:53.154Z",
     "indigenousplacename": "Yan'-tr'ee-nash See",
     "indigenousplacenamemeaning": "shark-rock",
     "englishplacename": "Shark Rock",
     "planningunitid": 3,
-    "primaryhabitat": "Offshore Rock",
+    "primaryhabitat": 6,
     "tribeid": 1,
     "islocked": false,
-    "geometry": null,
-    "Source": null,
-    "DigitizedBy": null,
-    "DigitizedDate": null
+    "geometry": "SRID=3857;POLYGON ((-13827397.042595 5154553.4109967, -13827459.14768 5154512.8038255, -13827406.597223 5154369.4843975, -13827339.714824 5154331.2658833, -13827234.61391 5154347.9864833, -13827158.176882 5154414.868883, -13827151.01091 5154496.0832255, -13827275.221081 5154543.8563682, -13827397.042595 5154553.4109967))",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
   }
 },
 {
@@ -1000,18 +1263,443 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T14:50:05Z",
+    "modifiedbydate": "2017-10-25T17:31:17.231Z",
     "indigenousplacename": "Naa~-k'vt Mii~-sdvm",
     "indigenousplacenamemeaning": "gravel-size-for fish",
     "englishplacename": "Gravel Bed",
     "planningunitid": 1,
-    "primaryhabitat": "Sandy Beach",
+    "primaryhabitat": 8,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13823096.10652436 5146324.548355187, -13823198.11039438 5147203.900264483, -13822635.39565358 5147189.042921233, -13822648.67842265 5146511.350916951, -13823022.46501273 5145873.92250526, -13823096.10652436 5146324.548355187))",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 21,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-12-29T20:20:28.622Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-12-29T20:31:34.444Z",
+    "indigenousplacename": "Test",
+    "indigenousplacenamemeaning": "test",
+    "englishplacename": "test",
+    "planningunitid": 3,
+    "primaryhabitat": 0,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13831387.616891 5162123.6085506, -13824202.536233 5164416.7193988, -13824661.158402 5158454.6311934, -13829094.506042 5158760.3793065, -13831387.616891 5162123.6085506))",
+    "Source": "Ryan",
+    "DigitizedBy": "Ryan",
+    "DigitizedDate": "2017-12-29T20:21:41Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 22,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-11T18:32:14.967Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-11T18:58:55.984Z",
+    "indigenousplacename": "Retreat 2010",
+    "indigenousplacenamemeaning": "To The Pond",
+    "englishplacename": "Flora, OR",
+    "planningunitid": 2,
+    "primaryhabitat": 1,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13054593.928393 5763389.2162437, -13054402.835822 5763358.163701, -13054204.57728 5763090.634102, -13054209.354595 5762866.1003314, -13054608.260336 5762863.7116743, -13054593.928393 5763389.2162437))",
+    "Source": "Ryan",
+    "DigitizedBy": "Ryan",
+    "DigitizedDate": "2018-06-11T18:36:26Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 24,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:49:16.159Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:52:42.305Z",
+    "indigenousplacename": "chinook",
+    "indigenousplacenamemeaning": "salmon",
+    "englishplacename": "King",
+    "planningunitid": 2,
+    "primaryhabitat": 2,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-13825425.528684 5151881.0467617, -13831234.742833 5138428.1297854, -13816558.833404 5141485.6109164, -13818393.322083 5152186.7948748, -13825731.276797 5151269.5505355, -13825425.528684 5151269.5505355)",
+    "Source": "Laura",
+    "DigitizedBy": "Brown",
+    "DigitizedDate": "2018-06-12T09:53:00Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 25,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:49:25.982Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:51:14.395Z",
+    "indigenousplacename": "Myplace",
+    "indigenousplacenamemeaning": "My place",
+    "englishplacename": "My place",
+    "planningunitid": 2,
+    "primaryhabitat": 7,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-14030582.512573 5247274.4580483, -13795767.961714 5205692.714667, -13798825.442845 5122529.2279043, -13854471.599429 5126809.7014877, -13893607.357905 5202635.233536)",
+    "Source": null,
+    "DigitizedBy": null,
+    "DigitizedDate": "2018-06-12T21:53:30Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 26,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:50:31.898Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:54:16.871Z",
+    "indigenousplacename": "No I DEA",
+    "indigenousplacenamemeaning": "Otter Rock",
+    "englishplacename": "Otter Rocks",
+    "planningunitid": 0,
+    "primaryhabitat": 6,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-13855006.658626 5225489.9049901, -13858675.635984 5227859.4528666, -13859745.754379 5230916.9339976, -13858599.198955 5231451.9931955, -13855923.902966 5229158.8823473, -13854777.347542 5225489.9049901)",
+    "Source": "Andy Lanier",
+    "DigitizedBy": "Andy Lanier",
+    "DigitizedDate": "2018-06-12T21:54:37Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 27,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:50:51.650Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:53:30.853Z",
+    "indigenousplacename": "James Island",
+    "indigenousplacenamemeaning": null,
+    "englishplacename": null,
+    "planningunitid": 2,
+    "primaryhabitat": 7,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13868765.323715 6102620.0916127, -13888409.639982 6101397.0991603, -13883059.048003 6079688.9831304, -13860280.813577 6081905.6569503, -13859898.628435 6082134.9680352, -13868765.323715 6102620.0916127))",
+    "Source": "Jennifer",
+    "DigitizedBy": "Jennifer",
+    "DigitizedDate": "2018-06-12T21:55:03Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 28,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:50:52.188Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:50:52.188Z",
+    "indigenousplacename": "me",
+    "indigenousplacenamemeaning": "yo",
+    "englishplacename": "wow",
+    "planningunitid": 3,
+    "primaryhabitat": 15,
     "tribeid": 1,
     "islocked": false,
     "geometry": null,
     "Source": null,
     "DigitizedBy": null,
     "DigitizedDate": null
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 29,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:51:25.856Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:54:54.759Z",
+    "indigenousplacename": "qwiddiciat",
+    "indigenousplacenamemeaning": "People of the Rocks and Gulls",
+    "englishplacename": "Makah",
+    "planningunitid": 2,
+    "primaryhabitat": 7,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-13874650.974893 5267943.0416906, -13859363.569238 5172549.630404, -13837961.201321 5176218.6077612, -13854471.599429 5267943.0416906, -13875262.471119 5267943.0416906, -13874039.478667 5267331.5454644)",
+    "Source": "Katie",
+    "DigitizedBy": "Mike",
+    "DigitizedDate": "2018-06-12T21:55:38Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 30,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:52:04.750Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:56:05.772Z",
+    "indigenousplacename": "Artifact - JC",
+    "indigenousplacenamemeaning": "same",
+    "englishplacename": "same",
+    "planningunitid": 0,
+    "primaryhabitat": 0,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13836375.132985 5170895.5174132, -13835687.19973 5170952.8451844, -13835725.418244 5170513.3322719, -13836413.351499 5170436.8952436, -13836394.242242 5170666.2063284, -13836375.132985 5170895.5174132))",
+    "Source": "test",
+    "DigitizedBy": "mjh",
+    "DigitizedDate": "2018-06-12T21:56:14Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 31,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:52:49.030Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:57:53.642Z",
+    "indigenousplacename": "ama",
+    "indigenousplacenamemeaning": "land",
+    "englishplacename": "land",
+    "planningunitid": 2,
+    "primaryhabitat": 7,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13725445.895702 4662913.3768895, -13725445.895702 4662072.5695785, -13722082.666458 4662301.8806633, -13724605.088391 4663754.1842005, -13725751.643815 4663754.1842005, -13725445.895702 4662913.3768895))",
+    "Source": null,
+    "DigitizedBy": null,
+    "DigitizedDate": null
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 32,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:56:51.588Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:56:51.588Z",
+    "indigenousplacename": "Waatch",
+    "indigenousplacenamemeaning": "home village",
+    "englishplacename": "wyaatch",
+    "planningunitid": 2,
+    "primaryhabitat": 13,
+    "tribeid": 1,
+    "islocked": false,
+    "geometry": null,
+    "Source": null,
+    "DigitizedBy": null,
+    "DigitizedDate": null
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 33,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:59:33.855Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T22:00:48.123Z",
+    "indigenousplacename": "tcha Timanwi (Kalapuya)",
+    "indigenousplacenamemeaning": "Place of Spiritual Power",
+    "englishplacename": "Marys Peak",
+    "planningunitid": 0,
+    "primaryhabitat": null,
+    "tribeid": null,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-13754186.218334 5545589.0701465, -13753612.940621 5545111.3387198, -13753116.099938 5544499.8424936, -13753326.301765 5543773.690725, -13753956.907249 5543181.3037559, -13755141.681187 5543582.5981543, -13756613.093981 5543869.2370103, -13757339.24575 5544518.9517507, -13756402.892153 5544633.6072931, -13755466.538557 5544557.1702648, -13754472.85719 5545283.3220334, -13754186.218334 5545608.1794036, -13754167.109076 5545569.9608894)",
+    "Source": null,
+    "DigitizedBy": null,
+    "DigitizedDate": null
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 34,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-15T21:15:47.781Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-15T21:15:47.781Z",
+    "indigenousplacename": "Artifact - Tarheel",
+    "indigenousplacenamemeaning": "same",
+    "englishplacename": "same",
+    "planningunitid": 2,
+    "primaryhabitat": 6,
+    "tribeid": null,
+    "islocked": false,
+    "geometry": "SRID=3857;POLYGON ((-13837189.067903 5366890.070744, -13837159.806853 5366888.2792511, -13837157.418196 5366876.9331297, -13837286.405681 5366813.0365514, -13837298.946131 5366842.2976013, -13837189.067903 5366890.070744))",
+    "Source": null,
+    "DigitizedBy": null,
+    "DigitizedDate": null
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 1702,
+  "fields": {
+    "enteredbyname": "ryan",
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-09-11T07:00:00Z",
+    "modifiedbyname": "ryan",
+    "modifiedbytitle": null,
+    "modifiedbytribe": null,
+    "modifiedbydate": "2017-10-25T17:31:20.369Z",
+    "indigenousplacename": "path 1702",
+    "indigenousplacenamemeaning": "from not beach to island",
+    "englishplacename": "path 1702",
+    "planningunitid": null,
+    "primaryhabitat": 12,
+    "tribeid": null,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-13822648.67842265 5146511.350916951, -13822392.3777462 5146274.897890653, -13822251.91523652 5146390.87047256, -13821751.99071155 5146183.838406166, -13821555.48685414 5146357.58844141, -13821342.15852075 5146393.667043811)",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 1703,
+  "fields": {
+    "enteredbyname": "ryan",
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-09-11T07:00:00Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-10-25T17:37:17.322Z",
+    "indigenousplacename": "Eddie",
+    "indigenousplacenamemeaning": "road to nowhere in particular",
+    "englishplacename": "Eddie",
+    "planningunitid": null,
+    "primaryhabitat": 13,
+    "tribeid": null,
+    "islocked": false,
+    "geometry": "SRID=3857;LINESTRING (-13822012.29357882 5146291.640579519, -13822285.04610559 5145691.865345437, -13822764.93530208 5145471.464377365)",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 1704,
+  "fields": {
+    "enteredbyname": "ryan",
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-09-11T07:00:00Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-10-25T17:36:50.340Z",
+    "indigenousplacename": "Point in a field",
+    "indigenousplacenamemeaning": "Test to set Habitat to creek on import. This is not a real creek.",
+    "englishplacename": "Point in a field",
+    "planningunitid": null,
+    "primaryhabitat": 14,
+    "tribeid": null,
+    "islocked": false,
+    "geometry": "SRID=3857;POINT (-13821950.0923074 5146574.981265442)",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
+  }
+},
+{
+  "model": "TEKDB.places",
+  "pk": 1705,
+  "fields": {
+    "enteredbyname": "ryan",
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-09-11T07:00:00Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-10-25T17:36:07.679Z",
+    "indigenousplacename": "Point by a pond",
+    "indigenousplacenamemeaning": "yup, as we thought, just a point",
+    "englishplacename": "Point by a pond",
+    "planningunitid": null,
+    "primaryhabitat": 15,
+    "tribeid": null,
+    "islocked": false,
+    "geometry": "SRID=3857;POINT (-13822764.93530208 5145471.464377365)",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
   }
 },
 {
@@ -1556,7 +2244,7 @@
     "genus": "Vaccinium",
     "species": "sp.",
     "specific": false,
-    "resourceclassificationgroup": "flowering plant",
+    "resourceclassificationgroup": 12,
     "islocked": false
   }
 },
@@ -1829,7 +2517,7 @@
     "genus": "Cryptochiton",
     "species": "stelleri",
     "specific": true,
-    "resourceclassificationgroup": "invertebrate",
+    "resourceclassificationgroup": 6,
     "islocked": false
   }
 },
@@ -2228,7 +2916,7 @@
     "genus": "Dentalium",
     "species": "sp.",
     "specific": false,
-    "resourceclassificationgroup": "mollusk",
+    "resourceclassificationgroup": 9,
     "islocked": false
   }
 },
@@ -3467,7 +4155,7 @@
     "genus": "Mytilus",
     "species": "californianus",
     "specific": true,
-    "resourceclassificationgroup": "mollusk",
+    "resourceclassificationgroup": 9,
     "islocked": false
   }
 },
@@ -3601,20 +4289,20 @@
   "model": "TEKDB.resources",
   "pk": 273,
   "fields": {
-    "enteredbyname": null,
-    "enteredbytribe": null,
-    "enteredbytitle": null,
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
     "enteredbydate": null,
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T15:03:48Z",
+    "modifiedbydate": "2017-12-14T01:45:30.026Z",
     "commonname": "otter, River",
     "indigenousname": "naa-ghaa-t'u'-ne",
     "genus": "Lutra",
     "species": "canadensis",
     "specific": true,
-    "resourceclassificationgroup": "marine mammal",
+    "resourceclassificationgroup": 8,
     "islocked": false
   }
 },
@@ -5168,7 +5856,7 @@
     "genus": "Embiotocidae",
     "species": "sp.",
     "specific": false,
-    "resourceclassificationgroup": "anadromous finfish",
+    "resourceclassificationgroup": 0,
     "islocked": false
   }
 },
@@ -5992,6 +6680,27 @@
   }
 },
 {
+  "model": "TEKDB.resources",
+  "pk": 387,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-12-30T01:06:02.752Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-12-30T01:06:02.752Z",
+    "commonname": "Test",
+    "indigenousname": "Test",
+    "genus": "Test",
+    "species": "Test",
+    "specific": false,
+    "resourceclassificationgroup": 0,
+    "islocked": false
+  }
+},
+{
   "model": "TEKDB.resourcesactivityevents",
   "pk": 27,
   "fields": {
@@ -6008,9 +6717,9 @@
     "partused": null,
     "activityshortdescription": null,
     "activitylongdescription": null,
-    "participants": "Everyone",
-    "technique": "hand gathered",
+    "participants": 3,
     "gear": null,
+    "technique": 10,
     "customaryuse": null,
     "timing": null,
     "timingdescription": null,
@@ -6034,9 +6743,9 @@
     "partused": null,
     "activityshortdescription": null,
     "activitylongdescription": null,
-    "participants": "Women",
-    "technique": "hand gathered",
+    "participants": 6,
     "gear": null,
+    "technique": 10,
     "customaryuse": null,
     "timing": null,
     "timingdescription": null,
@@ -6054,15 +6763,15 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T15:08:12Z",
+    "modifiedbydate": "2017-10-27T22:36:10.649Z",
     "placeresourceid": 24,
     "relationshipdescription": "\"The men use A-frame nets to catch perch in the vacinity of gravel beds on the beach, because that's where the fish like to spawn and they gather in great numbers there in late spring and through summer - like May through August.\"",
     "partused": null,
     "activityshortdescription": null,
-    "activitylongdescription": null,
-    "participants": "Men",
-    "technique": "A-frame net",
+    "activitylongdescription": "",
+    "participants": 4,
     "gear": null,
+    "technique": 0,
     "customaryuse": null,
     "timing": null,
     "timingdescription": null,
@@ -6081,7 +6790,7 @@
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
     "modifiedbydate": "2017-03-20T14:30:47Z",
-    "referencetype": "Book",
+    "referencetype": 0,
     "referencetext": "Text on marine flora and fauna",
     "authortype": null,
     "authorprimary": "Tanner, J.J.",
@@ -6097,7 +6806,9 @@
     "publisher": "Si~s-xa Publishing",
     "publishercity": "Smith River",
     "preparedfor": null,
-    "comments": "Text on flora and fauna harvested by Native Americans in the marine environment"
+    "comments": "Text on flora and fauna harvested by Native Americans in the marine environment",
+    "journal": null,
+    "journalpages": null
   }
 },
 {
@@ -6112,7 +6823,7 @@
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
     "modifiedbydate": "2017-03-20T14:39:36Z",
-    "referencetype": "Interview",
+    "referencetype": 3,
     "referencetext": "Ethnographic Interview",
     "authortype": null,
     "authorprimary": null,
@@ -6128,7 +6839,53 @@
     "publisher": null,
     "publishercity": null,
     "preparedfor": null,
-    "comments": "Interview regarding marine harvesting"
+    "comments": "Interview regarding marine harvesting",
+    "journal": null,
+    "journalpages": null
+  }
+},
+{
+  "model": "TEKDB.locality",
+  "pk": 1710,
+  "fields": {
+    "enteredbyname": "ryan",
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-09-11T07:00:00Z",
+    "modifiedbyname": "ryan",
+    "modifiedbytitle": null,
+    "modifiedbytribe": null,
+    "modifiedbydate": "2017-10-26T23:11:31.822Z",
+    "placeid": null,
+    "englishname": "Intertial Locality 1",
+    "indigenousname": "Intertial Locality 1",
+    "localitytype": 4,
+    "geometry": "SRID=3857;POLYGON ((-13822120.84562868 5147855.86404582, -13822190.29644194 5147949.024667512, -13822200.32590858 5148060.108507803, -13822124.32234378 5148112.479258601, -13821614.26238193 5148213.539504307, -13821522.3633875 5148351.679657084, -13821462.93731521 5148369.598394974, -13821334.29489595 5148311.454385287, -13820914.51774128 5148154.583039097, -13821455.37076321 5147492.061643782, -13821558.91715016 5147533.430155386, -13821762.94339097 5147651.85226163, -13821881.03318816 5147717.972486132, -13822031.32278208 5147801.476144408, -13822120.84562868 5147855.86404582))",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
+  }
+},
+{
+  "model": "TEKDB.locality",
+  "pk": 1711,
+  "fields": {
+    "enteredbyname": "ryan",
+    "enteredbytribe": null,
+    "enteredbytitle": null,
+    "enteredbydate": "2017-09-11T07:00:00Z",
+    "modifiedbyname": "ryan",
+    "modifiedbytitle": null,
+    "modifiedbytribe": null,
+    "modifiedbydate": "2017-10-26T23:11:31.827Z",
+    "placeid": null,
+    "englishname": "part of the rocks",
+    "indigenousname": "part of the rocks",
+    "localitytype": 12,
+    "geometry": "SRID=3857;POLYGON ((-13821463.76001509 5147069.518661795, -13821238.19151936 5147027.410597898, -13821211.13949989 5146689.021792148, -13821398.09923319 5146704.588001125, -13821463.76001509 5147069.518661795))",
+    "Source": "ryan",
+    "DigitizedBy": "ryan",
+    "DigitizedDate": "2017-09-11T07:00:00Z"
   }
 },
 {
@@ -6142,12 +6899,13 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T15:13:36Z",
-    "mediatype": "image",
+    "modifiedbydate": "2017-10-27T22:19:50.589Z",
+    "mediatype": 1,
     "medianame": "Chiton Photo",
     "mediadescription": "Photo taken by Manaha Herman, 2015",
-    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\IMG_3996.JPG",
-    "mediafile": ""
+    "medialink": "/usr/local/apps/TEKDB/TEKDB/media/gumboot_chiton.jpg",
+    "mediafile": "gumboot_chiton_fT5Kxtm.jpg",
+    "limitedaccess": true
   }
 },
 {
@@ -6161,12 +6919,13 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T15:14:32Z",
-    "mediatype": "image",
+    "modifiedbydate": "2018-05-11T04:05:20.310Z",
+    "mediatype": 1,
     "medianame": "Mussel Photo",
     "mediadescription": "Photo taken by Manaha Herman, 2014",
-    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\IMG_0470.JPG",
-    "mediafile": ""
+    "medialink": "/usr/local/apps/TEKDB/TEKDB/media/mussels.jpg",
+    "mediafile": "mussels.jpg",
+    "limitedaccess": null
   }
 },
 {
@@ -6180,12 +6939,13 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T15:15:18Z",
-    "mediatype": "image",
+    "modifiedbydate": "2017-10-27T22:19:23.950Z",
+    "mediatype": 1,
     "medianame": "Perch Photo",
     "mediadescription": "Photo taken by Manahe Herman, 2004",
-    "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\IMGP0344.JPG",
-    "mediafile": ""
+    "medialink": "/usr/local/apps/TEKDB/TEKDB/media/White_perch_GLERL.jpg",
+    "mediafile": "White_perch_GLERL_il4tAhX.jpg",
+    "limitedaccess": null
   }
 },
 {
@@ -6199,12 +6959,73 @@
     "modifiedbyname": "admin",
     "modifiedbytitle": "Admin",
     "modifiedbytribe": "General Admin",
-    "modifiedbydate": "2017-03-20T15:17:51Z",
-    "mediatype": "PDF",
+    "modifiedbydate": "2017-10-27T23:20:13.780Z",
+    "mediatype": 3,
     "medianame": "Jay Tosanic Interview Transcript",
     "mediadescription": "Interview transcript for Jay Tosanic on marine havesting  from 2016",
     "medialink": "C:\\Users\\rosa.laucci\\MTKED Database\\Media\\giant_devil_ray_st_factsheet.pdf",
-    "mediafile": ""
+    "mediafile": "",
+    "limitedaccess": null
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 10,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2018-05-11T04:39:06.531Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2018-05-11T16:29:55.446Z",
+    "mediatype": 4,
+    "medianame": "Video Sample",
+    "mediadescription": "Sample Video",
+    "medialink": "/usr/local/apps/TEKDB/TEKDB/media/SampleVideo_1280x720_1mb.mp4",
+    "mediafile": "SampleVideo_1280x720_1mb.mp4",
+    "limitedaccess": true
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 11,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2018-05-11T04:39:48.327Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2018-05-11T04:39:48.327Z",
+    "mediatype": 0,
+    "medianame": "Sample Audio",
+    "mediadescription": "",
+    "medialink": "/usr/local/apps/TEKDB/TEKDB/media/06_-_The_Ballad_of_Sir_Kibbles__Theme_of_Dream_Hunter.mp3",
+    "mediafile": "06_-_The_Ballad_of_Sir_Kibbles__Theme_of_Dream_Hunter.mp3",
+    "limitedaccess": false
+  }
+},
+{
+  "model": "TEKDB.media",
+  "pk": 12,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-11T18:58:21.544Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-11T18:58:21.544Z",
+    "mediatype": 1,
+    "medianame": "Test Demo Sample",
+    "mediadescription": "Kohlrabi",
+    "medialink": "/usr/local/apps/TEKDB/TEKDB/media/kohlrabi.png",
+    "mediafile": "kohlrabi.png",
+    "limitedaccess": false
   }
 },
 {
@@ -6222,10 +7043,10 @@
     "placeid": 19,
     "resourceid": 188,
     "relationshipdescription": "Bright orange chiton found on Shark Rock.  Plates (shells) were used for tools and meat was prepared for summer ceremony.",
-    "partused": "Shell",
+    "partused": 6,
     "customaryuse": null,
     "barterresource": false,
-    "season": "All",
+    "season": 0,
     "timing": null,
     "january": false,
     "february": false,
@@ -6258,10 +7079,10 @@
     "placeid": 20,
     "resourceid": 207,
     "relationshipdescription": "Dentalia shells were found mostly in gravel beds and used as a trading comodity by Native Americans.  Women were responsible for hand collecting the shells during the low tides of the spring, summer and fall.",
-    "partused": "Shell",
+    "partused": 6,
     "customaryuse": null,
     "barterresource": true,
-    "season": "All",
+    "season": 0,
     "timing": null,
     "january": false,
     "february": false,
@@ -6294,10 +7115,10 @@
     "placeid": 19,
     "resourceid": 266,
     "relationshipdescription": "\"Some of the biggest mussels I've ever seen, I got from Shark Rock. You could tell they were good eatin', the otters always tried to get to 'em.\"",
-    "partused": "Meat",
+    "partused": 5,
     "customaryuse": null,
     "barterresource": false,
-    "season": "Spring/Summer",
+    "season": 4,
     "timing": null,
     "january": false,
     "february": false,
@@ -6333,7 +7154,7 @@
     "partused": null,
     "customaryuse": null,
     "barterresource": false,
-    "season": "All",
+    "season": 0,
     "timing": null,
     "january": false,
     "february": false,
@@ -6366,10 +7187,10 @@
     "placeid": 20,
     "resourceid": 347,
     "relationshipdescription": "\"The men use A-frame nets to catch perch in the vacinity of gravel beds on the beach, because that's where the fish like to spawn and they gather in great numbers there in late spring and through summer - like May through August.\"",
-    "partused": "Meat",
+    "partused": 5,
     "customaryuse": null,
     "barterresource": false,
-    "season": "Spring/Summer",
+    "season": 4,
     "timing": null,
     "january": false,
     "february": false,
@@ -6388,6 +7209,150 @@
   }
 },
 {
+  "model": "Relationships.placesresourceevents",
+  "pk": 26,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-12-29T20:24:57.749Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-12-29T20:24:57.749Z",
+    "placeid": 21,
+    "resourceid": 150,
+    "relationshipdescription": "a",
+    "partused": null,
+    "customaryuse": null,
+    "barterresource": false,
+    "season": null,
+    "timing": null,
+    "january": false,
+    "february": false,
+    "march": false,
+    "april": false,
+    "may": false,
+    "june": false,
+    "july": false,
+    "august": false,
+    "september": false,
+    "october": false,
+    "november": false,
+    "december": false,
+    "year": 1,
+    "islocked": false
+  }
+},
+{
+  "model": "Relationships.placesresourceevents",
+  "pk": 27,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2018-05-11T15:59:45.634Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2018-05-11T15:59:45.634Z",
+    "placeid": 1705,
+    "resourceid": 155,
+    "relationshipdescription": "",
+    "partused": 9,
+    "customaryuse": null,
+    "barterresource": false,
+    "season": null,
+    "timing": null,
+    "january": false,
+    "february": false,
+    "march": false,
+    "april": false,
+    "may": false,
+    "june": false,
+    "july": false,
+    "august": false,
+    "september": false,
+    "october": false,
+    "november": false,
+    "december": false,
+    "year": null,
+    "islocked": false
+  }
+},
+{
+  "model": "Relationships.placesresourceevents",
+  "pk": 28,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:50:26.980Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:50:26.980Z",
+    "placeid": 25,
+    "resourceid": 153,
+    "relationshipdescription": "",
+    "partused": null,
+    "customaryuse": null,
+    "barterresource": false,
+    "season": null,
+    "timing": null,
+    "january": false,
+    "february": false,
+    "march": false,
+    "april": false,
+    "may": false,
+    "june": false,
+    "july": false,
+    "august": false,
+    "september": false,
+    "october": false,
+    "november": false,
+    "december": false,
+    "year": null,
+    "islocked": false
+  }
+},
+{
+  "model": "Relationships.placescitationevents",
+  "pk": 2,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-12-29T20:30:36.343Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-12-29T20:30:36.343Z",
+    "placeid": 21,
+    "citationid": 11,
+    "relationshipdescription": "b",
+    "pages": "b"
+  }
+},
+{
+  "model": "Relationships.placescitationevents",
+  "pk": 3,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:51:06.902Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:51:06.902Z",
+    "placeid": 25,
+    "citationid": 11,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
   "model": "Relationships.mediacitationevents",
   "pk": 1,
   "fields": {
@@ -6401,6 +7366,194 @@
     "modifiedbydate": "2017-03-20T15:17:33Z",
     "mediaid": 9,
     "citationid": 12,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 1,
+  "fields": {
+    "placeid": 21,
+    "altindigenousname": "test 20"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 2,
+  "fields": {
+    "placeid": 21,
+    "altindigenousname": "foo"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 3,
+  "fields": {
+    "placeid": 21,
+    "altindigenousname": "flurpy"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 4,
+  "fields": {
+    "placeid": 1702,
+    "altindigenousname": null
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 6,
+  "fields": {
+    "placeid": 22,
+    "altindigenousname": "Beebe Ranch"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 8,
+  "fields": {
+    "placeid": 25,
+    "altindigenousname": "ThePlace"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 10,
+  "fields": {
+    "placeid": 26,
+    "altindigenousname": "Wishiknew"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 11,
+  "fields": {
+    "placeid": 27,
+    "altindigenousname": "1LP"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 12,
+  "fields": {
+    "placeid": 29,
+    "altindigenousname": "Cape Flattery"
+  }
+},
+{
+  "model": "Relationships.placealtindigenousname",
+  "pk": 13,
+  "fields": {
+    "placeid": 31,
+    "altindigenousname": "place"
+  }
+},
+{
+  "model": "Relationships.placesmediaevents",
+  "pk": 2,
+  "fields": {
+    "enteredbyname": "admin",
+    "enteredbytribe": "General Admin",
+    "enteredbytitle": "Admin",
+    "enteredbydate": "2017-12-29T20:29:37.565Z",
+    "modifiedbyname": "admin",
+    "modifiedbytitle": "Admin",
+    "modifiedbytribe": "General Admin",
+    "modifiedbydate": "2017-12-29T20:29:37.565Z",
+    "placeid": 21,
+    "mediaid": 8,
+    "relationshipdescription": "a",
+    "pages": "a"
+  }
+},
+{
+  "model": "Relationships.placesmediaevents",
+  "pk": 3,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-11T18:58:26.555Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-11T18:58:26.555Z",
+    "placeid": 22,
+    "mediaid": 12,
+    "relationshipdescription": "Demo",
+    "pages": null
+  }
+},
+{
+  "model": "Relationships.placesmediaevents",
+  "pk": 4,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:51:34.378Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:51:34.378Z",
+    "placeid": 24,
+    "mediaid": 9,
+    "relationshipdescription": null,
+    "pages": null
+  }
+},
+{
+  "model": "Relationships.placesmediaevents",
+  "pk": 5,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:53:20.357Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:54:00.631Z",
+    "placeid": 26,
+    "mediaid": 7,
+    "relationshipdescription": "What I always wanted",
+    "pages": null
+  }
+},
+{
+  "model": "Relationships.placesmediaevents",
+  "pk": 6,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:54:48.058Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:54:48.058Z",
+    "placeid": 29,
+    "mediaid": 7,
+    "relationshipdescription": "This is where you can find mussels, among other things.",
+    "pages": null
+  }
+},
+{
+  "model": "Relationships.placesmediaevents",
+  "pk": 7,
+  "fields": {
+    "enteredbyname": "demoedit",
+    "enteredbytribe": "None",
+    "enteredbytitle": "None",
+    "enteredbydate": "2018-06-12T21:55:38.543Z",
+    "modifiedbyname": "demoedit",
+    "modifiedbytitle": "None",
+    "modifiedbytribe": "None",
+    "modifiedbydate": "2018-06-12T21:55:38.543Z",
+    "placeid": 27,
+    "mediaid": 7,
     "relationshipdescription": null,
     "pages": null
   }
@@ -6504,6 +7657,22 @@
   }
 },
 {
+  "model": "Relationships.resourcealtindigenousname",
+  "pk": 7,
+  "fields": {
+    "resourceid": 273,
+    "altindigenousname": "foo otter"
+  }
+},
+{
+  "model": "Relationships.resourcealtindigenousname",
+  "pk": 8,
+  "fields": {
+    "resourceid": 387,
+    "altindigenousname": "flurpie"
+  }
+},
+{
   "model": "Relationships.resourcesmediaevents",
   "pk": 1,
   "fields": {
@@ -6585,9 +7754,9 @@
   "model": "Accounts.users",
   "pk": 5,
   "fields": {
-    "last_login": null,
+    "last_login": "2018-06-29T23:31:08.876Z",
     "username": "admin",
-    "password": "pbkdf2_sha256$36000$QY0JPcxpcKUv$BmdvmDBvSMSwZer1DCXy4RXY+s9na/BIZw6VT5yMw0A=",
+    "password": "pbkdf2_sha256$36000$1dpFz7GN5QpK$QVVyQ/BEmjfYsPdSMjRCkju2IuMbbYFP8/usVCajcq0=",
     "first_name": "Admin",
     "last_name": "Administrator",
     "affiliation": "General Admin",
@@ -6597,7 +7766,7 @@
     "email": null,
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2017-09-28T01:12:25.404Z",
+    "date_joined": "2017-10-25T17:31:07.037Z",
     "groups": [
       1
     ],
@@ -6608,9 +7777,9 @@
   "model": "Accounts.users",
   "pk": 6,
   "fields": {
-    "last_login": null,
+    "last_login": "2018-05-11T16:30:31.979Z",
     "username": "editor",
-    "password": "pbkdf2_sha256$36000$0Hh5YVZEcUGy$hGD8AAHFeMI8GOBK8dVfe5Uh3q4/ETXb0QmwuG3vEzw=",
+    "password": "pbkdf2_sha256$36000$99C5AcDtUej3$M4rQovXGfP1L0btx88jY9E/ahuWJNb1e1dcvymcxh7g=",
     "first_name": "Editor",
     "last_name": "Editor",
     "affiliation": "General Admin",
@@ -6620,7 +7789,7 @@
     "email": null,
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2017-09-28T01:12:25.404Z",
+    "date_joined": "2017-10-25T17:31:07.037Z",
     "groups": [
       2
     ],
@@ -6631,9 +7800,9 @@
   "model": "Accounts.users",
   "pk": 7,
   "fields": {
-    "last_login": null,
+    "last_login": "2018-05-11T16:30:08.639Z",
     "username": "readonly",
-    "password": "pbkdf2_sha256$36000$9wP0hJplEiF6$QWfXFAmIjnrh/x0mBjQWUjjeiAZ/MCASLeQIbbAuDMM=",
+    "password": "pbkdf2_sha256$36000$WFYgl3bAwXND$Vmfv33QS9xrGPxO++OAMUlpo0sFxbR0suXbUQrcWkQ8=",
     "first_name": "Read",
     "last_name": "Only",
     "affiliation": "General Access",
@@ -6643,11 +7812,82 @@
     "email": null,
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2017-09-28T01:12:25.404Z",
+    "date_joined": "2017-10-25T17:31:07.037Z",
     "groups": [
       3
     ],
     "user_permissions": []
+  }
+},
+{
+  "model": "Accounts.users",
+  "pk": 8,
+  "fields": {
+    "last_login": "2017-10-27T20:25:33.628Z",
+    "username": "bill",
+    "password": "pbkdf2_sha256$36000$br3GRrW2OlSN$18ZcbJ8vOwO3v+S8b5wEPrtWW8p4gDBAqPQsDYeb3Mo=",
+    "first_name": "bill",
+    "last_name": "bill",
+    "affiliation": "bill",
+    "title": "bill",
+    "accesslevel": null,
+    "is_superuser": false,
+    "email": "bill@bill.net",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-10-27T19:51:32Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "Accounts.users",
+  "pk": 9,
+  "fields": {
+    "last_login": "2018-06-20T21:39:58.042Z",
+    "username": "demoedit",
+    "password": "pbkdf2_sha256$36000$1cXVZl3Xw8L4$xtnk0Gd9V9L1wsCG7U9QjsjEjVIUClpyfPWVnfKBrJs=",
+    "first_name": "Demo",
+    "last_name": "Editor",
+    "affiliation": "None",
+    "title": "None",
+    "accesslevel": 2,
+    "is_superuser": false,
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2018-06-11T18:11:24Z",
+    "groups": [
+      2
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "explore.pagecontent",
+  "pk": "About",
+  "fields": {
+    "content": "<h1>About</h1>\r\n\r\n<p>This tool is the result of a project between the Tolowa Dee-Ni&#39; Nation and Ecotrust to migrate an&nbsp;existing marine traditional ethnographic knowledge into a more user-friendly, spatially enabled web application. It is hoped that this tool will help tribes to retain and organize their traditional knowledge and have a new way to share it with future generations.</p>\r\n\r\n<h2>Technology</h2>\r\n\r\n<p>This tool was built using Open Source software. The code is readily available on <a href=\"https://github.com/Ecotrust/TEKDB\">Ecotrust&#39;s Github Page</a>. It is a Django application on top of a PostgreSQL database spatially enabled with PostGIS. Documentation, including notes on how to install your own instance can be found <a href=\"https://github.com/Ecotrust/TEKDB/wiki\">here</a>.</p>\r\n\r\n<h2>Philosophy</h2>\r\n\r\n<p>This project was built with sharing in mind, without abandoning privacy. As mentioned, the tool itself is all built with Open Source code so that anyone may download it, install it, or customize it free of charge, and with as few barriers as possible. In the meantime, the data to be kept in the tool is recognized to be confidential and private - only to be shared with explicit permission by the owners.</p>\r\n\r\n<p>Keeping this in mind, the tool can be (and already is) installed on a tribe&#39;s private, internal servers so that only members have access to the data. Recognizing that nothing online is 100% safe, the data in this tool should be at least as safe as the other sensative files on your network.</p>\r\n\r\n<h2>Ecotrust</h2>\r\n\r\n<p>Ecotrust is powered by the vision of a world where people and nature thrive together. Since 1991, we have partnered with local communities from California to Alaska to build new ways of living and doing business. From forestry to finance, food access to green building, we work to advance social equity, economic opportunity, and environmental well-being.</p>\r\n\r\n<p><a href=\"http://www.ecotrust.org\">Visit us here</a>.</p>\r\n\r\n<h2>Contact</h2>\r\n\r\n<p>If you would like to contact the tribe:</p>\r\n\r\n<p>[Tribe contact info]</p>\r\n\r\n<p>If you&#39;d like to contact the developers of this tool:</p>\r\n\r\n<p>Please email <a href=\"mailto:teksupport@ecotrust.org?subject=TEKDB%20Question\">teksupport@ecotrust.org</a></p>",
+    "is_html": false,
+    "html_content": ""
+  }
+},
+{
+  "model": "explore.pagecontent",
+  "pk": "Help",
+  "fields": {
+    "content": "<h1>Help</h1>\r\n\r\n<h2>I can&#39;t log in</h2>\r\n\r\n<p>Please contact your local administrator to create an account for you or reset your password.</p>\r\n\r\n<h2>I can&#39;t find a record</h2>\r\n\r\n<p>If you believe a record is missing from this database, please contact your local administrator to have it added.</p>\r\n\r\n<h2>Other</h2>\r\n\r\n<p>Additional documentation can be found <a href=\"https://github.com/Ecotrust/TEKDB/wiki\">here</a>, including:</p>\r\n\r\n<ul>\r\n\t<li><a href=\"https://github.com/Ecotrust/TEKDB/wiki/user_guide\">User Guide</a>&nbsp;[<a download=\"\" href=\"https://github.com/Ecotrust/TEKDB/raw/master/docs/TEK%20DB%20User%20Guide.pdf\">download .pdf</a>]</li>\r\n\t<li><a href=\"https://github.com/Ecotrust/TEKDB/wiki/gis_guide\">GIS Guide</a>&nbsp;[<a download=\"\" href=\"https://github.com/Ecotrust/TEKDB/raw/master/docs/TEKDB%20GIS%20User%20Guide.pdf\">download .pdf</a>]</li>\r\n</ul>\r\n\r\n<p>If you do not find the help you need on this page, please reach out to either the Tribe or to the developers, depending on who is best suited to answer your question. Contact info can be found on the&nbsp;<a href=\"/about\">About Page</a>.</p>",
+    "is_html": false,
+    "html_content": ""
+  }
+},
+{
+  "model": "explore.pagecontent",
+  "pk": "Welcome",
+  "fields": {
+    "content": "<h1>Welcome!</h1>\r\n\r\n<p style=\"text-align:center\">This is the&nbsp;<strong><u>Traditional Ethnographic Knowledge Database</u></strong>, operated by the <u><strong>Tolowa</strong></u> Tribe.&nbsp;</p>\r\n\r\n<p style=\"text-align:center\">Please log in to explore.</p>\r\n\r\n<p style=\"text-align:center\">If you do not have an account, please reach out to an administrator to get set up.</p>",
+    "is_html": false,
+    "html_content": ""
   }
 }
 ]
