@@ -3,39 +3,39 @@ div.container {
   padding-bottom:10px;
 }
 
-.header-title h1 {
-  padding-bottom: 0px;
-  margin-bottom: 0px;
-  margin-top: 3px;
-}
-
 .header-title-content {
   margin: 5px 0;
-  text-align: center;
-  color: white;
-  background-color: #777;
-  border-radius: 10px;
-  box-shadow: 3px 3px 8px 0 #ccc;
+  text-align: left;
+  background-color: white;
+  font-family: garamond;
+  line-height: 1;
 }
 
-.header-title-content a,
-.header-title-content h1,
-.header-title-content p {
-  color: white;
-}
-.header-title-content p {
-  margin-bottom: 3px;
-  font-size: 14px;
-}
-.header-title-content:hover a,
-.header-title-content:hover h1,
-.header-title-content:hover p {
+.header-title-content:hover {
   color: #DDFFDD;
   text-decoration: none !important;
-}
-.header-title-content:hover {
   background-color: #555;
 }
+
+.logo {
+  text-align: justify;
+}
+
+.logo-TEK {
+  color: #004d00;
+  font-size: 60px;
+}
+
+.logo-DB {
+  color: #99ff99; 
+  font-size: 60px;
+   }
+
+ .logo-subhead {
+  color: #001a00;
+  font-family: futura;
+  font-size:14;
+ }
 
 .header-button-row {
   min-height: 50px;
