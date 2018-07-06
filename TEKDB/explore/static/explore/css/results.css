@@ -1,4 +1,8 @@
-.td {
+thead {
+  background-color: #003300
+}
+
+td {
   cursor: pointer;
 }
 
