@@ -1,24 +1,18 @@
 <div class="row">
   <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-8 header-title-content">
-        <div class="row">
-          <a href="/">
-           {% block headerTitle %}
-            <div class="col-md-12 logo">         
-              <span class="logo-TEK">TEK</span>
-              <span class="logo-DB">DB</span>
-            </div>
-            <div class="col-md-12"> 
-              <span class="logo-subhead">Traditional Ethnographic Knowledge Database</span>
-            </div>
-          {% endblock %}
-          </a>
+    <div class="row header-title-content">
+      <a href="/">
+        <div class="col-md-12 logo-tekdb">
+        {% block headerTitle %}        
+            <span class="logo-tek">TEK</span>
+            <span class="logo-db">DB</span>
         </div>
-      </div>
-      <div class="col-md-4">
-      </div>
+        <div class="w-100"></div>
+        <div class="col-md-12 logo-subhead">Traditional Ethnographic Knowledge Database</div>
+      </a>
+      {% endblock %}
     </div>
+    <div class="col-md-4"></div>
   </div>
   <div class="col-md-6">
     {% block headerButtons %}
@@ -53,7 +47,7 @@
       {% if user.is_authenticated %}
       <div class="dropdown col-sm-3 col-md-3">
         <button class="btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          {{ user.username }}
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="userDropdown">
           {% if user.is_staff %}
@@ -71,3 +65,4 @@
     {% endblock %}
   </div>
 </div>
+

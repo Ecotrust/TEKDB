@@ -20,25 +20,24 @@ div.container {
 }
 
 .header-title-content:hover {
-  color: #DDFFDD;
   text-decoration: none !important;
   background-color: #ccffcc;
+  font-weight: normal;
 }
 
-.logo {
+.logo-tekdb {
   letter-spacing: 10px;
   margin-bottom: -8;
+  font-size: 70px;
 }
 
-.logo-TEK {
+.logo-tek {
   color: #004d00;
-  font-size: 70px;
 }
 
-.logo-DB {
+.logo-db {
   color: #99ff99; 
-  margin-left: -14px;
-  font-size: 70px;
+  margin-left: -28px;
    }
 
  .logo-subhead {
@@ -97,6 +96,7 @@ div.container {
   border-style: solid;
   border-width: 1px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .btn.dropdown-toggle:hover {
