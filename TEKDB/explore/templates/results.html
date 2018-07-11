@@ -13,8 +13,9 @@
   <form class="query-form" method='post' action='/search/'>
     {% csrf_token %}
     <div class="form-group row">
-      <div class="col-md-4">
-        {{ keyword_search_input | safe }}
+      <div class="col-md-4 input-group">
+     <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase" value="{{ keyword_search_input }}">
+     <span class="input-group-addon">Search</span>
       </div>
       <div class="col-md-4">
       </div>

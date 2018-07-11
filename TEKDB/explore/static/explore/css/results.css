@@ -1,3 +1,11 @@
+
+div {
+  border-style: solid;
+  border-width: 1px; 
+  border-color: black;
+}
+
+
 thead {
   background-color: #008000;
 }

@@ -374,10 +374,9 @@ def search(request):
         query_string_visible = query_string
 
     if query_string not in [None, '', '*']:
-        query_value = ' value=%s' % query_string
+        query_value = '%s' % query_string
     else:
         query_value = ''
-    keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase"%s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')
@@ -399,7 +398,7 @@ def search(request):
         'results': json.dumps(resultlist),
         'query': query_string,
         'keyword': query_string_visible,
-        'keyword_search_input': keyword_search_input,
+        'keyword_search_input': query_value,
         'categories': json.dumps(categories),
         'category_checkboxes': category_checkboxes,
         'page':'Results',
