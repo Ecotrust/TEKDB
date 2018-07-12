@@ -17,6 +17,7 @@
   <div class="col-md-6">
     {% block headerButtons %}
     <div class="row header-button-row">
+      <div class="col-sm-2 col-md-2"></div>
       {% if user.is_authenticated %}
       {% ifnotequal pageTitle "Explore" %}
       <a href="/explore" class="col-sm-2 col-md-2 header-button">
@@ -42,11 +43,10 @@
       {% endifnotequal %}
         Help
       </a>
-      <a class="col-sm-1 col-md-1">
-      </a>
+      <div class="col-sm-2 col-md-2"></div>
       {% if user.is_authenticated %}
       <div class="dropdown col-sm-3 col-md-3">
-        <button class="btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="header-button btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="userDropdown">

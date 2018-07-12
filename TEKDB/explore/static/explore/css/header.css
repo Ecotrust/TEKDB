@@ -54,7 +54,7 @@ div.container {
 .header-button {
   background-image: linear-gradient(#fff 0, #e0e0e0);
 }
-.header-button, .header-button-selected {
+.header-button, .header-button-selected button {
   width: 15%;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -97,6 +97,7 @@ div.container {
   border-width: 1px;
   border-radius: 8px;
   cursor: pointer;
+  float: right;
 }
 
 .btn.dropdown-toggle:hover {
