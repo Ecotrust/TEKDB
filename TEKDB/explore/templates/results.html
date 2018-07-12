@@ -12,25 +12,18 @@
 <div class="container content-container">
   <form class="query-form" method='post' action='/search/'>
     {% csrf_token %}
-    <div class="form-group row">
-      <div class="col-md-4 input-group">
-     <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase" value="{{ keyword_search_input }}">
-     <span class="input-group-addon">Search</span>
+    <div class = "row">
+        <div class="col-md-2">
+          <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control" id="search-text"  name="query" placeholder="Search Phrase" value="{{ keyword_search_input }}">
+            <span class="input-group-addon">Search</span>
+          </div>
+        </div>
       </div>
-      <div class="col-md-4">
-      </div>
-      <div class="col-md-4">
-      </div>
-    </div>
-    <div class="row content-row">
-      <div class="col-md-2">
-        <p>Type:</p>
-        {{ category_checkboxes | safe }}
-        <input type="submit" value='Apply Filter'>
-      </div>
-      <div class="col-md-8">
-        <div class="pagination-row row">
-          <div class="pagination col-md-6">
+      <div class="col-md-6">
+                <div class="pagination-row row">
+          <div class="pagination col-md-8">
             <div class="col-md-12">
               <div id="pagination-container" class='dataTables_wrapper'></div>
             </div>
@@ -58,6 +51,18 @@
             </span>
           </div>
         </div>
+      </div>
+
+      <div class="col-md-2"></div>
+    </div>
+    <div class="row content-row">
+      <div class="col-md-2">
+        <p>Type:</p>
+        {{ category_checkboxes | safe }}
+        <input type="submit" value='Apply Filter'>
+      </div>
+      <div class="col-md-8">
+
         <div class="row">
           <div class="col-md-12 well content-well">
             {% block content %}
