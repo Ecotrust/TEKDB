@@ -43,10 +43,8 @@
       {% endifnotequal %}
         Help
       </a>
-      <div class="col-sm-2 col-md-2"></div>
       {% if user.is_authenticated %}
-      <div class="dropdown col-sm-3 col-md-3">
-        <button class="header-button btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="header-button btn dropdown-toggle dropdown col-sm-4 col-md-4" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="userDropdown">
@@ -55,7 +53,6 @@
           {% endif %}
           <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
         </ul>
-      </div>
       {% else %}
       <a class="col-sm-3 col-md-3 header-button" data-toggle="modal" data-target="#loginModal">
         Login
