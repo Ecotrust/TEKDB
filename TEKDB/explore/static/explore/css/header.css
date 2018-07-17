@@ -87,6 +87,12 @@ div.container {
   float: none;
 }
 
+.dropdown-menu {
+  right: 0;
+  left: auto;
+  text-align: right;
+}
+
 .btn.dropdown-toggle:hover {
   background-image: linear-gradient(#fff 0, #ccffcc);
   font-weight: bold;
