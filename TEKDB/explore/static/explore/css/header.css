@@ -53,6 +53,7 @@ div.container {
 }
 
 .header-button, .header-button-selected {
+  font-family: futura;
   width: 15%;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -60,7 +61,7 @@ div.container {
   padding-left: 0;
   margin-left: 3px;
   margin-right: 3px;
-  color: black;
+  color: #001a00;
   text-align: center;
   font-size: 15px;
   border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
@@ -73,9 +74,8 @@ div.container {
 
 .header-button:hover, .header-button-selected, .header-button-selected:hover {
   margin-left: 5px;
-  color: #000;
   background-image: linear-gradient(#fff 0, #ccffcc);
-  font-weight: bold;
+  color: black;
 }
 
 .header-button:hover, .header-button-selected:hover {
