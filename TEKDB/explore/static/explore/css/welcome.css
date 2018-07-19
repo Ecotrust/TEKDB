@@ -2,6 +2,7 @@
   text-align: center;
 }
 .welcome-login-btn {
+  font-family: futura;
   box-shadow: 3px 3px 8px 5px #ccc;
   margin: 30px auto;
   width: auto;
