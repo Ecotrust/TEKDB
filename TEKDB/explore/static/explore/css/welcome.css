@@ -3,18 +3,17 @@
 }
 .welcome-login-btn {
   box-shadow: 3px 3px 8px 5px #ccc;
-  margin: 50px auto;
-  width: 120px;
+  margin: 30px auto;
+  width: auto;
   padding: 15px;
   background-color: white;
-  color: #000;
-  font: icon;
-  font-size: 25px;
+  color: #001a00;
+  font-size: 20px;
   border-radius: 10px;
 }
 
 .welcome-login-btn:hover {
-	background-color: #DDFFDD;
-	border: 1px solid black;
-	box-shadow: 3px 3px 10px 0;
+  color: #000;
+  background-image: linear-gradient(#fff 0, #ccffcc);
+  font-weight: bold;
 }
