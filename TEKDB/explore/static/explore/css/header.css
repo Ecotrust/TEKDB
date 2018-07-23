@@ -19,16 +19,10 @@ div.container {
   line-height: 1;
 }
 
-.header-title-content:hover {
-  text-decoration: none !important;
-  background-color: #ccffcc;
-  font-weight: normal;
-}
-
 .logo-tekdb {
   letter-spacing: 10px;
   margin-bottom: -8;
-  font-size: 70px;
+  font-size: 60px;
 }
 
 .logo-tek {
@@ -37,13 +31,15 @@ div.container {
 
 .logo-db {
   color: #99ff99; 
-  margin-left: -28px;
+  margin-left: -22px;
    }
 
  .logo-subhead {
   color: #001a00;
   font-family: futura;
-  font-size:13;
+  font-size:16;
+  letter-spacing: 2px;
+  padding-left:23px;
  }
 
 .header-button-row {
