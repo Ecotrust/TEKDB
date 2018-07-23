@@ -23,10 +23,17 @@
   font-size: 16px;
 }
 
+.input-group-btn .btn {
+   color: #001a00;
+   font-family: futura;
+}
+
 .input-group-btn .btn:hover {
   font-weight: bold;
+  color: black;
   background-image: linear-gradient(#fff 0, #ccffcc);
 }
+
 
 body { padding-top: 90px; }
 
@@ -76,11 +83,17 @@ a:hover {
 .explore-logo {
   margin-top: 100px;
   text-align: center;
+  font-family: futura;
+  color: #001a00
 }
 
 .explore-logo img {
-  height: 50px;
-  width: 50px;
+  height: 8em;
+  width: 8em;
+}
+
+.explore-logo p {
+  font-size: 2em;
 }
 
 #export-links {
