@@ -10,6 +10,10 @@ thead {
   background-color: #008000;
 }
 
+.table-body {
+  overflow: scroll;
+}
+
 td {
   cursor: pointer;
 }

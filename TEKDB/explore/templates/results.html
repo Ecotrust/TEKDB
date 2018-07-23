@@ -73,7 +73,7 @@
             <h3>Results for search "<b>{{ keyword }}</b>"</h3>
 
             <div data-bind="visible: app.resultViewModel.view_is_list">
-            <table id='results_table' class="table table-striped table-hover result-list">
+           <table id='results_table' class="table table-striped table-hover result-list">
               <thead>
                 <tr>
                   <th></th>
@@ -82,6 +82,7 @@
                   <th id='description_col'>Description</th>
                 </tr>
               </thead>
+              <div class="table-body">
               <tbody data-bind="foreach: app.resultViewModel.results">
                 <tr data-bind="click: rowclick">
                   <td><img class='list-image' data-bind="attr: { src: $data.image }" /></td>
@@ -90,6 +91,7 @@
                   <td data-bind='text: $data.description'></td>
                 </tr>
               </tbody>
+              </div>
             </table>
             </div>
 
