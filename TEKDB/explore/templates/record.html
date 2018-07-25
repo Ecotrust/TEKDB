@@ -14,17 +14,6 @@
       <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button">Back to results</button></a>
     </div>
     <div class="col-md-1">
-      <table>
-        <tr><td>Download</td></tr>
-        <tr>
-          <td>
-            <ul id="export-links">
-              <li><a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a></li>
-              <li><a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a></li>
-            </ul>
-          </td>
-        </tr>
-      </table>
     </div>
   </div>
   <div class="row content-row">
@@ -124,6 +113,17 @@
       </div>
     </div>
     <div class="col-md-1">
+      <table>
+        <tr><td>Download</td></tr>
+        <tr>
+          <td>
+            <ul id="export-links">
+              <li><a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a></li>
+              <li><a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
