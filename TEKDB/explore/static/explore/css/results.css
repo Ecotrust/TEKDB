@@ -6,6 +6,7 @@ div {
 }
 */
 
+
 #results-well {
   padding-bottom: 100px;
   padding-top: 0px;
@@ -14,7 +15,41 @@ div {
 #results-well h3 {
   font-size: 24px;
   color: #001a00;
-  margin: 0px;
+  margin: 5px;
+}
+
+#results-controls {
+  margin: 5px;
+}
+
+.pagination-row {
+  margin-left: 0 px;
+  margin-right: 0 px;
+}
+
+#pagination-container {
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+.pagination {
+  margin: 5 0 0 0;
+  padding-left: 15px;
+}
+
+.view-icons {
+  margin: 5 0 0 0px;
+  padding-right: 15px;
+  text-align: right;
+}
+
+.view-icons a {
+  color: black;
+  text-decoration: none;
+}
+
+.view-icons a:hover {
+  color: #696;
 }
 
 thead {
@@ -112,23 +147,6 @@ input[type=submit]:hover {
 .result-cell:hover .result-img-content-wrapper {
   background-color: black;
   background-color: rgba(0,0,0,0.9);
-}
-
-.pagination {
-  margin: 0 15 0 15;
-}
-
-.view-icons {
-  margin: 2px auto 5px auto;
-}
-
-.view-icons a {
-  color: black;
-  text-decoration: none;
-}
-
-.view-icons a:hover {
-  color: #696;
 }
 
 .selected-view {

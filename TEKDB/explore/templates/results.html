@@ -33,11 +33,13 @@
             <h3>Results for search "<b>{{ keyword }}</b>"</h3>
             <div id="results-controls">
             </div>
+          <!--pagination-->
             <div class="pagination-row row">
                 <div class="pagination col-md-8">
                     <div id="pagination-container" class='dataTables_wrapper'></div>
                 </div>
-                <div class='col-md-3 view-icons'>
+                <!--select tile or list-->
+                <div class='col-md-4 view-icons'>
                     <span data-bind="visible: app.resultViewModel.view_is_tiled">
               <a class='selected-view'>
                 <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
@@ -59,7 +61,6 @@
                     </a>
                     </span>
                 </div>
-
             </div>
             <!--list view-->
             <div data-bind="visible: app.resultViewModel.view_is_list">
