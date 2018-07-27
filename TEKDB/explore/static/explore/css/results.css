@@ -15,16 +15,27 @@ div {
 #results-well h3 {
   font-size: 24px;
   color: #001a00;
-  margin: 5px;
+  margin: 5 0 5 0px;
 }
 
 #results-controls {
-  margin: 5px;
+  margin: 5 0 5 0px;
 }
 
-.pagination-row {
-  margin-left: 0 px;
-  margin-right: 0 px;
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row-eq-height .view-icons {
+  flex:1;
+}
+
+.row-eq-height .pagination {
+  flex:1;
 }
 
 #pagination-container {
@@ -33,14 +44,15 @@ div {
 }
 
 .pagination {
-  margin: 5 0 0 0;
-  padding-left: 15px;
+  margin: 0px;
+
 }
 
 .view-icons {
-  margin: 5 0 0 0px;
-  padding-right: 15px;
-  text-align: right;
+  padding-left: 15px;
+  text-align: left;
+  margin-left: 5px;
+  margin-top: 8px; /*make due with this until div's height can be made = to adjacent divs*/
 }
 
 .view-icons a {
