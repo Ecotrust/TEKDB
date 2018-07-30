@@ -1,10 +1,10 @@
-/*
+
 div {
   border-style: solid;
   border-width: 1px; 
   border-color: black;
 }
-*/
+
 
 
 #results-well {
@@ -22,6 +22,7 @@ div {
   margin: 5 0 5 0px;
 }
 
+/*this is not working
 .row-eq-height {
   display: -webkit-box;
   display: -webkit-flex;
@@ -29,6 +30,8 @@ div {
   display: flex;
   flex-wrap: wrap;
 }
+
+*/
 
 .row-eq-height .view-icons {
   flex:1;
@@ -314,4 +317,8 @@ input[type=submit]:hover {
 #results_table_info {
   float: right;
   /*margin-top: -0.75em;*/
+}
+
+.download-table {
+  float: right;
 }

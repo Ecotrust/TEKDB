@@ -85,6 +85,7 @@ div.container {
 .header-button-row .dropdown {
   width: 8%;
   float: none;
+  margin-right: 15;
 }
 
 .dropdown-menu {
