@@ -22,6 +22,7 @@ div.container {
   letter-spacing: 10px;
   margin-bottom: -8;
   font-size: 60px;
+  letter-spacing: 8px;
 }
 
 .logo-tek {
@@ -30,7 +31,7 @@ div.container {
 
 .logo-db {
   color: #99ff99; 
-  margin-left: -22px;
+  margin-left: -28px;
    }
 
  .logo-subhead {
@@ -40,6 +41,10 @@ div.container {
   letter-spacing: 2px;
   padding-left:23px;
  }
+
+.logo-subhead p {
+  margin-bottom: 3px;
+}
 
 .header-button-row {
   min-height: 50px;
