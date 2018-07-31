@@ -2,20 +2,20 @@
   <div class="col-md-6">
     <div class="row header-title-content">
       <a href="/">
-        <div class="col-md-8 logo-tekdb">
+        <div class="col-md-12 logo-tekdb">
         {% block headerTitle %}        
-            <span class="logo-tek">TEK</span>
+             <span class="logo-tek">TEK</span>
             <span class="logo-db">DB</span>
         </div>
-        <div class="w-100"></div>
-        <div class="col-md-8 logo-subhead">
-          <p>Traditional Ethnograhic</p>
-          <p>Knowledge Database</p>
+        <div class="row">
+          <div class="logo-subhead col-md-12">
+            <p>Traditional Ethnographic</p>
+            <p> Knowledge Database</p>
+          </div>
         </div>
       </a>
       {% endblock %}
     </div>
-    <div class="col-md-4"></div>
   </div>
   <div class="col-md-6">
     {% block headerButtons %}
