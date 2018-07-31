@@ -5,6 +5,14 @@ div {
   border-color: black;
 }
 
+.query-form {
+  margin-bottom: 0px;
+}
+
+.form-group {
+  margin: 3px;
+}
+
 .select-search-filter {
   margin-bottom: 4px;
   font-weight: bold;
@@ -87,6 +95,7 @@ td {
 }
 
 input[type=submit] {
+  font-family: futura;
   border-radius: 8px;
   box-shadow: 3px 3px 8px 0 #ccc;
   background-image: linear-gradient(#fff 0, #e0e0e0);
