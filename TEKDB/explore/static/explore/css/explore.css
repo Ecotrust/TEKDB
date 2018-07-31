@@ -31,7 +31,7 @@
   font-family: futura;
 }
 
-.input-group-btn .btn:hover {
+.input-group .btn:hover {
   font-weight: bold;
   color: black;
   background-image: linear-gradient(#fff 0, #ccffcc);
