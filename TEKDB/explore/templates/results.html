@@ -22,9 +22,11 @@
     <!--Search options-->
     <div class="row content-row">
         <div class="col-md-2">
-            <p>Type:</p>
+            <p class="select-search-filter">Type:</p>
             {{ category_checkboxes | safe }}
-            <input type="submit" value='Apply Filter'>
+            <p class="apply-search-filter-btn">
+                <input type="submit" value='Apply Filter'>
+            </p>
         </div>
         <div class="col-md-8 well content-well" id="results-well">
             {% block content %}

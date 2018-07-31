@@ -5,7 +5,14 @@ div {
   border-color: black;
 }
 
+.select-search-filter {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
 
+.apply-search-filter-btn {
+  margin-top: 4px;
+}
 
 #results-well {
   padding-bottom: 100px;
