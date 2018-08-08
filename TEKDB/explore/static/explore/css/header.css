@@ -46,10 +46,14 @@ div.container {
   margin-bottom: 3px;
 }
 
+a {
+  color: #001a00;
+}
+
 .header-button-row {
-  min-height: 50px;
-  margin-top: 15px;
-  text-align: right;
+  float: right;
+  font-size: 14px;
+  font-family: futura;
 }
 
 .header-button, .header-button-selected {

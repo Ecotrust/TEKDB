@@ -21,47 +21,64 @@
   <div class="col-md-6">
     {% block headerButtons %}
     <div class="row header-button-row">
-      <div class="col-sm-4 col-md-4"></div>
-      {% if user.is_authenticated %}
-      {% ifnotequal pageTitle "Explore" %}
-      <a href="/explore" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button" >
-      {% endif %}
-        Explore
-      </a>
-      {% ifnotequal pageTitle "About" %}
-      <a href="/about" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-        About
-      </a>
-      {% ifnotequal pageTitle "Help" %}
-      <a href="/help" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-        Help
-      </a>
-      {% if user.is_authenticated %}
-          <button class="header-button btn dropdown-toggle dropdown col-sm-2 col-md-2" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="glyphicon glyphicon-user" aria-hidden="true"></span>        
-          </button>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-        {% if user.is_staff %}
-          <li><a class="dropdown-item" href="/admin">Administration</a></li>
+
+
+
+
+      <ul class="nav nav-tabs">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+          {% ifnotequal pageTitle "Explore" %}
+              <a href="/explore" class="nav-link">
+              {% else %}
+              <a class="nav-link">
+          {% endifnotequal %}
+        {% else %}
+              <a class="nav-link" >
         {% endif %}
-      <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
-      </ul>
+            Explore
+              </a>
+            </li>
+          <li class="nav-item">
+            {% ifnotequal pageTitle "About" %}
+              <a href="/about" class="nav-link">
+            {% else %}
+              <a class="nav-link">
+            {% endifnotequal %}
+            About
+              </a>
+          </li>
+          <li class="nav-item">
+            {% ifnotequal pageTitle "Help" %}
+              <a href="/help" class="nav-link">
+            {% else %}
+              <a class="nav-link">
+            {% endifnotequal %}
+              Help
+              </a>
+          </li>
+    
+      {% if user.is_authenticated %}
+          <li>
+            <a class="nav-link dropdown-toggle" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="glyphicon glyphicon-user" aria-hidden="true"></span>        
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+              {% if user.is_staff %}
+                <a class="dropdown-item" href="/admin">Administration</a>
+              {% endif %}
+                <a class="dropdown-item" href="/logout?next=/">Logout</a>
+            </div>
       {% else %}
-        <a class="col-sm-3 col-md-3 header-button" data-toggle="modal" data-target="#loginModal">
-        Login
-        </a>
+            <a class="header-button nav-item" data-toggle="modal" data-target="#loginModal">
+            Login
+            </a>
+          </li>
       {% endif %}
+
+
+
+    </ul>
     </div>
     {% endblock %}
   </div>
