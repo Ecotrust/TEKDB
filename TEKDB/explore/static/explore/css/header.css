@@ -55,7 +55,7 @@ a {
   font-size: 14px;
   font-family: futura;
 }
-
+/*
 .header-button, .header-button-selected {
   font-family: futura;
   width: 15%;
@@ -90,6 +90,16 @@ a {
   width: 8%;
   float: none;
   margin-right: 15;
+}
+*/
+.nav-link {
+  color: #001a00;
+    background-image: linear-gradient(#fff 0, #e0e0e0);
+}
+
+.nav-link:hover {
+  color: #001a00;
+  background-image: linear-gradient(#fff 0, #ccffcc);
 }
 
 .dropdown-menu {
