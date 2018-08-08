@@ -12,7 +12,7 @@ div.container {
 }
 
 .header-title-content {
-  text-align: left;
+  text-align: center;
   background-color: white;
   font-family: garamond;
   line-height: 1;
@@ -39,7 +39,7 @@ div.container {
   font-family: futura;
   font-size:16;
   letter-spacing: 2px;
-  padding-left:23px;
+  padding-left:15px;
  }
 
 .logo-subhead p {
