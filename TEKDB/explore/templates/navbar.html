@@ -1,4 +1,6 @@
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
 <div class="row row-eq-height">
   <div class="col-md-3">
     <div class="row header-title-content">
@@ -61,7 +63,7 @@
       {% if user.is_authenticated %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="glyphicon glyphicon-user" aria-hidden="true"></span>        
+              <i class="fas fa-user"></i>      
             </a>
             <div class="dropdown-menu" aria-labelledby="userDropdown">
               {% if user.is_staff %}

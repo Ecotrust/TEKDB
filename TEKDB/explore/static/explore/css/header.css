@@ -92,6 +92,19 @@ a {
   margin-right: 15;
 }
 */
+
+.nav-tabs{
+    display: flex;
+}
+.nav-tabs li {
+    display: flex;
+    flex: 1;
+}
+
+.nav-tabs li  a {
+    flex: 1;
+}
+
 .nav-link {
   color: #001a00;
     background-image: linear-gradient(#fff 0, #e0e0e0);
