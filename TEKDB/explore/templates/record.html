@@ -3,21 +3,14 @@
 {% block extra_css %}
 <link rel="stylesheet" href="/static/explore/css/results.css">
 <link rel="stylesheet" href="/static/explore/css/record.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 {% endblock %}
 
 {% block contentwrapper %}
 <div class="container content-container">
-  <div class="row">
-    <div class="col-md-1">
-    </div>
-    <div class="col-md-10">
-      <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button" aria-label="Back to Search Results"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button></a>
-    </div>
-    <div class="col-md-1">
-    </div>
-  </div>
   <div class="row content-row">
     <div class="col-md-1">
+        <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button" aria-label="Back to Search Results"><i class="fas fa-arrow-left"></i></a>
     </div>
     <div class="col-md-10 well content-well">
       <div class='row'>
