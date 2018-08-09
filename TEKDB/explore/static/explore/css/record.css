@@ -40,15 +40,24 @@
 }
 
 .back-button {
-  color: #004d00;
+  color: #001a00;
   border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
-  border-style: solid;
-  border-width: 1px;
   box-shadow: 3px 3px 8px 0 #ccc;
+  background-image: linear-gradient(#fff 0, #e0e0e0);
+  padding-top: 8px;
+  padding-right: 20px;
+  padding-bottom: 8px;
+  padding-left: 15px;
+  float: right;
 }
+
 .back-button:hover {
   background-image: linear-gradient(#fff 0, #ccffcc);
   font-weight: bold;
+}
+
+a:hover {
+  color: black;
 }
 
 .source-excerpt {
