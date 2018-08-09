@@ -1,10 +1,10 @@
-
+/*
 div {
   border-style: solid;
   border-width: 1px; 
   border-color: black;
 }
-
+*/
 .query-form {
   margin-bottom: 0px;
 }
@@ -52,11 +52,6 @@ div {
   text-align: left;
   margin-left: 5px;
   margin-top: 8px; /*make due with this until div's height can be made = to adjacent divs*/
-}
-
-.view-icons a {
-  color: black;
-  text-decoration: none;
 }
 
 .view-icons a:hover {
@@ -163,18 +158,13 @@ input[type=submit]:hover {
 
 .selected-view {
   color: white;
-  background-color: black;
   padding: 5px;
   border-radius: 14px;
   margin: 5px;
+  background-color: black;
 }
 .selected-view span {
   color: ccffcc;
-}
-
-.selected-view .glyphicon-th {
-  /*margin-left: 1px;*/
-  margin-right: -4px;
 }
 
 .result-list {
