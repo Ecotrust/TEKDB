@@ -18,15 +18,18 @@ div.container {
   line-height: 1;
 }
 
-.logo-tekdb {
-  letter-spacing: 10px;
-  margin-bottom: -8;
+.logo {
+  width: 300px;
   font-size: 60px;
   letter-spacing: 8px;
 }
 
+.logo-main {
+  margin-bottom: -8px;
+}
+
 .logo-tek {
-  color: #004d00;
+  color: #006600;
 }
 
 .logo-db {
@@ -37,14 +40,10 @@ div.container {
  .logo-subhead {
   color: #001a00;
   font-family: futura;
-  font-size:16;
+  font-size: 16;
   letter-spacing: 2px;
-  padding-left:15px;
- }
-
-.logo-subhead p {
   margin-bottom: 3px;
-}
+ }
 
 a {
   color: #001a00;
@@ -55,44 +54,8 @@ a {
   font-size: 14px;
   font-family: futura;
 }
-/*
-.header-button, .header-button-selected {
-  font-family: futura;
-  width: 15%;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 0;
-  padding-left: 0;
-  margin-left: 3px;
-  margin-right: 3px;
-  color: #001a00;
-  text-align: center;
-  font-size: 15px;
-  border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 8px;
-  box-shadow: 3px 3px 8px 0 #ccc;
-  background-image: linear-gradient(#fff 0, #e0e0e0);
-}
 
-.header-button:hover, .header-button-selected, .header-button-selected:hover {
-  margin-left: 5px;
-  background-image: linear-gradient(#fff 0, #ccffcc);
-  color: black;
-}
-
-.header-button:hover, .header-button-selected:hover {
-  text-decoration: none !important; 
-}
-
-.header-button-row .dropdown {
-  width: 8%;
-  float: none;
-  margin-right: 15;
-}
-*/
-
+/*flex is being used to make all nav tabs the same height:*/
 .nav-tabs{
     display: flex;
 }
