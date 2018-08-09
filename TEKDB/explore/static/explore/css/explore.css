@@ -42,13 +42,6 @@ body { padding-top: 90px; }
 
 h1 { text-align: center; }
 
-a { color: white; }
-
-a:hover {
-  color: white;
-  font-weight: bold;
-}
-
 #search-category-type {
   display: none;
 }
