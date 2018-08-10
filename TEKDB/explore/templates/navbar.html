@@ -2,30 +2,22 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
 <div class="row row-eq-height">
-  <div class="col-md-3">
-    <div class="row header-title-content">
-      {% block headerTitle %}    
-      <a href="/">
-        <div class="col-md-12 logo">
-          <div class="logo-main">
-            <span class="logo-tek">TEK</span>
-            <span class="logo-db">DB</span>
-          </div>
-          <p class="logo-subhead">Traditional Ethnographic</p>
-          <p class="logo-subhead"> Knowledge Database</p>
-        </div>
-      </a>
-      {% endblock %}
-    </div>
+  
+  {% block headerTitle %}    
+  <div class="col-md-3 logo">
+    <a href="/">      
+      <div class="logo-main">
+        <span class="logo-tek">TEK</span>
+        <span class="logo-db">DB</span>
+      </div>
+      <p class="logo-subhead">Traditional Ethnographic</p>
+      <p class="logo-subhead"> Knowledge Database</p>
+    </a>    
   </div>
+      {% endblock %}
 
+  {% block headerButtons %}
   <div class="col-md-9">
-    {% block headerButtons %}
-    <div class="row header-button-row">
-
-
-
-
       <ul class="nav nav-tabs">
         {% if user.is_authenticated %}
           <li class="nav-item">
@@ -76,12 +68,8 @@
             </a>
           </li>
       {% endif %}
-
-
-
     </ul>
-    </div>
-    {% endblock %}
   </div>
+  {% endblock %}
 </div>
 

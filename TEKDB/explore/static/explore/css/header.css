@@ -11,21 +11,30 @@ div.container {
   padding-bottom:10px;
 }
 
-.header-title-content {
-  text-align: center;
-  background-color: white;
-  font-family: garamond;
-  line-height: 1;
+.row-eq-height {
+  display: flex;
+}
+
+.row-eq-height .col-md-3 {
+  flex: 1;
+}
+
+.row-eq-height .col-md-9 {
+  flex: 1;
 }
 
 .logo {
-  width: 300px;
-  font-size: 60px;
-  letter-spacing: 8px;
+  width: 275px;
+  text-align: center;
+  background-color: white;
+  line-height: 1;
 }
 
 .logo-main {
   margin-bottom: -8px;
+  font-size: 60px;
+  font-family: garamond;
+  letter-spacing: 8px;
 }
 
 .logo-tek {
@@ -49,15 +58,13 @@ a {
   color: #001a00;
 }
 
-.header-button-row {
-  float: right;
-  font-size: 14px;
-  font-family: futura;
-}
 
 /*flex is being used to make all nav tabs the same height:*/
 .nav-tabs{
-    display: flex;
+  display: flex;
+  float: right;
+  font-size: 14px;
+  font-family: futura;
 }
 .nav-tabs li {
     display: flex;
