@@ -5,10 +5,9 @@ div {
   border-color: black;
 }
 
-
-div.container {
-  padding-top:10px;
-  padding-bottom:10px;
+nav .container {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .row-eq-height {

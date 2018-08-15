@@ -50,10 +50,6 @@ h1 { text-align: center; }
   color: black;
 }
 
-.content-container {
-  margin-top: 20px;
-}
-
 .well {
   background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%);
 }
