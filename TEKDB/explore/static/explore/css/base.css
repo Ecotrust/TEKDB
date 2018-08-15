@@ -4,9 +4,26 @@ body {
 }
 */
 .container {
-	background-color: #F5F5DC;
+	background-color: #e9e0c5;
 }
 
 body {
 	padding-top: 115px;
+}
+
+.well {
+  background-image: linear-gradient(to top, #d1d7c3 0,#F0ffF0 100%);
+}
+.content-well {
+  padding-bottom: 200px;
+}
+
+.content-well h1 {
+  margin: 40px auto;
+  font-size: 55px;
+  letter-spacing: 5px;
+}
+
+.odd-well {
+  background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%);
 }
