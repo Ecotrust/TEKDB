@@ -4,7 +4,8 @@ body {
 }
 */
 .container {
-	background-color: #e9e0c5;
+	/*background-color: #e9e0c5;*/
+	background-image: linear-gradient(to bottom, #e9e0c5 0, #f4efe1 100%) ;
 }
 
 body {
@@ -12,7 +13,7 @@ body {
 }
 
 .well {
-  background-image: linear-gradient(to top, #d1d7c3 0,#F0ffF0 100%);
+  background-image: linear-gradient(to top, #bfd68c 0,#e7f0d4 100%);
 }
 .content-well {
   padding-bottom: 200px;
