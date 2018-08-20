@@ -5,6 +5,12 @@
   width: 84px;
 }
 
+.record-name {
+  font-family: garamond;
+  font-weight: bold;
+  color: #006600;
+}
+
 .relationship-row {
   margin-bottom: 0.5em;
 }
