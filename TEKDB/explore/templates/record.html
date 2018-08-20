@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class='row'>
-            <div class='well odd-well'>
+            <div class='content-well well'>
               {% if record.media.file %}
                 {% if not record.restricted %}
                 <div style="text-align: right">
@@ -50,7 +50,7 @@
           {% if record.relationships|length > 0 %}
           <div class='row'>
             <h4>Relationships</h4>
-            <div class='well odd-well relationship-div'>
+            <div class='content-well well relationship-div'>
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
                   <p><b>{{ relationship.key }}:</b></p>
