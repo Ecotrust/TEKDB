@@ -61,10 +61,10 @@ div {
 
 /*both .dataTables_scrollHead AND thead need to have the same color applied for the background of the top of the table head to have the same color. This is because of the 20px margin on .dataTables_scroll_HeadInner*/
 .dataTables_scrollHead {
-  background-color: #ceba7e;
+  background-color: #dcc09b;
 }
 thead {
-  background-color: #ceba7e;
+  background-color: #dcc09b;
 }
 
 .table-body {

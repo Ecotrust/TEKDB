@@ -8,7 +8,7 @@ div {
 nav .container {
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: #bfd68c;
+  background-image: linear-gradient(#e9d8c1 0, #f7f0e7);
 }
 
 .row-eq-height {
