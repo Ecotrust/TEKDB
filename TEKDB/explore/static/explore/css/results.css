@@ -1,10 +1,10 @@
-
+/*
 div {
   border-style: solid;
   border-width: 1px; 
   border-color: black;
 }
-
+*/
 .query-form {
   margin-bottom: 0px;
 }
@@ -23,12 +23,12 @@ div {
   margin-top: 4px;
 }
 
-#results-well {
+.content-well {
   padding-bottom: 20px;
   padding-top: 0px;
 }
 
-#results-well h3 {
+.content-well h3 {
   font-size: 24px;
   color: #001a00;
   margin: 5 0 5 0px;
@@ -88,7 +88,6 @@ input[type=submit]:hover {
 }
 
 .result-cell {
-  /*padding: 10px;*/
   margin: 10px 4.166666%;
   border: 2px solid #888;
   border-radius: 10px;
@@ -120,17 +119,18 @@ input[type=submit]:hover {
 .result-desc-col {
   background-size:cover;
   height: 50px;
-  background-color: peru;
+  background-color: #dcc09b;
   text-align: center;
   overflow: hidden;
   /*white-space: nowrap;*/
   text-overflow: ellipsis;
   border-radius: 8px 8px 0 0;
 }
-.result-desc-col h3 {
+
+[id^="result-title"] h3 {
   margin: auto;
   margin-top: 3px;
-  font-size: 24px;
+  font-size: 20px;
   /*font-size: 2vw;*/
 }
 
