@@ -1,14 +1,11 @@
 
 body {
   background-image: linear-gradient(#f7f0e7 0, #e9d8c1);
+  padding-top: 120px;
 }
 
 /*.container {
 	background-image: linear-gradient(to top, #e9e0c5 0, #f4efe1 100%)*/
-}
-
-body {
-	padding-top: 115px;
 }
 
 .well {
