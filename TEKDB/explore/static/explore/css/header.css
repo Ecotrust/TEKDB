@@ -1,14 +1,18 @@
-
+/*
 div {
   border-style: solid;
   border-width: 1px; 
   border-color: black;
 }
+*/
+
+.navbar {
+  background-image: linear-gradient(#e9d8c1 0, #f7f0e7);
+}
 
 nav .container {
   padding-top: 10px;
   padding-bottom: 10px;
-  background-image: linear-gradient(#e9d8c1 0, #f7f0e7);
 }
 
 .row-eq-height {
@@ -26,7 +30,6 @@ nav .container {
 .logo {
   width: 275px;
   text-align: center;
-  background-color: white;
   line-height: 1;
 }
 
