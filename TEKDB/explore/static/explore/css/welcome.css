@@ -2,19 +2,9 @@
   text-align: center;
 }
 .welcome-login-btn {
-  font-family: futura;
-  box-shadow: 3px 3px 8px 5px #ccc;
   margin: 30px auto;
   width: auto;
   padding: 15px;
-  background-color: white;
-  color: #001a00;
   font-size: 20px;
-  border-radius: 10px;
 }
 
-.welcome-login-btn:hover {
-  color: #000;
-  background-image: linear-gradient(#fff 0, #ccffcc);
-  font-weight: bold;
-}

@@ -7,30 +7,6 @@
   width: 100%;
 }
 
-
-.btn-group .btn:hover {
-  font-weight: bold;
-  color: black;
-  background-image: linear-gradient(#fff 0, #ccffcc);
-}
-
-.input-group .btn {
-  border: 1px solid;
-  border-color: #ccc;
-  background-image: linear-gradient(#fff 0, #e0e0e0);
-  box-shadow: 3px 3px 8px 0 #ccc;
-  text-align: center;
-  font-size: 16px;
-  color: #001a00;
-  font-family: futura;
-}
-
-.input-group .btn:hover {
-  font-weight: bold;
-  color: black;
-  background-image: linear-gradient(#fff 0, #ccffcc);
-}
-
 .btn-group .btn:focus {
   outline-color: #dcc09b;
   outline-width: 5px;

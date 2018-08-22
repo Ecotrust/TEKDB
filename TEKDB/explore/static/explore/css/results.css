@@ -23,9 +23,6 @@ body {
   font-weight: bold;
 }
 
-.apply-search-filter-btn {
-  margin-top: 4px;
-}
 
 .content-well {
   padding-bottom: 20px;
@@ -77,18 +74,6 @@ thead {
 
 td {
   cursor: pointer;
-}
-
-input[type=submit] {
-  font-family: futura;
-  border-radius: 8px;
-  box-shadow: 3px 3px 8px 0 #ccc;
-  background-image: linear-gradient(#fff 0, #e0e0e0);
-}
-
-input[type=submit]:hover {
-   background-image: linear-gradient(#fff 0, #ccffcc);
-   font-weight: bold;
 }
 
 .result-cell {

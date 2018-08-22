@@ -6,22 +6,30 @@ body {
 
 /*.container {
 	background-image: linear-gradient(to top, #e9e0c5 0, #f4efe1 100%)*/
+
+/*The greens assigned here to .well are whiter tints of a green taken from map images shown in the applicaton*/
+.well {
+  background-image: linear-gradient(to top, #97b181 0, #e5ecdf 100%);
 }
 
-.well {
-  background-image: linear-gradient(to top, #d2e9c1 0,#eef7e7 100%);
-}
 .content-well {
   padding-bottom: 200px;
 }
 
-.content-well h1 {
-  margin: 40px auto;
-  font-size: 55px;
-  letter-spacing: 5px;
+
+.btn {
+  border: 1px solid;
+  border-color: #ccc;
+  border-radius: 4px;
+  background-image: linear-gradient(#fff 0, #e0e0e0);
+  box-shadow: 3px 3px 8px 0 #ccc;
+  text-align: center;
+  color: #001a00;
+  font-family: futura;
 }
-/*
-.odd-well {
-  background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%);
+
+.btn:hover  {
+ font-weight: bold;
+  color: black;
+  background-image: linear-gradient(#eff2f5 0, #8197b1);
 }
-*/
