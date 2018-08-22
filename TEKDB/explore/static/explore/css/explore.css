@@ -14,12 +14,6 @@
   background-image: linear-gradient(#fff 0, #ccffcc);
 }
 
-.btn-group .btn:focus {
-  border-color: orange;
-  outline-offset: -5px;
-  background-image: linear-gradient(#fff 0, #ccffcc);
-}
-
 .input-group .btn {
   border: 1px solid;
   border-color: #ccc;
@@ -35,6 +29,11 @@
   font-weight: bold;
   color: black;
   background-image: linear-gradient(#fff 0, #ccffcc);
+}
+
+.btn-group .btn:focus {
+  outline-color: #dcc09b;
+  outline-width: 5px;
 }
 
 h1 { text-align: center; }
