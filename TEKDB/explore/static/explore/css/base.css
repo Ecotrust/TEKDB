@@ -4,9 +4,6 @@ body {
   padding-top: 120px;
 }
 
-/*.container {
-	background-image: linear-gradient(to top, #e9e0c5 0, #f4efe1 100%)*/
-
 /*The greens assigned here to .well are whiter tints of a green taken from map images shown in the applicaton*/
 .well {
   background-image: linear-gradient(to top, #97b181 0, #e5ecdf 100%);
@@ -17,18 +14,21 @@ body {
 }
 
 
+.btn, .nav-link {
+  background-image: linear-gradient(#fff 0, #d0d8e2);
+  box-shadow: 3px 3px 8px 0 #ccc;
+  text-align: center;
+  color: black;
+  font-family: futura;
+}
+
 .btn {
   border: 1px solid;
   border-color: #ccc;
   border-radius: 4px;
-  background-image: linear-gradient(#fff 0, #e0e0e0);
-  box-shadow: 3px 3px 8px 0 #ccc;
-  text-align: center;
-  color: #262f1d;
-  font-family: futura;
 }
 
-.btn:hover  {
+.btn:hover, .nav-link:hover  {
  font-weight: bold;
-  background-image: linear-gradient(#eff2f5 0, #b0becf);
+  background-image: linear-gradient(#ffffff 0, #b0becf);
 }

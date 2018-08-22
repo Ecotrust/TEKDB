@@ -78,15 +78,6 @@ a {
     flex: 1;
 }
 
-.nav-link {
-  color: #001a00;
-    background-image: linear-gradient(#fff 0, #e0e0e0);
-}
-
-.nav-link:hover {
-  color: #001a00;
-  background-image: linear-gradient(#fff 0, #ccffcc);
-}
 
 .dropdown-menu {
   right: 0;
