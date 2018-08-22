@@ -5,6 +5,10 @@ div {
   border-color: black;
 }
 */
+body {
+  padding-top: 110px;
+}
+
 .query-form {
   margin-bottom: 0px;
 }
