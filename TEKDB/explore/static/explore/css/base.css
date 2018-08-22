@@ -24,12 +24,11 @@ body {
   background-image: linear-gradient(#fff 0, #e0e0e0);
   box-shadow: 3px 3px 8px 0 #ccc;
   text-align: center;
-  color: #001a00;
+  color: #262f1d;
   font-family: futura;
 }
 
 .btn:hover  {
  font-weight: bold;
-  color: black;
-  background-image: linear-gradient(#eff2f5 0, #8197b1);
+  background-image: linear-gradient(#eff2f5 0, #b0becf);
 }
