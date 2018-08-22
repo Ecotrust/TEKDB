@@ -40,6 +40,10 @@ nav .container {
   letter-spacing: 8px;
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 .logo-tek {
   color: #006600;
 }
