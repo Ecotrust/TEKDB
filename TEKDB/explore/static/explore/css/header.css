@@ -40,10 +40,6 @@ nav .container {
   letter-spacing: 8px;
 }
 
-a:hover {
-  text-decoration: none;
-}
-
 .logo-tek {
   color: #006600;
 }
@@ -72,6 +68,9 @@ a {
   float: right;
   font-size: 14px;
   font-family: futura;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 .nav-tabs li {
     display: flex;
