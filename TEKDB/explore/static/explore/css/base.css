@@ -13,9 +13,13 @@ body {
   padding-bottom: 200px;
 }
 
+a:hover {
+  text-decoration: none;
+  color: black;
+}
 
 .btn, .nav-link {
-  background-image: linear-gradient(#fff 0, #d0d8e2);
+  background-image: linear-gradient(#fff 0, #dfe5ec);
   box-shadow: 3px 3px 8px 0 #ccc;
   text-align: center;
   color: black;

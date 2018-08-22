@@ -2,6 +2,11 @@
   font-size: 14px;
 }
 
+.btn-default:hover {
+  background-position: 0;
+  color: black;
+}
+
 .btn-group.btn-group-justified {
   table-layout: auto;
   width: 100%;
