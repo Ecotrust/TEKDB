@@ -13,9 +13,10 @@ body {
   padding-bottom: 200px;
 }
 
-a:hover {
-  text-decoration: none;
-  color: black;
+.dropdown-item :hover {
+	color: black;
+	font-size: larger;
+	text-decoration: none;
 }
 
 .btn, .nav-link {
@@ -34,5 +35,7 @@ a:hover {
 
 .btn:hover, .nav-link:hover  {
  font-weight: bold;
+ text-decoration: none;
   background-image: linear-gradient(#ffffff 0, #b0becf);
+  color: #006600; /*color #006600 is the same as the color assigned to "TEK" in the logo*/
 }

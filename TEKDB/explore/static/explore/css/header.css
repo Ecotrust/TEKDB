@@ -33,6 +33,10 @@ nav .container {
   line-height: 1;
 }
 
+.logo a:hover {
+  text-decoration: none;
+}
+
 .logo-main {
   margin-bottom: -8px;
   font-size: 60px;
