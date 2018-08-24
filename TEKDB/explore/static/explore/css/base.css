@@ -2,6 +2,7 @@
 body {
   background-image: linear-gradient(#f7f0e7 0, #e9d8c1);
   padding-top: 120px;
+  color: black;
 }
 
 /*The greens assigned here to .well are whiter tints of a green taken from map images shown in the applicaton*/
