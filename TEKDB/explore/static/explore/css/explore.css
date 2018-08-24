@@ -2,6 +2,12 @@
   font-size: 14px;
 }
 
+.content-well h1 {
+  font-family: garamond;
+  font-size: 42px;
+  color: #006600;
+}
+
 .btn-default:hover {
   background-position: 0;
   color: black;
