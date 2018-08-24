@@ -1,7 +1,10 @@
+body {
+  padding-top: 120px;
+}
+
 .content-well {
   padding-bottom: 20px;
 }
-
 .record-icon {
   height: 80px;
   background-size: cover;
