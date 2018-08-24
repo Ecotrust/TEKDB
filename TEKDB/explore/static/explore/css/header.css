@@ -12,7 +12,6 @@ div {
 
 nav .container {
   padding-top: 10px;
-  padding-bottom: 10px;
 }
 
 .row-eq-height {
@@ -31,6 +30,7 @@ nav .container {
   width: 275px;
   text-align: center;
   line-height: 1;
+  padding-bottom: 10px;
 }
 
 .logo a:hover {
