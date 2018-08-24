@@ -20,7 +20,7 @@ body {
 }
 
 .btn, .nav-link {
-  background-image: linear-gradient(#fff 0, #dfe5ec);
+  background-image: linear-gradient(#fff 0, #CCDEF3);
   box-shadow: 3px 3px 8px 0 #ccc;
   text-align: center;
   color: black;
@@ -36,6 +36,6 @@ body {
 .btn:hover, .nav-link:hover  {
  font-weight: bold;
  text-decoration: none;
-  background-image: linear-gradient(#ffffff 0, #b0becf);
+  background-image: linear-gradient(#ffffff 0, #B2CDED);
   color: #006600; /*color #006600 is the same as the color assigned to "TEK" in the logo*/
 }
