@@ -53,11 +53,3 @@ h1 { text-align: center; }
 .explore-logo p {
   font-size: 2em;
 }
-
-#export-links {
-  list-style-type: none;
-}
-#export-links li a,
-#export-links li span{
-  color: blue;
-}
