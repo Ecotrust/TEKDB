@@ -69,7 +69,6 @@ a {
 /*flex is being used to make all nav tabs the same height:*/
 .nav-tabs{
   display: flex;
-  float: right;
   font-size: 14px;
   font-family: futura;
   position: absolute;
