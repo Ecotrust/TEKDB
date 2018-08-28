@@ -12,3 +12,7 @@
   font-family: garamond;
   color: #006600;
 }
+
+.btn {
+	box-shadow: 3px 3px 8px 0 #97b181;
+}

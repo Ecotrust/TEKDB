@@ -2,6 +2,10 @@ body {
   padding-top: 120px;
 }
 
+.btn {
+  box-shadow: 3px 3px 8px 0px #e9d8c1;
+} 
+
 .content-well {
   padding-bottom: 20px;
 }
@@ -28,6 +32,11 @@ body {
 
 .relationship-row a:hover {
   color: #336633;
+}
+
+
+#map {
+  box-shadow: 3px 3px 12px 0px #7d9e61
 }
 
 .record-link {
