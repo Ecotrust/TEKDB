@@ -84,6 +84,18 @@ a {
     flex: 1;
 }
 
+.nav-item {
+  cursor: pointer;
+}
+
+.not-clickable {
+  cursor: default;
+}
+
+.not-clickable:hover {
+  font-weight: normal;
+  color: black;
+}
 
 .dropdown-menu {
   right: 0;

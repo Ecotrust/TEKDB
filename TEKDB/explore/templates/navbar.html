@@ -26,10 +26,10 @@
           {% ifnotequal pageTitle "Explore" %}
               <a href="/explore" class="nav-link">
               {% else %}
-              <a class="nav-link">
+              <a class="nav-link not-clickable">
           {% endifnotequal %}
         {% else %}
-              <a class="nav-link" >
+              <a class="nav-link not-clickable" >
         {% endif %}
           Explore
           </a>
@@ -39,7 +39,7 @@
             {% ifnotequal pageTitle "About" %}
               <a href="/about" class="nav-link">
             {% else %}
-              <a class="nav-link">
+              <a class="nav-link not-clickable">
             {% endifnotequal %}
             About
               </a>
@@ -48,7 +48,7 @@
             {% ifnotequal pageTitle "Help" %}
               <a href="/help" class="nav-link">
             {% else %}
-              <a class="nav-link">
+              <a class="nav-link not-clickable">
             {% endifnotequal %}
               Help
               </a>
