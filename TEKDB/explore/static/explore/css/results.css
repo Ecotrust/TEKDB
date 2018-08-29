@@ -312,16 +312,3 @@ td {
   float: right;
   /*margin-top: -0.75em;*/
 }
-
-.download-table {
-  float: right;
-  color: black;
-}
-
-#export-links {
-  list-style-type: none;
-}
-
-#export-links li a, #export-links li span {
-  color: #225691;
-}

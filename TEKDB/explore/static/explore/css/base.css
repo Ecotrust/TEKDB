@@ -40,3 +40,18 @@ body {
   background-image: linear-gradient(#ffffff 0, #d9d9d9);
   color: #006600; /*color #006600 is the same as the color assigned to "TEK" in the logo*/
 }
+
+.download-table {
+  color: black;
+  float: right;
+  margin-right: -15px;
+}
+
+.download-table ul {
+  list-style-type: none;
+  text-decoration: underline;
+}
+
+.dowload-table a:hover {
+  color: #006600 ;
+}
