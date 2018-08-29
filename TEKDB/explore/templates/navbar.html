@@ -21,8 +21,8 @@
   {% block headerButtons %}
   <div class="col-md-9">
       <ul class="nav nav-tabs">
+        <li class="nav-item">
         {% if user.is_authenticated %}
-          <li class="nav-item">
           {% ifnotequal pageTitle "Explore" %}
               <a href="/explore" class="nav-link">
               {% else %}
@@ -31,9 +31,10 @@
         {% else %}
               <a class="nav-link" >
         {% endif %}
-            Explore
-              </a>
-            </li>
+          Explore
+          </a>
+        </li>
+
           <li class="nav-item">
             {% ifnotequal pageTitle "About" %}
               <a href="/about" class="nav-link">
@@ -64,8 +65,10 @@
               {% endif %}
                 <a class="dropdown-item" href="/logout?next=/">Logout</a>
             </div>
+          </li>
       {% else %}
-            <a class="header-button nav-item" data-toggle="modal" data-target="#loginModal">
+          <li class="nav-item">
+            <a class="header-button nav-link" data-toggle="modal" data-target="#loginModal">
             Login
             </a>
           </li>
