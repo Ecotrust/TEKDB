@@ -195,6 +195,11 @@ td {
   padding: 0.5em;
 }
 
+#results_table_paginate a:focus {
+  outline: none;
+}
+
+
 .paginationjs {
   display: none;
   visiblity: hidden;
