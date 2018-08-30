@@ -15,4 +15,5 @@
 
 .btn {
 	box-shadow: 3px 3px 8px 0 #97b181;
+	background-image: linear-gradient(#fff 0, #d9e2d0);
 }
