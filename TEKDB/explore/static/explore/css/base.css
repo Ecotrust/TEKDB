@@ -20,8 +20,7 @@ body {
 }
 
 .btn, .nav-link {
-  background-image: linear-gradient(#fff 0, #e6e6e6);
-  box-shadow: 3px 3px 8px 0 #ccc;
+  background-image: linear-gradient(#fff 0, #e6ebe0);
   text-align: center;
   color: black;
   font-family: futura;
