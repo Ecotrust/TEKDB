@@ -8,6 +8,10 @@
   color: #006600;
 }
 
+.selected {
+  outline-color: #dcc09b;
+}
+
 .btn-default:hover {
   background-position: 0;
   color: black;
