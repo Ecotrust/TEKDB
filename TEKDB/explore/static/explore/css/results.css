@@ -5,6 +5,9 @@ div {
   border-color: black;
 }
 */
+.navbar {
+  margin-bottom: 0px;
+}
 
 .query-form {
   margin-bottom: 0px;
