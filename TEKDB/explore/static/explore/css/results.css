@@ -38,20 +38,15 @@ div {
   margin: 5 0 5 0px;
 }
 
-#pagination-container {
-  margin-top: 5px;
-  margin-bottom: 0px;
-}
-
 .pagination {
   text-align:right;
-  margin: 0px;
+  margin: 8 0 0 0px;
   padding-left:10px;
 }
 
 .view-icons {
   text-align: right;
-  margin-top: 7px;
+  margin-top: 15px;
 }
 
 .view-icons a:hover {
@@ -73,6 +68,11 @@ thead {
 
 .table-body {
   overflow: scroll;
+}
+
+.dataTables_scrollBody {
+    margin-top: -1px;
+    border-bottom: 0 !important;
 }
 
 td {
