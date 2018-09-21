@@ -9,7 +9,7 @@
 }
 
 .selected {
-  outline-color: #dcc09b;
+  background-image: linear-gradient(#fff 0, #e9d8c1);
 }
 
 .btn-default:hover {
@@ -20,11 +20,6 @@
 .btn-group.btn-group-justified {
   table-layout: auto;
   width: 100%;
-}
-
-.btn-group .btn:focus {
-  outline-color: #dcc09b;
-  outline-width: 5px;
 }
 
 .input-group-btn .btn {
