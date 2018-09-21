@@ -7,26 +7,11 @@
 {% endblock %} 
 
 {% block contentwrapper %}
-<div class="container content-container search-results-container">
+<div class="container content-container search-results-container
 
-<!--Search Box-->
-    <div class="row">
-        <div class="col-md-6"> 
-        {% csrf_token %}
-            <form class="query-form" method='post' action='/search/'>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase" value="{{ keyword_search_input }}">
-                        <span class="input-group btn input-group-addon">Search</span>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6"></div>
-    </div>
-
-<!--Search options-->
     <div class="row content-row">
+
+        <!--Search filter-->
         <div class="col-md-2">
             <p class="select-search-filter">Type:</p>
             {{ category_checkboxes | safe }}
@@ -35,49 +20,30 @@
             </p>
         </div>
 
-
-
         <div class="col-md-8 well content-well" id="results-well">
-            {% block content %}
+<!--Search Box-->
+    <div class="row">
+        <div class="col-md-12"> 
+        {% csrf_token %}
+            <form class="query-form" method='post' action='/search/'>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="search-text" name="query" placeholder="{{ keyword }}" value="{{ keyword_search_input }}">
+                        <span class="input-group btn input-group-addon">Search</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+        <!--{% block content %}
             {% if keyword != "No keyword search specified."%}
-                <h3>Results for search "<b>{{ keyword }}</b>"
+                <h3>Results for search "<b>{{ keyword }}</b>"</h3>
                 {% else %}
                 <h3>Search Results</h3>
-            {% endif %}
-
-            <div id="results-controls">
+            {% endif %}-->
+        <!--Choose number of results-->
+        <div id="results-controls">
             </div>
-<!--table view options-->
-            <div class="pagination-row row .row-eq-height">
-    <!--select tile or list-->
-                <div class='col-md-2 view-icons'>
-                    <span data-bind="visible: app.resultViewModel.view_is_tiled">
-              <a class='selected-view'>
-                <i class="fas fa-th" aria-hidden="true"></i>
-                    </a>
-                    </span>
-                    <span data-bind="visible: app.resultViewModel.view_is_list">
-              <a class='view-switcher' href='#' data-bind="click: app.resultViewModel.setViewTiled">
-                <i class="fas fa-th" aria-hidden="true"></i>
-                    </a>
-                    </span>
-                    <span data-bind="visible: app.resultViewModel.view_is_list">
-              <a class='selected-view'>
-                <i class="fas fa-th-list" aria-hidden="true"></i>
-                    </a>
-                    </span>
-                    <span data-bind="visible: app.resultViewModel.view_is_tiled">
-              <a class='view-switcher' href='#' data-bind="click: app.resultViewModel.setViewList">
-                <i class="fas fa-th-list" aria-hidden="true"></i>
-                    </a>
-                    </span>
-                </div>
-    <!--pagination-->
-                <div class="pagination col-md-6">
-                    <div id="pagination-container" class='dataTables_wrapper'></div>
-                </div>
-            </div>
-            <div class="col-md-2"></div>
 
         <!--list view-->
             <div data-bind="visible: app.resultViewModel.view_is_list">
@@ -109,6 +75,35 @@
                 </div>
             </div>
             {% endblock %}
+             <!--pagination-->
+            <div class="pagination-row row .row-eq-height">
+                <div class="pagination col-md-6">
+                    <div id="pagination-container" class='dataTables_wrapper'></div>
+                </div>
+            <!--select tile or list-->
+                <div class='col-md-6 view-icons'>
+                    <span data-bind="visible: app.resultViewModel.view_is_tiled">
+              <a class='selected-view'>
+                <i class="fas fa-th" aria-hidden="true"></i>
+                    </a>
+                    </span>
+                    <span data-bind="visible: app.resultViewModel.view_is_list">
+              <a class='view-switcher' href='#' data-bind="click: app.resultViewModel.setViewTiled">
+                <i class="fas fa-th" aria-hidden="true"></i>
+                    </a>
+                    </span>
+                    <span data-bind="visible: app.resultViewModel.view_is_list">
+              <a class='selected-view'>
+                <i class="fas fa-th-list" aria-hidden="true"></i>
+                    </a>
+                    </span>
+                    <span data-bind="visible: app.resultViewModel.view_is_tiled">
+              <a class='view-switcher' href='#' data-bind="click: app.resultViewModel.setViewList">
+                <i class="fas fa-th-list" aria-hidden="true"></i>
+                    </a>
+                    </span>
+                </div>                
+        </div>
         </div>
         
         <!--download options-->

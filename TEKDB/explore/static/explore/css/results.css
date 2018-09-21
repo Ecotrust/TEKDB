@@ -6,7 +6,7 @@ div {
 }
 */
 .navbar {
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 
 .query-form {
@@ -38,25 +38,20 @@ div {
   margin: 5 0 5 0px;
 }
 
-#results-controls {
-  margin: 5 0 5 0px;
-}
-
 #pagination-container {
   margin-top: 5px;
   margin-bottom: 0px;
 }
 
 .pagination {
+  text-align:right;
   margin: 0px;
-
+  padding-left:10px;
 }
 
 .view-icons {
-  padding-left: 15px;
-  text-align: left;
-  margin-left: 5px;
-  margin-top: 8px; /*make due with this until div's height can be made = to adjacent divs*/
+  text-align: right;
+  margin-top: 7px;
 }
 
 .view-icons a:hover {
