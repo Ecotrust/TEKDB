@@ -6,22 +6,22 @@
   <input type="text" id="search-category-type" name="category" value="all" required>
   <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
     <div class="btn-group" role="category-group">
-      <button type="button"  class="btn btn-default selected" onclick="setCategoryType('all');">All</button>
+      <button type="button"  id='category-btn-all' class="btn btn-default selected" onclick="setCategoryType('all');">All</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('place');">Place</button>
+      <button type="button" id='category-btn-places' class="btn btn-default" onclick="setCategoryType('places');">Place</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('resource');">Resource</button>
+      <button type="button" id='category-btn-resources' class="btn btn-default" onclick="setCategoryType('resources');">Resource</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('activity');">Activity</button>
+      <button type="button" id='category-btn-activites' class="btn btn-default" onclick="setCategoryType('activities');">Activity</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('source');">Source</button>
+      <button type="button" id='category-btn-sources' class="btn btn-default" onclick="setCategoryType('sources');">Source</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default"  onclick="setCategoryType('media');">Media</button>
+      <button type="button" id='category-btn-media' class="btn btn-default"  onclick="setCategoryType('media');">Media</button>
     </div>
   </div>
     <div class="input-group">
@@ -35,19 +35,8 @@
   <img src='/static/explore/img/compass-bevel.png'>
   <p>Explore</p>
 </div>
-
 {% endblock %}
 
-
 {% block extra_js %}
-    <!-- JQuery -->
 <script src="/static/explore/js/explore.js"></script>
-
-<script>
-  function setCategoryType(category) {
-    $('#search-category-type')[0].value = category;
-  }
-</script>
-
-
 {% endblock %}

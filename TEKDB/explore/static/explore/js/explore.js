@@ -1,4 +1,7 @@
-$('btn').click(function(){
+<script>
+  function setCategoryType(category) {
+    $('#search-category-type')[0].value = category;
     $('.selected').removeClass('selected');
-    $(this).addClass('selected');
-  });
+    $('#category-btn-'+category).addClass('selected');
+  }
+</script>
