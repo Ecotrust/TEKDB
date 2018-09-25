@@ -8,13 +8,18 @@
   color: #006600;
 }
 
+.btn-default:hover {
+  background-position: 0;
+  color: black;
+}
+
+
 .selected {
   background-image: linear-gradient(#fff 0, #e9d8c1);
 }
 
-.btn-default:hover {
-  background-position: 0;
-  color: black;
+.selected:focus {
+  background-image: linear-gradient(#fff 0, #e9d8c1); 
 }
 
 .btn-group.btn-group-justified {

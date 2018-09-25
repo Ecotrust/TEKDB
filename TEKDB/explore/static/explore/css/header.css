@@ -61,11 +61,6 @@ nav .container {
   margin-bottom: 3px;
  }
 
-a {
-  color: #001a00;
-}
-
-
 /*flex is being used to make all nav tabs the same height:*/
 .nav-tabs{
   display: flex;
