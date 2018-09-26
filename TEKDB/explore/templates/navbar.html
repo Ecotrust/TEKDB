@@ -8,12 +8,18 @@
   {% block headerTitle %}    
   <div class="col-md-3 logo">
     <a href="/">      
-      <div class="logo-main">
+
+<!--styling of 'padding-bottom:10px;'goes with the <div> below instead of in CSS because it is only used if the logo image is replaced by the html below.-->
+<!--
+      <div class="logo-main" style='padding-bottom:10px;'>
         <span class="logo-tek">TEK</span>
         <span class="logo-db">DB</span>
       </div>
       <p class="logo-subhead">Traditional Ethnographic</p>
       <p class="logo-subhead"> Knowledge Database</p>
+-->
+<!--margin styling goes with the <img> below instead of in CSS because it is only used if the logo image is used in place of the html above. If decision is made to use image instead of html, this styling can go into the CSS.-->
+<img src='/static/explore/img/logoTEKDB.png' alt='TEKDB logo' style='margin-bottom:-15px;margin-left:-60px;'>
     </a>    
   </div>
       {% endblock %}

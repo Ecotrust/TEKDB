@@ -27,14 +27,18 @@ nav .container {
 }
 
 .logo {
-  width: 275px;
   text-align: center;
+  width: 275px;
   line-height: 1;
-  padding-bottom: 10px;
 }
 
 .logo a:hover {
   text-decoration: none;
+}
+
+.logo img {
+  width:350px;
+  height:117px;
 }
 
 .logo-main {
