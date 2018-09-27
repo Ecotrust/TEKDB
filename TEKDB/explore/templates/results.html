@@ -1,51 +1,42 @@
-{% extends "base.html" %} {% load explore_tags %} 
-
-{% block extra_css %}
+{% extends "base.html" %} {% load explore_tags %} {% block extra_css %}
 <link rel="stylesheet" href="/static/assets/pagination/pagination.css">
 <link rel="stylesheet" href="/static/assets/datatables/datatables.min.css">
-<link rel="stylesheet" href="/static/explore/css/results.css"> 
-{% endblock %} 
-
-{% block contentwrapper %}
+<link rel="stylesheet" href="/static/explore/css/results.css"> {% endblock %} {% block contentwrapper %} {% csrf_token %}
 <div class="container content-container search-results-container">
-
     <div class="row content-row">
-
+        <form class="query-form" method='post' action='/search/'>
+        {% csrf_token %}
         <!--Search filter-->
         <div class="col-md-2">
-            <p class="select-search-filter">Type:</p>
-            {{ category_checkboxes | safe }}
-            <p>
+                <p class="select-search-filter">Type:</p>
+                    {{ category_checkboxes | safe }}
+                <p>
                 <input type="submit" class="btn" value='Apply Filter'>
-            </p>
+                </p>
         </div>
-
         <div class="col-md-8 well content-well" id="results-well">
-<!--Search Box-->
-    <div class="row">
-        <div class="col-md-12"> 
-        {% csrf_token %}
-            <form class="query-form" method='post' action='/search/'>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="search-text" name="query" placeholder="{{ keyword }}" value="{{ keyword_search_input }}">
-                        <span class="input-group btn input-group-addon">Search</span>
-                    </div>
+            <!--Search Box-->
+            <div class="row">
+                <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search-text" name="query" placeholder="{{ keyword }}" value="{{ keyword_search_input }}">
+                                <span class="input-group btn input-group-addon">Search</span>
+                            </div>
+                        </div>
                 </div>
-            </form>
-        </div>
-    </div>
-        <!--{% block content %}
+            </div>
+            <!--{% block content %}
             {% if keyword != "No keyword search specified."%}
                 <h3>Results for search "<b>{{ keyword }}</b>"</h3>
                 {% else %}
                 <h3>Search Results</h3>
             {% endif %}
             {% endblock %}-->
-        <!--Choose number of results-->
-        <div id="results-controls">
+            <!--Choose number of results-->
+            <div id="results-controls">
             </div>
-        <!--list view-->
+            <!--list view-->
             <div data-bind="visible: app.resultViewModel.view_is_list">
                 <table id='results_table' class="table table-striped table-hover result-list">
                     <thead>
@@ -66,7 +57,7 @@
                     </tbody>
                 </table>
             </div>
-        <!--tile view-->
+            <!--tile view-->
             <div data-bind="visible: app.resultViewModel.view_is_tiled">
                 <div data-bind="foreach: app.resultViewModel.resultGridArray">
                     <div data-bind="foreach: $data" class="row">
@@ -74,13 +65,13 @@
                     </div>
                 </div>
             </div>
-        <!--pagination-->
+            <!--pagination-->
             <!--page selection-->
             <div class="pagination-row row .row-eq-height">
                 <div class="pagination col-md-6">
                     <div id="pagination-container" class='dataTables_wrapper'></div>
                 </div>
-            <!--tile or list selection-->
+                <!--tile or list selection-->
                 <div class='col-md-6 view-icons'>
                     <span data-bind="visible: app.resultViewModel.view_is_tiled">
               <a class='selected-view'>
@@ -102,9 +93,9 @@
                 <i class="fas fa-th-list" aria-hidden="true"></i>
                     </a>
                     </span>
-                </div>                
+                </div>
+            </div>
         </div>
-        </div>        
         <!--download options-->
         <div class="col-md-2">
             <table class="download-table">
@@ -125,11 +116,10 @@
                 </tr>
             </table>
         </div>
+    </form>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
     $.query = { hash: true };
 </script>
