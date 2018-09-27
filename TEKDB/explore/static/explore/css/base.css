@@ -40,6 +40,11 @@ body {
   color: #006600; /*color #006600 is the same as the color assigned to "TEK" in the logo*/
 }
 
+.input-group .btn {
+  box-shadow: 3px 3px 8px 0 #97b181;
+  background-image: linear-gradient(#fff 0, #d9e2d0);
+}
+
 .download-table {
   color: black;
   float: right;
