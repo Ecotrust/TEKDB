@@ -30,7 +30,7 @@ nav .container {
   text-align: center;
   width: 275px;
   line-height: 1;
-}
+} /*width and line-height are only in use if the html logo description is used instead of the logo image.*/
 
 .logo a:hover {
   text-decoration: none;
