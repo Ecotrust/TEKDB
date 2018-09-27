@@ -36,11 +36,13 @@
 }
 
 .back-button {
-  padding-top: 8px;
-  padding-right: 20px;
-  padding-bottom: 8px;
-  padding-left: 15px;
+  font-size: 25px;
+  padding: 5px 10px 5px 10px;
   float: right;
+}
+
+.btn a {
+  color: #003400;
 }
 
 .source-excerpt {

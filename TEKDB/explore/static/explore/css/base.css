@@ -20,7 +20,7 @@ body {
 	text-decoration: none;
 }
 
-.btn, .nav-link {
+.btn, .nav-link, .btn a{
   background-image: linear-gradient(#fff 0, #e6ebe0);
   text-align: center;
   color: black;
@@ -33,7 +33,7 @@ body {
   border-radius: 4px;
 }
 
-.btn:hover, .nav-link:hover  {
+.btn:hover, .nav-link:hover, .btn a:hover {
  font-weight: bold;
  text-decoration: none;
   background-image: linear-gradient(#ffffff 0, #d9d9d9);
@@ -54,6 +54,10 @@ body {
 .download-table ul {
   list-style-type: none;
   text-decoration: underline;
+}
+
+.download-table tbody tr td ul li a {
+  color: black;
 }
 
 .dowload-table a:hover {
