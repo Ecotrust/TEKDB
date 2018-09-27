@@ -37,7 +37,7 @@ body {
  font-weight: bold;
  text-decoration: none;
   background-image: linear-gradient(#ffffff 0, #d9d9d9);
-  color: #006600; /*color #006600 is the same as the color assigned to "TEK" in the logo*/
+  color: #003400; 
 }
 
 .input-group .btn {
@@ -60,6 +60,7 @@ body {
   color: black;
 }
 
-.dowload-table a:hover {
-  color: #006600 ;
+
+.download-table tbody tr td ul li a:hover {
+  color: #003400;
 }

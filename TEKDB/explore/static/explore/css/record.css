@@ -15,7 +15,7 @@
 .record-name {
   font-family: garamond;
   font-weight: bold;
-  color: #006600;
+  color: #003400;
 }
 
 .relationship-row {
@@ -30,7 +30,6 @@
   color: #336633;
 }
 
-
 #map {
   box-shadow: 3px 3px 12px 0px #7d9e61
 }
@@ -39,10 +38,6 @@
   font-size: 25px;
   padding: 5px 10px 5px 10px;
   float: right;
-}
-
-.btn a {
-  color: #003400;
 }
 
 .source-excerpt {
