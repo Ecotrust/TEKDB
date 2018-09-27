@@ -44,15 +44,6 @@ div {
   padding-left:10px;
 }
 
-.view-icons {
-  text-align: right;
-  margin-top: 15px;
-}
-
-.view-icons a:hover {
-  color: #696;
-}
-
 #results_table_wrapper {
   box-shadow: 3px 3px 12px 0px #7d9e61
 }
@@ -158,15 +149,22 @@ td {
   background-color: rgba(0,0,0,0.9);
 }
 
+.view-icons {
+  text-align: right;
+  margin-top: 15px;
+}
+.view-icons a {
+  color: black;
+}
+.view-icons a:hover {
+  color: #696;
+}
+
 .selected-view {
-  color: white;
   padding: 5px;
   border-radius: 14px;
   margin: 5px;
-  background-color: black;
-}
-.selected-view span {
-  color: ccffcc;
+  background-color: #cfa875;
 }
 
 .result-list {
