@@ -20,7 +20,7 @@ body {
 	text-decoration: none;
 }
 
-.btn, .nav-link, .btn a{
+.btn, .nav-link, .btn a {
   background-image: linear-gradient(#fff 0, #e6ebe0);
   text-align: center;
   color: black;
@@ -63,5 +63,5 @@ body {
 
 .download-table tbody tr td ul li a:hover {
   color: #003400;
-  font-weight:bold;
+  font-weight: bold;
 }

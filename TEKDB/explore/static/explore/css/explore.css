@@ -8,13 +8,19 @@
   color: #003400;
 }
 
-.btn-default:hover {
-  background-position: 0;
-  color: black;
+h1 { 
+  text-align: center; 
 }
 
+.btn-group .btn {
+  background-image: linear-gradient(#fff 0, #d9e2d0);
+}
 
-.selected {
+.btn-group .btn:hover, .btn-group .btn:focus {
+  background-position: 0px ;
+}
+
+.btn-group .selected {
   background-image: linear-gradient(#fff 0, #e9d8c1);
 }
 
@@ -27,19 +33,19 @@
   width: 100%;
 }
 
-h1 { text-align: center; }
+img {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
 
 #search-category-type {
   display: none;
 }
 
-.btn-default {
-  color: black;
-}
-
 .explore-form {
   text-align: center;
-  margin: 80px 150px;
+  margin: 70px;
 }
 
 .explore-logo {

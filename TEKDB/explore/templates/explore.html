@@ -9,19 +9,19 @@
       <button type="button"  id='category-btn-all' class="btn btn-default selected" onclick="setCategoryType('all');">All</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" id='category-btn-places' class="btn btn-default" onclick="setCategoryType('places');">Place</button>
+      <button type="button" id='category-btn-places' class="btn btn-default" onclick="setCategoryType('places');"><img src='/static/explore/img/place.png'>Places</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" id='category-btn-resources' class="btn btn-default" onclick="setCategoryType('resources');">Resource</button>
+      <button type="button" id='category-btn-resources' class="btn btn-default" onclick="setCategoryType('resources');"><img src='/static/explore/img/resource.png'>Resources</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" id='category-btn-activities' class="btn btn-default" onclick="setCategoryType('activities');">Activity</button>
+      <button type="button" id='category-btn-activities' class="btn btn-default" onclick="setCategoryType('activities');"><img src='/static/explore/img/activity.png'>Activities</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" id='category-btn-sources' class="btn btn-default" onclick="setCategoryType('sources');">Source</button>
+      <button type="button" id='category-btn-sources' class="btn btn-default" onclick="setCategoryType('sources');"><img src='/static/explore/img/citation.png'>Sources</button>
     </div>
     <div class="btn-group" role="category-group">
-      <button type="button" id='category-btn-media' class="btn btn-default"  onclick="setCategoryType('media');">Media</button>
+      <button type="button" id='category-btn-media' class="btn btn-default"  onclick="setCategoryType('media');"><img src='/static/explore/img/Media.png'>Media</button>
     </div>
   </div>
     <div class="input-group">
@@ -39,4 +39,17 @@
 
 {% block extra_js %}
 <script src="/static/explore/js/explore.js"></script>
+<!--The script below makes all buttons in the button form the same height, regardless of the size of the image within them.-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+    var highestBox = 0;
+        $('.btn-group-justified .btn').each(function(){  
+                if($(this).height() > highestBox){  
+                highestBox = $(this).height();  
+        }
+    });    
+    $('.btn-group-justified .btn').height(highestBox);
+});
+</script>
 {% endblock %}
