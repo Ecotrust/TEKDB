@@ -107,6 +107,16 @@ nav .container {
   text-align: right;
 }
 
+.dropdown-menu a {
+  color: black;
+  text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+  color: #003400;
+  font-weight: bold;
+}
+
 .btn.dropdown-toggle:hover {
   background-image: linear-gradient(#fff 0, #ccffcc);
   font-weight: bold;
