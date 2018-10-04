@@ -4,7 +4,7 @@
 <form class="explore-form" method='post' action='/search/'>
   {% csrf_token %}
   <input type="text" id="search-category-type" name="category" value="all" required>
-  <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
+  <div class="btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
     <div class="btn-group" role="category-group">
       <button type="button"  id='category-btn-all' class="btn btn-default selected" onclick="setCategoryType('all');">All</button>
     </div>

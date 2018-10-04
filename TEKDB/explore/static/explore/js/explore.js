@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	setFilter();
-	eqHeightBtns();
+    matchHeight();
 });
 
 function setFilter() {
@@ -9,6 +9,15 @@ function setFilter() {
  	$('#category-btn-'+category).addClass('selected');
 }
 
+//This function makes the All button the same height as the others, even though it has no icon."
+function matchHeight() {
+    // var btnheight = $('.btn-group-justified').height();
+    // $('#category-btn-all').height(btnheight);
+    $('#category-btn-all').height(25);
+}
+
+
+/*
 function eqHeightBtns() {
     var highestBox = 0;
     $('.btn-group-justified .btn').each(function(){  
@@ -18,6 +27,7 @@ function eqHeightBtns() {
     	});    
     $('.btn-group-justified .btn').height(highestBox);
 }
+*/
 
 /*This function runs when the users clicks the Search button.*/
 function setCategoryType(category) {
