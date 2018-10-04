@@ -62,12 +62,13 @@
     
       {% if user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-user"></i>      
             </a>
             <div class="dropdown-menu" aria-labelledby="userDropdown">
               {% if user.is_staff %}
                 <a class="dropdown-item" href="/admin">Administration</a>
+                <div class="dropdown-divider"></div>
               {% endif %}
                 <a class="dropdown-item" href="/logout?next=/">Logout</a>
             </div>

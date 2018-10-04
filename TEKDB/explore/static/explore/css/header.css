@@ -105,11 +105,16 @@ nav .container {
   right: 0;
   left: auto;
   text-align: right;
+  min-width: 100px;
 }
 
 .dropdown-menu a {
   color: black;
   text-decoration: none;
+}
+
+.dropdown-divider {
+  min-height: 5px;
 }
 
 .dropdown-menu a:hover {
