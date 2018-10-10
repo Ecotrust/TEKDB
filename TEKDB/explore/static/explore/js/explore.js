@@ -14,6 +14,8 @@ function matchHeight() {
     // var btnheight = $('.btn-group-justified').height();
     // $('#category-btn-all').height(btnheight);
     $('#category-btn-all').height(25);
+    $('.form-control').height(25);
+    $('.btn-secondary').height(25);
 }
 
 
