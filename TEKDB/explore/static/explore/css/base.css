@@ -1,0 +1,67 @@
+
+body {
+  height: 100%;
+ /* background-image: linear-gradient(#f7f0e7 0, #e9d8c1);*/
+  color: black;
+}
+
+/*The greens assigned here to .well are whiter tints of a green taken from map images shown in the applicaton*/
+.well {
+  background-image: linear-gradient(to top, #97b181 0, #e5ecdf 100%);
+}
+
+.content-well {
+  padding-bottom: 200px;
+}
+
+.dropdown-item :hover {
+	color: black;
+	font-size: larger;
+	text-decoration: none;
+}
+
+.btn, .nav-link, .btn a {
+  background-image: linear-gradient(#fff 0, #e6ebe0);
+  text-align: center;
+  color: black;
+  font-family: futura;
+}
+
+.btn {
+  border: 1px solid;
+  border-color: #ccc;
+  border-radius: 4px;
+}
+
+.btn:hover, .nav-link:hover, .btn a:hover {
+ font-weight: bold;
+ text-decoration: none;
+  background-image: linear-gradient(#ffffff 0, #d9d9d9);
+  color: #003400; 
+}
+
+.input-group .btn {
+  box-shadow: 3px 3px 8px 0 #97b181;
+  background-image: linear-gradient(#fff 0, #d9e2d0);
+}
+
+.download-table {
+  color: black;
+  float: right;
+  margin-right: -15px;
+}
+
+.download-table ul {
+  list-style-type: none;
+  text-decoration: underline;
+}
+
+.download-table tbody tr td ul li a {
+  color: black;
+}
+
+
+.download-table tbody tr td ul li a:hover {
+  color: #003400;
+  font-weight: bold;
+}

@@ -1,71 +1,137 @@
-.header-title h1 {
-  padding-bottom: 0px;
-  margin-bottom: 0px;
-  margin-top: 3px;
+/*
+div {
+  border-style: solid;
+  border-width: 1px; 
+  border-color: black;
 }
-.header-title-content {
-  margin: 5px 0;
-  text-align: center;
-  color: white;
-  background-color: #777;
-  border-radius: 10px;
-  /*padding: 5px;*/
-}
-.header-title-content a,
-.header-title-content h1,
-.header-title-content p {
-  color: white;
-}
-.header-title-content p {
-  margin-bottom: 3px;
-  font-size: 14px;
-}
-.header-title-content:hover a,
-.header-title-content:hover h1,
-.header-title-content:hover p {
-  color: #DDFFDD;
-  text-decoration: none !important;
-}
-.header-title-content:hover {
-  background-color: #555;
-}
+*/
+/*
+.navbar {
+  background-image: linear-gradient(#e9d8c1 0, #f7f0e7);
+}*/
 
-.header-button-row {
-  min-height: 50px;
-  margin-top: 15px;
-}
-
-.header-button, .header-button-selected {
-  font-size: 20px;
+nav .container {
   padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 10px;
+}
+
+.row-eq-height {
+  display: flex;
+}
+
+.row-eq-height .col-md-3 {
+  flex: 1;
+}
+
+.row-eq-height .col-md-9 {
+  flex: 1;
+}
+
+.logo {
   text-align: center;
+  width: 275px;
+  line-height: 1;
+} /*width and line-height are only in use if the html logo description is used instead of the logo image.*/
+
+.logo a:hover {
+  text-decoration: none;
 }
-.header-button {
-  color: #000;
-  margin-left: 3px;
-  margin-right: 3px;
+
+.logo img {
+  width:350px;
+  height:117px;
 }
-.header-button-selected, .header-button-selected:hover {
+
+.logo-main {
+  margin-bottom: -8px;
+  font-size: 60px;
+  font-family: garamond;
+  letter-spacing: 8px;
+}
+
+.logo-tek {
+  color: #006600;
+}
+
+.logo-db {
+  color: #008000; 
+  margin-left: -28px;
+   }
+
+ .logo-subhead {
+  color: #001a00;
+  font-family: futura;
+  font-size: 16;
+  letter-spacing: 2px;
+  margin-bottom: 3px;
+ }
+
+/*flex is being used to make all nav tabs the same height:*/
+.nav-tabs{
+  display: flex;
+  font-size: 14px;
+  font-family: futura;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.nav-tabs li {
+    display: flex;
+    flex: 1;
+}
+
+.nav-tabs li  a {
+    flex: 1;
+}
+
+.nav-item {
+  cursor: pointer;
   margin-left: 5px;
-  color: #999;
-  background-color: white;
-  border: 1px solid black;
 }
 
-.header-button:hover, .header-button-selected:hover {
-  text-decoration: none !important;
-  border: 1px solid black;
-}
-.header-button:hover {
-  background-color: #DDFFDD;
-  color: #000;
+.nav-link {
+  box-shadow: 3px 3px 0 0 #ebdcc6;
 }
 
-.header-button-row .dropdown button {
-  width: 100%;
+.not-clickable {
+  cursor: default;
 }
+
+.not-clickable:hover {
+  font-weight: normal;
+  color: black;
+}
+
+.dropdown-menu {
+  right: 0;
+  left: auto;
+  text-align: right;
+  min-width: 100px;
+  padding: 10px;
+  box-shadow: 3px 3px 0 0 #e9d8c1;
+  background-image: linear-gradient(#fff 0, #e6ebe0);
+  border-color: #e6e6e6;
+  border-radius:2px;
+}
+
+.dropdown-menu a {
+  color: black;
+  text-decoration: none;
+}
+
+.dropdown-divider {
+  min-height: 10px;
+}
+
+.dropdown-menu a:hover {
+  color: #003400;
+  font-weight: bold;
+}
+
+.btn.dropdown-toggle:hover {
+  background-image: linear-gradient(#fff 0, #ccffcc);
+  font-weight: bold;
+}
+
 .header-button-row .dropdown .dropdown-menu {
   background-color: #DDFFDD;
   margin-left: 15px;

@@ -1,34 +1,13 @@
 {% extends "base.html" %}
-
 {% block extra_css %}
-<link rel="stylesheet" href="/static/explore/css/results.css">
 <link rel="stylesheet" href="/static/explore/css/record.css">
 {% endblock %}
 
 {% block contentwrapper %}
 <div class="container content-container">
-  <div class="row">
-    <div class="col-md-1">
-    </div>
-    <div class="col-md-10">
-      <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button">Back to results</button></a>
-    </div>
-    <div class="col-md-1">
-      <table>
-        <tr><td>Download</td></tr>
-        <tr>
-          <td>
-            <ul id="export-links">
-              <li><a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a></li>
-              <li><a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a></li>
-            </ul>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
   <div class="row content-row">
     <div class="col-md-1">
+        <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button" aria-label="Back to Search Results"><i class="fas fa-arrow-left"></i></a>
     </div>
     <div class="col-md-10 well content-well">
       <div class='row'>
@@ -39,12 +18,12 @@
             <div class="col record-icon" style="background-image: url({{ record.image }})">
             </div>
             <div class="col-md-10">
-              <h2>{{record.name}}</h2>
+              <h2 class="record-name">{{record.name}}</h2>
               <h5>{{record.subtitle}}</h5>
             </div>
           </div>
           <div class='row'>
-            <div class='well odd-well'>
+            <div class='content-well'>
               {% if record.media.file %}
                 {% if not record.restricted %}
                 <div style="text-align: right">
@@ -69,7 +48,7 @@
           {% if record.relationships|length > 0 %}
           <div class='row'>
             <h4>Relationships</h4>
-            <div class='well odd-well relationship-div'>
+            <div class='content-well relationship-div'>
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
                   <p><b>{{ relationship.key }}:</b></p>
@@ -124,6 +103,17 @@
       </div>
     </div>
     <div class="col-md-1">
+      <table class="download-table">
+        <tr><td>Download</td></tr>
+        <tr>
+          <td>
+            <ul>
+              <li><a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a></li>
+              <li><a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

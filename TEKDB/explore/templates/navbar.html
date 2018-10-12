@@ -1,77 +1,87 @@
-<div class="row">
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-2">
-      </div>
-      <div class="col-md-8 header-title-content">
-        <a href="/">
-          {% block headerTitle %}
-          <div class="row">
-            <div class="col-md-12 header-title">
-              <h1>TEK</h1>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <p>Traditional Ethnographic Knowledge Database</p>
-            </div>
-          </div>
-          {% endblock %}
-        </a>
-      </div>
-      <div class="col-md-2">
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    {% block headerButtons %}
-    <div class="row header-button-row">
-      {% if user.is_authenticated %}
-      {% ifnotequal pageTitle "Explore" %}
-      <a href="/explore" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endif %}
-        Explore
-      </a>
-      {% ifnotequal pageTitle "About" %}
-      <a href="/about" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-        About
-      </a>
-      {% ifnotequal pageTitle "Help" %}
-      <a href="/help" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-        Help
-      </a>
-      <a class="col-sm-1 col-md-1">
 
-      </a>
-      {% if user.is_authenticated %}
-      <div class="dropdown col-sm-3 col-md-3">
-        <button class="btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          {{ user.username }}
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-          {% if user.is_staff %}
-          <li><a class="dropdown-item" href="/admin">Administration</a></li>
-          {% endif %}
-          <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
-        </ul>
-      </div>
-      {% else %}
-      <a class="col-sm-3 col-md-3 header-button" data-toggle="modal" data-target="#loginModal">
-        Login
-      </a>
-      {% endif %}
-    </div>
+    {% block extra_css %}
+
     {% endblock %}
+
+<div class="row row-eq-height">
+  
+  {% block headerTitle %}    
+  <div class="col-md-3 logo">
+    <a href="/">      
+
+<!--styling of 'padding-bottom:10px;'goes with the <div> below instead of in CSS because it is only used if the logo image is replaced by the html below.-->
+<!--
+      <div class="logo-main" style='padding-bottom:10px;'>
+        <span class="logo-tek">TEK</span>
+        <span class="logo-db">DB</span>
+      </div>
+      <p class="logo-subhead">Traditional Ethnographic</p>
+      <p class="logo-subhead"> Knowledge Database</p>
+-->
+<!--margin styling goes with the <img> below instead of in CSS because it is only used if the logo image is used in place of the html above. If decision is made to use image instead of html, this styling can go into the CSS.-->
+<img src='/static/explore/img/logoTEKDB.png' alt='TEKDB logo' style='margin-bottom:-15px;margin-left:-60px;'>
+    </a>    
   </div>
+      {% endblock %}
+
+  {% block headerButtons %}
+  <div class="col-md-9">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+        {% if user.is_authenticated %}
+          {% ifnotequal pageTitle "Explore" %}
+              <a href="/explore" class="nav-link">
+              {% else %}
+              <a class="nav-link not-clickable">
+          {% endifnotequal %}
+        {% else %}
+              <a class="nav-link not-clickable" >
+        {% endif %}
+          Explore
+          </a>
+        </li>
+
+          <li class="nav-item">
+            {% ifnotequal pageTitle "About" %}
+              <a href="/about" class="nav-link">
+            {% else %}
+              <a class="nav-link not-clickable">
+            {% endifnotequal %}
+            About
+              </a>
+          </li>
+          <li class="nav-item">
+            {% ifnotequal pageTitle "Help" %}
+              <a href="/help" class="nav-link">
+            {% else %}
+              <a class="nav-link not-clickable">
+            {% endifnotequal %}
+              Help
+              </a>
+          </li>
+    
+      {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user"></i>      
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+              {% if user.is_staff %}
+                <a class="dropdown-item" href="/admin">Administration</a>
+                <div class="dropdown-divider"></div>
+              {% endif %}
+                <a class="dropdown-item" href="/logout?next=/">Logout</a>
+            </div>
+          </li>
+      {% else %}
+          <li class="nav-item">
+            <a class="header-button nav-link" data-toggle="modal" data-target="#loginModal">
+            Login
+            </a>
+          </li>
+      {% endif %}
+    </ul>
+  </div>
+  {% endblock %}
 </div>
+

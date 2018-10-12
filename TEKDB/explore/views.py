@@ -32,7 +32,7 @@ def about(request):
         page_content = "<h1>About</h1><h3>Set About Page Content In Admin</h3>"
     context = {
         'page':'about',
-        'pageTitle':False,
+        'pageTitle':'About',
         'pageContent':page_content,
         'user': request.user
     }
@@ -49,7 +49,7 @@ def help(request):
         page_content = "<h1>Help</h1><h3>Set Help Page Content In Admin</h3>"
     context = {
         'page':'help',
-        'pageTitle':False,
+        'pageTitle':'Help',
         'pageContent':page_content,
         'user': request.user
     }
@@ -374,10 +374,9 @@ def search(request):
         query_string_visible = query_string
 
     if query_string not in [None, '', '*']:
-        query_value = ' value=%s' % query_string
+        query_value = '%s' % query_string
     else:
         query_value = ''
-    keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase"%s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')
@@ -399,7 +398,7 @@ def search(request):
         'results': json.dumps(resultlist),
         'query': query_string,
         'keyword': query_string_visible,
-        'keyword_search_input': keyword_search_input,
+        'keyword_search_input': query_value,
         'categories': json.dumps(categories),
         'category_checkboxes': category_checkboxes,
         'page':'Results',

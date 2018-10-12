@@ -110,6 +110,7 @@ $(document).ready( function () {
 
   app.datatable = $('#results_table').DataTable({
     "displayStart": display_start,
+    "scrollY": "65%",
     "pageLength": app.resultViewModel.state_items_per_page(),
     "lengthMenu": results_per_page_options,
     // "search": {

@@ -11,6 +11,7 @@ Vagrant.configure(2) do |config|
 
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
+  config.ssh.username = "ubuntu"
 
   config.vm.synced_folder "./TEKDB", "/usr/local/apps/TEKDB"
 

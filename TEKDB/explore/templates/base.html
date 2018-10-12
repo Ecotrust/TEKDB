@@ -2,18 +2,21 @@
   <head>
     <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/explore/css/base.css">
     <link rel="stylesheet" href="/static/explore/css/explore.css">
     <link rel="stylesheet" href="/static/explore/css/header.css">
     <link rel="stylesheet" href="/static/explore/css/modals.css">
-    <link rel="stylesheet" href="/static/explore/css/forms.css">
+    <link rel="stylesheet" href="/static/explore/css/forms.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    {% block extra_css %}
 
-    {% block extra_css %}{% endblock %}
+    {% endblock %}
   </head>
   <body>
     {% include 'modals.html' %}
 
     {% block header %}
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-sticky-top">
       <div class="container">
         {% include 'navbar.html' %}
       </div>
@@ -28,7 +31,6 @@
         </div>
         <div class="col-md-10 well content-well">
           {% block content %}
-            <h1>{{pageTitle}}</h1>
             {{pageContent}}
           {% endblock %}
         </div>

@@ -1,60 +1,66 @@
-body { padding-top: 90px; }
+.content-well p {
+  font-size: 14px;
+}
 
-h1 { text-align: center; }
-a { color: white; }
-a:hover {
-  color: white;
-  font-weight: bold;
+.content-well h1 {
+  font-family: garamond;
+  font-size: 42px;
+  color: #001a00;
+}
+
+h1 { 
+  text-align: center; 
+}
+
+.btn-group .btn {
+  background-image: linear-gradient(#fff 0, #d9e2d0);
+}
+
+.btn-group .btn:hover, .btn-group .btn:focus {
+  background-position: 0px ;
+}
+
+.btn-group .selected {
+  background-image: linear-gradient(#fff 0, #e9d8c1);
+}
+
+.selected:focus {
+  background-image: linear-gradient(#fff 0, #e9d8c1); 
+}
+
+.btn-group.btn-group-justified {
+  table-layout: auto;
+  width: 100%;
+}
+
+img {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
 }
 
 #search-category-type {
   display: none;
 }
 
-.btn-default {
-  color: black;
-}
-
-.content-container {
-  margin-top: 60px;
-}
-
-.well {
-  background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%);
-}
-.content-well {
-  padding-bottom: 200px;
-}
-
-.content-well h1 {
-  margin: 40px auto;
-  font-size: 55px;
-  letter-spacing: 5px;
-}
-
-.odd-well {
-  background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%);
-}
-
 .explore-form {
   text-align: center;
-  margin: 80px 150px;
+  margin: 70px;
 }
 
 .explore-logo {
   margin-top: 100px;
   text-align: center;
+  font-family: futura;
+  color: #001a00
 }
 
 .explore-logo img {
-  height: 50px;
-  width: 50px;
+  height: 8em;
+  width: 8em;
 }
 
-#export-links {
-  list-style-type: none;
-}
-#export-links li a,
-#export-links li span{
-  color: blue;
+.explore-logo p {
+  font-size: 1.5em;
+  color: #003400;
 }
