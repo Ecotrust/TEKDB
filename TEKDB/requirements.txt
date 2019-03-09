@@ -4,7 +4,7 @@ django<2.0
 django-ckeditor
 django-leaflet
 django-nested-admin
-django-registration
+django-registration<3.0
 psycopg2
 uwsgi
 XlsxWriter
