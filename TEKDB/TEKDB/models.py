@@ -171,6 +171,7 @@ class LookupPlanningUnit(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['planningunitname']
         db_table = 'lookupplanningunit'
         app_label="Lookup"
         verbose_name="planning unit"
@@ -190,6 +191,7 @@ class LookupTribe(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['tribe']
         db_table = 'lookuptribe'
         app_label="Lookup"
         verbose_name="tribe"
@@ -234,6 +236,7 @@ class LookupHabitat(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['habitat']
         db_table = 'lookuphabitat'
         app_label="Lookup"
         verbose_name="habitat"
@@ -386,6 +389,7 @@ class LookupResourceGroup(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['resourceclassificationgroup']
         db_table = 'lookupresourcegroup'
         app_label = 'Lookup'
         verbose_name="resource group"
@@ -507,6 +511,7 @@ class LookupPartUsed(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['partused']
         db_table = 'lookuppartused'
         app_label="Lookup"
         verbose_name="part used"
@@ -524,6 +529,7 @@ class LookupCustomaryUse(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['usedfor']
         db_table = 'lookupcustomaryuse'
         app_label="Lookup"
         verbose_name="customary use"
@@ -541,6 +547,7 @@ class LookupSeason(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['season']
         db_table = 'lookupseason'
         app_label="Lookup"
         verbose_name="season"
@@ -558,6 +565,7 @@ class LookupTiming(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['timing']
         db_table = 'lookuptiming'
         app_label="Lookup"
         verbose_name="timing"
@@ -705,6 +713,7 @@ class LookupParticipants(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['participants']
         db_table = 'lookupparticipants'
         app_label = "Lookup"
         verbose_name = "participant"
@@ -722,6 +731,7 @@ class LookupTechniques(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['techniques']
         db_table = 'lookuptechniques'
         app_label = "Lookup"
         verbose_name = "technique"
@@ -739,6 +749,7 @@ class LookupActivity(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['activity']
         db_table = 'lookupactivity'
         app_label = 'Lookup'
         verbose_name = 'activity'
@@ -953,6 +964,7 @@ class LookupReferenceType(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['documenttype']
         db_table = 'lookupreferencetype'
         app_label = "Lookup"
         verbose_name="reference type"
@@ -970,6 +982,7 @@ class LookupAuthorType(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['authortype']
         db_table = 'lookupauthortype'
         app_label = 'Lookup'
         verbose_name = 'author type'
@@ -1240,6 +1253,7 @@ class LookupLocalityType(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['localitytype']
         db_table = 'lookuplocalitytype'
         app_label = "Lookup"
         verbose_name = "locality type"
@@ -1437,6 +1451,7 @@ class LookupMediaType(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['mediatype']
         db_table = 'lookupmediatype'
         app_label = 'Lookup'
         verbose_name="media type"
@@ -1462,6 +1477,7 @@ class LookupUserInfo(models.Model):
 
     class Meta:
         managed = MANAGED
+        ordering = ['username']
         db_table = 'lookupuserinfo'
         app_label = 'Lookup'
         verbose_name = 'user info'
