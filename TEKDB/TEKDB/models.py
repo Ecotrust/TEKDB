@@ -96,7 +96,7 @@ class Queryable(models.Model):
             'modifiedbydate': self.modifiedbydate,
         }
 
-    def map(self):
+    def map(self, srid=None):
         return None
 
     def restrict_data(self, user):
@@ -105,7 +105,7 @@ class Queryable(models.Model):
     def limited_data(self):
         return self.data()
 
-    def get_record_dict(self, user):
+    def get_record_dict(self, user, srid=3857):
         if self.restrict_data(user):
             data = self.limited_data()
             restricted = True
@@ -118,7 +118,7 @@ class Queryable(models.Model):
             'subtitle': self.subtitle(),
             'data': data,
             'relationships': self.relationships(),
-            'map': self.map(),
+            'map': self.map(srid),
             'media': self.media(),
             # 'link': self.link(),
             'enteredbyname': self.enteredbyname,
@@ -329,8 +329,9 @@ class Places(Queryable, Record):
             # {'key':'Localities', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
         ]
 
-    def map(self):
+    def map(self, srid=3857):
         try:
+            self.geometry.transform(srid)
             geom = self.geometry.geojson
         except Exception:
             return False
@@ -947,7 +948,7 @@ class People(models.Model):
             'link': self.link()
         }
 
-    def get_record_dict(self, user):
+    def get_record_dict(self, user, srid=None):
         return {
             'name': str(self),
             'image': self.image(),
@@ -1335,8 +1336,9 @@ class Locality(Queryable):
             relationship_list.append({'key': 'GIS Selections', 'value': gisselections})
         return relationship_list
 
-    def map(self):
+    def map(self, srid=3857):
         try:
+            self.geometry.transform(srid)
             geom = self.geometry.geojson
         except Exception:
             return False

@@ -133,7 +133,7 @@ def get_by_model_id(request, model_type, id):
         try:
             model = models[0]
             obj = model.objects.get(pk=id)
-            record_dict = obj.get_record_dict(request.user)
+            record_dict = obj.get_record_dict(request.user, 3857)
         except Exception as e:
             obj = None
             record_dict = {'name': "Error retrieving %s record with ID %s" % (model_type, id)}
@@ -283,7 +283,7 @@ def export_by_model_id(request, model_type, id, format):
         try:
             model = models[0]
             obj = model.objects.get(pk=id)
-            record_dict = obj.get_record_dict(request.user)
+            record_dict = obj.get_record_dict(request.user, 4326)
         except Exception as e:
             record_dict = {'error': 'unknown error', 'code': '%s' % e}
     else:
