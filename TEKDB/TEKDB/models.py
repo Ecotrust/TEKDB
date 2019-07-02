@@ -170,6 +170,7 @@ class LookupPlanningUnit(models.Model):
     planningunitname = models.CharField(db_column='planningunitname', max_length=100, blank=True, null=True, verbose_name='planning unit')
 
     class Meta:
+        ordering = ['planningunitname']
         managed = MANAGED
         ordering = ['planningunitname']
         db_table = 'lookupplanningunit'
