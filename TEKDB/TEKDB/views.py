@@ -26,6 +26,7 @@ class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
         qs = PlacesResourceEvents.objects.all()
 
         if self.q:
+            from django.db.models.functions import Lower
             qs = qs.filter(
                 Q(placeid__indigenousplacename__icontains=self.q) |
                 Q(placeid__englishplacename__icontains=self.q) |
@@ -33,6 +34,6 @@ class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
                 Q(resourceid__indigenousname__icontains=self.q) |
                 Q(resourceid__genus__icontains=self.q) |
                 Q(resourceid__species__icontains=self.q)
-            ).order_by('resourceid__commonname', 'placeid__indigenousplacename')
+            ).order_by(Lower('resourceid__commonname'), Lower('placeid__indigenousplacename'))
 
         return qs
