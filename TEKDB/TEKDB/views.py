@@ -1,5 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from dal import autocomplete
+from django.db.models import Q
 from .models import *
 
 def get_related(request, model_name, id):
@@ -16,3 +18,21 @@ def get_related(request, model_name, id):
     except:
         pass
     return HttpResponse(data, content_type='application/json')
+
+class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return PlacesResourceEvents.objects.none()
+        qs = PlacesResourceEvents.objects.all()
+
+        if self.q:
+            qs = qs.filter(
+                Q(placeid__indigenousplacename__icontains=self.q) |
+                Q(placeid__englishplacename__icontains=self.q) |
+                Q(resourceid__commonname__icontains=self.q) |
+                Q(resourceid__indigenousname__icontains=self.q) |
+                Q(resourceid__genus__icontains=self.q) |
+                Q(resourceid__species__icontains=self.q)
+            ).order_by('resourceid__commonname', 'placeid__indigenousplacename')
+
+        return qs

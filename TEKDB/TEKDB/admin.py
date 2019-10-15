@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.translation import ugettext, ugettext_lazy as _
+from dal import autocomplete
 import nested_admin
 
 from .models import *
@@ -21,6 +22,14 @@ class MediaForm(forms.ModelForm):
         # widgets = {
         #     'medialink':forms.FileInput
         # }
+        fields = '__all__'
+
+class ResourcesActivityEventsForm(forms.ModelForm):
+    class Meta:
+        model = ResourcesActivityEvents
+        widgets = {
+            'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource')
+        }
         fields = '__all__'
 
 class PlacesResourceEventForm(forms.ModelForm):
@@ -462,6 +471,7 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
         'enteredbyname', 'enteredbytribe', 'enteredbytitle', 'modifiedbyname',
         'modifiedbytribe', 'modifiedbytitle'
     )
+    form = ResourcesActivityEventsForm
 
 class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
     list_display = ('placeid', 'englishname', 'indigenousname',

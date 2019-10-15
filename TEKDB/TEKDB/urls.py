@@ -28,8 +28,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from login import views as login_views
+from dal import autocomplete
 
 from . import views
+from . import models
 
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
@@ -39,6 +41,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^tekdb/(?P<model_name>\w+)/(?P<id>\w+)/get_related$', views.get_related),
+    url('place_resource_autocomplete/$', views.PlaceResourceAutocompleteView.as_view(), name='select2_fk_placeresource',),
     url(r'', include('explore.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
