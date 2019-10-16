@@ -1,9 +1,19 @@
 body { padding-top: 90px; }
 
 h1 { text-align: center; }
-a { color: white; }
-a:hover {
+
+
+a,
+.well a.btn-download,
+.well a.btn {
   color: white;
+}
+
+.well a {
+  color: black;
+}
+
+a:hover {
   font-weight: bold;
 }
 
