@@ -44,7 +44,8 @@ var nautical_charts = new ol.layer.Tile({
   type: 'base',
   source: new ol.source.TileWMS({
     url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/services/RNC/NOAA_RNC/ImageServer/WMSServer',
-    params: {'LAYERS': 'NOAA_RNC'},
+    // params: {'LAYERS': 'NOAA_RNC'},
+    params: {'LAYERS': '0'},
     attributions: [
       new ol.Attribution({
         html: 'Natical Source: NOAA Office of Coast Survey'
