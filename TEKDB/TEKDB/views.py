@@ -21,12 +21,12 @@ def get_related(request, model_name, id):
 
 class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
+        from django.db.models.functions import Lower
         if not self.request.user.is_authenticated():
             return PlacesResourceEvents.objects.none()
         qs = PlacesResourceEvents.objects.all()
 
         if self.q:
-            from django.db.models.functions import Lower
             qs = qs.filter(
                 Q(placeid__indigenousplacename__icontains=self.q) |
                 Q(placeid__englishplacename__icontains=self.q) |
@@ -34,6 +34,6 @@ class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
                 Q(resourceid__indigenousname__icontains=self.q) |
                 Q(resourceid__genus__icontains=self.q) |
                 Q(resourceid__species__icontains=self.q)
-            ).order_by(Lower('resourceid__commonname'), Lower('placeid__indigenousplacename'))
+            )
 
-        return qs
+        return qs.order_by(Lower('resourceid__commonname'), Lower('placeid__indigenousplacename'))
