@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models.functions import Lower
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
@@ -24,6 +25,10 @@ class MediaForm(forms.ModelForm):
         # }
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(MediaForm, self).__init__(*args, **kwargs)
+        self.fields['mediatype'].queryset = LookupMediaType.objects.order_by(Lower('mediatype'))
+
 class ResourcesActivityEventsForm(forms.ModelForm):
     class Meta:
         model = ResourcesActivityEvents
@@ -31,6 +36,32 @@ class ResourcesActivityEventsForm(forms.ModelForm):
             'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource')
         }
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ResourcesActivityEventsForm, self).__init__(*args, **kwargs)
+        self.fields['participants'].queryset = LookupParticipants.objects.order_by(Lower('participants'))
+        self.fields['technique'].queryset = LookupTechniques.objects.order_by(Lower('techniques'))
+        self.fields['activityshortdescription'].queryset = LookupActivity.objects.order_by(Lower('activity'))
+
+class CitationsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CitationsForm, self).__init__(*args, **kwargs)
+        self.fields['referencetype'].queryset = LookupReferenceType.objects.order_by(Lower('documenttype'))
+        # self.fields['authortype'].queryset = LookupAuthorType.objects.order_by(Lower('authortype'))
+        self.fields['intervieweeid'].queryset = People.objects.order_by(Lower('firstname'), Lower('lastname'))
+        self.fields['interviewerid'].queryset = People.objects.order_by(Lower('firstname'), Lower('lastname'))
+
+class PlacesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PlacesForm, self).__init__(*args, **kwargs)
+        self.fields['planningunitid'].queryset = LookupPlanningUnit.objects.order_by(Lower('planningunitname'))
+        self.fields['primaryhabitat'].queryset = LookupHabitat.objects.order_by(Lower('habitat'))
+        self.fields['tribeid'].queryset = LookupTribe.objects.order_by(Lower('tribe'))
+
+class ResourcesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ResourcesForm, self).__init__(*args, **kwargs)
+        self.fields['resourceclassificationgroup'].queryset = LookupResourceGroup.objects.order_by(Lower('resourceclassificationgroup'))
 
 class PlacesResourceEventForm(forms.ModelForm):
     class Meta:
@@ -352,6 +383,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
         'enteredbyname', 'enteredbytribe', 'modifiedbyname',
         'modifiedbytribe'
     )
+    form = CitationsForm
 
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
@@ -417,6 +449,7 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
     default_lat = DATABASE_GEOGRAPHY['default_lat']
     default_zoom = DATABASE_GEOGRAPHY['default_zoom']
     map_template = DATABASE_GEOGRAPHY['map_template']
+    form = PlacesForm
 
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('commonname','indigenousname', 'modifiedbyname',
@@ -443,6 +476,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
         'modifiedbytribe'
     )
     ordering = ('commonname',)
+    form = ResourcesForm
 
 class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('placeresourceid', 'relationshipdescription',
