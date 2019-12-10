@@ -67,14 +67,24 @@ class PlacesResourceEventForm(forms.ModelForm):
     class Meta:
         model = PlacesResourceEvents
         widgets = {
+            'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
+            'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(PlacesResourceEventForm, self).__init__(*args, **kwargs)
+        self.fields['partused'].queryset = LookupPartUsed.objects.order_by(Lower('partused'))
+        self.fields['season'].queryset = LookupSeason.objects.order_by(Lower('season'))
+        self.fields['timing'].queryset = LookupTiming.objects.order_by(Lower('timing'))
 
 class MediaCitationEventsForm(forms.ModelForm):
     class Meta:
         model = MediaCitationEvents
         widgets = {
+            'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
+            'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -83,6 +93,8 @@ class PlacesCitationEventsForm(forms.ModelForm):
     class Meta:
         model = PlacesCitationEvents
         widgets = {
+            'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
+            'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -91,6 +103,8 @@ class PlacesMediaEventsForm(forms.ModelForm):
     class Meta:
         model = PlacesMediaEvents
         widgets = {
+            'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
+            'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -99,6 +113,8 @@ class PlacesResourceCitationEventsForm(forms.ModelForm):
     class Meta:
         model = PlacesResourceCitationEvents
         widgets = {
+            'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource'),
+            'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -107,6 +123,8 @@ class PlacesResourceMediaEventsForm(forms.ModelForm):
     class Meta:
         model = PlacesResourceMediaEvents
         widgets = {
+            'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource'),
+            'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -115,7 +133,9 @@ class ResourceActivityMediaEventsForm(forms.ModelForm):
     class Meta:
         model = ResourceActivityMediaEvents
         widgets = {
-            'relationshipdescription': forms.Textarea
+            'resourceactivityid': autocomplete.ModelSelect2(url='select2_fk_resourceactivity'),
+            'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
+            'relationshipdescription': forms.Textarea,
         }
         fields = '__all__'
 
@@ -123,6 +143,8 @@ class ResourceActivityCitationEventsForm(forms.ModelForm):
     class Meta:
         model = ResourceActivityCitationEvents
         widgets = {
+            'resourceactivityid': autocomplete.ModelSelect2(url='select2_fk_resourceactivity'),
+            'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -131,6 +153,8 @@ class ResourceResourceEventsForm(forms.ModelForm):
     class Meta:
         model = ResourceResourceEvents
         widgets = {
+            'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
+            'altresourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -139,6 +163,8 @@ class ResourcesCitationEventsForm(forms.ModelForm):
     class Meta:
         model = ResourcesCitationEvents
         widgets = {
+            'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
+            'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
             'relationshipdescription': forms.Textarea
         }
         fields = '__all__'
@@ -147,7 +173,25 @@ class ResourcesMediaEventsForm(forms.ModelForm):
     class Meta:
         model = ResourcesMediaEvents
         widgets = {
+            'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
+            'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
             'relationshipdescription': forms.Textarea
+        }
+        fields = '__all__'
+
+class PlaceAltIndigenousNameForm(forms.ModelForm):
+    class Meta:
+        model = PlaceAltIndigenousName
+        widgets = {
+            'placeid': autocomplete.ModelSelect2(url='select2_fk_place')
+        }
+        fields = '__all__'
+
+class ResourceAltIndigenousNameForm(forms.ModelForm):
+    class Meta:
+        model = ResourceAltIndigenousName
+        widgets = {
+            'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
         }
         fields = '__all__'
 
@@ -614,6 +658,7 @@ class PlaceAltIndigenousNameAdmin(admin.ModelAdmin):
             'fields': (('placeid', 'altindigenousname'),),
         }),
     )
+    form = PlaceAltIndigenousNameForm
 
 class PlacesResourceCitationEventsAdmin(RecordAdminProxy):
     list_display = ('placeresourceid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
@@ -726,6 +771,7 @@ class ResourceAltIndigenousNameAdmin(admin.ModelAdmin):
             'fields': (('resourceid', 'altindigenousname'),),
         }),
     )
+    form = ResourceAltIndigenousNameForm
 
 class LocalityPlaceResourceEventAdmin(RecordAdminProxy):
     list_display = ('localityid','placeresourceid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')

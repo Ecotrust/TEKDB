@@ -1511,7 +1511,7 @@ class Media(Queryable, Record):
         return unicode('%s' % (self.medianame))
 
     def __str__(self):
-        return self.medianame or ''
+        return "%s [ %s ]" % (self.medianame, self.mediatype) or ''
 
     def keyword_search(keyword):
         type_qs = LookupMediaType.keyword_search(keyword)
