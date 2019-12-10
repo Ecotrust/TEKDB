@@ -28,3 +28,13 @@ th {
 .btn-success {
   margin: 15px;
 }
+
+.modal-dialog {
+  width: 80vw;
+  height: 80vh;
+  margin: 10vh, 10vw;
+}
+
+#popup-iframe-form {
+  height: 70vh !important;
+}
