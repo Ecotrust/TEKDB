@@ -75,7 +75,7 @@ loadFormModal = function(module, model, id, action, base_model, base_id, fk_fiel
   $('#popup-iframe-form').load(function(){
       if (action != 'delete') {
         if (action == 'add') {
-          $('#popup-iframe-form').contents().find('#id_' + fk_field_id).val(base_id);
+          $('#popup-iframe-form').contents().find('#id_' + fk_field_id).parent().replaceWith('<input name="' + fk_field_id + '" id="id_' + fk_field_id + '" value="' + base_id + '"></input>');
         }
         // If below only shown for 'add', users could move relationships to new records
         // For now I'm not sure this feature is intuitive or desired.
