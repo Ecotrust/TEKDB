@@ -187,8 +187,8 @@ class LookupPlanningUnit(models.Model):
 class LookupTribe(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)
     tribeunit = models.CharField(db_column='tribeunit', max_length=50, blank=True, null=True, verbose_name='tribe subunit')
-    tribe = models.CharField(db_column='tribe', max_length=100, blank=True, null=True, verbose_name='tribe')
-    federaltribe = models.CharField(db_column='federaltribe', max_length=100, blank=True, null=True, verbose_name='tribal government')
+    tribe = models.CharField(db_column='tribe', max_length=255, blank=True, null=True, verbose_name='tribe')
+    federaltribe = models.CharField(db_column='federaltribe', max_length=255, blank=True, null=True, verbose_name='tribal government')
 
     class Meta:
         managed = MANAGED
@@ -253,7 +253,7 @@ class Places(Queryable, Record):
     placeid = models.AutoField(db_column='placeid', primary_key=True)
     # PlaceID
     indigenousplacename = models.CharField(db_column='indigenousplacename', max_length=255, blank=True, null=True, verbose_name='indigenous name')
-    indigenousplacenamemeaning = models.CharField(db_column='indigenousplacenamemeaning', max_length=255, blank=True, null=True, verbose_name='english translation')
+    indigenousplacenamemeaning = models.TextField(db_column='indigenousplacenamemeaning', blank=True, null=True, verbose_name='english translation')
     englishplacename = models.CharField(db_column='englishplacename', max_length=255, blank=True, null=True, verbose_name='english name')
     # PlaceLabel = models.CharField(max_length=255, blank=True, null=True, verbose_name='Place Label')
     planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='planningunitid', blank=True, null=True, verbose_name='planning unit')
@@ -1158,7 +1158,7 @@ class Citations(Queryable, Record):
 class PlacesCitationEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1645,7 +1645,7 @@ class Media(Queryable, Record):
 class MediaCitationEvents(SimpleRelationship):
     mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1767,7 +1767,7 @@ class PlaceGISSelections(models.Model):
 class PlacesMediaEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
@@ -1842,7 +1842,7 @@ class PlacesMediaEvents(SimpleRelationship):
 class PlacesResourceCitationEvents(SimpleRelationship):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1917,7 +1917,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
 class PlacesResourceMediaEvents(SimpleRelationship):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place - resource')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
@@ -1991,7 +1991,7 @@ class PlacesResourceMediaEvents(SimpleRelationship):
 class ResourceActivityCitationEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -2066,7 +2066,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
 class ResourceActivityMediaEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
@@ -2173,7 +2173,7 @@ class ResourceAltIndigenousName(models.Model):
 class ResourceResourceEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a")
     altresourceid = models.ForeignKey(Resources, db_column='altresourceid', related_name="resource_b")
-    relationshipdescription = models.TextField(db_column='relationshipdescription',blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
 
     class Meta:
         managed = MANAGED
@@ -2274,7 +2274,7 @@ class ResourceResourceEvents(SimpleRelationship):
 class ResourcesCitationEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -2349,7 +2349,7 @@ class ResourcesCitationEvents(SimpleRelationship):
 class ResourcesMediaEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.CharField(db_column='relationshipdescription', max_length=255, blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
