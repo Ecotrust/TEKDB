@@ -132,9 +132,10 @@ def get_by_model_id(request, model_type, id):
     if len(models) == 1:
         try:
             model = models[0]
-            obj = model.objects.get(pk=id)
+            obj = model.objects.get(pk=int(id))
             record_dict = obj.get_record_dict(request.user, 3857)
         except Exception as e:
+            import pdb; pdb.set_trace()
             obj = None
             record_dict = {'name': "Error retrieving %s record with ID %s" % (model_type, id)}
     else:

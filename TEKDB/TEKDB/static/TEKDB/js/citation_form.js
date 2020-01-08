@@ -1,48 +1,93 @@
-
-
 show_reftype_form = function(reftype) {
-  $('.citation-book-form').hide();
-  $('.citation-volume-form').hide();
-  $('.citation-interview-form').hide();
-  $('.citation-other-form').hide();
+  $('.citation-form-fieldset h2').html(reftype);
   switch(reftype) {
     case '---------':
+      $('.citation-form-fieldset h2').html("Select a 'Reference type' to contine.");
+      $('.form-row.field-title').hide();
+      $('.form-row.field-authorprimary.field-authorsecondary').hide();
+      $('.form-row.field-year').hide();
+      $('.form-row.field-publisher.field-publishercity').hide();
+      $('.form-row.field-seriestitle').hide();
+      $('.form-row.field-seriesvolume.field-serieseditor').hide();
+      $('.form-row.field-intervieweeid.field-interviewerid').hide();
+      $('.form-row.field-placeofinterview').hide();
+      $('.form-row.field-journal.field-journalpages').hide();
+      $('.form-row.field-preparedfor').hide();
+      $('.form-row.field-referencetext').hide();
+      $('.form-row.field-comments').hide();
       break;
     case 'Book':
-      $('.citation-book-form').show();
+      $('.form-row.field-title').show();
+      $('.form-row.field-authorprimary.field-authorsecondary').show();
+      $('.form-row.field-year').show();
+      $('.form-row.field-publisher.field-publishercity').show();
+
+      $('.form-row.field-seriestitle').hide();
+      $('.form-row.field-seriesvolume.field-serieseditor').hide();
+      $('.form-row.field-intervieweeid.field-interviewerid').hide();
+      $('.form-row.field-placeofinterview').hide();
+      $('.form-row.field-journal.field-journalpages').hide();
+      $('.form-row.field-preparedfor').hide();
+
+      $('.form-row.field-referencetext').show();
+      $('.form-row.field-comments').show();
+
       break;
     case 'Edited Volume':
-      $('.citation-volume-form').show();
+      $('.form-row.field-title').show();
+      $('.form-row.field-authorprimary.field-authorsecondary').show();
+      $('.form-row.field-year').show();
+      $('.form-row.field-publisher.field-publishercity').show();
+      $('.form-row.field-seriestitle').show();
+      $('.form-row.field-seriesvolume.field-serieseditor').show();
+
+      $('.form-row.field-intervieweeid.field-interviewerid').hide();
+      $('.form-row.field-placeofinterview').hide();
+      $('.form-row.field-journal.field-journalpages').hide();
+      $('.form-row.field-preparedfor').hide();
+
+      $('.form-row.field-referencetext').show();
+      $('.form-row.field-comments').show();
       break;
     case 'Interview':
-      $('.citation-interview-form').show();
-      break;
-    case 'Other':
-      $('.citation-other-form').show();
+      $('.form-row.field-title').hide();
+      $('.form-row.field-authorprimary.field-authorsecondary').hide();
+      $('.form-row.field-publisher.field-publishercity').hide();
+      $('.form-row.field-seriestitle').hide();
+      $('.form-row.field-seriesvolume.field-serieseditor').hide();
+
+      $('.form-row.field-intervieweeid.field-interviewerid').show();
+      $('.form-row.field-year').show();
+      $('.form-row.field-placeofinterview').show();
+
+      $('.form-row.field-journal.field-journalpages').hide();
+      $('.form-row.field-preparedfor').hide();
+
+      $('.form-row.field-referencetext').show();
+      $('.form-row.field-comments').show();
       break;
     default:
-      $('.citation-other-form').show();
+      $('.form-row.field-title').show();
+      $('.form-row.field-authorprimary.field-authorsecondary').show();
+      $('.form-row.field-year').show();
+      $('.form-row.field-publisher.field-publishercity').show();
+      $('.form-row.field-seriestitle').show();
+      $('.form-row.field-seriesvolume.field-serieseditor').show();
+
+      $('.form-row.field-intervieweeid.field-interviewerid').hide();
+      $('.form-row.field-placeofinterview').hide();
+
+      $('.form-row.field-journal.field-journalpages').show();
+      $('.form-row.field-preparedfor').show();
+      $('.form-row.field-referencetext').show();
+      $('.form-row.field-comments').show();
       break;
   }
 }
 
 show_reftype_form($('#id_referencetype option:selected').text());
 
-// $( "form" ).submit(function( event ) {
-//   event.preventDefault();
-//   window.alert('submit!');
-// });
-
-// update_referencetype = function() {
 $('#id_referencetype').change(function() {
   var reftype = $('#id_referencetype option:selected').text();
   show_reftype_form(reftype);
-});
-
-// $('[name="title"]').change(function(event) {
-$('input, text, textarea').change(function(event) {
-  new_val = event.currentTarget.value;
-  name = event.currentTarget.name;
-  $('[name="' + name + '"]').val(new_val);
-  // window.alert('title change');
 });

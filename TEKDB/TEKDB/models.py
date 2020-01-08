@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from TEKDB import settings
 from django.contrib.gis.db.models import GeometryField, GeoManager
+from ckeditor.fields import RichTextField
 
 MANAGED = True
 
@@ -583,7 +584,7 @@ class PlacesResourceEvents(Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place')
     resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt', config_name="custom") #CKEditor Rich Text Editor Field
     partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
     customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use')
     barterresource = models.BooleanField(db_column='barterresource', verbose_name='barter resource?', default=False)
@@ -766,10 +767,10 @@ class LookupActivity(models.Model):
 class ResourcesActivityEvents(Queryable, Record):
     resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt', config_name="custom") #CKEditor Rich Text Editor Field
     partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
     activityshortdescription = models.ForeignKey(LookupActivity, db_column='activityshortdescription', max_length=255, blank=True, null=True, verbose_name='activity type')
-    activitylongdescription = models.TextField(db_column='activitylongdescription', blank=True, null=True, verbose_name='full activity description')
+    activitylongdescription = RichTextField(db_column='activitylongdescription', blank=True, null=True, verbose_name='full activity description', config_name="custom") #CKEditor Rich Text Editor Field
     participants = models.ForeignKey(LookupParticipants, db_column='participants', max_length=50, blank=True, null=True)
     gear = models.CharField(db_column='gear', max_length=255, blank=True, null=True)
     technique = models.ForeignKey(LookupTechniques, db_column='technique', max_length=255, blank=True, null=True)
@@ -789,6 +790,11 @@ class ResourcesActivityEvents(Queryable, Record):
 
     def __str__(self):
         return "%s: %s" % (str(self.placeresourceid), self.activityshortdescription) or ''
+
+    @property
+    def excerpt_text(self):
+        from django.utils.html import strip_tags
+        return strip_tags(self.relationshipdescription)
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -889,7 +895,7 @@ class People(models.Model):
     lastname = models.CharField(db_column='lastname', max_length=255, blank=True, null=True, verbose_name='last name')
     village = models.CharField(db_column='village', max_length=255, blank=True, null=True)
     yearborn = models.IntegerField(db_column='yearborn', blank=True, null=True, verbose_name='year born')
-    relationshiptootherpeople = models.TextField(db_column='relationshiptootherpeople', blank=True, null=True, verbose_name='relationship to other people')
+    relationshiptootherpeople = RichTextField(db_column='relationshiptootherpeople', blank=True, null=True, verbose_name='relationship to other people', config_name="custom") #CKEditor Rich Text Editor Field
 
     class Meta:
         managed = MANAGED
@@ -1000,7 +1006,7 @@ class LookupAuthorType(models.Model):
 class Citations(Queryable, Record):
     citationid = models.AutoField(db_column='citationid', primary_key=True)
     referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue")
-    referencetext = models.CharField(db_column='referencetext', max_length=50, blank=True, null=True, verbose_name='description')
+    referencetext = models.TextField(db_column='referencetext', blank=True, null=True, verbose_name='description')
     authortype = models.ForeignKey(LookupAuthorType, db_column='authortype', max_length=255, blank=True, null=True, verbose_name='author type')
     authorprimary = models.CharField(db_column='authorprimary', max_length=255, blank=True, null=True, verbose_name='primary author')
     authorsecondary = models.CharField(db_column='authorsecondary', max_length=255, blank=True, null=True, verbose_name='secondary author')
@@ -1015,7 +1021,7 @@ class Citations(Queryable, Record):
     publisher = models.CharField(db_column='publisher', max_length=100, blank=True, null=True)
     publishercity = models.CharField(db_column='publishercity', max_length=255, blank=True, null=True, verbose_name='city')
     preparedfor = models.CharField(db_column='preparedfor', max_length=100, blank=True, null=True, verbose_name='prepared_for')
-    comments = models.TextField(db_column='comments', blank=True, null=True)
+    comments = RichTextField(db_column='comments', blank=True, null=True, config_name="custom") #CKEditor Rich Text Editor Field
     journal = models.TextField(db_column='journal', blank=True, null=True, verbose_name='journal')
     journalpages = models.TextField(db_column='journalpages', blank=True, null=True, verbose_name='journal pages')
 
@@ -1093,24 +1099,64 @@ class Citations(Queryable, Record):
         return relationship_list
 
     def data(self):
-        #TODO: Return different results for different reference types
+
+        if str(self.referencetype).lower() == 'book':
+            return [
+                {'key':'reference type', 'value': str(self.referencetype)},
+                {'key':'title', 'value': self.title},
+                {'key':'description', 'value': self.referencetext},
+                {'key':'year', 'value': self.year},
+                {'key':'primary author', 'value': self.authorprimary},
+                {'key':'secondary author', 'value': self.authorsecondary},
+                {'key':'publisher', 'value': self.publisher},
+                {'key':'publisher city', 'value': self.publishercity},
+                {'key':'comments', 'value': self.comments},
+            ]
+        if str(self.referencetype).lower() == 'edited volume':
+            return [
+                {'key':'reference type', 'value': str(self.referencetype)},
+                {'key':'title', 'value': self.title},
+                {'key':'description', 'value': self.referencetext},
+                {'key':'year', 'value': self.year},
+                {'key':'primary author', 'value': self.authorprimary},
+                {'key':'secondary author', 'value': self.authorsecondary},
+                {'key':'publisher', 'value': self.publisher},
+                {'key':'publisher city', 'value': self.publishercity},
+                {'key':'series volume', 'value': self.seriesvolume},
+                {'key':'series title', 'value': self.seriestitle},
+                {'key':'series editor', 'value': self.serieseditor},
+                {'key':'comments', 'value': self.comments},
+            ]
+
+        if str(self.referencetype).lower() == 'interview':
+            return [
+                {'key':'reference type', 'value': str(self.referencetype)},
+                {'key':'description', 'value': self.referencetext},
+                {'key':'interviewee', 'value': str(self.intervieweeid)},
+                {'key':'interviewer', 'value': str(self.interviewerid)},
+                {'key':'year', 'value': self.year},
+                {'key':'place of interview', 'value': self.placeofinterview},
+                {'key':'comments', 'value': self.comments},
+            ]
+
         return [
             {'key':'reference type', 'value': str(self.referencetype)},
-            {'key':'description', 'value': self.referencetext},
             {'key':'title', 'value': self.title},
-            {'key':'author type', 'value': str(self.authortype)},
+            {'key':'description', 'value': self.referencetext},
+            {'key':'year', 'value': self.year},
             {'key':'primary author', 'value': self.authorprimary},
             {'key':'secondary author', 'value': self.authorsecondary},
-            {'key':'year', 'value': self.year},
+            {'key':'publisher', 'value': self.publisher},
+            {'key':'publisher city', 'value': self.publishercity},
             {'key':'series volume', 'value': self.seriesvolume},
             {'key':'series title', 'value': self.seriestitle},
             {'key':'series editor', 'value': self.serieseditor},
             {'key':'interviewee', 'value': str(self.intervieweeid)},
             {'key':'interviewer', 'value': str(self.interviewerid)},
             {'key':'place of interview', 'value': self.placeofinterview},
+            {'key':'journal', 'value': self.journal},
+            {'key':'journal pages', 'value': self.journalpages},
             {'key':'prepared for', 'value': self.preparedfor},
-            {'key':'publisher', 'value': self.publisher},
-            {'key':'publisher city', 'value': self.publishercity},
             {'key':'comments', 'value': self.comments},
         ]
 
@@ -1141,6 +1187,18 @@ class Citations(Queryable, Record):
             {'title': 'Activity Relationships', 'data': self.format_data(activity_events, 'citationid', ['citation'])},
         ]
 
+    @property
+    def title_text(self):
+        if str(self.referencetype).lower() == 'interview':
+            return "%s: interviewed by %s" % (str(self.intervieweeid), str(self.interviewerid))
+        from django.utils.html import strip_tags
+        return strip_tags(self.title)
+
+    @property
+    def description_text(self):
+        from django.utils.html import strip_tags
+        return strip_tags(self.referencetext)
+
     def __str__(self):
         if str(self.referencetype) == 'Interview':
             try:
@@ -1158,7 +1216,7 @@ class Citations(Queryable, Record):
 class PlacesCitationEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1187,6 +1245,11 @@ class PlacesCitationEvents(SimpleRelationship):
             Q(placeid__in=place_loi) |
             Q(relationshipdescription__icontains=keyword)
         )
+
+    @property
+    def description_text(self):
+        from django.utils.html import strip_tags
+        return strip_tags(self.relationshipdescription)
 
     def image(self):
         return settings.RECORD_ICONS['activity']
@@ -1496,7 +1559,7 @@ class Media(Queryable, Record):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type')
     medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
-    mediadescription = models.TextField(db_column='mediadescription', blank=True, null=True, verbose_name='description')
+    mediadescription = RichTextField(db_column='mediadescription', blank=True, null=True, verbose_name='description', config_name="custom") #CKEditor Rich Text Editor Field
     medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
     mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
     limitedaccess = models.NullBooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
@@ -1523,6 +1586,10 @@ class Media(Queryable, Record):
             Q(mediadescription__icontains=keyword) |
             Q(medialink__icontains=keyword)
         )
+    @property
+    def description_text(self):
+        from django.utils.html import strip_tags
+        return strip_tags(self.mediadescription)
 
     def image(self):
         return settings.RECORD_ICONS['media']
@@ -1645,7 +1712,7 @@ class Media(Queryable, Record):
 class MediaCitationEvents(SimpleRelationship):
     mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1661,6 +1728,11 @@ class MediaCitationEvents(SimpleRelationship):
 
     def __str__(self):
         return "%s %s" % (str(self.mediaid), str(self.citationid)) or ''
+
+    @property
+    def description_text(self):
+        from django.utils.html import strip_tags
+        return strip_tags(self.relationshipdescription)
 
     def keyword_search(keyword):
         media_qs = Media.keyword_search(keyword)
@@ -1767,7 +1839,7 @@ class PlaceGISSelections(models.Model):
 class PlacesMediaEvents(SimpleRelationship):
     placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
@@ -1842,7 +1914,7 @@ class PlacesMediaEvents(SimpleRelationship):
 class PlacesResourceCitationEvents(SimpleRelationship):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1917,7 +1989,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
 class PlacesResourceMediaEvents(SimpleRelationship):
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place - resource')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
@@ -1991,7 +2063,7 @@ class PlacesResourceMediaEvents(SimpleRelationship):
 class ResourceActivityCitationEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -2066,7 +2138,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
 class ResourceActivityMediaEvents(SimpleRelationship):
     resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:
@@ -2173,7 +2245,7 @@ class ResourceAltIndigenousName(models.Model):
 class ResourceResourceEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a")
     altresourceid = models.ForeignKey(Resources, db_column='altresourceid', related_name="resource_b")
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
 
     class Meta:
         managed = MANAGED
@@ -2274,7 +2346,7 @@ class ResourceResourceEvents(SimpleRelationship):
 class ResourcesCitationEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
     citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
     class Meta:
@@ -2349,7 +2421,7 @@ class ResourcesCitationEvents(SimpleRelationship):
 class ResourcesMediaEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
     mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
-    relationshipdescription = models.TextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
+    relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
     class Meta:

@@ -39,8 +39,8 @@
             <div class="col record-icon" style="background-image: url({{ record.image }})">
             </div>
             <div class="col-md-10">
-              <h2>{{record.name}}</h2>
-              <h5>{{record.subtitle}}</h5>
+              <h2>{{record.name | safe }}</h2>
+              <h5>{{record.subtitle | safe }}</h5>
             </div>
           </div>
           <div class='row'>
@@ -81,7 +81,7 @@
                         <a href="{{ link.link }}{{ state }}">{{ link.name }}</a>
                         {% if link.data.description %}
                           <div class='source-excerpt'>
-                            {{ link.data.description }}
+                            {{ link.data.description | safe }}
                             {% if link.data.pages %}&nbsp(Pages: {{ link.data.pages }}){% endif %}
                           </div>
                         {% endif %}

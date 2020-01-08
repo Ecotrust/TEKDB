@@ -6,6 +6,7 @@ from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.translation import ugettext, ugettext_lazy as _
 from dal import autocomplete
 import nested_admin
+from ckeditor.widgets import CKEditorWidget
 
 from .models import *
 
@@ -69,7 +70,7 @@ class PlacesResourceEventForm(forms.ModelForm):
         widgets = {
             'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -85,7 +86,7 @@ class MediaCitationEventsForm(forms.ModelForm):
         widgets = {
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -95,7 +96,7 @@ class PlacesCitationEventsForm(forms.ModelForm):
         widgets = {
             'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -105,7 +106,7 @@ class PlacesMediaEventsForm(forms.ModelForm):
         widgets = {
             'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -115,7 +116,7 @@ class PlacesResourceCitationEventsForm(forms.ModelForm):
         widgets = {
             'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget()
         }
         fields = '__all__'
 
@@ -125,7 +126,7 @@ class PlacesResourceMediaEventsForm(forms.ModelForm):
         widgets = {
             'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -135,7 +136,7 @@ class ResourceActivityMediaEventsForm(forms.ModelForm):
         widgets = {
             'resourceactivityid': autocomplete.ModelSelect2(url='select2_fk_resourceactivity'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': forms.Textarea,
+            'relationshipdescription': CKEditorWidget,
         }
         fields = '__all__'
 
@@ -145,7 +146,7 @@ class ResourceActivityCitationEventsForm(forms.ModelForm):
         widgets = {
             'resourceactivityid': autocomplete.ModelSelect2(url='select2_fk_resourceactivity'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -155,7 +156,7 @@ class ResourceResourceEventsForm(forms.ModelForm):
         widgets = {
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'altresourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -165,7 +166,7 @@ class ResourcesCitationEventsForm(forms.ModelForm):
         widgets = {
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -175,7 +176,7 @@ class ResourcesMediaEventsForm(forms.ModelForm):
         widgets = {
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': forms.Textarea
+            'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
 
@@ -346,59 +347,27 @@ class RecordModelAdmin(admin.ModelAdmin):
         return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
-    list_display = ('referencetype','title','referencetext',
+    list_display = ('referencetype','title_text','description_text',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
             'classes': ('citation-ref-type',),
             'fields': ('referencetype',)
         }),
-        ('Book', {
-            'classes': ('citation-book-form',),
+        ('Bibliographic Source', {
+            'classes': ('citation-form-fieldset',),
             'fields': (
                 'title',
-                ('authorprimary', 'year'),
-                'authorsecondary',
-                ('publisher', 'publishercity'),
                 'referencetext',
-                'comments'
-            )
-        }),
-        ('Edited Volume', {
-            'classes': ('citation-volume-form',),
-            'fields': (
-                'title',
-                ('authorprimary', 'year'),
-                'authorsecondary',
+                ('authorprimary', 'authorsecondary'),
+                ('intervieweeid', 'interviewerid'),
+                'year',
                 ('publisher', 'publishercity'),
                 'seriestitle',
                 ('seriesvolume','serieseditor'),
-                'referencetext',
-                'comments'
-            )
-        }),
-        ('Interview', {
-            'classes': ('citation-interview-form',),
-            'fields': (
-                ('intervieweeid', 'year'),
-                'interviewerid',
                 'placeofinterview',
-                'referencetext',
-                'comments'
-            )
-        }),
-        ('Other', {
-            'classes': ('citation-other-form',),
-            'fields': (
-                'title',
-                ('authorprimary', 'year'),
-                'authorsecondary',
-                ('publisher', 'publishercity'),
-                'seriestitle',
-                ('seriesvolume','serieseditor'),
                 ('journal', 'journalpages'),
                 'preparedfor',
-                'referencetext',
                 'comments'
             )
         }),
@@ -523,7 +492,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     form = ResourcesForm
 
 class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
-    list_display = ('placeresourceid', 'relationshipdescription',
+    list_display = ('placeresourceid', 'excerpt_text',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
