@@ -499,7 +499,17 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
             'fields': ('placeresourceid',)
         }),
         ('Activity', {
-            'fields': (('participants', 'technique'), 'relationshipdescription', 'activityshortdescription', 'activitylongdescription')
+            'fields': (
+                ('participants', 'technique'),
+                'relationshipdescription',
+                ('partused', 'activityshortdescription'),
+                'activitylongdescription',
+                'gear',
+                'customaryuse',
+                'timing',
+                'timingdescription',
+
+            )
         }),
         ('History', {
             'fields': (
