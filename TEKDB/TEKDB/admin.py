@@ -568,7 +568,7 @@ class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
                 ('season', 'timing'),
                 ('january', 'february', 'march', 'april', 'may', 'june'),
                 ('july', 'august', 'september', 'october', 'november',
-                'december'), 'year', 'islocked'
+                'december'), 'year',
             )
         }),
         ('History', {
