@@ -794,7 +794,8 @@ class ResourcesActivityEvents(Queryable, Record):
     @property
     def excerpt_text(self):
         from django.utils.html import strip_tags
-        return strip_tags(self.relationshipdescription)
+        from html import unescape
+        return unescape(strip_tags(self.relationshipdescription))
 
     def keyword_search(keyword):
         placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
@@ -1192,12 +1193,14 @@ class Citations(Queryable, Record):
         if str(self.referencetype).lower() == 'interview':
             return "%s: interviewed by %s" % (str(self.intervieweeid), str(self.interviewerid))
         from django.utils.html import strip_tags
-        return strip_tags(self.title)
+        from html import unescape
+        return unescape(strip_tags(self.title))
 
     @property
     def description_text(self):
         from django.utils.html import strip_tags
-        return strip_tags(self.referencetext)
+        from html import unescape
+        return unescape(strip_tags(self.referencetext))
 
     def __str__(self):
         if str(self.referencetype) == 'Interview':
@@ -1249,7 +1252,8 @@ class PlacesCitationEvents(SimpleRelationship):
     @property
     def description_text(self):
         from django.utils.html import strip_tags
-        return strip_tags(self.relationshipdescription)
+        from html import unescape
+        return unescape(strip_tags(self.relationshipdescription))
 
     def image(self):
         return settings.RECORD_ICONS['activity']
@@ -1589,7 +1593,8 @@ class Media(Queryable, Record):
     @property
     def description_text(self):
         from django.utils.html import strip_tags
-        return strip_tags(self.mediadescription)
+        from html import unescape
+        return unescape(strip_tags(self.mediadescription))
 
     def image(self):
         return settings.RECORD_ICONS['media']
@@ -1732,7 +1737,8 @@ class MediaCitationEvents(SimpleRelationship):
     @property
     def description_text(self):
         from django.utils.html import strip_tags
-        return strip_tags(self.relationshipdescription)
+        from html import unescape
+        return unescape(strip_tags(self.relationshipdescription))
 
     def keyword_search(keyword):
         media_qs = Media.keyword_search(keyword)
