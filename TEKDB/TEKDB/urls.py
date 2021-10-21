@@ -36,8 +36,8 @@ from . import models
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
     url(r'^login/$', login_views.login, name='login'),
-    url(r'^logout/$', auth_views.logout, name='logout'),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^logout/$', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    url(r'^accounts/', include('django_registration.backends.one_step.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^tekdb/(?P<model_name>\w+)/(?P<id>\w+)/get_related$', views.get_related),

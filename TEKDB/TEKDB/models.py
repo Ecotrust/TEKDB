@@ -12,7 +12,8 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from TEKDB import settings
-from django.contrib.gis.db.models import GeometryField, GeoManager
+from django.contrib.gis.db.models import GeometryField
+from django.db.models import Manager as GeoManager
 from ckeditor.fields import RichTextField
 
 MANAGED = True
@@ -257,10 +258,10 @@ class Places(Queryable, Record):
     indigenousplacenamemeaning = models.TextField(db_column='indigenousplacenamemeaning', blank=True, null=True, verbose_name='english translation')
     englishplacename = models.CharField(db_column='englishplacename', max_length=255, blank=True, null=True, verbose_name='english name')
     # PlaceLabel = models.CharField(max_length=255, blank=True, null=True, verbose_name='Place Label')
-    planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='planningunitid', blank=True, null=True, verbose_name='planning unit')
-    primaryhabitat = models.ForeignKey(LookupHabitat, db_column='primaryhabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat')
+    planningunitid = models.ForeignKey(LookupPlanningUnit, db_column='planningunitid', blank=True, null=True, verbose_name='planning unit', default=None, on_delete=models.SET_DEFAULT)
+    primaryhabitat = models.ForeignKey(LookupHabitat, db_column='primaryhabitat', max_length=100, blank=True, null=True, verbose_name='primary habitat', default=None, on_delete=models.SET_DEFAULT)
     # FeatType = models.CharField(choices=FEATURE_TYPE_CHOICES)
-    tribeid = models.ForeignKey(LookupTribe, db_column='tribeid', blank=True, null=True, verbose_name='tribe')
+    tribeid = models.ForeignKey(LookupTribe, db_column='tribeid', blank=True, null=True, verbose_name='tribe', default=True, on_delete=models.SET_DEFAULT)
     islocked = models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')
     ### Updated Geometry Fields ###
     objects = GeoManager()
@@ -411,7 +412,7 @@ class Resources(Queryable, Record):
     genus = models.CharField(db_column='genus', max_length=255, blank=True, null=True, verbose_name='genus')
     species = models.CharField(db_column='species', max_length=255, blank=True, null=True)
     specific = models.BooleanField(db_column='specific', default=False)
-    resourceclassificationgroup = models.ForeignKey(LookupResourceGroup, db_column='resourceclassificationgroup', max_length=255, blank=True, null=True, verbose_name='broad species group')
+    resourceclassificationgroup = models.ForeignKey(LookupResourceGroup, db_column='resourceclassificationgroup', max_length=255, blank=True, null=True, verbose_name='broad species group', default=None, on_delete=models.SET_DEFAULT)
     islocked = models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')
 
     class Meta:
@@ -582,14 +583,14 @@ class LookupTiming(models.Model):
 
 class PlacesResourceEvents(Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place')
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource')
+    placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place', on_delete=models.PROTECT)
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt', config_name="custom") #CKEditor Rich Text Editor Field
-    partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
-    customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use')
+    partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used', default=None, on_delete=models.SET_DEFAULT)
+    customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use', default=None, on_delete=models.SET_DEFAULT)
     barterresource = models.BooleanField(db_column='barterresource', verbose_name='barter resource?', default=False)
-    season = models.ForeignKey(LookupSeason, db_column='season', max_length=255, blank=True, null=True)
-    timing = models.ForeignKey(LookupTiming, db_column='timing', max_length=255, blank=True, null=True)
+    season = models.ForeignKey(LookupSeason, db_column='season', max_length=255, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
+    timing = models.ForeignKey(LookupTiming, db_column='timing', max_length=255, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
     january = models.BooleanField(db_column='january', default=False)
     february = models.BooleanField(db_column='february', default=False)
     march = models.BooleanField(db_column='march', default=False)
@@ -766,16 +767,16 @@ class LookupActivity(models.Model):
 
 class ResourcesActivityEvents(Queryable, Record):
     resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource')
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt', config_name="custom") #CKEditor Rich Text Editor Field
-    partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used')
-    activityshortdescription = models.ForeignKey(LookupActivity, db_column='activityshortdescription', max_length=255, blank=True, null=True, verbose_name='activity type')
+    partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used', default=None, on_delete=models.SET_DEFAULT)
+    activityshortdescription = models.ForeignKey(LookupActivity, db_column='activityshortdescription', max_length=255, blank=True, null=True, verbose_name='activity type', default=None, on_delete=models.SET_DEFAULT)
     activitylongdescription = RichTextField(db_column='activitylongdescription', blank=True, null=True, verbose_name='full activity description', config_name="custom") #CKEditor Rich Text Editor Field
-    participants = models.ForeignKey(LookupParticipants, db_column='participants', max_length=50, blank=True, null=True)
+    participants = models.ForeignKey(LookupParticipants, db_column='participants', max_length=50, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
     gear = models.CharField(db_column='gear', max_length=255, blank=True, null=True)
-    technique = models.ForeignKey(LookupTechniques, db_column='technique', max_length=255, blank=True, null=True)
+    technique = models.ForeignKey(LookupTechniques, db_column='technique', max_length=255, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
     customaryuse = models.CharField(db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use')
-    timing = models.ForeignKey(LookupTiming, db_column='timing', max_length=255, blank=True, null=True)
+    timing = models.ForeignKey(LookupTiming, db_column='timing', max_length=255, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
     timingdescription = models.CharField(db_column='timingdescription', max_length=255, blank=True, null=True, verbose_name='timing description')
     islocked = models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')
 
@@ -1006,13 +1007,13 @@ class LookupAuthorType(models.Model):
 
 class Citations(Queryable, Record):
     citationid = models.AutoField(db_column='citationid', primary_key=True)
-    referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue")
+    referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue", on_delete=models.PROTECT)
     referencetext = models.TextField(db_column='referencetext', blank=True, null=True, verbose_name='description')
-    authortype = models.ForeignKey(LookupAuthorType, db_column='authortype', max_length=255, blank=True, null=True, verbose_name='author type')
+    authortype = models.ForeignKey(LookupAuthorType, db_column='authortype', max_length=255, blank=True, null=True, verbose_name='author type', default=None, on_delete=models.SET_DEFAULT)
     authorprimary = models.CharField(db_column='authorprimary', max_length=255, blank=True, null=True, verbose_name='primary author')
     authorsecondary = models.CharField(db_column='authorsecondary', max_length=255, blank=True, null=True, verbose_name='secondary author')
-    intervieweeid = models.ForeignKey(People, db_column='intervieweeid', related_name='interviewee', blank=True, null=True, verbose_name='interviewee')
-    interviewerid = models.ForeignKey(People, db_column='interviewerid', related_name='interviewer', blank=True, null=True, verbose_name='interviewer')
+    intervieweeid = models.ForeignKey(People, db_column='intervieweeid', related_name='interviewee', blank=True, null=True, verbose_name='interviewee', default=None, on_delete=models.SET_DEFAULT)
+    interviewerid = models.ForeignKey(People, db_column='interviewerid', related_name='interviewer', blank=True, null=True, verbose_name='interviewer', default=None, on_delete=models.SET_DEFAULT)
     placeofinterview = models.CharField(db_column='placeofinterview', max_length=255, blank=True, null=True, verbose_name='place of interview')
     year = models.IntegerField(db_column='year', blank=True, null=True)
     title = models.TextField(db_column='title', blank=True, null=True)
@@ -1217,8 +1218,8 @@ class Citations(Queryable, Record):
         return unicode('%s' % (str(self)))
 
 class PlacesCitationEvents(SimpleRelationship):
-    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place', on_delete=models.PROTECT)
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -1336,10 +1337,10 @@ class LookupLocalityType(models.Model):
 
 class Locality(Queryable):
     localityid = models.AutoField(db_column='localityid', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
+    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place', default=None, on_delete=models.SET_DEFAULT)
     englishname = models.CharField(db_column='englishname', max_length=255, blank=True, null=True, verbose_name='english name')
     indigenousname = models.CharField(db_column='indigenousname', max_length=255, blank=True, null=True, verbose_name='indigenous name')
-    localitytype = models.ForeignKey(LookupLocalityType, db_column='localitytype', max_length=255, blank=True, null=True, verbose_name='type')
+    localitytype = models.ForeignKey(LookupLocalityType, db_column='localitytype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
     ### Updated Geometry Fields ###
     objects = GeoManager()
     geometry = GeometryField(
@@ -1434,7 +1435,7 @@ class Locality(Queryable):
         }
 
 class LocalityGISSelections(models.Model):
-    localityid = models.ForeignKey(Locality, db_column='localityid', blank=True, null=True, verbose_name='locality')
+    localityid = models.ForeignKey(Locality, db_column='localityid', blank=True, null=True, verbose_name='locality', default=None, on_delete=models.SET_DEFAULT)
     localitylabel = models.CharField(db_column='localitylabel', max_length=255, blank=True, null=True, verbose_name='locality label')
     sourcefc = models.CharField(db_column='sourcefc', max_length=255, blank=True, null=True, verbose_name='source fc')
 
@@ -1451,8 +1452,8 @@ class LocalityGISSelections(models.Model):
         return self.localitylabel or ''
 
 class LocalityPlaceResourceEvent(Queryable):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
-    localityid = models.ForeignKey(Locality, db_column='localityid', verbose_name='locality')
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource', on_delete=models.PROTECT)
+    localityid = models.ForeignKey(Locality, db_column='localityid', verbose_name='locality', on_delete=models.PROTECT)
 
     class Meta:
         managed = MANAGED
@@ -1561,12 +1562,12 @@ class LookupUserInfo(models.Model):
 
 class Media(Queryable, Record):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
-    mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type')
+    mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
     medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
     mediadescription = RichTextField(db_column='mediadescription', blank=True, null=True, verbose_name='description', config_name="custom") #CKEditor Rich Text Editor Field
     medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
     mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
-    limitedaccess = models.NullBooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
+    limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
     class Meta:
         managed = MANAGED
@@ -1715,8 +1716,8 @@ class Media(Queryable, Record):
         ]
 
 class MediaCitationEvents(SimpleRelationship):
-    mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media')
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media', on_delete=models.PROTECT)
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -1797,7 +1798,7 @@ class MediaCitationEvents(SimpleRelationship):
 
 class PlaceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
+    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place', default=None, on_delete=models.SET_DEFAULT)
     altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alternate name')
 
     class Meta:
@@ -1826,7 +1827,7 @@ class PlaceAltIndigenousName(models.Model):
         ]
 
 class PlaceGISSelections(models.Model):
-    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place')
+    placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place', default=None, on_delete=models.SET_DEFAULT)
     placelabel = models.CharField(db_column='placelabel', max_length=255, blank=True, null=True, verbose_name='label')
     sourcefc = models.CharField(db_column='sourcefc', max_length=255, blank=True, null=True, verbose_name='source fc')
 
@@ -1843,8 +1844,8 @@ class PlaceGISSelections(models.Model):
         return self.placelabel or ''
 
 class PlacesMediaEvents(SimpleRelationship):
-    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place')
-    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place', on_delete=models.PROTECT)
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
@@ -1918,8 +1919,8 @@ class PlacesMediaEvents(SimpleRelationship):
             return self.mediaid
 
 class PlacesResourceCitationEvents(SimpleRelationship):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource')
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place resource', on_delete=models.PROTECT)
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -1993,8 +1994,8 @@ class PlacesResourceCitationEvents(SimpleRelationship):
             return self.placeresourceid
 
 class PlacesResourceMediaEvents(SimpleRelationship):
-    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place - resource')
-    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', primary_key=False, verbose_name='place - resource', on_delete=models.PROTECT)
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
@@ -2067,8 +2068,8 @@ class PlacesResourceMediaEvents(SimpleRelationship):
             return self.placeresourceid
 
 class ResourceActivityCitationEvents(SimpleRelationship):
-    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity', on_delete=models.PROTECT)
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -2142,8 +2143,8 @@ class ResourceActivityCitationEvents(SimpleRelationship):
             return self.resourceactivityid
 
 class ResourceActivityMediaEvents(SimpleRelationship):
-    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity')
-    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    resourceactivityid = models.ForeignKey(ResourcesActivityEvents, db_column='resourceactivityid', primary_key=False, verbose_name='resource activity', on_delete=models.PROTECT)
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
@@ -2220,7 +2221,7 @@ class ResourceActivityMediaEvents(SimpleRelationship):
 
 class ResourceAltIndigenousName(models.Model):
     altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', blank=True, null=True, verbose_name='resource')
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', blank=True, null=True, verbose_name='resource', default=None, on_delete=models.SET_DEFAULT)
     altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alt name')
 
     class Meta:
@@ -2249,8 +2250,8 @@ class ResourceAltIndigenousName(models.Model):
         return self.altindigenousname or ''
 
 class ResourceResourceEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a")
-    altresourceid = models.ForeignKey(Resources, db_column='altresourceid', related_name="resource_b")
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, related_name="resource_a", on_delete=models.PROTECT)
+    altresourceid = models.ForeignKey(Resources, db_column='altresourceid', related_name="resource_b", on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
 
     class Meta:
@@ -2350,8 +2351,8 @@ class ResourceResourceEvents(SimpleRelationship):
         }
 
 class ResourcesCitationEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation')
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource', on_delete=models.PROTECT)
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -2425,8 +2426,8 @@ class ResourcesCitationEvents(SimpleRelationship):
             return self.resourceid
 
 class ResourcesMediaEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource')
-    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media')
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource', on_delete=models.PROTECT)
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description', config_name="custom") #CKEditor Rich Text Editor Field
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
@@ -2502,7 +2503,7 @@ class ResourcesMediaEvents(SimpleRelationship):
 from django.contrib.auth.models import Group
 
 class UserAccess(models.Model):
-    group = models.OneToOneField(Group, db_column='group_id')
+    group = models.OneToOneField(Group, db_column='group_id', on_delete=models.CASCADE)
     accessid = models.AutoField(db_column='accessid', primary_key=True)
     accesslevel = models.CharField(db_column='accesslevel', max_length=255, blank=True, null=True, verbose_name='access level')
 
@@ -2527,7 +2528,7 @@ class Users(AbstractUser):
     last_name = models.CharField(db_column='lastname', max_length=255, verbose_name='last name')
     affiliation = models.CharField(db_column='affiliation', max_length=255)
     title = models.CharField(db_column='title', max_length=255)
-    accesslevel = models.ForeignKey(UserAccess, db_column='accesslevel', verbose_name='access level', null=True, blank=True)
+    accesslevel = models.ForeignKey(UserAccess, db_column='accesslevel', verbose_name='access level', null=True, blank=True, default=None, on_delete=models.SET_DEFAULT)
     is_superuser = models.BooleanField(
         _('superuser status'),
         default=False,

@@ -2,17 +2,23 @@
 
 PROJECT_NAME=TEKDB
 APP_NAME=TEKDB
-HOME=/home/ubuntu
+HOME=/home/vagrant
 APP_DB_NAME=tekdb
 
-PROJECT_DIR=/usr/local/apps/$PROJECT_NAME
-VIRTUALENV_DIR=$PROJECT_DIR/env
+APP_DIRECTORY=/usr/local/apps
+PROJECT_DIR=$APP_DIRECTORY/$PROJECT_NAME
+VIRTUALENV_DIR=$APP_DIRECTORY/env
 
 PYTHON=$VIRTUALENV_DIR/bin/python
 PIP=$VIRTUALENV_DIR/bin/pip
 
+USER=`whoami`
+
 echo "resetting DB"
 $PROJECT_DIR/scripts/reset_db.sh $APP_DB_NAME #$USER
+
+echo "updating apps ownership"
+sudo chown $USER $APP_DIRECTORY
 
 # Virtualenv setup for project
 echo "setting up virtualenvs"

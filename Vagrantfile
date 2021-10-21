@@ -3,10 +3,10 @@
 
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "ubuntu/focal64"
   config.vm.box_check_update = true
 
-  config.vm.network "forwarded_port", guest:8000, host:8111
+  config.vm.network "forwarded_port", guest:8000, host:8000
   config.vm.network "forwarded_port", guest:5432, host:65432
 
   config.ssh.insert_key = true
@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell" do |s|
     s.path = "scripts/vagrant_provision_root.sh"
-    s.args = ['xenial', '3.5.0', '9.5']
+    s.args = ['focal', '3.8.0', '12', '3']
     s.privileged = "true"
   end
 
