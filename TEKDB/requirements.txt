@@ -10,6 +10,16 @@ psycopg2-binary
 uwsgi
 XlsxWriter
 
+#DEPENDENCIES
+cryptography>=3.3.2
+httplib2>=0.19.0
+jinja2>=2.11.3
+pyyaml>=5.4
+SecretStorage>=3.3.1
+testresources
+twisted>=20.3.0
+urllib3>=1.26.5
+
 #OPTIONAL, BUT LOVELY FOR DEBUGGING
-ipython
 ipdb
+ipython
