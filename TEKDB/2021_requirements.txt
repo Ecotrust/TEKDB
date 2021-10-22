@@ -12,7 +12,7 @@ command-not-found==0.3
 configobj==5.0.6
 confusable-homoglyphs==3.2.0
 constantly==15.1.0
-cryptography==2.8
+cryptography==3.3.2
 dbus-python==1.2.16
 decorator==5.1.0
 distro==1.4.0
