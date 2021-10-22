@@ -1,11 +1,11 @@
 #REQUIRED
-confusable-homoglyphs>=3.0
-django<2.0
+confusable-homoglyphs
+django
 django-autocomplete-light
 django-ckeditor
 django-leaflet
 django-nested-admin
-django-registration<3.0
+django-registration
 psycopg2-binary
 uwsgi
 XlsxWriter

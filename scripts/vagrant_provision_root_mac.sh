@@ -15,10 +15,10 @@ POSTGRES_VERSION=$3
 /usr/bin/apt-get install postgresql-9.5-postgis-2.2 postgresql-contrib-9.5 -y
 
 # /usr/bin/apt-get install pgadmin3 -y   # Do we really need this?
-/usr/bin/apt-get install binutils libgeos-$GEOS_VER libproj-dev gdal-bin python-gdal -y
+/usr/bin/apt-get install binutils libgeos-$GEOS_VER libproj-dev gdal-bin -y
 sed -i '' 's/local   all             postgres                                peer/local   all             postgres                                trust/' /etc/postgresql/$POSTGRES_VERSION/main/pg_hba.conf
 /usr/sbin/service postgresql restart
 
 # echo `pwd`
 chmod +x /vagrant/scripts/vagrant_provision_ubuntu.sh
-su -c "/vagrant/scripts/vagrant_provision_ubuntu.sh" ubuntu
+su -c "/vagrant/scripts/vagrant_provision_ubuntu.sh" vagrant
