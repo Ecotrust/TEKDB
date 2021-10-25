@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from glob import glob
+
+GDAL_LIBRARY_PATH=glob('/usr/lib/libgdal.so.*')[0]
+GEOS_LIBRARY_PATH=glob('/usr/lib/libgeos_c.so.*')[0]
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,15 +25,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'lbgg^obk_vnj1o%s-u)vy+6@%=)uk4011d!!vub_5s40(^+mzp'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = [
-    'localhost',
-    u'demo-tekdb.herokuapp.com',
-]
+#ALLOWED_HOSTS = [
+#    'localhost',
+#    u'demo-tekdb.herokuapp.com',
+#]
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
