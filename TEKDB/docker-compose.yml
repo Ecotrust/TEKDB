@@ -1,20 +1,17 @@
-version: '3.8'
+version: '3.7'
 
 services:
   web:
-    build: /usr/local/apps/TEKDB
-    command: /entrypoint.sh
+    build: /usr/local/apps/TEKDB/TEKDB
+    command: dockerize -wait tcp://db:5432 /entrypoint.sh
     volumes:
-      - ./:/usr/local/apps/TEKDB/
-      - static_volume:/usr/local/apps/TEKDB/static
-      - media_volume:/usr/local/apps/TEKDB/media
+      - ./:/usr/local/apps/TEKDB/TEKDB/
+      - static_volume:/usr/local/apps/TEKDB/TEKDB/static
+      - media_volume:/usr/local/apps/TEKDB/TEKDB/media
     ports:
       - 8000:8000
     env_file:
       - ./.env.dev
-    depends_on:
-      db:
-        condition: service_healthy
     links:
       - db
   db:
@@ -27,11 +24,6 @@ services:
       - POSTGRES_DB=tekdb
     ports:
       - 5432:5432
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tekdb_user -d tekdb"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
 volumes:
   postgis-data:
