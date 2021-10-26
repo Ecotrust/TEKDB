@@ -6,6 +6,8 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./:/usr/local/apps/TEKDB/
+      - static_volume:/usr/local/apps/TEKDB/static
+      - media_volume:/usr/local/apps/TEKDB/media
     ports:
       - 8000:8000
     env_file:
@@ -23,3 +25,5 @@ services:
 
 volumes:
   postgis-data:
+  static_volume:
+  media_volume:
