@@ -7,7 +7,7 @@ from .models import *
 def get_related(request, model_name, id):
     from django.apps import apps
     import json
-    if not (request.user.is_authenticated() and request.user.has_perm('TEKDB.change_%s' % model_name.lower())):
+    if not (request.user.is_authenticated and request.user.has_perm('TEKDB.change_%s' % model_name.lower())):
         return HttpResponse('Unauthorized', status=401)
     data = json.dumps([])
     try:
@@ -22,7 +22,7 @@ def get_related(request, model_name, id):
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Citations.objects.none()
         qs = Citations.objects.all()
 
@@ -34,7 +34,7 @@ class CitationAutocompleteView(autocomplete.Select2QuerySetView):
 class MediaAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Media.objects.none()
         qs = Media.objects.all()
 
@@ -50,7 +50,7 @@ class MediaAutocompleteView(autocomplete.Select2QuerySetView):
 class PlaceAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Places.objects.none()
         qs = Places.objects.all()
 
@@ -62,7 +62,7 @@ class PlaceAutocompleteView(autocomplete.Select2QuerySetView):
 class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return PlacesResourceEvents.objects.none()
         qs = PlacesResourceEvents.objects.all()
 
@@ -81,7 +81,7 @@ class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
 class ResourceAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Resources.objects.none()
         qs = Resources.objects.all()
 
@@ -93,7 +93,7 @@ class ResourceAutocompleteView(autocomplete.Select2QuerySetView):
 class ResourceActivityAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return ResourcesActivityEvents.objects.none()
         qs = ResourcesActivityEvents.objects.all()
 
