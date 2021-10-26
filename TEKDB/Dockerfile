@@ -27,3 +27,6 @@ RUN \
 
 # copy project
 COPY . .
+
+COPY ./docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
