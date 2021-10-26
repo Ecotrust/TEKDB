@@ -3,7 +3,7 @@
 FROM python:3.8.10-alpine
 
 # set work directory
-WORKDIR /usr/src/app
+WORKDIR /usr/local/apps/TEKDB
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
