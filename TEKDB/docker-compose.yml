@@ -1,19 +1,23 @@
 version: '3.7'
 
 services:
-  web:
+  app:
     build: /usr/local/apps/TEKDB/TEKDB
-    command: dockerize -wait tcp://db:5432 /entrypoint.sh
+    command: dockerize -wait tcp://db:5432 sh -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./:/usr/local/apps/TEKDB/TEKDB/
-      - static_volume:/usr/local/apps/TEKDB/TEKDB/static
-      - media_volume:/usr/local/apps/TEKDB/TEKDB/media
+      - media_volume:/vol/web/media
+      - static_volume:/vol/web/static
     ports:
-      - 8000:8000
+      - "8000:8000"
     env_file:
       - ./.env.dev
     links:
       - db
+    depends_on:
+      - db
+    environment:
+      - DEBUG=1
   db:
     image: postgis/postgis:14-3.1-alpine
     volumes:

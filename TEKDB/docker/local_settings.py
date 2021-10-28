@@ -13,3 +13,5 @@ DATABASE_GEOGRAPHY = {
     'min_zoom': 2,
     'max_zoom': 19,
 }
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'

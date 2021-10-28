@@ -7,7 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DOCKERIZE_VERSION v0.6.1
 
-COPY ./requirements.txt .
+COPY ./TEKDB/requirements.txt .
 
 # install dependencies
 RUN \
@@ -31,20 +31,22 @@ RUN \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 # copy project
-COPY . .
+COPY . /usr/local/apps/TEKDB
+COPY ./TEKDB/docker/entrypoint.sh /entrypoint.sh
 
 # set work directory
 WORKDIR /usr/local/apps/TEKDB/TEKDB
 
-COPY ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 
 RUN adduser -D tekdb_user
+RUN chown -R tekdb_user:tekdb_user /usr/local/apps/TEKDB/TEKDB/TEKDB
 RUN chown -R tekdb_user:tekdb_user /vol
 RUN chmod -R 755 /vol/web
+
 USER tekdb_user
 
 CMD ["/entrypoint.sh"]
