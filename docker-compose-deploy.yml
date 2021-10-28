@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: .
+    # image: rhodges/itkdb
     # command: dockerize -wait tcp://db:5432 sh -c "python manage.py migrate --noinput"
     # command: dockerize -wait tcp://db:5432 sh -c "python manage.py loaddata /usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json"
     volumes:
@@ -27,6 +28,7 @@ services:
   proxy:
     build:
       context: ./proxy
+    # image: rhodges/itkdb_proxy
     volumes:
       - static_data:/vol/static
       # - media_data:/vol/media
