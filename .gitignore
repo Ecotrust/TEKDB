@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 #User added
 TEKDB/TEKDB/local_settings.py
+TEKDB/TEKDB/Dockerfile
 TEKDB/db.sqlite3
 TEKDB/static/*
 TEKDB/env_TEKvir

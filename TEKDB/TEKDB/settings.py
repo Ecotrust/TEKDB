@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", default="set in local_settings.py")
+SECRET_KEY = os.environ.get("SECRET_KEY", default="set in .env file")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get("DEBUG", default=0)))
@@ -216,24 +216,29 @@ RECORD_ICONS = {
     'resource': '/static/explore/img/resource.png',
 }
 
-# Set this in local_settings.py
+ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin')
+
+TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
+REGISTRATION_OPEN = os.environ.get("REGISTRATION_OPEN", default=False)
 DATABASE_GEOGRAPHY = {
-    'default_lon': -11131949.08,
-    'default_lat': 4865942.28,
-    'default_zoom': 3,
-    'map_template': 'gis/admin/ol2osm.html'
+    ###EPSG:4326###
+    # 'default_lon': -124.325,
+    # 'default_lat': 42.065,
+    ###EPSG:3857###
+    'default_lon': os.environ.get("DEFAULT_LON", default=-13839795.69),
+    'default_lat': os.environ.get("DEFAULT_LAT", default=5171448.926),
+    'default_zoom': os.environ.get("DEFAULT_ZOOM", default=8),
+    'map_template': 'gis/admin/ol2osm.html',
+    'map_extent': [
+        os.environ.get("MAP_EXTENT_WEST", default=-24000000),
+        os.environ.get("MAP_EXTENT_SOUTH", default=1450000),
+        os.environ.get("MAP_EXTENT_EAST", default=-6200000),
+        os.environ.get("MAP_EXTENT_NORTH", default=13000000)
+    ], #US Territories
+    'min_zoom': 2,
+    'max_zoom': 19,
 }
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 
-ADMIN_SITE_HEADER = 'TEK DB Admin'
-
-from TEKDB.local_settings import *
-
-### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
-
-### Update database configuration with $DATABASE_URL.
-#
-# import dj_database_url
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
-#
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# from TEKDB.local_settings import *
