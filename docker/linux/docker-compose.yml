@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ../../TEKDB
+    # command: dockerize -wait tcp://db:5432 sh -c "python manage.py migrate --noinput"
+    # command: dockerize -wait tcp://db:5432 sh -c "python manage.py loaddata /usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json"
+    volumes:
+      - static_data:/vol/web
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - SQL_ENGINE=${SQL_ENGINE}
+      - SQL_DATABASE=${SQL_DATABASE}
+      - SQL_USER=${SQL_USER}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_HOST=${SQL_HOST}
+      - SQL_PORT=${SQL_PORT}
+    depends_on:
+      - ${SQL_HOST}
+    links:
+      - ${SQL_HOST}
+    networks:
+      - djangonetwork
+
+  proxy:
+    build:
+      context: ../../proxy
+    volumes:
+      - static_data:/vol/static
+      # - media_data:/vol/media
+    ports:
+      - "${PROXY_PORT}:8080"
+    depends_on:
+      - app
+    networks:
+      - djangonetwork
+
+  db:
+    image: postgis/postgis:14-3.1-alpine
+    volumes:
+      - postgis-data:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=${SQL_USER}
+      - POSTGRES_PASSWORD=${SQL_PASSWORD}
+      - POSTGRES_DB=${SQL_DATABASE}
+    ports:
+      - ${SQL_PORT}:5432
+    networks:
+      - djangonetwork
+
+volumes:
+  postgis-data:
+  static_data:
+  # media_data:
+
+networks:
+  djangonetwork:
+    driver: bridge

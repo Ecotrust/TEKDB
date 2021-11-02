@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from glob import glob
+
+try:
+    GDAL_LIBRARY_PATH=glob('/usr/lib/libgdal.so.*')[0]
+    GEOS_LIBRARY_PATH=glob('/usr/lib/libgeos_c.so.*')[0]
+except IndexError as e:
+    pass
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,15 +28,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'lbgg^obk_vnj1o%s-u)vy+6@%=)uk4011d!!vub_5s40(^+mzp'
+SECRET_KEY = os.environ.get("SECRET_KEY", default="set in .env file")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = bool(int(os.environ.get("DEBUG", default=0)))
 
-ALLOWED_HOSTS = [
-    'localhost',
-    u'demo-tekdb.herokuapp.com',
-]
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default='*').split(" ")
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(","))
 
 
 # Application definition
@@ -92,12 +101,14 @@ WSGI_APPLICATION = 'TEKDB.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'tekdb',
-        'USER': 'postgres',
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.contrib.gis.db.backends.postgis"),
+        "NAME": os.environ.get("SQL_DATABASE", "tekdb"),
+        "USER": os.environ.get("SQL_USER", "postgres"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", None),
+        "HOST": os.environ.get("SQL_HOST", 'db'),
+        "PORT": os.environ.get("SQL_PORT", None),
     }
 }
 
@@ -205,24 +216,29 @@ RECORD_ICONS = {
     'resource': '/static/explore/img/resource.png',
 }
 
-# Set this in local_settings.py
+ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin')
+
+TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
+REGISTRATION_OPEN = os.environ.get("REGISTRATION_OPEN", default=False)
 DATABASE_GEOGRAPHY = {
-    'default_lon': -11131949.08,
-    'default_lat': 4865942.28,
-    'default_zoom': 3,
-    'map_template': 'gis/admin/ol2osm.html'
+    ###EPSG:4326###
+    # 'default_lon': -124.325,
+    # 'default_lat': 42.065,
+    ###EPSG:3857###
+    'default_lon': os.environ.get("DEFAULT_LON", default=-13839795.69),
+    'default_lat': os.environ.get("DEFAULT_LAT", default=5171448.926),
+    'default_zoom': os.environ.get("DEFAULT_ZOOM", default=8),
+    'map_template': 'gis/admin/ol2osm.html',
+    'map_extent': [
+        os.environ.get("MAP_EXTENT_WEST", default=-24000000),
+        os.environ.get("MAP_EXTENT_SOUTH", default=1450000),
+        os.environ.get("MAP_EXTENT_EAST", default=-6200000),
+        os.environ.get("MAP_EXTENT_NORTH", default=13000000)
+    ], #US Territories
+    'min_zoom': 2,
+    'max_zoom': 19,
 }
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 
-ADMIN_SITE_HEADER = 'TEK DB Admin'
-
-from TEKDB.local_settings import *
-
-### HEROKU SETTINGS (NOT FOR PRODUCTION!!!)
-
-### Update database configuration with $DATABASE_URL.
-#
-# import dj_database_url
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
-#
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# from TEKDB.local_settings import *

@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
@@ -135,7 +136,6 @@ def get_by_model_id(request, model_type, id):
             obj = model.objects.get(pk=int(id))
             record_dict = obj.get_record_dict(request.user, 3857)
         except Exception as e:
-            import pdb; pdb.set_trace()
             obj = None
             record_dict = {'name': "Error retrieving %s record with ID %s" % (model_type, id)}
     else:
@@ -301,6 +301,7 @@ def export_by_model_id(request, model_type, id, format):
     else:       #CSV as default
         return export_record_csv(record_dict, filename)
 
+@login_required
 def search(request):
     import json
     import TEKDB
