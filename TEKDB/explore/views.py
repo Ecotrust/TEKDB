@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
@@ -300,6 +301,7 @@ def export_by_model_id(request, model_type, id, format):
     else:       #CSV as default
         return export_record_csv(record_dict, filename)
 
+@login_required
 def search(request):
     import json
     import TEKDB
