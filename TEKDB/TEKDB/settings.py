@@ -96,6 +96,8 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_URL = '/'
+
 WSGI_APPLICATION = 'TEKDB.wsgi.application'
 
 

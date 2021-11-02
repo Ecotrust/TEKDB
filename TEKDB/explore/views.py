@@ -56,9 +56,8 @@ def help(request):
     }
     return render(request, "tek_index.html", context)
 
+@login_required
 def explore(request):
-    if not request.user.is_authenticated:
-        return home(request)
     context = {
         'page':'explore',
         'pageTitle':'Explore',
@@ -115,6 +114,7 @@ def get_model_by_type(model_type):
     else:
         return []
 
+@login_required
 def get_by_model_type(request, model_type):
     context = {
         'query': '',
@@ -126,6 +126,7 @@ def get_by_model_type(request, model_type):
     }
     return render(request, "results.html", context)
 
+@login_required
 def get_by_model_id(request, model_type, id):
     state = "?%s" % request.GET.urlencode()
     back_link = '%s%s' % ('/search/', state)
@@ -170,6 +171,7 @@ def get_by_model_id(request, model_type, id):
 
     return render(request, "record.html", context)
 
+@login_required
 def download_media_file(request, model_type, id):
     models = get_model_by_type(model_type)
     if len(models) == 1:
@@ -278,6 +280,7 @@ def export_record_xls(record_dict, filename):
     xls_response['Content-Disposition'] = "attachment; filename=\"%s.xlsx\"" % filename
     return xls_response
 
+@login_required
 def export_by_model_id(request, model_type, id, format):
     models = get_model_by_type(model_type)
     if len(models) == 1:
@@ -436,6 +439,7 @@ def getResults(keyword_string, categories):
 
     return resultlist
 
+@login_required
 def query(request):
     from django.http import JsonResponse
     results = {'resultList': getResults(request)}
@@ -448,6 +452,7 @@ def get_category_list(request):
             categories.append(category)
     return categories
 
+@login_required
 def download(request):
     categories = get_category_list(request)
     results = getResults(request.GET.get('query'), categories)
