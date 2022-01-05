@@ -1,6 +1,6 @@
 #REQUIRED
 confusable-homoglyphs
-django
+django<3.3
 django-autocomplete-light
 django-ckeditor
 django-leaflet

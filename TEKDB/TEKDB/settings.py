@@ -243,4 +243,7 @@ DATABASE_GEOGRAPHY = {
 STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
 
-# from TEKDB.local_settings import *
+try:
+    from TEKDB.local_settings import *
+except Exception as e:
+    print("ERROR: Unable to load local_settings.py. This is expected for docker deployment")
