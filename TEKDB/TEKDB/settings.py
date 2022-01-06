@@ -179,6 +179,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ### DJANGO-REGISTRATION SETTINGS ###
 REGISTRATION_OPEN = True
 
+
+### Search Settings
 SEARCH_CATEGORIES = [
     'all',
     'places',
@@ -188,6 +190,8 @@ SEARCH_CATEGORIES = [
     'media',
 ]
 #Locality? People?
+
+MIN_SEARCH_RANK = 0.01
 
 AUTH_USER_MODEL = 'Accounts.Users'
 
