@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'leaflet',
     'nested_admin',
     'ckeditor',
+    'coverage',
     'explore',
     'login',
     'TEKDB',
