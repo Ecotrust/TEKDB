@@ -192,6 +192,7 @@ SEARCH_CATEGORIES = [
 #Locality? People?
 
 MIN_SEARCH_RANK = 0.01
+MIN_SEARCH_SIMILARITY = 0.3
 
 AUTH_USER_MODEL = 'Accounts.Users'
 

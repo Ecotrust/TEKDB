@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from TEKDB import settings
@@ -17,6 +18,50 @@ from django.db.models import Manager as GeoManager
 from ckeditor.fields import RichTextField
 
 MANAGED = True
+
+def run_keyword_search(model, keyword, fields, fk_fields, set_fields, weight_lookup):
+    # model -> the model calling this function
+    # keyword -> [str] your search string -- can be multiple words
+    # fields -> [list of str] char or text fields on your model
+    # fk_fields -> [list of tuples] Foreign Key field names coupled with field on foreign model to search
+    # set_fields -> [list of tuples] '_set' nomenclature to get other models that reference this model, coupled with the field on the foreign model to search
+    # weight_lookup -> [dict] lookup to get relative ['A','B','C','D'] weights for scoring search results.
+    for idx, val in enumerate(fields):
+        if idx == 0:
+            vector = SearchVector(val, weight=weight_lookup[val])
+            similarity = TrigramSimilarity(val, keyword, weight=weight_lookup[val])
+        else:
+            vector += SearchVector(val, weight=weight_lookup[val])
+            similarity += TrigramSimilarity(val, keyword, weight=weight_lookup[val])
+
+    for val in fk_fields:
+        relationship_name = '__'.join(val)
+        if not vector:
+            vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
+        else:
+            vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
+        if not similarity:
+            similarity = TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+        else:
+            similarity += TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+
+    # TODO: set_fields
+
+    query = SearchQuery(keyword)
+
+    return model.objects.annotate(
+        search=vector,
+        rank=SearchRank(vector,query),
+        similarity=similarity
+    ).filter(
+        Q(search__icontains=keyword) |
+        Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)|
+        Q(rank__gte=settings.MIN_SEARCH_RANK)
+    ).order_by(
+        '-rank',
+        '-similarity',
+        'commonname'
+    )
 
 class Record(models.Model):
     def format_data(self, data_set, fk_field_id, ignore_columns=[]):
@@ -427,20 +472,59 @@ class Resources(Queryable, Record):
     def __str__(self):
         return self.commonname or ''
 
-    def keyword_search(keyword):
-        group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
-        group_loi = [group.pk for group in group_qs]
-        alt_name_qs = ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
-        alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
+    def keyword_search(
+            keyword,
+            fields=['commonname','indigenousname','genus','species'],
+            fk_fields=[
+                ('resourceclassificationgroup','resourceclassificationgroup'),
+            ],
+            set_fields=[
+                ('resourcealtindigenousname_set', 'altindigenousname')
+            ]
+        ):
 
-        return Resources.objects.filter(
-            Q(commonname__icontains=keyword) |
-            Q(indigenousname__icontains=keyword) |
-            Q(genus__icontains=keyword) |
-            Q(species__icontains=keyword) |
-            Q(resourceclassificationgroup__in=group_loi) |
-            Q(pk__in=alt_name_loi)
-        )
+        weight_lookup = {
+            'commonname': 'A',
+            'indigenousname': 'A',
+            'genus': 'C',
+            'species': 'C',
+            'resourceclassificationgroup': 'B',
+            'resourcealtindigenousname_set': 'A'
+        }
+
+        return run_keyword_search(Resources, keyword, fields, fk_fields, set_fields, weight_lookup)
+        ################################
+        # NEW APPROACH #################
+        ################################
+        # vector = SearchVector('commonname', weight='A') + \
+        #     SearchVector('indigenousname', weight='A') + \
+        #     SearchVector('resourceclassificationgroup__resourceclassificationgroup', weight='B') + \
+        #     SearchVector('genus', weight='C') + \
+        #     SearchVector('species', weight='C')
+        #     #HoW TO GET Alt Names?)
+        # query = SearchQuery(keyword)
+        # similarity=TrigramSimilarity('commonname', keyword, weight='A') + \
+        #     TrigramSimilarity('indigenousname', keyword, weight='A') + \
+        #     TrigramSimilarity('resourceclassificationgroup__resourceclassificationgroup', keyword, weight='B') + \
+        #     TrigramSimilarity('genus', keyword, weight='C') + \
+        #     TrigramSimilarity('species', keyword, weight='C')
+
+        ################################
+        # OLD APPROACH #################
+        ################################
+        # group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
+        # group_loi = [group.pk for group in group_qs]
+        # alt_name_qs = ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
+        # alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
+        #
+        # return Resources.objects.filter(
+        #     Q(commonname__icontains=keyword) |
+        #     Q(indigenousname__icontains=keyword) |
+        #     Q(genus__icontains=keyword) |
+        #     Q(species__icontains=keyword) |
+        #     Q(resourceclassificationgroup__in=group_loi) |
+        #     Q(pk__in=alt_name_loi)
+        # )
 
     def image(self):
         return settings.RECORD_ICONS['resource']
