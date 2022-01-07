@@ -47,6 +47,9 @@ class PlacesTest(TestCase):
         ame_results = Places.keyword_search(keyword)
         # do we get 3 results?
         self.assertEqual(ame_results.count(), 3)
+
+        for result in ame_results:
+            self.assertTrue(hasattr(result, 'rank'))
         
 
 # Resources
