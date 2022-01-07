@@ -21,11 +21,33 @@ from django.db import connection
 # Places
 class PlacesTest(TestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-    def test_resources(self):
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_places(self):
         # print("Testing Places Model")
         # print("Total places: {}".format(Places.objects.all().count()))
         self.assertTrue(True)
 
+    def test_places_search(self):
+        ##############################
+        ### TEST TEXT FIELD SEARCH ###
+        ##############################
+        # search 'ame'
+        # char fields:
+        #   * englishplacename
+        #   * indigenousplacename
+        #   * Source
+        #   * DigitizedBy
+        keyword = 'ame'
+        ame_results = Places.keyword_search(keyword)
+        # do we get 3 results?
+        self.assertEqual(ame_results.count(), 3)
+        
 
 # Resources
 class ResourcesTest(TestCase):
@@ -45,7 +67,7 @@ class ResourcesTest(TestCase):
         # print("Total resources: {}".format(Resources.objects.all().count()))
         self.assertTrue(True)
 
-    def test_search(self):
+    def test_resources_search(self):
         ##############################
         ### TEST TEXT FIELD SEARCH ###
         ##############################
