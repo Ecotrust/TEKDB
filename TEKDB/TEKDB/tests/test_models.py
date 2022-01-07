@@ -46,7 +46,15 @@ class ResourcesTest(TestCase):
         self.assertTrue(True)
 
     def test_search(self):
+        ##############################
+        ### TEST TEXT FIELD SEARCH ###
+        ##############################
         # search 'chiton'
+        # This particular search term is good as it should have hits on all char fields:
+        #   * commonname
+        #   * indigenousname
+        #   * genus
+        #   * species
         keyword = 'chiton'
         chiton_results = Resources.keyword_search(keyword)
         # do we get 4 results?
@@ -77,6 +85,53 @@ class ResourcesTest(TestCase):
                 )
             )
         # Advanced search name, description ONLY (no genus/spceies): 2 results
+        skunk_cabbage_id = 325
+        sea_cucumber_id = 305
+        gumboot_chiton_id = 188
+        chiton_id = 187
+        fields = ['commonname', 'indigenousname']
+        fk_fields = []
+        advanced_results = Resources.keyword_search(keyword, fields, fk_fields)
+        # sea cukes and skunk cabbage only have 'chiton' in their genus or species name. They should not be present.
+        self.assertEqual(advanced_results.count(), 2)
+        for resource in advanced_results:
+            self.assertTrue(resource.pk not in [skunk_cabbage_id, sea_cucumber_id])
+        fields = ['genus', 'species']
+        advanced_results = Resources.keyword_search(keyword, fields, fk_fields)
+        # 'chiton' only has chiton in it's commonname. It should not be present.
+        self.assertEqual(advanced_results.count(), 3)
+        for resource in advanced_results:
+            # self.assertTrue(resource.pk in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id])
+            self.assertTrue(resource.pk != chiton_id)
+
+        #####################################
+        ### TEST FOREIGN KEY FIELD SEARCH ###
+        #####################################
+        # Test resourceclassificationgroup search
+        # This keyword is good to test Resources model's only foreign key field:
+        #   * resourceclassificationgroup
+        keyword = 'anadromous'
+        anadromous_results = Resources.keyword_search(keyword)
+        self.assertEqual(anadromous_results.count(), 2)
+        self.assertTrue(347 in [x.pk for x in anadromous_results])
+
+        #######################################
+        ### TEST MODEL SET REFERENCE SEARCH ###
+        #######################################
+        # Test Alternative Resource Name
+        # This search term only tests the one foreign model we have considered in the past:
+        #   * ResourceAltIndigenousName
+        # The current search neglects the following models that reference Resources... why?
+        #   * PlacesResourceEvents
+        #   * ResourceResourceEvents
+        #   * ResourcesCitationEvents
+        #   * ResourcesMediaEvents
+        # These 4 are the 'in-between' tables for the other 4 core models. Perhaps not searching these is intentional?
+
+        keyword = 'flurpie'
+        flurpie_results = Resources.keyword_search(keyword)
+        self.assertEqual(flurpie_results.count(), 1)
+        self.assertEqual(flurpie_results[0].commonname, 'Test')
 
 # PlacesResourceEvents
 

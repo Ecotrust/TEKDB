@@ -19,12 +19,12 @@ from ckeditor.fields import RichTextField
 
 MANAGED = True
 
-def run_keyword_search(model, keyword, fields, fk_fields, set_fields, weight_lookup):
+def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup):
     # model -> the model calling this function
     # keyword -> [str] your search string -- can be multiple words
     # fields -> [list of str] char or text fields on your model
     # fk_fields -> [list of tuples] Foreign Key field names coupled with field on foreign model to search
-    # set_fields -> [list of tuples] '_set' nomenclature to get other models that reference this model, coupled with the field on the foreign model to search
+    #   fk_fields can search any models with a fk for current model as well!
     # weight_lookup -> [dict] lookup to get relative ['A','B','C','D'] weights for scoring search results.
     for idx, val in enumerate(fields):
         if idx == 0:
@@ -45,8 +45,6 @@ def run_keyword_search(model, keyword, fields, fk_fields, set_fields, weight_loo
         else:
             similarity += TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
 
-    # TODO: set_fields
-
     query = SearchQuery(keyword)
 
     return model.objects.annotate(
@@ -54,7 +52,8 @@ def run_keyword_search(model, keyword, fields, fk_fields, set_fields, weight_loo
         rank=SearchRank(vector,query),
         similarity=similarity
     ).filter(
-        Q(search__icontains=keyword) |
+        Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
+        Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
         Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)|
         Q(rank__gte=settings.MIN_SEARCH_RANK)
     ).order_by(
@@ -477,9 +476,7 @@ class Resources(Queryable, Record):
             fields=['commonname','indigenousname','genus','species'],
             fk_fields=[
                 ('resourceclassificationgroup','resourceclassificationgroup'),
-            ],
-            set_fields=[
-                ('resourcealtindigenousname_set', 'altindigenousname')
+                ('resourcealtindigenousname', 'altindigenousname')
             ]
         ):
 
@@ -489,10 +486,10 @@ class Resources(Queryable, Record):
             'genus': 'C',
             'species': 'C',
             'resourceclassificationgroup': 'B',
-            'resourcealtindigenousname_set': 'A'
+            'resourcealtindigenousname': 'A'
         }
 
-        return run_keyword_search(Resources, keyword, fields, fk_fields, set_fields, weight_lookup)
+        return run_keyword_search(Resources, keyword, fields, fk_fields, weight_lookup)
         ################################
         # NEW APPROACH #################
         ################################
