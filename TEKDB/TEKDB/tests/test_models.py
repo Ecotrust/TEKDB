@@ -21,14 +21,7 @@ from django.db import connection
 # Places
 class PlacesTest(TestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
-
-    def test_places(self):
+    def test_resources(self):
         # print("Testing Places Model")
         # print("Total places: {}".format(Places.objects.all().count()))
         self.assertTrue(True)
@@ -51,6 +44,26 @@ class PlacesTest(TestCase):
         for result in ame_results:
             self.assertTrue(hasattr(result, 'rank'))
         
+        #####################################
+        ### TEST FOREIGN KEY FIELD SEARCH ###
+        #####################################
+        # Places model's foreign key field(s):
+        #   * planningunitid
+        #   * primaryhabitat
+        #   * tribeid
+
+        #######################################
+        ### TEST MODEL SET REFERENCE SEARCH ###
+        #######################################
+        # Test Alternative Resource Name
+        # This search term only tests the one foreign model we have considered in the past:
+        #   * ResourceAltIndigenousName
+        # The current search neglects the following models that reference Resources... why?
+        #   * PlacesResourceEvents
+        #   * ResourceResourceEvents
+        #   * ResourcesCitationEvents
+        #   * ResourcesMediaEvents
+        # These 4 are the 'in-between' tables for the other 4 core models. Perhaps not searching these is intentional?
 
 # Resources
 class ResourcesTest(TestCase):
@@ -70,7 +83,7 @@ class ResourcesTest(TestCase):
         # print("Total resources: {}".format(Resources.objects.all().count()))
         self.assertTrue(True)
 
-    def test_resources_search(self):
+    def test_search(self):
         ##############################
         ### TEST TEXT FIELD SEARCH ###
         ##############################

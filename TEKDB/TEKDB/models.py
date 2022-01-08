@@ -328,28 +328,29 @@ class Places(Queryable, Record):
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
 
-    def keyword_search(keyword):
-        planningunit_qs = LookupPlanningUnit.objects.filter(planningunitname__icontains=keyword)
-        planningunit_loi = [planningunit.pk for planningunit in planningunit_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['englishplacename','indigenousplacename','Source','DigitizedBy'], # fields to search
+            fk_fields=[ 
+                ('planningunitid','planningunitid'),
+                ('primaryhabitat', 'id'),
+                ('tribeid', 'id'),
+                ('placealtindigenousname', 'altindigenousname')
+            ] # fields to search for fk objects
+        ):
 
-        habitat_qs = LookupHabitat.objects.filter(habitat__icontains=keyword)
-        habitat_loi = [habitat.pk for habitat in habitat_qs]
+        weight_lookup = {
+            'englishplacename': 'A',
+            'indigenousplacename': 'A',
+            'Source': 'C',
+            'DigitizedBy': 'C',
+            'planningunitid': 'B',
+            'primaryhabitat': 'B',
+            'tribeid': 'B',
+            'placealtindigenousname': 'A'
+        }
 
-        tribe_qs = LookupTribe.keyword_search(keyword)
-        tribe_loi = [tribe.pk for tribe in tribe_qs]
-
-        alt_name_qs = PlaceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
-        alt_name_loi = [pan.placeid.pk for pan in alt_name_qs]
-
-        return Places.objects.filter(
-            Q(indigenousplacename__icontains=keyword) |
-            Q(indigenousplacenamemeaning__icontains=keyword)|
-            Q(englishplacename__icontains=keyword)|
-            Q(planningunitid__in=planningunit_loi) |
-            Q(primaryhabitat__in=habitat_loi) |
-            Q(tribeid__in=tribe_loi) |
-            Q(pk__in=alt_name_loi)
-        )
+        return run_keyword_search(Places, keyword, fields, fk_fields, weight_lookup)
 
     def image(self):
         return settings.RECORD_ICONS['place']
@@ -471,13 +472,14 @@ class Resources(Queryable, Record):
     def __str__(self):
         return self.commonname or ''
 
+    # Add to each of the 5 resource types
     def keyword_search(
-            keyword,
-            fields=['commonname','indigenousname','genus','species'],
-            fk_fields=[
+            keyword, # string
+            fields=['commonname','indigenousname','genus','species'], # fields to search
+            fk_fields=[ 
                 ('resourceclassificationgroup','resourceclassificationgroup'),
                 ('resourcealtindigenousname', 'altindigenousname')
-            ]
+            ] # fields to search for fk objects
         ):
 
         weight_lookup = {
