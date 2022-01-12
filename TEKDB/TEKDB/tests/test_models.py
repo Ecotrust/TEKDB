@@ -21,6 +21,13 @@ from django.db import connection
 # Places
 class PlacesTest(TestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
     def test_resources(self):
         # print("Testing Places Model")
         # print("Total places: {}".format(Places.objects.all().count()))
@@ -35,6 +42,7 @@ class PlacesTest(TestCase):
         #   * englishplacename
         #   * indigenousplacename
         #   * indigenousplacenamemeaning
+        #   * placealtindigenousname
         #   * Source
         #   * DigitizedBy
         keyword = 'lace'
@@ -44,28 +52,31 @@ class PlacesTest(TestCase):
 
         for result in lace_results:
             self.assertTrue(hasattr(result, 'rank'))
-            self.assertTrue(hasattr(result,'similarity'))
-        #     self.assertTrue(
-        #     (
-        #         result.similarity and
-        #         result.similarity > settings.MIN_SEARCH_SIMILARITY
-        #     ) or
-        #     result.rank > settings.MIN_SEARCH_RANK or
-        #     keyword in result.indigenouseplacename.lower() or
-        #     (
-        #         result.englishname and
-        #         keyword in result.englishname.lower()
-        #     ) or (
-        #         result. and
-        #         keyword in result.resourceclassificationgroup.resourceclassificationgroup.lower()
-        #     ) or (
-        #         result.genus and
-        #         keyword in result.genus.lower()
-        #     ) or (
-        #         result.species and
-        #         keyword in result.species.lower()
-        #     )
-        # )
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                ) or
+                result.rank > settings.MIN_SEARCH_RANK or
+                (
+                    result['indigenous place name'] and
+                    keyword in result['indigenous place name'].lower()
+                ) or
+                (
+                    result['english place name'] and
+                    keyword in result['english place name'].lower()
+                ) or (
+                    result['planning unit'] and
+                    keyword in result['planning unit'].lower()
+                ) or (
+                    result['primary habitat'] and
+                    keyword in result['primary habitat'].lower()
+                ) or (
+                    result.tribe and
+                    keyword in result.tribe.lower()
+                )
+         )
         
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
@@ -106,7 +117,7 @@ class ResourcesTest(TestCase):
         # print("Total resources: {}".format(Resources.objects.all().count()))
         self.assertTrue(True)
 
-    def test_search(self):
+    def test_resources_search(self):
         ##############################
         ### TEST TEXT FIELD SEARCH ###
         ##############################
