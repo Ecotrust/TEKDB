@@ -19,7 +19,7 @@ from ckeditor.fields import RichTextField
 
 MANAGED = True
 
-def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup):
+def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_field):
     # model -> the model calling this function
     # keyword -> [str] your search string -- can be multiple words
     # fields -> [list of str] char or text fields on your model
@@ -59,7 +59,7 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup):
     ).order_by(
         '-rank',
         '-similarity',
-        'commonname'
+        sort_field
     )
 
 class Record(models.Model):
@@ -330,11 +330,11 @@ class Places(Queryable, Record):
 
     def keyword_search(
             keyword, # string
-            fields=['englishplacename','indigenousplacename','Source','DigitizedBy'], # fields to search
+            fields=['englishplacename','indigenousplacename', 'indigenousplacenamemeaning', 'Source','DigitizedBy'], # fields to search
             fk_fields=[ 
-                ('planningunitid','planningunitid'),
-                ('primaryhabitat', 'id'),
-                ('tribeid', 'id'),
+                ('planningunitid','planningunitname'),
+                ('primaryhabitat', 'habitat'),
+                ('tribeid', 'tribe'),
                 ('placealtindigenousname', 'altindigenousname')
             ] # fields to search for fk objects
         ):
@@ -342,6 +342,7 @@ class Places(Queryable, Record):
         weight_lookup = {
             'englishplacename': 'A',
             'indigenousplacename': 'A',
+            'indigenousplacenamemeaning': 'A',
             'Source': 'C',
             'DigitizedBy': 'C',
             'planningunitid': 'B',
@@ -350,7 +351,10 @@ class Places(Queryable, Record):
             'placealtindigenousname': 'A'
         }
 
-        return run_keyword_search(Places, keyword, fields, fk_fields, weight_lookup)
+        sort_field = 'indigenousplacename'
+
+        return run_keyword_search(Places, keyword, fields, fk_fields, weight_lookup, sort_field)
+        
 
     def image(self):
         return settings.RECORD_ICONS['place']
@@ -491,7 +495,9 @@ class Resources(Queryable, Record):
             'resourcealtindigenousname': 'A'
         }
 
-        return run_keyword_search(Resources, keyword, fields, fk_fields, weight_lookup)
+        sort_field = 'commonname'
+
+        return run_keyword_search(Resources, keyword, fields, fk_fields, weight_lookup, sort_field)
         ################################
         # NEW APPROACH #################
         ################################

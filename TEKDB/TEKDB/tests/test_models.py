@@ -27,22 +27,45 @@ class PlacesTest(TestCase):
         self.assertTrue(True)
 
     def test_places_search(self):
-        ##############################
-        ### TEST TEXT FIELD SEARCH ###
-        ##############################
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
         # search 'ame'
         # char fields:
         #   * englishplacename
         #   * indigenousplacename
+        #   * indigenousplacenamemeaning
         #   * Source
         #   * DigitizedBy
-        keyword = 'ame'
-        ame_results = Places.keyword_search(keyword)
+        keyword = 'lace'
+        lace_results = Places.keyword_search(keyword)
         # do we get 3 results?
-        self.assertEqual(ame_results.count(), 3)
+        self.assertEqual(lace_results.count(), 3)
 
-        for result in ame_results:
+        for result in lace_results:
             self.assertTrue(hasattr(result, 'rank'))
+            # self.assertTrue(hasattr(result,'similarity'))
+        #     self.assertTrue(
+        #     (
+        #         result.similarity and
+        #         result.similarity > settings.MIN_SEARCH_SIMILARITY
+        #     ) or
+        #     result.rank > settings.MIN_SEARCH_RANK or
+        #     keyword in result.indigenouseplacename.lower() or
+        #     (
+        #         result.englishname and
+        #         keyword in result.englishname.lower()
+        #     ) or (
+        #         result. and
+        #         keyword in result.resourceclassificationgroup.resourceclassificationgroup.lower()
+        #     ) or (
+        #         result.genus and
+        #         keyword in result.genus.lower()
+        #     ) or (
+        #         result.species and
+        #         keyword in result.species.lower()
+        #     )
+        # )
         
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
