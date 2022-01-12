@@ -44,7 +44,7 @@ class PlacesTest(TestCase):
 
         for result in lace_results:
             self.assertTrue(hasattr(result, 'rank'))
-            # self.assertTrue(hasattr(result,'similarity'))
+            self.assertTrue(hasattr(result,'similarity'))
         #     self.assertTrue(
         #     (
         #         result.similarity and
