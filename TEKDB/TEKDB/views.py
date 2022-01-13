@@ -19,6 +19,23 @@ def get_related(request, model_name, id):
         pass
     return HttpResponse(data, content_type='application/json')
 
+def export_database(request):
+    # create filename
+    # run dumpdata command
+    # zip up:
+    #   * Data Dump file
+    #   * Media files
+    return True
+
+def import_database(request, zipfile):
+    # Unzip file
+    # Drop DB -- if exists.
+    # Create DB
+    # Migrate DB
+    # Load Fixture
+    # Copy media into MEDIA dir
+    return True
+
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         from django.db.models.functions import Lower
