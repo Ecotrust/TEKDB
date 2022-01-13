@@ -45,11 +45,11 @@ class PlacesTest(TestCase):
         #   * placealtindigenousname
         #   * Source
         #   * DigitizedBy
-        keyword = 'lace'
+        keyword = 'place'
         lace_results = Places.keyword_search(keyword)
         # do we get 3 results?
         self.assertEqual(lace_results.count(), 3)
-
+        # weighting check: indigenousplacename > placealtindigenousname > indigenousplacenamemeaning 
         for result in lace_results:
             self.assertTrue(hasattr(result, 'rank'))
             self.assertTrue(hasattr(result, 'similarity'))
@@ -59,24 +59,23 @@ class PlacesTest(TestCase):
                     result.similarity > settings.MIN_SEARCH_SIMILARITY
                 ) or
                 result.rank > settings.MIN_SEARCH_RANK or
+                keyword in result.indigenousplacename.lower() or 
                 (
-                    result['indigenous place name'] and
-                    keyword in result['indigenous place name'].lower()
-                ) or
-                (
-                    result['english place name'] and
-                    keyword in result['english place name'].lower()
+                    result.englishplacename and
+                    keyword in result.englishplacename.lower()
                 ) or (
-                    result['planning unit'] and
-                    keyword in result['planning unit'].lower()
+                    result.planningunitid and
+                    keyword in result.planningunitid.planningunitname.lower()
                 ) or (
-                    result['primary habitat'] and
-                    keyword in result['primary habitat'].lower()
+                    result.primaryhabitat and
+                    keyword in result.primaryhabitat.habitat.lower()
                 ) or (
-                    result.tribe and
-                    keyword in result.tribe.lower()
+                    result.tribeid and
+                    keyword in result.tribeid.tribe.lower() or
+                    keyword in result.tribeid.tribeunit.lower() or
+                    keyword in result.tribeid.federaltribe.lower()
                 )
-         )
+            )
         
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###

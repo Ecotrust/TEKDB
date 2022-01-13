@@ -330,18 +330,18 @@ class Places(Queryable, Record):
 
     def keyword_search(
             keyword, # string
-            fields=['englishplacename','indigenousplacename', 'indigenousplacenamemeaning', 'Source','DigitizedBy'], # fields to search
+            fields=['indigenousplacename','englishplacename','indigenousplacenamemeaning','Source','DigitizedBy'], # fields to search
             fk_fields=[ 
                 ('planningunitid','planningunitname'),
-                ('primaryhabitat', 'habitat'),
-                ('tribeid', 'tribe'),
-                ('placealtindigenousname', 'altindigenousname')
+                ('primaryhabitat','habitat'),
+                ('tribeid','tribe'),
+                ('placealtindigenousname','altindigenousname')
             ] # fields to search for fk objects
         ):
 
         weight_lookup = {
-            'englishplacename': 'A',
             'indigenousplacename': 'A',
+            'englishplacename': 'A',
             'indigenousplacenamemeaning': 'A',
             'Source': 'C',
             'DigitizedBy': 'C',
@@ -476,7 +476,6 @@ class Resources(Queryable, Record):
     def __str__(self):
         return self.commonname or ''
 
-    # Add to each of the 5 resource types
     def keyword_search(
             keyword, # string
             fields=['commonname','indigenousname','genus','species'], # fields to search
