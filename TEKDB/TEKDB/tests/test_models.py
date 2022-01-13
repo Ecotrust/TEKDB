@@ -47,7 +47,7 @@ class PlacesTest(TestCase):
         #   * DigitizedBy
         keyword = 'place'
         lace_results = Places.keyword_search(keyword)
-        # do we get 3 results?
+        # do we get 3 results? also checks that we do not return all results in Place category
         self.assertEqual(lace_results.count(), 3)
         # weighting check: indigenousplacename > placealtindigenousname > indigenousplacenamemeaning 
         for result in lace_results:
@@ -84,6 +84,20 @@ class PlacesTest(TestCase):
         #   * planningunitid
         #   * primaryhabitat
         #   * tribeid
+        keyword = 'Northern'
+        planning_unit_fk_search = Places.keyword_search(keyword)
+        self.assertEqual(planning_unit_fk_search.count(), 8)
+        self.assertTrue(25 in [x.pk for x in planning_unit_fk_search])
+        
+        keyword = 'Rocky Intertidal'
+        habitat_fk_search = Places.keyword_search(keyword)
+        self.assertEqual(habitat_fk_search.count(), 5)
+        self.assertTrue(25 in [x.pk for x in habitat_fk_search])
+
+        keyword = 'Tolowa'
+        tribe_fk_search = Places.keyword_search(keyword)
+        self.assertEqual(tribe_fk_search.count(), 15)
+        self.assertTrue(25 in [x.pk for x in tribe_fk_search])
 
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
