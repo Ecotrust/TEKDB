@@ -103,14 +103,11 @@ class PlacesTest(TestCase):
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
         # Test Alternative Resource Name
-        # This search term only tests the one foreign model we have considered in the past:
-        #   * ResourceAltIndigenousName
-        # The current search neglects the following models that reference Resources... why?
         #   * PlacesResourceEvents
-        #   * ResourceResourceEvents
-        #   * ResourcesCitationEvents
-        #   * ResourcesMediaEvents
-        # These 4 are the 'in-between' tables for the other 4 core models. Perhaps not searching these is intentional?
+        keyword = 'flurpie'
+        flurpie_results = Places.keyword_search(keyword)
+        self.assertEqual(flurpie_results.count(), 1)
+        self.assertEqual(flurpie_results[0].indigenousplacename, 'Test')
 
 # Resources
 class ResourcesTest(TestCase):
