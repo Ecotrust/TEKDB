@@ -28,7 +28,7 @@ class PlacesTest(TestCase):
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
-    def test_resources(self):
+    def test_placess(self):
         # print("Testing Places Model")
         # print("Total places: {}".format(Places.objects.all().count()))
         self.assertTrue(True)
@@ -46,11 +46,11 @@ class PlacesTest(TestCase):
         #   * Source
         #   * DigitizedBy
         keyword = 'place'
-        lace_results = Places.keyword_search(keyword)
+        place_results = Places.keyword_search(keyword)
         # do we get 3 results? also checks that we do not return all results in Place category
-        self.assertEqual(lace_results.count(), 3)
+        self.assertEqual(place_results.count(), 3)
         # weighting check: indigenousplacename > placealtindigenousname > indigenousplacenamemeaning 
-        for result in lace_results:
+        for result in place_results:
             self.assertTrue(hasattr(result, 'rank'))
             self.assertTrue(hasattr(result, 'similarity'))
             self.assertTrue(
@@ -225,6 +225,91 @@ class ResourcesTest(TestCase):
 
 
 # Citations
+class CitationsTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_citations(self):
+        # print("Testing Places Model")
+        # print("Total places: {}".format(Places.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_citations_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # fields:
+        #   * referencetext
+        #   * authorprimary
+        #   * authorsecondary
+        #   * placeofinterview
+        #   * seriestitle
+        #   * seriesvolume
+        #   * serieseditor
+        #   * publisher
+        #   * publishercity
+        #   * preparedfor
+        #   * referencetype
+        #   * authortype
+        #   * intervieweeid
+        #   * interviewerid
+        #   * indigenousplacename
+        #   * indigenousplacenamemeaning
+        #   * placealtindigenousname
+        #   * Source
+        #   * DigitizedBy
+
+        keyword = 'book'
+        cit_results = Citations.keyword_search(keyword) 
+        self.assertEqual(cit_results.count(), 1)
+        
+        for result in cit_results:
+            self.assertTrue(hasattr(result, 'rank'))
+            self.assertTrue(hasattr(result, 'similarity'))
+            # self.assertTrue(
+            #     (
+            #         result.similarity and
+            #         result.similarity > settings.MIN_SEARCH_SIMILARITY
+            #     ) or
+            #     result.rank > settings.MIN_SEARCH_RANK or
+            #     keyword in result.indigenousplacename.lower() or 
+            #     (
+            #         result.englishplacename and
+            #         keyword in result.englishplacename.lower()
+            #     ) or (
+            #         result.planningunitid and
+            #         keyword in result.planningunitid.planningunitname.lower()
+            #     ) or (
+            #         result.primaryhabitat and
+            #         keyword in result.primaryhabitat.habitat.lower()
+            #     ) or (
+            #         result.tribeid and
+            #         keyword in result.tribeid.tribe.lower() or
+            #         keyword in result.tribeid.tribeunit.lower() or
+            #         keyword in result.tribeid.federaltribe.lower()
+            #     )
+            # )
+        
+        #####################################
+        ### TEST FOREIGN KEY FIELD SEARCH ###
+        #####################################
+        # Citation model's foreign key field(s):
+       
+
+        #######################################
+        ### TEST MODEL SET REFERENCE SEARCH ###
+        #######################################
+        # 
+        #   * 
+        keyword = 'flurpie'
+        flurpie_results = Citations.keyword_search(keyword)
+        # self.assertEqual(flurpie_results.count(), 1)
+        # self.assertEqual(flurpie_results[0]., 'Test')
 
 
 # PlacesCitationEvents
