@@ -102,7 +102,7 @@ class PlacesTest(TestCase):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
-        # Test Alternative Resource Name
+        # Test Alternative Place Name
         #   * PlacesResourceEvents
         keyword = 'flurpie'
         flurpie_results = Places.keyword_search(keyword)
@@ -254,12 +254,12 @@ class CitationsTest(TestCase):
         #   * publisher
         #   * publishercity
         #   * preparedfor
-        #   * referencetype
-        #   * authortype
-        #   * intervieweeid
-        #   * interviewerid
+        #   * referencetype (foreign key)
+        #   * authortype (foreign key) (no records for testing)
+        #   X intervieweeid (foreign key) (not ready for testing)
+        #   X interviewerid (foreign key) (not ready for testing)
 
-        keyword = 'book'
+        keyword = 'traditional'
         cit_results = Citations.keyword_search(keyword) 
         self.assertEqual(cit_results.count(), 1)
         
@@ -304,16 +304,10 @@ class CitationsTest(TestCase):
                     keyword in result.preparedfor.lower()
                 ) or (
                     result.referencetype and
-                    keyword in result.referencetype.referencetype.lower()
+                    keyword in result.referencetype.documenttype.lower()
                 ) or (
                     result.authortype and
                     keyword in result.authortype.authortype.lower()
-                ) or (
-                    result.intervieweeid and
-                    keyword in result.intervieweeid.intervieweeid.lower()
-                ) or (
-                    result.interviewerid and
-                    keyword in result.interviewerid.interviewerid.lower()
                 )
             )
         
@@ -321,18 +315,23 @@ class CitationsTest(TestCase):
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
         # Citation model's foreign key field(s):
-       
+        keyword = 'book'
+        reftype_results = Citations.keyword_search(keyword)
+        self.assertEqual(reftype_results.count(), 1)
+        self.assertTrue(11 in [x.pk for x in reftype_results])
+
+        ## Future test for authortype
+        # keyword = 'book'
+        # authortype_results = Citations.keyword_search(keyword)
+        # self.assertEqual(authortype_results.count(), 1)
+        # self.assertTrue(11 in [x.pk for x in authortype_results])
+
 
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
         # 
         #   * 
-        keyword = 'flurpie'
-        flurpie_results = Citations.keyword_search(keyword)
-        # self.assertEqual(flurpie_results.count(), 1)
-        # self.assertEqual(flurpie_results[0]., 'Test')
-
 
 # PlacesCitationEvents
 
