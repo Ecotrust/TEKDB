@@ -1121,6 +1121,38 @@ class Citations(Queryable, Record):
         verbose_name = 'Bibliographic Source'
         verbose_name_plural = 'Bibliographic Sources'
 
+    def keyword_search(
+            keyword, # string
+            fields=['referencetext','authorprimary','authorsecondary','placeofinterview','seriestitle','seriesvolume','serieseditor','publisher','publishercity','preparedfor'], # fields to search
+            fk_fields=[ 
+                ('referencetype','documenttype'),
+                ('authortype', 'authortype'),
+                ('intervieweeid', 'interviewee'),
+                ('interviewerid', 'interviewer')
+            ] # fields to search for fk objects
+        ):
+
+        weight_lookup = {
+            'referencetext': 'A',
+            'authorprimary': 'A',
+            'authorsecondary': 'A',
+            'placeofinterview': 'C',
+            'seriestitle': 'C',
+            'seriesvolume': 'C',
+            'serieseditor': 'C',
+            'publisher': 'C',
+            'publishercity': 'C',
+            'preparedfor': 'C',
+            'referencetype': 'B',
+            'authortype': 'B',
+            'intervieweeid': 'B',
+            'interviewerid': 'B'
+        }
+
+        sort_field = 'referencetext'
+
+        return run_keyword_search(Resources, keyword, fields, fk_fields, weight_lookup, sort_field)
+
     def keyword_search(keyword):
         reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
         reference_loi = [reference.pk for reference in reference_qs]
