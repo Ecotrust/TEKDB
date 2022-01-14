@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from dal import autocomplete
@@ -19,14 +20,17 @@ def get_related(request, model_name, id):
         pass
     return HttpResponse(data, content_type='application/json')
 
+# TODO: Only Admins!
 def export_database(request):
     # create filename
+    datestamp = datetime.now().strftime('%Y%m%d')
     # run dumpdata command
     # zip up:
     #   * Data Dump file
     #   * Media files
-    return True
+    return HttpResponse()
 
+# TODO: Only Admins!
 def import_database(request, zipfile):
     # Unzip file
     # Drop DB -- if exists.
