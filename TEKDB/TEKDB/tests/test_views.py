@@ -12,7 +12,8 @@ import shutil
 # from TEKDB.forms import *
 from TEKDB.models import *
 import tempfile
-from zipfile import ZipFile
+import zipfile
+# from zipfile import ZipFile
 
 #########################################################################
 # Run with:
@@ -56,25 +57,34 @@ class ExportTest(TestCase):
         request = self.factory.get('/export_database')
         response = export_database(request)
         self.assertEqual(response.status_code, 200)
+
+        tempdir = tempfile.gettempdir()
+        zipname = join(tempdir, "{}_backup.zip".format(datestamp))
+        with open(zipname, "wb") as f:
+            f.write(response.content)
         # test for dump files
         #   * .zip
-        zipname = join(settings.MEDIA_ROOT, "{}_backup.zip".format(datestamp))
         self.assertTrue(isfile(zipname))
-        zip = ZipFile(zipname, "r")
+        self.assertTrue(zipfile.is_zipfile(zipname))
+        zip = zipfile.ZipFile(zipname, "r")
         media_folder_name = path.split(settings.MEDIA_ROOT)[-1]
-        zip.extract(media_folder_name, tempfile.gettempdir())
+        try:
+            zip.extract(media_folder_name, tempdir)
+        except Exception as e:
+            print(e)
+            self.assertTrue(False)
         # Test that all media files were captured in the zip
         for mediafile in listdir(settings.MEDIA_ROOT):
             source_file_location = join(settings.MEDIA_ROOT, mediafile)
             source_file_relative_name = join(media_folder_name, mediafile)
-            temp_file_location = join(tempfile.gettempdir(), source_file_relative_name)
+            temp_file_location = join(tempdir, source_file_relative_name)
             self.assertTrue(source_file_relative_name in zip.namelist())
             self.assertTrue(isfile(temp_file_location))
             source_checksum = get_checksum(source_file_location, "md5")
             temp_checksum = get_checksum(temp_file_location, "md5")
             self.assertEqual(source_checksum, temp_checksum)
         zip.close()
-        shutil.rmtree(join(tempfile.gettempdir(), media_folder_name))
+        shutil.rmtree(join(tempdir, media_folder_name))
         # import .zip
         # test for deleted media
         # test for added record
