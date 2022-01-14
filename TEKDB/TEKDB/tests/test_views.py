@@ -1,9 +1,10 @@
+from base64 import b64encode
 from datetime import datetime
 from django.conf import settings
 from django.db import connection
 from django.test import TestCase
 from django.test.client import RequestFactory
-# from django.urls import reverse
+from django.urls import reverse
 # from django.utils import timezone
 import hashlib
 from os import listdir
@@ -11,6 +12,7 @@ from os.path import isfile, join
 import shutil
 # from TEKDB.forms import *
 from TEKDB.models import *
+from TEKDB.views import ExportDatabase, ImportDatabase
 import tempfile
 import zipfile
 # from zipfile import ZipFile
@@ -45,17 +47,24 @@ class ExportTest(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
 
     def test_export(self):
-        from TEKDB.views import export_database, import_database
         self.assertTrue(True)
         # add record
         print("TODO: Add record to TEKDB/test_views.ExportTest.test_export")
         print("TODO: Test non-admin user failure in TEKDB/test_views.ExportTest.test_export")
         datestamp = datetime.now().strftime('%Y%m%d')
         # dump data
-        request = self.factory.get('/export_database')
-        response = export_database(request)
+        request = self.factory.get(
+            reverse('export_database'),
+            headers = {
+                "Authorization": f"Basic {self.credentials}"
+            },
+        )
+        # TODO: Test that non-admin request fails
+        request.user = Users.objects.get(username='admin')
+        response = ExportDatabase(request)
         self.assertEqual(response.status_code, 200)
 
         tempdir = tempfile.gettempdir()

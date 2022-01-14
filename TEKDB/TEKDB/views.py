@@ -1,4 +1,6 @@
 from datetime import datetime
+from django.contrib.auth.decorators import user_passes_test
+from django.core.management.commands import loaddata, dumpdata
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from dal import autocomplete
@@ -20,8 +22,9 @@ def get_related(request, model_name, id):
         pass
     return HttpResponse(data, content_type='application/json')
 
-# TODO: Only Admins!
-def export_database(request):
+# Only Admins!
+@user_passes_test(lambda u: u.is_superuser)
+def ExportDatabase(request):
     # create filename
     datestamp = datetime.now().strftime('%Y%m%d')
     # run dumpdata command
@@ -30,8 +33,9 @@ def export_database(request):
     #   * Media files
     return HttpResponse()
 
-# TODO: Only Admins!
-def import_database(request, zipfile):
+# Only Admins!
+@user_passes_test(lambda u: u.is_superuser)
+def ImportDatabase(request, zipfile):
     # Unzip file
     # Drop DB -- if exists.
     # Create DB
