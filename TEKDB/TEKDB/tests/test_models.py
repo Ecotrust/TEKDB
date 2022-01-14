@@ -49,7 +49,7 @@ class PlacesTest(TestCase):
         place_results = Places.keyword_search(keyword)
         # do we get 3 results? also checks that we do not return all results in Place category
         self.assertEqual(place_results.count(), 3)
-        # weighting check: indigenousplacename > placealtindigenousname > indigenousplacenamemeaning 
+        # checkout results belong to one of the search fields
         for result in place_results:
             self.assertTrue(hasattr(result, 'rank'))
             self.assertTrue(hasattr(result, 'similarity'))
@@ -258,11 +258,6 @@ class CitationsTest(TestCase):
         #   * authortype
         #   * intervieweeid
         #   * interviewerid
-        #   * indigenousplacename
-        #   * indigenousplacenamemeaning
-        #   * placealtindigenousname
-        #   * Source
-        #   * DigitizedBy
 
         keyword = 'book'
         cit_results = Citations.keyword_search(keyword) 
@@ -271,29 +266,56 @@ class CitationsTest(TestCase):
         for result in cit_results:
             self.assertTrue(hasattr(result, 'rank'))
             self.assertTrue(hasattr(result, 'similarity'))
-            # self.assertTrue(
-            #     (
-            #         result.similarity and
-            #         result.similarity > settings.MIN_SEARCH_SIMILARITY
-            #     ) or
-            #     result.rank > settings.MIN_SEARCH_RANK or
-            #     keyword in result.indigenousplacename.lower() or 
-            #     (
-            #         result.englishplacename and
-            #         keyword in result.englishplacename.lower()
-            #     ) or (
-            #         result.planningunitid and
-            #         keyword in result.planningunitid.planningunitname.lower()
-            #     ) or (
-            #         result.primaryhabitat and
-            #         keyword in result.primaryhabitat.habitat.lower()
-            #     ) or (
-            #         result.tribeid and
-            #         keyword in result.tribeid.tribe.lower() or
-            #         keyword in result.tribeid.tribeunit.lower() or
-            #         keyword in result.tribeid.federaltribe.lower()
-            #     )
-            # )
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                ) or (
+                    result.rank and
+                    result.rank > settings.MIN_SEARCH_RANK    
+                ) or
+                    keyword in result.referencetext.lower() 
+                or (
+                    result.authorprimary and
+                    keyword in result.authorprimary.lower()
+                ) or (
+                    result.authorsecondary and
+                    keyword in result.authorsecondary.lower()
+                ) or (
+                    result.placeofinterview and
+                    keyword in result.placeofinterview.lower()
+                ) or (
+                    result.seriestitle and
+                    keyword in result.seriestitle.lower()
+                ) or (
+                    result.seriesvolume and
+                    keyword in result.seriesvolume.lower()
+                ) or (
+                    result.serieseditor and
+                    keyword in result.serieseditor.lower()
+                ) or (
+                    result.publisher and
+                    keyword in result.publisher.lower()
+                ) or (
+                    result.publishercity and
+                    keyword in result.publishercity.lower()
+                ) or (
+                    result.preparedfor and
+                    keyword in result.preparedfor.lower()
+                ) or (
+                    result.referencetype and
+                    keyword in result.referencetype.referencetype.lower()
+                ) or (
+                    result.authortype and
+                    keyword in result.authortype.authortype.lower()
+                ) or (
+                    result.intervieweeid and
+                    keyword in result.intervieweeid.intervieweeid.lower()
+                ) or (
+                    result.interviewerid and
+                    keyword in result.interviewerid.interviewerid.lower()
+                )
+            )
         
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
