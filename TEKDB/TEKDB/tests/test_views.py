@@ -99,7 +99,9 @@ class ExportTest(TestCase):
         dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
         self.assertTrue(isfile(dumpfile))
         remove(dumpfile)
-        
+
         # import .zip
         # test for deleted media
         # test for added record
+
+        remove(zipname)
