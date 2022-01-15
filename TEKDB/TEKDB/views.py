@@ -1,11 +1,16 @@
+from dal import autocomplete
 from datetime import datetime
 from django.contrib.auth.decorators import user_passes_test
+from django.core import management
 from django.core.management.commands import loaddata, dumpdata
-from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from dal import autocomplete
 from django.db.models import Q
-from .models import *
+from django.http import HttpResponse, Http404, FileResponse
+from django.shortcuts import render
+import os
+import shutil
+from TEKDB.models import *
+import tempfile
+import zipfile
 
 def get_related(request, model_name, id):
     from django.apps import apps
@@ -22,15 +27,51 @@ def get_related(request, model_name, id):
         pass
     return HttpResponse(data, content_type='application/json')
 
+# from https://www.geeksforgeeks.org/working-zip-files-python/
+def get_all_file_paths(directory, cwd=False):
+    if cwd:
+        os.chdir(cwd)
+    # initializing empty file paths list
+    file_paths = []
+
+    # crawling through directory and subdirectories
+    for root, directories, files in os.walk(directory):
+        for filename in files:
+            # join the two strings in order to form the full filepath.
+            filepath = os.path.join(root, filename)
+            file_paths.append(filepath)
+
+    # returning all file paths
+    return file_paths
+
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request):
-    # create filename
     datestamp = datetime.now().strftime('%Y%m%d')
-    # run dumpdata command
-    # zip up:
-    #   * Data Dump file
-    #   * Media files
+    tmp_zip = tempfile.NamedTemporaryFile(delete=False, prefix="{}_backup_".format(datestamp), suffix='.zip')
+    os.chdir(os.path.join(settings.MEDIA_ROOT, '..'))
+    relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
+    media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
+    try:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            # create filename
+            dumpfile = "{}_backup.json".format(datestamp)
+            dumpfile_location = os.path.join(tmp_dir, dumpfile)
+            with open(dumpfile_location, 'w') as of:
+                management.call_command('dumpdata', '--indent=2', stdout=of)
+            # zip up:
+            #   * Data Dump file
+            #   * Media files
+            with zipfile.ZipFile(tmp_zip.name, 'w') as zip:
+                zip.write(dumpfile_location, dumpfile)
+                for media_file in media_paths:
+                    zip.write(media_file)
+
+        response = FileResponse(open(tmp_zip.name, 'rb'))
+        return response
+    finally:
+        os.remove(tmp_zip.name)
+
     return HttpResponse()
 
 # Only Admins!
