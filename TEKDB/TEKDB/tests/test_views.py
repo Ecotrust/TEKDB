@@ -7,8 +7,8 @@ from django.test.client import RequestFactory
 from django.urls import reverse
 # from django.utils import timezone
 import hashlib
-from os import listdir
-from os.path import isfile, join
+from os import listdir, remove
+from os.path import isfile, join, split
 import shutil
 # from TEKDB.forms import *
 from TEKDB.models import *
@@ -39,7 +39,7 @@ def get_checksum(filename, hash_function):
 class RelatedTest(TestCase):
     def test_related(self):
         from TEKDB.views import get_related
-        print("TODO: Write TEKDB/test_views.RelatedTest")
+        print("\n\tTODO: Write TEKDB/test_views.RelatedTest")
         self.assertTrue(True)
 
 class ExportTest(TestCase):
@@ -52,8 +52,8 @@ class ExportTest(TestCase):
     def test_export(self):
         self.assertTrue(True)
         # add record
-        print("TODO: Add record to TEKDB/test_views.ExportTest.test_export")
-        print("TODO: Test non-admin user failure in TEKDB/test_views.ExportTest.test_export")
+        print("\n\tTODO: Add record to TEKDB/test_views.ExportTest.test_export")
+        print("\tTODO: Test non-admin user failure in TEKDB/test_views.ExportTest.test_export")
         datestamp = datetime.now().strftime('%Y%m%d')
         # dump data
         request = self.factory.get(
@@ -62,30 +62,32 @@ class ExportTest(TestCase):
                 "Authorization": f"Basic {self.credentials}"
             },
         )
-        # TODO: Test that non-admin request fails
+
         request.user = Users.objects.get(username='admin')
         response = ExportDatabase(request)
         self.assertEqual(response.status_code, 200)
 
         tempdir = tempfile.gettempdir()
         zipname = join(tempdir, "{}_backup.zip".format(datestamp))
+        fileresponse = bytes('test', 'utf-8')
+        stream = b''.join(response.streaming_content)
         with open(zipname, "wb") as f:
-            f.write(response.content)
+            f.write(stream)
         # test for dump files
         #   * .zip
         self.assertTrue(isfile(zipname))
         self.assertTrue(zipfile.is_zipfile(zipname))
         zip = zipfile.ZipFile(zipname, "r")
-        media_folder_name = path.split(settings.MEDIA_ROOT)[-1]
+        media_folder_name = split(settings.MEDIA_ROOT)[-1]
         try:
-            zip.extract(media_folder_name, tempdir)
+            zip.extractall(tempdir)
         except Exception as e:
             print(e)
             self.assertTrue(False)
         # Test that all media files were captured in the zip
         for mediafile in listdir(settings.MEDIA_ROOT):
             source_file_location = join(settings.MEDIA_ROOT, mediafile)
-            source_file_relative_name = join(media_folder_name, mediafile)
+            source_file_relative_name = join('media', mediafile)
             temp_file_location = join(tempdir, source_file_relative_name)
             self.assertTrue(source_file_relative_name in zip.namelist())
             self.assertTrue(isfile(temp_file_location))
@@ -94,6 +96,10 @@ class ExportTest(TestCase):
             self.assertEqual(source_checksum, temp_checksum)
         zip.close()
         shutil.rmtree(join(tempdir, media_folder_name))
+        dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
+        self.assertTrue(isfile(dumpfile))
+        remove(dumpfile)
+        
         # import .zip
         # test for deleted media
         # test for added record
