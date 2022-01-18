@@ -228,8 +228,8 @@ class ResourcesTest(TestCase):
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
     def test_activity(self):
-        print("Testing ResourcesActivityEvents Model")
-        print("Total activities: {}".format(ResourcesActivityEvents.objects.all().count()))
+        # print("Testing ResourcesActivityEvents Model")
+        # print("Total activities: {}".format(ResourcesActivityEvents.objects.all().count()))
         self.assertTrue(True)
 
     def test_activities_search(self):
@@ -239,7 +239,7 @@ class ResourcesTest(TestCase):
         # fields:
         
         keyword = 'men'
-        activity_results = Citations.keyword_search(keyword) 
+        activity_results = ResourcesActivityEvents.keyword_search(keyword) 
         self.assertEqual(activity_results.count(), 2)
         
 

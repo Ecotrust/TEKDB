@@ -890,32 +890,30 @@ class ResourcesActivityEvents(Queryable, Record):
             keyword, # string
             fields=['relationshipdescription','activitylongdescription','gear','customaryuse','timingdescription'], # fields to search
             fk_fields=[ 
-                ('placeresourceid','placeresourceid'),
                 ('partused','partused'),
-                ('activityshortdescription','activityshortdescription'),
+                ('activityshortdescription','activity'),
                 ('participants','participants'),
-                ('technique','technique'),
+                ('technique','techniques'),
                 ('timing','timing')
             ] # fields to search for fk objects
         ):
 
         weight_lookup = {
-            'relationshipdescription': 'A',
+            'relationshipdescription': 'B',
             'activitylongdescription': 'A',
             'gear': 'B',
             'customaryuse': 'B',
             'timingdescription': 'B',
-            'placeresourceid': 'C',
             'partused': 'C',
-            'activityshortdescription': 'C',
+            'activityshortdescription': 'A',
             'participants': 'C',
             'technique': 'C',
             'timing': 'C'
         }
 
-        sort_field = 'placeresourceid'
+        sort_field = 'activitylongdescription'
 
-        return run_keyword_search(Places, keyword, fields, fk_fields, weight_lookup, sort_field)
+        return run_keyword_search(ResourcesActivityEvents, keyword, fields, fk_fields, weight_lookup, sort_field)
     
     # def keyword_search(keyword):
     #     placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
