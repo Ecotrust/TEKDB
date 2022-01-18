@@ -219,6 +219,7 @@ class ResourcesTest(TestCase):
 
 
 # ResourcesActivityEvents
+class ResourcesActivityEventsTest(TestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
@@ -369,6 +370,8 @@ class CitationsTest(TestCase):
 
 
 # Media
+
+
 
 
 # MediaCitationEvents
