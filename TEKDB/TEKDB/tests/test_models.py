@@ -390,7 +390,7 @@ class MediaTest(TestCase):
         #####################################
         # fields:
         
-        keyword = ''
+        keyword = 'sample'
         media_results = Media.keyword_search(keyword) 
         self.assertEqual(media_results.count(), 3)        
 
