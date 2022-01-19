@@ -207,8 +207,7 @@ class ResourcesActivityEventsTest(TestCase):
         
         keyword = 'men'
         activity_results = ResourcesActivityEvents.keyword_search(keyword) 
-        self.assertEqual(activity_results.count(), 2)
-        
+        self.assertEqual(activity_results.count(), 2)        
 
 
 # People
@@ -284,6 +283,7 @@ class CitationsTest(TestCase):
         #
         #   *
 
+
 # PlacesCitationEvents
 
 
@@ -297,8 +297,29 @@ class CitationsTest(TestCase):
 
 
 # Media
+class MediaTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
+    def test_media(self):
+        # print("Testing Media Model")
+        # print("Total media: {}".format(Media.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_media_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # fields:
+        
+        keyword = 'sample'
+        media_results = Media.keyword_search(keyword) 
+        self.assertEqual(media_results.count(), 3)        
 
 
 # MediaCitationEvents

@@ -1751,16 +1751,36 @@ class Media(Queryable, Record):
     def __str__(self):
         return "%s [ %s ]" % (self.medianame, self.mediatype) or ''
 
-    def keyword_search(keyword):
-        type_qs = LookupMediaType.keyword_search(keyword)
-        type_loi = [mtype.pk for mtype in type_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['medianame','mediadescription','medialink','mediafile'], # fields to search
+            fk_fields=[ 
+                ('mediatype','mediatype')
+            ] # fields to search for fk objects
+        ):
 
-        return Media.objects.filter(
-            Q(mediatype__in=type_loi) |
-            Q(medianame__icontains=keyword)|
-            Q(mediadescription__icontains=keyword) |
-            Q(medialink__icontains=keyword)
-        )
+        weight_lookup = {
+            'medianame': 'A',
+            'mediadescription': 'B',
+            'medialink': 'B',
+            'mediafile': 'B',
+            'mediatype': 'C'
+        }
+
+        sort_field = 'medianame'
+
+        return run_keyword_search(Media, keyword, fields, fk_fields, weight_lookup, sort_field)
+
+    # def keyword_search(keyword):
+    #     type_qs = LookupMediaType.keyword_search(keyword)
+    #     type_loi = [mtype.pk for mtype in type_qs]
+
+    #     return Media.objects.filter(
+    #         Q(mediatype__in=type_loi) |
+    #         Q(medianame__icontains=keyword)|
+    #         Q(mediadescription__icontains=keyword) |
+    #         Q(medialink__icontains=keyword)
+    #     )
     @property
     def description_text(self):
         from django.utils.html import strip_tags
