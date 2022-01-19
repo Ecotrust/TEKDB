@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
+from django.db.models.functions import Greatest
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.utils.translation import ugettext_lazy as _
@@ -26,41 +27,60 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     # fk_fields -> [list of tuples] Foreign Key field names coupled with field on foreign model to search
     #   fk_fields can search any models with a fk for current model as well!
     # weight_lookup -> [dict] lookup to get relative ['A','B','C','D'] weights for scoring search results.
+    similarities = []
     for idx, val in enumerate(fields):
-        if idx == 0:
-            vector = SearchVector(val, weight=weight_lookup[val])
-            similarity = TrigramSimilarity(val, keyword, weight=weight_lookup[val])
-        else:
-            vector += SearchVector(val, weight=weight_lookup[val])
-            similarity += TrigramSimilarity(val, keyword, weight=weight_lookup[val])
+        similarities.append(TrigramSimilarity(val, keyword, weight=weight_lookup[val]))
+        # ----------------------------------------------------------------------
+        # if idx == 0:
+        #     vector = SearchVector(val, weight=weight_lookup[val])
+        #     similarity = TrigramSimilarity(val, keyword, weight=weight_lookup[val])
+        # else:
+        #     vector += SearchVector(val, weight=weight_lookup[val])
+        #     similarity += TrigramSimilarity(val, keyword, weight=weight_lookup[val])
+        # ----------------------------------------------------------------------
 
     for val in fk_fields:
         relationship_name = '__'.join(val)
-        if not vector:
-            vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
-        else:
-            vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
-        if not similarity:
-            similarity = TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
-        else:
-            similarity += TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+        similarities.append(TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]]))
+        # ----------------------------------------------------------------------
+        # if not vector:
+        #     vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
+        # else:
+        #     vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
+        # if not similarity:
+        #     similarity = TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+        # else:
+        #     similarity += TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+        # ----------------------------------------------------------------------
 
-    query = SearchQuery(keyword)
+    # query = SearchQuery(keyword)
 
-    return model.objects.annotate(
-        search=vector,
-        rank=SearchRank(vector,query),
+    if len(similarities) > 1:
+        similarity = Greatest(*similarities)
+    elif len(similarities) == 1:
+        similarity = similarities[0]
+    else:
+        return model.objects.none()
+
+
+    results =  model.objects.annotate(
+        # search=vector,
+        # rank=SearchRank(vector,query),
+        # similarity=similarity
         similarity=similarity
     ).filter(
-        Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
-        Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
-        Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)|
-        Q(rank__gte=settings.MIN_SEARCH_RANK)
+        # Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
+        # Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
+        # Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)|
+        # Q(rank__gte=settings.MIN_SEARCH_RANK)
+        Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)
     ).order_by(
-        '-rank',
+        # '-rank',
         '-similarity',
         sort_field
     )
+
+    return results
 
 class Record(models.Model):
     def format_data(self, data_set, fk_field_id, ignore_columns=[]):
@@ -331,7 +351,7 @@ class Places(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['indigenousplacename','englishplacename','indigenousplacenamemeaning','Source','DigitizedBy'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('planningunitid','planningunitname'),
                 ('primaryhabitat','habitat'),
                 ('tribeid','tribe'),
@@ -354,7 +374,7 @@ class Places(Queryable, Record):
         sort_field = 'indigenousplacename'
 
         return run_keyword_search(Places, keyword, fields, fk_fields, weight_lookup, sort_field)
-        
+
 
     def image(self):
         return settings.RECORD_ICONS['place']
@@ -479,7 +499,7 @@ class Resources(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['commonname','indigenousname','genus','species'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('resourceclassificationgroup','resourceclassificationgroup'),
                 ('resourcealtindigenousname', 'altindigenousname')
             ] # fields to search for fk objects
@@ -1124,7 +1144,7 @@ class Citations(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['referencetext','authorprimary','authorsecondary','placeofinterview','title','seriestitle','seriesvolume','serieseditor','publisher','publishercity','preparedfor'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('referencetype','documenttype'),
                 ('authortype','authortype'),
                 # ('intervieweeid','interviewee'),
