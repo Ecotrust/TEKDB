@@ -906,41 +906,70 @@ class ResourcesActivityEvents(Queryable, Record):
         from html import unescape
         return unescape(strip_tags(self.relationshipdescription))
 
-    def keyword_search(keyword):
-        placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
-        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['relationshipdescription','activitylongdescription','gear','customaryuse','timingdescription'], # fields to search
+            fk_fields=[ 
+                ('partused','partused'),
+                ('activityshortdescription','activity'),
+                ('participants','participants'),
+                ('technique','techniques'),
+                ('timing','timing')
+            ] # fields to search for fk objects
+        ):
 
-        part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
-        part_loi = [part.pk for part in part_qs]
+        weight_lookup = {
+            'relationshipdescription': 'B',
+            'activitylongdescription': 'A',
+            'gear': 'B',
+            'customaryuse': 'B',
+            'timingdescription': 'B',
+            'partused': 'C',
+            'activityshortdescription': 'A',
+            'participants': 'C',
+            'technique': 'C',
+            'timing': 'C'
+        }
 
-        activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
-        activity_loi = [activity.pk for activity in activity_qs]
+        sort_field = 'activitylongdescription'
 
-        participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
-        participant_loi = [participant.pk for participant in participant_qs]
+        return run_keyword_search(ResourcesActivityEvents, keyword, fields, fk_fields, weight_lookup, sort_field)
+    
+    # def keyword_search(keyword):
+    #     placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
+    #     placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
-        technique_qs = LookupTechniques.objects.filter(techniques__icontains=keyword)
-        technique_loi = [technique.pk for technique in technique_qs]
+    #     part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
+    #     part_loi = [part.pk for part in part_qs]
 
-        use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
-        use_loi = [use.pk for use in use_qs]
+    #     activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
+    #     activity_loi = [activity.pk for activity in activity_qs]
 
-        timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
-        timing_loi = [timing.pk for timing in timing_qs]
+    #     participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
+    #     participant_loi = [participant.pk for participant in participant_qs]
 
-        return ResourcesActivityEvents.objects.filter(
-            Q(placeresourceid__in=placeresource_loi) |
-            Q(relationshipdescription__icontains=keyword) |
-            Q(partused__in=part_loi) |
-            Q(activityshortdescription__in=activity_loi) |
-            Q(activitylongdescription__icontains=keyword) |
-            Q(participants__in=participant_loi) |
-            Q(technique__in=technique_loi) |
-            Q(gear__icontains=keyword) |
-            Q(customaryuse__in=use_loi) |
-            Q(timing__in=timing_loi) |
-            Q(timingdescription__icontains=keyword)
-        )
+    #     technique_qs = LookupTechniques.objects.filter(techniques__icontains=keyword)
+    #     technique_loi = [technique.pk for technique in technique_qs]
+
+    #     use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
+    #     use_loi = [use.pk for use in use_qs]
+
+    #     timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
+    #     timing_loi = [timing.pk for timing in timing_qs]
+
+    #     return ResourcesActivityEvents.objects.filter(
+    #         Q(placeresourceid__in=placeresource_loi) |
+    #         Q(relationshipdescription__icontains=keyword) |
+    #         Q(partused__in=part_loi) |
+    #         Q(activityshortdescription__in=activity_loi) |
+    #         Q(activitylongdescription__icontains=keyword) |
+    #         Q(participants__in=participant_loi) |
+    #         Q(technique__in=technique_loi) |
+    #         Q(gear__icontains=keyword) |
+    #         Q(customaryuse__in=use_loi) |
+    #         Q(timing__in=timing_loi) |
+    #         Q(timingdescription__icontains=keyword)
+    #     )
 
     def image(self):
         return settings.RECORD_ICONS['activity']

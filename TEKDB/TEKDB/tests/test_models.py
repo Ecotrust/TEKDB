@@ -185,6 +185,30 @@ class ResourcesTest(TestCase):
 
 
 # ResourcesActivityEvents
+class ResourcesActivityEventsTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_activity(self):
+        # print("Testing ResourcesActivityEvents Model")
+        # print("Total activities: {}".format(ResourcesActivityEvents.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_activities_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # fields:
+        
+        keyword = 'men'
+        activity_results = ResourcesActivityEvents.keyword_search(keyword) 
+        self.assertEqual(activity_results.count(), 2)
+        
 
 
 # People
@@ -273,6 +297,8 @@ class CitationsTest(TestCase):
 
 
 # Media
+
+
 
 
 # MediaCitationEvents
