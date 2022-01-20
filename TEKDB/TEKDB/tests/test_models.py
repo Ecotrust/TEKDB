@@ -319,7 +319,16 @@ class MediaTest(TestCase):
         
         keyword = 'sample'
         media_results = Media.keyword_search(keyword) 
-        self.assertEqual(media_results.count(), 3)        
+        self.assertEqual(media_results.count(), 3)      
+
+        for result in media_results:
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )  
 
 
 # MediaCitationEvents
