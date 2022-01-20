@@ -207,7 +207,17 @@ class ResourcesActivityEventsTest(TestCase):
         
         keyword = 'men'
         activity_results = ResourcesActivityEvents.keyword_search(keyword) 
-        self.assertEqual(activity_results.count(), 2)        
+        self.assertEqual(activity_results.count(), 2)
+        
+        for result in activity_results:
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+         
 
 
 # People
