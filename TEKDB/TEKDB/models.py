@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Manager as GeoManager
 from django.db.models.functions import Greatest
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
@@ -15,8 +15,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from TEKDB import settings
 from django.contrib.gis.db.models import GeometryField
-from django.db.models import Manager as GeoManager
 from ckeditor.fields import RichTextField
+from moderation.db import ModeratedModel
 
 MANAGED = True
 
@@ -82,7 +82,19 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
     return results
 
-class Record(models.Model):
+class DefaultModeratedModel(models.Model):
+    class Moderator:
+        auto_approve_for_staff = False
+        # keep_history = True -- this allows multiple 'moderation' records per instance, which breaks everything real bad.
+        keep_history = False
+        notify_moderator = False
+        notify_user = False
+
+    class Meta:
+        abstract = True
+
+
+class Record(DefaultModeratedModel):
     def format_data(self, data_set, fk_field_id, ignore_columns=[]):
         columns = ['id']
         rows = []
@@ -231,7 +243,7 @@ class SimpleRelationship(Queryable):
             },
         }
 
-class LookupPlanningUnit(models.Model):
+class LookupPlanningUnit(DefaultModeratedModel, ModeratedModel):
     planningunitid = models.AutoField(db_column='planningunitid', primary_key=True)
     planningunitname = models.CharField(db_column='planningunitname', max_length=100, blank=True, null=True, verbose_name='planning unit')
 
@@ -250,7 +262,7 @@ class LookupPlanningUnit(models.Model):
     def __str__(self):
         return self.planningunitname or ''
 
-class LookupTribe(models.Model):
+class LookupTribe(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     tribeunit = models.CharField(db_column='tribeunit', max_length=50, blank=True, null=True, verbose_name='tribe subunit')
     tribe = models.CharField(db_column='tribe', max_length=255, blank=True, null=True, verbose_name='tribe')
@@ -297,7 +309,7 @@ class LookupTribe(models.Model):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-class LookupHabitat(models.Model):
+class LookupHabitat(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     habitat = models.CharField(db_column='habitat', max_length=100)
 
@@ -315,7 +327,7 @@ class LookupHabitat(models.Model):
     def __str__(self):
         return self.habitat or ''
 
-class Places(Queryable, Record):
+class Places(Queryable, Record, ModeratedModel):
     placeid = models.AutoField(db_column='placeid', primary_key=True)
     # PlaceID
     indigenousplacename = models.CharField(db_column='indigenousplacename', max_length=255, blank=True, null=True, verbose_name='indigenous name')
@@ -456,7 +468,7 @@ class Places(Queryable, Record):
     def __str__(self):
         return "%s (%s)" % (self.indigenousplacename, self.englishplacename) or ''
 
-class LookupResourceGroup(models.Model):
+class LookupResourceGroup(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     resourceclassificationgroup = models.CharField(db_column='resourceclassificationgroup', max_length=255, verbose_name='broad species group')
 
@@ -474,7 +486,7 @@ class LookupResourceGroup(models.Model):
     def __str__(self):
         return self.resourceclassificationgroup or ''
 
-class Resources(Queryable, Record):
+class Resources(Queryable, Record, ModeratedModel):
     resourceid = models.AutoField(db_column='resourceid', primary_key=True)
     commonname = models.CharField(db_column='commonname', max_length=255, blank=True, null=True, unique=True, verbose_name='common name')
     indigenousname = models.CharField(db_column='indigenousname', max_length=255, blank=True, null=True, verbose_name='indigenous name')
@@ -617,7 +629,7 @@ class Resources(Queryable, Record):
             {'title': 'Alternate Names', 'data': self.format_data(alt_names, 'resourceid', ['resource'])},
         ]
 
-class LookupPartUsed(models.Model):
+class LookupPartUsed(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     partused = models.CharField(db_column='partused', max_length=255, verbose_name='part used')
 
@@ -635,7 +647,7 @@ class LookupPartUsed(models.Model):
     def __str__(self):
         return self.partused or ''
 
-class LookupCustomaryUse(models.Model):
+class LookupCustomaryUse(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     usedfor = models.CharField(db_column='usedfor', max_length=255, verbose_name='used_for')
 
@@ -653,7 +665,7 @@ class LookupCustomaryUse(models.Model):
     def __str__(self):
         return self.usedfor or ''
 
-class LookupSeason(models.Model):
+class LookupSeason(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     season = models.CharField(db_column='season', max_length=255)
 
@@ -671,7 +683,7 @@ class LookupSeason(models.Model):
     def __str__(self):
         return self.season or ''
 
-class LookupTiming(models.Model):
+class LookupTiming(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     timing = models.CharField(db_column='timing', max_length=255)
 
@@ -819,7 +831,7 @@ class PlacesResourceEvents(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-class LookupParticipants(models.Model):
+class LookupParticipants(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     participants = models.CharField(db_column='participants', max_length=255)
 
@@ -837,7 +849,7 @@ class LookupParticipants(models.Model):
     def __str__(self):
         return self.participants or ''
 
-class LookupTechniques(models.Model):
+class LookupTechniques(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     techniques = models.CharField(db_column='techniques', max_length=255)
 
@@ -855,7 +867,7 @@ class LookupTechniques(models.Model):
     def __str__(self):
         return self.techniques or ''
 
-class LookupActivity(models.Model):
+class LookupActivity(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     activity = models.CharField(db_column='activity', max_length=255)
 
@@ -873,7 +885,7 @@ class LookupActivity(models.Model):
     def __str__(self):
         return self.activity or ''
 
-class ResourcesActivityEvents(Queryable, Record):
+class ResourcesActivityEvents(Queryable, Record, ModeratedModel):
     resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt', config_name="custom") #CKEditor Rich Text Editor Field
@@ -909,7 +921,7 @@ class ResourcesActivityEvents(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['relationshipdescription','activitylongdescription','gear','customaryuse','timingdescription'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('partused','partused'),
                 ('activityshortdescription','activity'),
                 ('participants','participants'),
@@ -934,7 +946,7 @@ class ResourcesActivityEvents(Queryable, Record):
         sort_field = 'activitylongdescription'
 
         return run_keyword_search(ResourcesActivityEvents, keyword, fields, fk_fields, weight_lookup, sort_field)
-    
+
     # def keyword_search(keyword):
     #     placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
     #     placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
@@ -1028,7 +1040,7 @@ class ResourcesActivityEvents(Queryable, Record):
             {'title': 'Media Relationships', 'data': self.format_data(media_events, 'resourceactivityid', ['resource activity'])},
         ]
 
-class People(models.Model):
+class People(DefaultModeratedModel, ModeratedModel):
     personid = models.AutoField(db_column='personid', primary_key=True)
     firstname = models.CharField(db_column='firstname', max_length=255, blank=True, null=True, verbose_name='first name')
     lastname = models.CharField(db_column='lastname', max_length=255, blank=True, null=True, verbose_name='last name')
@@ -1105,7 +1117,7 @@ class People(models.Model):
             # 'link': self.link(),
         }
 
-class LookupReferenceType(models.Model):
+class LookupReferenceType(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     documenttype = models.CharField(db_column='documenttype', max_length=25, verbose_name='document type')
 
@@ -1123,7 +1135,7 @@ class LookupReferenceType(models.Model):
     def __str__(self):
         return self.documenttype or ''
 
-class LookupAuthorType(models.Model):
+class LookupAuthorType(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     authortype = models.CharField(db_column='authortype', max_length=50, verbose_name='author type')
 
@@ -1142,7 +1154,7 @@ class LookupAuthorType(models.Model):
     def __str__(self):
         return self.authortype or ''
 
-class Citations(Queryable, Record):
+class Citations(Queryable, Record, ModeratedModel):
     citationid = models.AutoField(db_column='citationid', primary_key=True)
     referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue", on_delete=models.PROTECT)
     referencetext = models.TextField(db_column='referencetext', blank=True, null=True, verbose_name='description')
@@ -1487,7 +1499,7 @@ class CurrentVersion(models.Model):
     def __str__(self):
         return "Back: %d, Front:%d" % (self.backendversion, self.frontendversion) or ''
 
-class LookupLocalityType(models.Model):
+class LookupLocalityType(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     localitytype = models.CharField(db_column='localitytype', max_length=255, verbose_name='locality type')
 
@@ -1685,7 +1697,7 @@ class LocalityPlaceResourceEvent(Queryable):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
-class LookupMediaType(models.Model):
+class LookupMediaType(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
     mediatype = models.CharField(db_column='mediatype', max_length=255, verbose_name='type')
     mediacategory = models.CharField(db_column='mediacategory', max_length=255, blank=True, null=True, verbose_name='category')
@@ -1710,7 +1722,7 @@ class LookupMediaType(models.Model):
             Q(mediacategory__icontains=keyword),
         )
 
-class LookupUserInfo(models.Model):
+class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
     username = models.CharField(db_column='username', max_length=100, blank=True, null=True, verbose_name='username')
     usingcustomusername = models.BooleanField(db_column='usingcustomusername', default=False, verbose_name='using custom username')
     usertitle = models.CharField(db_column='usertitle', max_length=100, blank=True, null=True, verbose_name='title')
@@ -1730,7 +1742,7 @@ class LookupUserInfo(models.Model):
     def __str__(self):
         return self.username or ''
 
-class Media(Queryable, Record):
+class Media(Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
     medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
@@ -1754,7 +1766,7 @@ class Media(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['medianame','mediadescription','medialink','mediafile'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('mediatype','mediatype')
             ] # fields to search for fk objects
         ):
@@ -1986,7 +1998,7 @@ class MediaCitationEvents(SimpleRelationship):
         else:
             return self.mediaid
 
-class PlaceAltIndigenousName(models.Model):
+class PlaceAltIndigenousName(DefaultModeratedModel, ModeratedModel):
     altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place', default=None, on_delete=models.SET_DEFAULT)
     altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alternate name')
@@ -2409,7 +2421,7 @@ class ResourceActivityMediaEvents(SimpleRelationship):
         else:
             return self.resourceactivityid
 
-class ResourceAltIndigenousName(models.Model):
+class ResourceAltIndigenousName(DefaultModeratedModel, ModeratedModel):
     altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
     resourceid = models.ForeignKey(Resources, db_column='resourceid', blank=True, null=True, verbose_name='resource', default=None, on_delete=models.SET_DEFAULT)
     altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alt name')
@@ -2692,7 +2704,7 @@ class ResourcesMediaEvents(SimpleRelationship):
 
 from django.contrib.auth.models import Group
 
-class UserAccess(models.Model):
+class UserAccess(DefaultModeratedModel, ModeratedModel):
     group = models.OneToOneField(Group, db_column='group_id', on_delete=models.CASCADE)
     accessid = models.AutoField(db_column='accessid', primary_key=True)
     accesslevel = models.CharField(db_column='accesslevel', max_length=255, blank=True, null=True, verbose_name='access level')

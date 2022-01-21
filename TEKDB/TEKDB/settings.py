@@ -39,6 +39,8 @@ ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(","))
 
+SITE_ID = 1
+
 
 # Application definition
 
@@ -64,6 +66,8 @@ INSTALLED_APPS = [
     'Accounts',
     'Relationships',
     'reversion',
+    'django.contrib.sites',
+    'moderation.apps.SimpleModerationConfig',
 ]
 
 MIDDLEWARE = [
