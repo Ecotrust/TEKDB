@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'Lookup',
     'Accounts',
     'Relationships',
+    'reversion',
 ]
 
 MIDDLEWARE = [

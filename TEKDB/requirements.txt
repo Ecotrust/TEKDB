@@ -7,6 +7,7 @@ django-ckeditor
 django-leaflet
 django-nested-admin
 django-registration
+django-reversion
 psycopg2-binary
 uwsgi
 XlsxWriter

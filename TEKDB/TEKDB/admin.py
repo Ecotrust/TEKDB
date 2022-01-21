@@ -7,6 +7,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from dal import autocomplete
 import nested_admin
 from ckeditor.widgets import CKEditorWidget
+from reversion.admin import VersionAdmin
 
 from .models import *
 
@@ -275,7 +276,7 @@ class LocalityGISSelectionsInline(admin.TabularInline):
 ### MODEL ADMINS ###
 ####################
 #### PROXY MODELS ####
-class RecordAdminProxy(admin.ModelAdmin):
+class RecordAdminProxy(VersionAdmin):
     readonly_fields = ('enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
     'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
 
@@ -336,7 +337,7 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
             instance.save()
 
 #### RECORD MODELS ####
-class RecordModelAdmin(admin.ModelAdmin):
+class RecordModelAdmin(VersionAdmin):
     record_form = '%s/TEKDB/templates/admin/RecordForm.html' % BASE_DIR
     add_form_template = record_form
     change_form_template = record_form
@@ -631,7 +632,7 @@ class PlacesMediaEventsAdmin(RecordAdminProxy):
     )
     form = PlacesMediaEventsForm
 
-class PlaceAltIndigenousNameAdmin(admin.ModelAdmin):
+class PlaceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
             'fields': (('placeid', 'altindigenousname'),),
@@ -744,7 +745,7 @@ class ResourcesMediaEventsAdmin(RecordAdminProxy):
     )
     form = ResourcesMediaEventsForm
 
-class ResourceAltIndigenousNameAdmin(admin.ModelAdmin):
+class ResourceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
             'fields': (('resourceid', 'altindigenousname'),),
