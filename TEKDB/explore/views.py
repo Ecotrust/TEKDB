@@ -435,9 +435,12 @@ def getResults(keyword_string, categories):
             model_results = model.keyword_search(keyword_string)
             for result in model_results:
                 # Create JSON object to be resturned
-                resultlist.append(result.get_response_format())
-
-    return resultlist
+                result_json = result.get_response_format()
+                result_json['rank'] = result.rank
+                result_json['similarity'] = result.similarity
+                resultlist.append(result_json)
+    # Sort results from all models by rank, then similarity (descending)
+    return sorted(resultlist, key=lambda res: (res['rank'], res['similarity']), reverse=True)
 
 @login_required
 def query(request):
