@@ -28,32 +28,24 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     #   fk_fields can search any models with a fk for current model as well!
     # weight_lookup -> [dict] lookup to get relative ['A','B','C','D'] weights for scoring search results.
     similarities = []
+    vector = False
+    similarity = False
     for idx, val in enumerate(fields):
         similarities.append(TrigramSimilarity(val, keyword, weight=weight_lookup[val]))
-        # ----------------------------------------------------------------------
-        # if idx == 0:
-        #     vector = SearchVector(val, weight=weight_lookup[val])
-        #     similarity = TrigramSimilarity(val, keyword, weight=weight_lookup[val])
-        # else:
-        #     vector += SearchVector(val, weight=weight_lookup[val])
-        #     similarity += TrigramSimilarity(val, keyword, weight=weight_lookup[val])
-        # ----------------------------------------------------------------------
+        if idx == 0:
+            vector = SearchVector(val, weight=weight_lookup[val])
+        else:
+            vector += SearchVector(val, weight=weight_lookup[val])
 
     for val in fk_fields:
         relationship_name = '__'.join(val)
         similarities.append(TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]]))
-        # ----------------------------------------------------------------------
-        # if not vector:
-        #     vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
-        # else:
-        #     vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
-        # if not similarity:
-        #     similarity = TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
-        # else:
-        #     similarity += TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
-        # ----------------------------------------------------------------------
+        if not vector:
+            vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
+        else:
+            vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
 
-    # query = SearchQuery(keyword)
+    query = SearchQuery(keyword)
 
     if len(similarities) > 1:
         similarity = Greatest(*similarities)
@@ -62,20 +54,17 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     else:
         return model.objects.none()
 
-
     results =  model.objects.annotate(
         # search=vector,
-        # rank=SearchRank(vector,query),
-        # similarity=similarity
+        rank=SearchRank(vector,query),
         similarity=similarity
     ).filter(
         # Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
         # Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
-        # Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)|
-        # Q(rank__gte=settings.MIN_SEARCH_RANK)
+        Q(rank__gte=settings.MIN_SEARCH_RANK) |
         Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)
     ).order_by(
-        # '-rank',
+        '-rank',
         '-similarity',
         sort_field
     )
@@ -909,7 +898,7 @@ class ResourcesActivityEvents(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['relationshipdescription','activitylongdescription','gear','customaryuse','timingdescription'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('partused','partused'),
                 ('activityshortdescription','activity'),
                 ('participants','participants'),
@@ -934,7 +923,7 @@ class ResourcesActivityEvents(Queryable, Record):
         sort_field = 'activitylongdescription'
 
         return run_keyword_search(ResourcesActivityEvents, keyword, fields, fk_fields, weight_lookup, sort_field)
-    
+
     # def keyword_search(keyword):
     #     placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
     #     placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
@@ -1754,7 +1743,7 @@ class Media(Queryable, Record):
     def keyword_search(
             keyword, # string
             fields=['medianame','mediadescription','medialink','mediafile'], # fields to search
-            fk_fields=[ 
+            fk_fields=[
                 ('mediatype','mediatype')
             ] # fields to search for fk objects
         ):
