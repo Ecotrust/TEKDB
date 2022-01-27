@@ -84,7 +84,7 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
 class DefaultModeratedModel(models.Model):
     class Moderator:
-        auto_approve_for_staff = False
+        auto_approve_for_staff = not settings.MODERATE_STAFF
         # keep_history = True -- this allows multiple 'moderation' records per instance, which breaks everything real bad.
         keep_history = False
         notify_moderator = False

@@ -254,6 +254,8 @@ DATABASE_GEOGRAPHY = {
 STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
 
+MODERATE_STAFF = False
+
 try:
     from TEKDB.local_settings import *
 except Exception as e:
