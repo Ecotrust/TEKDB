@@ -29,6 +29,11 @@ a.btn:visited {
   color: var(--body-fg);
 }
 
+hr {
+  color: var(--body-fg) !important;
+  border-color: var(--hairline-color);
+}
+
 /* INDEX Page */
 /* Why are the selection tables inverted!? */
 table {
