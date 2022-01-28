@@ -15,6 +15,38 @@ from django.db import connection
 #   MODELS W/ keyword_search
 ###
 
+class ReturnAllTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_empty_string_search(self):
+        """
+        Test that an empty string search returns all objects
+        """
+        keyword = ''
+        categories = ['places','resources','activities','sources','media']
+        
+        from explore.views import get_model_by_type
+
+        for category in categories:
+            query_models = get_model_by_type(category)
+            resultlist = []
+            for model in query_models:
+                # Find all results matching keyword in this model
+                print("\n\ttest empty string search for {} equals count of {}.objects.count".format(model.__name__, model.__name__))
+                model_results = model.keyword_search(keyword)
+                for result in model_results:
+                    resultlist.append(result)
+
+                self.assertTrue(len(resultlist) == model.objects.count())
+    
+        
+
 # LookupTribe
 
 
