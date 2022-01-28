@@ -81,6 +81,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(BASE_DIR, 'TEKDB/templates'),
             os.path.join(BASE_DIR, 'login/templates'),
             os.path.join(BASE_DIR, 'explore/templates'),
         ],

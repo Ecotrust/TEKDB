@@ -1,0 +1,61 @@
+:root {
+  --modal-header-color: var(--body-quiet-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bs-body-bg: #000 !important;
+    --modal-header-color: black;
+  }
+}
+
+/* GENERIC FIXES */
+button.btn {
+  color: var(--bs-body-bg);
+}
+
+button.btn-success {
+  color: #fff;
+}
+
+a.btn:visited {
+  color: #fff;
+}
+
+.addlink,
+.changelink,
+.inlinechangelink,
+.deletelink {
+  color: var(--body-fg);
+}
+
+/* INDEX Page */
+/* Why are the selection tables inverted!? */
+table {
+  caption-side: top !important;
+}
+
+/* SPECIALITY FORMS */
+body.app-TEKDB {
+  background-color: var(--bs-body-bg);
+  color: var(--body-quiet-color);
+}
+
+/* RELATED RECORD MODALS */
+
+div.modal-header,
+div.modal-header h5{
+  color: var(--modal-header-color);
+}
+
+/* LOOKAHEAD WIDGETE */
+
+span.select2-results {
+  background-color: var(--body-bg);
+}
+
+/* EXPORT MODULE */
+
+div#export-module a {
+  margin: 1rem;
+}
