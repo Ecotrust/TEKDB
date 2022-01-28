@@ -39,6 +39,8 @@ ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(","))
 
+SITE_ID = 1
+
 
 # Application definition
 
@@ -63,6 +65,9 @@ INSTALLED_APPS = [
     'Lookup',
     'Accounts',
     'Relationships',
+    'reversion',
+    'django.contrib.sites',
+    'moderation.apps.SimpleModerationConfig',
 ]
 
 MIDDLEWARE = [
@@ -249,6 +254,8 @@ DATABASE_GEOGRAPHY = {
 }
 STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
+
+MODERATE_STAFF = False
 
 try:
     from TEKDB.local_settings import *
