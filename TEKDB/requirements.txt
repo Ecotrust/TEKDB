@@ -1,5 +1,6 @@
 #REQUIRED
 confusable-homoglyphs
+coverage
 django >=3.2.10,<3.3
 django-autocomplete-light
 django-ckeditor

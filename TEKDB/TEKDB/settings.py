@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'leaflet',
     'nested_admin',
     'ckeditor',
+    'coverage',
     'explore',
     'login',
     'TEKDB',
@@ -80,6 +81,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(BASE_DIR, 'TEKDB/templates'),
             os.path.join(BASE_DIR, 'login/templates'),
             os.path.join(BASE_DIR, 'explore/templates'),
         ],
@@ -178,6 +180,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ### DJANGO-REGISTRATION SETTINGS ###
 REGISTRATION_OPEN = True
 
+
+### Search Settings
 SEARCH_CATEGORIES = [
     'all',
     'places',
@@ -187,6 +191,9 @@ SEARCH_CATEGORIES = [
     'media',
 ]
 #Locality? People?
+
+MIN_SEARCH_RANK = 0.01
+MIN_SEARCH_SIMILARITY = 0.1
 
 AUTH_USER_MODEL = 'Accounts.Users'
 

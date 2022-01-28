@@ -8,7 +8,9 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
+from django.db.models.functions import Greatest
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from TEKDB import settings
@@ -17,6 +19,57 @@ from django.db.models import Manager as GeoManager
 from ckeditor.fields import RichTextField
 
 MANAGED = True
+
+def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_field):
+    # model -> the model calling this function
+    # keyword -> [str] your search string -- can be multiple words
+    # fields -> [list of str] char or text fields on your model
+    # fk_fields -> [list of tuples] Foreign Key field names coupled with field on foreign model to search
+    #   fk_fields can search any models with a fk for current model as well!
+    # weight_lookup -> [dict] lookup to get relative ['A','B','C','D'] weights for scoring search results.
+    similarities = []
+    vector = False
+    similarity = False
+    for idx, val in enumerate(fields):
+        similarities.append(TrigramSimilarity(val, keyword, weight=weight_lookup[val]))
+        if idx == 0:
+            vector = SearchVector(val, weight=weight_lookup[val])
+        else:
+            vector += SearchVector(val, weight=weight_lookup[val])
+
+    for val in fk_fields:
+        relationship_name = '__'.join(val)
+        similarities.append(TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]]))
+        if not vector:
+            vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
+        else:
+            vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
+
+    query = SearchQuery(keyword)
+
+    if len(similarities) > 1:
+        similarity = Greatest(*similarities)
+    elif len(similarities) == 1:
+        similarity = similarities[0]
+    else:
+        return model.objects.none()
+
+    results =  model.objects.annotate(
+        # search=vector,
+        rank=SearchRank(vector,query),
+        similarity=similarity
+    ).filter(
+        # Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
+        # Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
+        Q(rank__gte=settings.MIN_SEARCH_RANK) |
+        Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)
+    ).order_by(
+        '-rank',
+        '-similarity',
+        sort_field
+    )
+
+    return results
 
 class Record(models.Model):
     def format_data(self, data_set, fk_field_id, ignore_columns=[]):
@@ -284,28 +337,33 @@ class Places(Queryable, Record):
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
 
-    def keyword_search(keyword):
-        planningunit_qs = LookupPlanningUnit.objects.filter(planningunitname__icontains=keyword)
-        planningunit_loi = [planningunit.pk for planningunit in planningunit_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['indigenousplacename','englishplacename','indigenousplacenamemeaning','Source','DigitizedBy'], # fields to search
+            fk_fields=[
+                ('planningunitid','planningunitname'),
+                ('primaryhabitat','habitat'),
+                ('tribeid','tribe'),
+                ('placealtindigenousname','altindigenousname')
+            ] # fields to search for fk objects
+        ):
 
-        habitat_qs = LookupHabitat.objects.filter(habitat__icontains=keyword)
-        habitat_loi = [habitat.pk for habitat in habitat_qs]
+        weight_lookup = {
+            'indigenousplacename': 'A',
+            'englishplacename': 'A',
+            'indigenousplacenamemeaning': 'A',
+            'Source': 'C',
+            'DigitizedBy': 'C',
+            'planningunitid': 'B',
+            'primaryhabitat': 'B',
+            'tribeid': 'B',
+            'placealtindigenousname': 'A'
+        }
 
-        tribe_qs = LookupTribe.keyword_search(keyword)
-        tribe_loi = [tribe.pk for tribe in tribe_qs]
+        sort_field = 'indigenousplacename'
 
-        alt_name_qs = PlaceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
-        alt_name_loi = [pan.placeid.pk for pan in alt_name_qs]
+        return run_keyword_search(Places, keyword, fields, fk_fields, weight_lookup, sort_field)
 
-        return Places.objects.filter(
-            Q(indigenousplacename__icontains=keyword) |
-            Q(indigenousplacenamemeaning__icontains=keyword)|
-            Q(englishplacename__icontains=keyword)|
-            Q(planningunitid__in=planningunit_loi) |
-            Q(primaryhabitat__in=habitat_loi) |
-            Q(tribeid__in=tribe_loi) |
-            Q(pk__in=alt_name_loi)
-        )
 
     def image(self):
         return settings.RECORD_ICONS['place']
@@ -427,20 +485,59 @@ class Resources(Queryable, Record):
     def __str__(self):
         return self.commonname or ''
 
-    def keyword_search(keyword):
-        group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
-        group_loi = [group.pk for group in group_qs]
-        alt_name_qs = ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
-        alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['commonname','indigenousname','genus','species'], # fields to search
+            fk_fields=[
+                ('resourceclassificationgroup','resourceclassificationgroup'),
+                ('resourcealtindigenousname', 'altindigenousname')
+            ] # fields to search for fk objects
+        ):
 
-        return Resources.objects.filter(
-            Q(commonname__icontains=keyword) |
-            Q(indigenousname__icontains=keyword) |
-            Q(genus__icontains=keyword) |
-            Q(species__icontains=keyword) |
-            Q(resourceclassificationgroup__in=group_loi) |
-            Q(pk__in=alt_name_loi)
-        )
+        weight_lookup = {
+            'commonname': 'A',
+            'indigenousname': 'A',
+            'genus': 'C',
+            'species': 'C',
+            'resourceclassificationgroup': 'B',
+            'resourcealtindigenousname': 'A'
+        }
+
+        sort_field = 'commonname'
+
+        return run_keyword_search(Resources, keyword, fields, fk_fields, weight_lookup, sort_field)
+        ################################
+        # NEW APPROACH #################
+        ################################
+        # vector = SearchVector('commonname', weight='A') + \
+        #     SearchVector('indigenousname', weight='A') + \
+        #     SearchVector('resourceclassificationgroup__resourceclassificationgroup', weight='B') + \
+        #     SearchVector('genus', weight='C') + \
+        #     SearchVector('species', weight='C')
+        #     #HoW TO GET Alt Names?)
+        # query = SearchQuery(keyword)
+        # similarity=TrigramSimilarity('commonname', keyword, weight='A') + \
+        #     TrigramSimilarity('indigenousname', keyword, weight='A') + \
+        #     TrigramSimilarity('resourceclassificationgroup__resourceclassificationgroup', keyword, weight='B') + \
+        #     TrigramSimilarity('genus', keyword, weight='C') + \
+        #     TrigramSimilarity('species', keyword, weight='C')
+
+        ################################
+        # OLD APPROACH #################
+        ################################
+        # group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
+        # group_loi = [group.pk for group in group_qs]
+        # alt_name_qs = ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
+        # alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
+        #
+        # return Resources.objects.filter(
+        #     Q(commonname__icontains=keyword) |
+        #     Q(indigenousname__icontains=keyword) |
+        #     Q(genus__icontains=keyword) |
+        #     Q(species__icontains=keyword) |
+        #     Q(resourceclassificationgroup__in=group_loi) |
+        #     Q(pk__in=alt_name_loi)
+        # )
 
     def image(self):
         return settings.RECORD_ICONS['resource']
@@ -798,41 +895,70 @@ class ResourcesActivityEvents(Queryable, Record):
         from html import unescape
         return unescape(strip_tags(self.relationshipdescription))
 
-    def keyword_search(keyword):
-        placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
-        placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['relationshipdescription','activitylongdescription','gear','customaryuse','timingdescription'], # fields to search
+            fk_fields=[
+                ('partused','partused'),
+                ('activityshortdescription','activity'),
+                ('participants','participants'),
+                ('technique','techniques'),
+                ('timing','timing')
+            ] # fields to search for fk objects
+        ):
 
-        part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
-        part_loi = [part.pk for part in part_qs]
+        weight_lookup = {
+            'relationshipdescription': 'B',
+            'activitylongdescription': 'A',
+            'gear': 'B',
+            'customaryuse': 'B',
+            'timingdescription': 'B',
+            'partused': 'C',
+            'activityshortdescription': 'A',
+            'participants': 'C',
+            'technique': 'C',
+            'timing': 'C'
+        }
 
-        activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
-        activity_loi = [activity.pk for activity in activity_qs]
+        sort_field = 'activitylongdescription'
 
-        participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
-        participant_loi = [participant.pk for participant in participant_qs]
+        return run_keyword_search(ResourcesActivityEvents, keyword, fields, fk_fields, weight_lookup, sort_field)
 
-        technique_qs = LookupTechniques.objects.filter(techniques__icontains=keyword)
-        technique_loi = [technique.pk for technique in technique_qs]
+    # def keyword_search(keyword):
+    #     placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
+    #     placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
 
-        use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
-        use_loi = [use.pk for use in use_qs]
+    #     part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
+    #     part_loi = [part.pk for part in part_qs]
 
-        timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
-        timing_loi = [timing.pk for timing in timing_qs]
+    #     activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
+    #     activity_loi = [activity.pk for activity in activity_qs]
 
-        return ResourcesActivityEvents.objects.filter(
-            Q(placeresourceid__in=placeresource_loi) |
-            Q(relationshipdescription__icontains=keyword) |
-            Q(partused__in=part_loi) |
-            Q(activityshortdescription__in=activity_loi) |
-            Q(activitylongdescription__icontains=keyword) |
-            Q(participants__in=participant_loi) |
-            Q(technique__in=technique_loi) |
-            Q(gear__icontains=keyword) |
-            Q(customaryuse__in=use_loi) |
-            Q(timing__in=timing_loi) |
-            Q(timingdescription__icontains=keyword)
-        )
+    #     participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
+    #     participant_loi = [participant.pk for participant in participant_qs]
+
+    #     technique_qs = LookupTechniques.objects.filter(techniques__icontains=keyword)
+    #     technique_loi = [technique.pk for technique in technique_qs]
+
+    #     use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
+    #     use_loi = [use.pk for use in use_qs]
+
+    #     timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
+    #     timing_loi = [timing.pk for timing in timing_qs]
+
+    #     return ResourcesActivityEvents.objects.filter(
+    #         Q(placeresourceid__in=placeresource_loi) |
+    #         Q(relationshipdescription__icontains=keyword) |
+    #         Q(partused__in=part_loi) |
+    #         Q(activityshortdescription__in=activity_loi) |
+    #         Q(activitylongdescription__icontains=keyword) |
+    #         Q(participants__in=participant_loi) |
+    #         Q(technique__in=technique_loi) |
+    #         Q(gear__icontains=keyword) |
+    #         Q(customaryuse__in=use_loi) |
+    #         Q(timing__in=timing_loi) |
+    #         Q(timingdescription__icontains=keyword)
+    #     )
 
     def image(self):
         return settings.RECORD_ICONS['activity']
@@ -1033,35 +1159,68 @@ class Citations(Queryable, Record):
         verbose_name = 'Bibliographic Source'
         verbose_name_plural = 'Bibliographic Sources'
 
-    def keyword_search(keyword):
-        reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
-        reference_loi = [reference.pk for reference in reference_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['referencetext','authorprimary','authorsecondary','placeofinterview','title','seriestitle','seriesvolume','serieseditor','publisher','publishercity','preparedfor'], # fields to search
+            fk_fields=[
+                ('referencetype','documenttype'),
+                ('authortype','authortype'),
+                # ('intervieweeid','interviewee'),
+                # ('interviewerid','interviewer')
+            ] # fields to search for fk objects
+        ):
 
-        authortype_qs = LookupAuthorType.objects.filter(authortype__icontains=keyword)
-        authortype_loi = [authortype.pk for authortype in authortype_qs]
+        weight_lookup = {
+            'referencetext': 'A',
+            'authorprimary': 'A',
+            'authorsecondary': 'A',
+            'placeofinterview': 'C',
+            'title': 'A',
+            'seriestitle': 'C',
+            'seriesvolume': 'C',
+            'serieseditor': 'C',
+            'publisher': 'C',
+            'publishercity': 'C',
+            'preparedfor': 'C',
+            'referencetype': 'B',
+            'authortype': 'B',
+            # 'intervieweeid': 'B',
+            # 'interviewerid': 'B'
+        }
 
-        people_qs = People.keyword_search(keyword)
-        people_loi = [person.pk for person in people_qs]
+        sort_field = 'referencetext'
 
-        return Citations.objects.filter(
-            Q(referencetype__in=reference_loi) |
-            Q(referencetext__icontains=keyword) |
-            Q(authortype__in=authortype_loi) |
-            Q(authorprimary__icontains=keyword) |
-            Q(authorsecondary__icontains=keyword) |
-            Q(intervieweeid__in=people_loi) |
-            Q(interviewerid__in=people_loi) |
-            Q(placeofinterview__icontains=keyword) |
-            Q(title__icontains=keyword) |
-            Q(seriestitle__icontains=keyword) |
-            Q(seriesvolume__icontains=keyword) |
-            Q(serieseditor__icontains=keyword) |
-            Q(publisher__icontains=keyword) |
-            Q(publishercity__icontains=keyword) |
-            Q(preparedfor__icontains=keyword) |
-            Q(comments__icontains=keyword) |
-            Q(journal__icontains=keyword)
-        )
+        return run_keyword_search(Citations, keyword, fields, fk_fields, weight_lookup, sort_field)
+
+    # def keyword_search(keyword):
+    #     reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
+    #     reference_loi = [reference.pk for reference in reference_qs]
+
+    #     authortype_qs = LookupAuthorType.objects.filter(authortype__icontains=keyword)
+    #     authortype_loi = [authortype.pk for authortype in authortype_qs]
+
+    #     people_qs = People.keyword_search(keyword)
+    #     people_loi = [person.pk for person in people_qs]
+
+    #     return Citations.objects.filter(
+    #         Q(referencetype__in=reference_loi) |
+    #         Q(referencetext__icontains=keyword) |
+    #         Q(authortype__in=authortype_loi) |
+    #         Q(authorprimary__icontains=keyword) |
+    #         Q(authorsecondary__icontains=keyword) |
+    #         Q(intervieweeid__in=people_loi) |
+    #         Q(interviewerid__in=people_loi) |
+    #         Q(placeofinterview__icontains=keyword) |
+    #         Q(title__icontains=keyword) |
+    #         Q(seriestitle__icontains=keyword) |
+    #         Q(seriesvolume__icontains=keyword) |
+    #         Q(serieseditor__icontains=keyword) |
+    #         Q(publisher__icontains=keyword) |
+    #         Q(publishercity__icontains=keyword) |
+    #         Q(preparedfor__icontains=keyword) |
+    #         Q(comments__icontains=keyword) |
+    #         Q(journal__icontains=keyword)
+    #     )
 
     def image(self):
         return settings.RECORD_ICONS['citation']
@@ -1581,16 +1740,36 @@ class Media(Queryable, Record):
     def __str__(self):
         return "%s [ %s ]" % (self.medianame, self.mediatype) or ''
 
-    def keyword_search(keyword):
-        type_qs = LookupMediaType.keyword_search(keyword)
-        type_loi = [mtype.pk for mtype in type_qs]
+    def keyword_search(
+            keyword, # string
+            fields=['medianame','mediadescription','medialink','mediafile'], # fields to search
+            fk_fields=[
+                ('mediatype','mediatype')
+            ] # fields to search for fk objects
+        ):
 
-        return Media.objects.filter(
-            Q(mediatype__in=type_loi) |
-            Q(medianame__icontains=keyword)|
-            Q(mediadescription__icontains=keyword) |
-            Q(medialink__icontains=keyword)
-        )
+        weight_lookup = {
+            'medianame': 'A',
+            'mediadescription': 'B',
+            'medialink': 'B',
+            'mediafile': 'B',
+            'mediatype': 'C'
+        }
+
+        sort_field = 'medianame'
+
+        return run_keyword_search(Media, keyword, fields, fk_fields, weight_lookup, sort_field)
+
+    # def keyword_search(keyword):
+    #     type_qs = LookupMediaType.keyword_search(keyword)
+    #     type_loi = [mtype.pk for mtype in type_qs]
+
+    #     return Media.objects.filter(
+    #         Q(mediatype__in=type_loi) |
+    #         Q(medianame__icontains=keyword)|
+    #         Q(mediadescription__icontains=keyword) |
+    #         Q(medialink__icontains=keyword)
+    #     )
     @property
     def description_text(self):
         from django.utils.html import strip_tags

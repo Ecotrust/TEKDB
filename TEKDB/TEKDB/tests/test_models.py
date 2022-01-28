@@ -1,0 +1,368 @@
+from django.test import TestCase
+from TEKDB.models import *
+from django.utils import timezone
+from django.urls import reverse
+# from .forms import *
+from django.conf import settings
+from django.db import connection
+
+#########################################################################
+# Run with:
+#       coverage run manage.py test TEKDB -v 2 --keepdb
+#########################################################################
+
+###
+#   MODELS W/ keyword_search
+###
+
+# LookupTribe
+
+
+# Places
+class PlacesTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_placess(self):
+        # print("Testing Places Model")
+        # print("Total places: {}".format(Places.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_places_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # search 'ame'
+        # char fields:
+        #   * englishplacename
+        #   * indigenousplacename
+        #   * indigenousplacenamemeaning
+        #   * placealtindigenousname
+        #   * Source
+        #   * DigitizedBy
+        keyword = 'place'
+        place_results = Places.keyword_search(keyword)
+        # do we get 3 results? also checks that we do not return all results in Place category
+        self.assertEqual(place_results.count(), 3)
+        # checkout results belong to one of the search fields
+        for result in place_results:
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+
+        #####################################
+        ### TEST FOREIGN KEY FIELD SEARCH ###
+        #####################################
+        # Places model's foreign key field(s):
+        #   * planningunitid
+        #   * primaryhabitat
+        #   * tribeid
+        keyword = 'Northern'
+        planning_unit_fk_search = Places.keyword_search(keyword)
+        self.assertEqual(planning_unit_fk_search.count(), 10)
+        self.assertTrue(25 in [x.pk for x in planning_unit_fk_search])
+
+        keyword = 'Rocky Intertidal'
+        habitat_fk_search = Places.keyword_search(keyword)
+        self.assertEqual(habitat_fk_search.count(), 8)
+        self.assertTrue(25 in [x.pk for x in habitat_fk_search])
+
+        keyword = 'Tolowa'
+        tribe_fk_search = Places.keyword_search(keyword)
+        self.assertEqual(tribe_fk_search.count(), 15)
+        self.assertTrue(25 in [x.pk for x in tribe_fk_search])
+
+        #######################################
+        ### TEST MODEL SET REFERENCE SEARCH ###
+        #######################################
+        # Test Alternative Place Name
+        #   * PlacesResourceEvents
+        keyword = 'flurpie'
+        flurpie_results = Places.keyword_search(keyword)
+        self.assertEqual(flurpie_results.count(), 3)
+        self.assertEqual(flurpie_results[0].indigenousplacename, 'Test')
+
+# Resources
+class ResourcesTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+
+
+    def test_resources(self):
+        # print("Testing Resources Model")
+        # print("Total resources: {}".format(Resources.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_resources_search(self):
+        ##############################
+        ### TEST TEXT FIELD SEARCH ###
+        ##############################
+        # search 'chiton'
+        # This particular search term is good as it should have hits on all char fields:
+        #   * commonname
+        #   * indigenousname
+        #   * genus
+        #   * species
+        keyword = 'chiton'
+        chiton_results = Resources.keyword_search(keyword)
+        # do we get 16 results?
+        self.assertEqual(chiton_results.count(), 16)
+        # is weighting appropriate? Chiton > Chiton, Gumboot > Sea Cucumber > Skunk Cabbage
+        for result in chiton_results:
+            self.assertTrue(hasattr(result,'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity >= settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+        # Advanced search name, description ONLY (no genus/spceies): 2 results
+        skunk_cabbage_id = 325
+        sea_cucumber_id = 305
+        gumboot_chiton_id = 188
+        chiton_id = 187
+        fields = ['commonname', 'indigenousname']
+        fk_fields = []
+        advanced_results = Resources.keyword_search(keyword, fields, fk_fields)
+        # sea cukes and skunk cabbage only have 'chiton' in their genus or species name. They should not be present.
+        self.assertEqual(advanced_results.count(), 10)
+        for resource in advanced_results:
+            self.assertTrue(resource.pk not in [skunk_cabbage_id, sea_cucumber_id])
+        fields = ['genus', 'species']
+        advanced_results = Resources.keyword_search(keyword, fields, fk_fields)
+        # 'chiton' only has chiton in it's commonname. It should not be present.
+        self.assertEqual(advanced_results.count(), 7)
+        for resource in advanced_results:
+            # self.assertTrue(resource.pk in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id])
+            self.assertTrue(resource.pk != chiton_id)
+
+        #####################################
+        ### TEST FOREIGN KEY FIELD SEARCH ###
+        #####################################
+        # Test resourceclassificationgroup search
+        # This keyword is good to test Resources model's only foreign key field:
+        #   * resourceclassificationgroup
+        keyword = 'anadromous'
+        anadromous_results = Resources.keyword_search(keyword)
+        self.assertEqual(anadromous_results.count(), 16)
+        self.assertTrue(347 in [x.pk for x in anadromous_results])
+
+        #######################################
+        ### TEST MODEL SET REFERENCE SEARCH ###
+        #######################################
+        # Test Alternative Resource Name
+        # This search term only tests the one foreign model we have considered in the past:
+        #   * ResourceAltIndigenousName
+        # The current search neglects the following models that reference Resources... why?
+        #   * PlacesResourceEvents
+        #   * ResourceResourceEvents
+        #   * ResourcesCitationEvents
+        #   * ResourcesMediaEvents
+        # These 4 are the 'in-between' tables for the other 4 core models. Perhaps not searching these is intentional?
+
+        keyword = 'flurpie'
+        flurpie_results = Resources.keyword_search(keyword)
+        self.assertEqual(flurpie_results.count(), 2)
+        self.assertEqual(flurpie_results[0].commonname, 'Test')
+
+# PlacesResourceEvents
+
+
+# ResourcesActivityEvents
+class ResourcesActivityEventsTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_activity(self):
+        # print("Testing ResourcesActivityEvents Model")
+        # print("Total activities: {}".format(ResourcesActivityEvents.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_activities_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # fields:
+        
+        keyword = 'men'
+        activity_results = ResourcesActivityEvents.keyword_search(keyword) 
+        self.assertEqual(activity_results.count(), 2)
+        
+        for result in activity_results:
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+         
+
+
+# People
+
+
+# Citations
+class CitationsTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_citations(self):
+        # print("Testing Places Model")
+        # print("Total places: {}".format(Places.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_citations_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # fields:
+        #   * referencetext
+        #   * authorprimary
+        #   * authorsecondary
+        #   * placeofinterview
+        #   * seriestitle
+        #   * seriesvolume
+        #   * serieseditor
+        #   * publisher
+        #   * publishercity
+        #   * preparedfor
+        #   * referencetype (foreign key)
+        #   * authortype (foreign key) (no records for testing)
+        #   X intervieweeid (foreign key) (not ready for testing)
+        #   X interviewerid (foreign key) (not ready for testing)
+
+        keyword = 'traditional'
+        cit_results = Citations.keyword_search(keyword)
+        self.assertEqual(cit_results.count(), 1)
+
+        for result in cit_results:
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+
+        #####################################
+        ### TEST FOREIGN KEY FIELD SEARCH ###
+        #####################################
+        # Citation model's foreign key field(s):
+        keyword = 'book'
+        reftype_results = Citations.keyword_search(keyword)
+        self.assertEqual(reftype_results.count(), 1)
+        self.assertTrue(11 in [x.pk for x in reftype_results])
+
+        ## Future test for authortype
+        # keyword = 'book'
+        # authortype_results = Citations.keyword_search(keyword)
+        # self.assertEqual(authortype_results.count(), 1)
+        # self.assertTrue(11 in [x.pk for x in authortype_results])
+
+
+        #######################################
+        ### TEST MODEL SET REFERENCE SEARCH ###
+        #######################################
+        #
+        #   *
+
+
+# PlacesCitationEvents
+
+
+# Locality
+
+
+# LocalityPlaceResourceEvent
+
+
+# LookupMediaType
+
+
+# Media
+class MediaTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_media(self):
+        # print("Testing Media Model")
+        # print("Total media: {}".format(Media.objects.all().count()))
+        self.assertTrue(True)
+
+    def test_media_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # fields:
+        
+        keyword = 'sample'
+        media_results = Media.keyword_search(keyword) 
+        self.assertEqual(media_results.count(), 3)      
+
+        for result in media_results:
+            self.assertTrue(hasattr(result, 'similarity'))
+            self.assertTrue(
+                (
+                    result.similarity and
+                    result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )  
+
+
+# MediaCitationEvents
+
+
+# PlacesMediaEvents
+
+
+# PlacesResourceCitationEvents
+
+
+# PlacesResourceMediaEvents
+
+
+# ResourceActivityCitationEvents
+
+
+# ResourceActivityMediaEvents
+
+
+# ResourceResourceEvents
+
+
+# ResourcesCitationEvents
+
+
+# ResourcesMediaEvents

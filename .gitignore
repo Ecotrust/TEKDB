@@ -9,6 +9,7 @@ old_code/
 __pycache__/
 *.py[cod]
 *$py.class
+.vagrant/*
 
 # C extensions
 *.so
