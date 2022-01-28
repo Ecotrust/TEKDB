@@ -18,7 +18,7 @@ dbus-python==1.2.16
 decorator==5.1.0
 distro==1.4.0
 distro-info===0.23ubuntu1
-Django==3.2.10
+Django==3.2.11
 django-autocomplete-light==3.8.2
 django-ckeditor==6.1.0
 django-js-asset==1.2.2
