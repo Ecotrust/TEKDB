@@ -15,7 +15,7 @@ from django.db import connection
 #   MODELS W/ keyword_search
 ###
 
-class ReturnAllTest(TestCase):
+class MiscSearchTest(TestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
@@ -44,8 +44,21 @@ class ReturnAllTest(TestCase):
                     resultlist.append(result)
 
                 self.assertTrue(len(resultlist) == model.objects.count())
-    
+
+    def test_phrase_search(self):
+        """
+        Test that a phrase search returns all objects that contain the phrase
+        """
+        keyword = "salmon trout"
         
+        from explore.views import getResults
+        
+        search_results = getResults(keyword, categories=['places','resources','activities','sources','media'])
+        # 24 is king salmon
+        self.assertTrue(24 in [x['id'] for x in search_results])
+        # 362 is cutthroat trout
+        self.assertTrue(362 in [x['id'] for x in search_results])
+
 
 # LookupTribe
 
