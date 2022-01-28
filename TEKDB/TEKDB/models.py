@@ -27,6 +27,10 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     # fk_fields -> [list of tuples] Foreign Key field names coupled with field on foreign model to search
     #   fk_fields can search any models with a fk for current model as well!
     # weight_lookup -> [dict] lookup to get relative ['A','B','C','D'] weights for scoring search results.
+
+    if keyword == '':
+        return model.objects.all()
+        
     similarities = []
     vector = False
     similarity = False
