@@ -76,14 +76,37 @@ def ExportDatabase(request):
 
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
-def ImportDatabase(request, zipfile):
-    # Unzip file
-    # Drop DB -- if exists.
-    # Create DB
-    # Migrate DB
-    # Load Fixture
-    # Copy media into MEDIA dir
-    return True
+def ImportDatabase(request):
+    if request.method == 'POST':
+        if 'MEDIA_DIR' in request.POST.keys() and os.path.exists(request.POST['MEDIA_DIR']):
+            media_dir = request.POST['MEDIA_DIR']
+        else:
+            media_dir = split(settings.MEDIA_ROOT)[-1]
+        # Unzip file
+        import ipdb; ipdb.set_trace()
+        if 'import_file' in request.FILES.keys() and os.path.exists(request.FILES['import_file']):
+            tempdir = tempfile.gettempdir()
+            import_file = request.FILES['import_file']
+            if zipfile.is_zipfile(import_file.name):
+                zip = zipfile.ZipFile(import_file.name, "r")
+                print("TODO: Validate Zip Contents")
+                fixture_name = [x for x in zip.namelist() if 'media' not in x and '.json' in x][0]
+                try:
+                    zip.extractall(tempdir)
+                    # Drop DB -- if exists.
+                    print("TODO: Drop DB!!!")
+                    # Create DB
+                    print("TODO: Create Empty DB!!!")
+                    # Migrate DB
+                    print("TODO: Migrate DB!!!")
+                    # Load Fixture
+                    management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+                    # Copy media into MEDIA dir
+                    shutil.copytree(os.path.join(tempdir, 'media'), media_dir)
+                except Exception as e:
+                    return HttpResponse(500, e)
+
+    return HttpResponse()
 
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):

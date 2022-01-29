@@ -1,6 +1,7 @@
 from base64 import b64encode
 from datetime import datetime
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.db import connection
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -36,6 +37,28 @@ def get_checksum(filename, hash_function):
 
     return readable_hash
 
+def create_export_request(self):
+    return self.factory.get(
+        reverse('export_database'),
+        headers = {
+            "Authorization": f"Basic {self.credentials}"
+        },
+    )
+
+def get_export_file_from_response(response, tempdir=False, datestamp=False):
+    if not tempdir:
+        tempdir = tempfile.gettempdir()
+    if not datestamp:
+        datestamp = datetime.now().strftime('%Y%m%d')
+    zipname = join(tempdir, "{}_backup.zip".format(datestamp))
+    fileresponse = bytes('test', 'utf-8')
+    stream = b''.join(response.streaming_content)
+    with open(zipname, "wb") as f:
+        f.write(stream)
+
+    return zipname
+
+
 class RelatedTest(TestCase):
     def test_related(self):
         from TEKDB.views import get_related
@@ -48,31 +71,32 @@ class ExportTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.credentials = b64encode(b"admin:admin").decode("ascii")
+        new_record = Resources.objects.create(commonname="Dummy Record 1")
+        new_record.save()
+        Resources.moderated_object.fget(new_record).approve()
 
     def test_export(self):
-        self.assertTrue(True)
-        # add record
-        print("\n\tTODO: Add record to TEKDB/test_views.ExportTest.test_export")
-        print("\tTODO: Test non-admin user failure in TEKDB/test_views.ExportTest.test_export")
-        datestamp = datetime.now().strftime('%Y%m%d')
         # dump data
-        request = self.factory.get(
-            reverse('export_database'),
-            headers = {
-                "Authorization": f"Basic {self.credentials}"
-            },
-        )
+        export_request = create_export_request(self)
 
-        request.user = Users.objects.get(username='admin')
-        response = ExportDatabase(request)
+        # Test non-admin user failure
+        # Users w/out adequate permissions should be redirected (302)
+        export_request.user = AnonymousUser()
+        anon_response = ExportDatabase(export_request)
+        self.assertEqual(anon_response.status_code, 302)
+
+        export_request.user = Users.objects.get(username='readonly')
+        bad_response = ExportDatabase(export_request)
+        self.assertEqual(bad_response.status_code, 302)
+
+        export_request.user = Users.objects.get(username='admin')
+        response = ExportDatabase(export_request)
         self.assertEqual(response.status_code, 200)
 
         tempdir = tempfile.gettempdir()
-        zipname = join(tempdir, "{}_backup.zip".format(datestamp))
-        fileresponse = bytes('test', 'utf-8')
-        stream = b''.join(response.streaming_content)
-        with open(zipname, "wb") as f:
-            f.write(stream)
+        datestamp = datetime.now().strftime('%Y%m%d')
+        zipname = get_export_file_from_response(response, tempdir, datestamp)
+
         # test for dump files
         #   * .zip
         self.assertTrue(isfile(zipname))
@@ -98,10 +122,145 @@ class ExportTest(TestCase):
         shutil.rmtree(join(tempdir, media_folder_name))
         dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
         self.assertTrue(isfile(dumpfile))
+
+        new_record_found = False
+        with open(dumpfile) as outfile:
+            fixture_lines = outfile.readlines()
+        for line in fixture_lines:
+            if '"commonname": "Dummy Record 1"' in line:
+                new_record_found = True
+                break
+        self.assertTrue(new_record_found)
+
         remove(dumpfile)
-
-        # import .zip
-        # test for deleted media
-        # test for added record
-
         remove(zipname)
+
+class ImportTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.factory = RequestFactory()
+        cls.credentials = b64encode(b"admin:admin").decode("ascii")
+        cls.dummy_1_name = "Dummy Record 1"
+        cls.dummy_2_name = "Dummy Record 2"
+
+        new_record = Resources.objects.create(commonname=cls.dummy_1_name)
+        new_record.save()
+        Resources.moderated_object.fget(new_record).approve()
+
+        zipname = join(settings.BASE_DIR, 'TEKDB', 'tests', 'test_files', 'exported_db.zip')
+        cls.tempmediadir = tempfile.gettempdir()
+        cls.import_request = cls.factory.post(
+            reverse('import_database'),
+            {
+                'MEDIA_DIR': cls.tempmediadir,
+            },
+            headers = {
+                "Authorization": f"Basic {cls.credentials}"
+            },
+        )
+        with open(zipname, 'rb') as z:
+            cls.import_request.FILES['import_file'] = z
+            cls.import_request.FILES['import_file'].read()
+            z.seek(0)
+
+        cls.import_request.user = Users.objects.get(username='admin')
+        response = ImportDatabase(cls.import_request)
+
+    def test_import(self):
+        self.assertEqual(Resources.objects.all().count(), 238)
+
+
+
+# class ExportImportTest(TestCase):
+#     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+#
+#     @classmethod
+#     def setUpTestData(cls):
+#         cls.factory = RequestFactory()
+#         cls.credentials = b64encode(b"admin:admin").decode("ascii")
+#
+#         cls.dummy_1_name = "Dummy Record 1"
+#         cls.dummy_2_name = "Dummy Record 2"
+#
+#         import ipdb; ipdb.set_trace()
+#
+#         new_record = Resources.objects.create(commonname=cls.dummy_1_name)
+#         new_record.save()
+#
+#         # Count records
+#         cls.original_media_count = Media.objects.all().count()
+#         cls.original_places_count = Places.objects.all().count()
+#         cls.original_resources_count = Resources.objects.all().count()
+#         cls.original_citations_count = Citations.objects.all().count()
+#         cls.original_activities_count = ResourcesActivityEvents.objects.all().count()
+#
+#         export_request = create_export_request(cls)
+#         export_request.user = Users.objects.get(username='admin')
+#         response = ExportDatabase(export_request)
+#         cls.tempdir = tempfile.gettempdir()
+#         zipname = get_export_file_from_response(response, cls.tempdir)
+#
+#         new_record2 = Resources.objects.create(commonname=cls.dummy_2_name)
+#         new_record2.save()
+#
+#         cls.tempmediadir = tempfile.gettempdir()
+#         cls.import_request = cls.factory.post(
+#             reverse('import_database'),
+#             {
+#                 'MEDIA_DIR': cls.tempmediadir,
+#             },
+#             headers = {
+#                 "Authorization": f"Basic {cls.credentials}"
+#             },
+#         )
+#         #   Attach .zip to request
+#         with open(zipname, 'rb') as z:
+#             cls.import_request.FILES['import_file'] = z
+#             cls.import_request.FILES['import_file'].read()
+#             z.seek(0)
+#
+#         cls.import_request.user = Users.objects.get(username='admin')
+#         response = ImportDatabase(cls.import_request)
+#
+#         remove(zipname)
+#
+#     def test_export_import(self):
+#         ############################################################
+#         ### IMPORT
+#         ############################################################
+#         tempdir = self.tempdir
+#         # zipname = self.zipname
+#
+#         # Prep for test import:
+#         #   Create temp dir to write media to
+#
+#         #   view must take optional MEDIA_DIR location
+#         #   MAKE SURE TEST DOESN"T OVERRIDE LIVE DB!!!
+#         self.assertEqual(Resources.objects.all().count(), self.original_resources_count )
+#         self.assertEqual(Media.objects.all().count(), self.original_media_count)
+#         self.assertEqual(Places.objects.all().count(), self.original_places_count)
+#         self.assertEqual(Resources.objects.all().count(), self.original_resources_count)
+#         self.assertEqual(Citations.objects.all().count(), self.original_citations_count)
+#         self.assertEqual(ResourcesActivityEvents.objects.all().count(), self.original_activities_count)
+#         # test for added record
+#         dummy1_q = Resources.objects.filter(commonname=self.dummy_1_name)
+#         dummy2_q = Resources.objects.filter(commonname=self.dummy_2_name)
+#         self.assertEqual(dummy1_q.count(), 1)
+#         self.assertEqual(dummy2_q.count(), 0)
+#         self.assertEqual(dummy1_q[0].pk, first_resource.pk)
+#         #
+#         # import .zip
+#         #   Create Request
+#
+#         self.import_request.user = AnonymousUser()
+#         anon_response = ImportDatabase(self.import_request)
+#         # Users w/out adequate permissions should be redirected (302)
+#         self.assertEqual(anon_response.status_code, 302)
+#         self.import_request.user = Users.objects.get(username='readonly')
+#         bad_response = ImportDatabase(self.import_request)
+#         self.assertEqual(bad_response.status_code, 302)
+#
+#         # self.assertEqual(response.status_code, 200)
+#         #   Specify target MEDIA_DIR in request

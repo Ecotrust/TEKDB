@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^tekdb/(?P<model_name>\w+)/(?P<id>\w+)/get_related$', views.get_related),
     url('citation_autocomplete/$', views.CitationAutocompleteView.as_view(), name='select2_fk_citation',),
     url('export_database/$', views.ExportDatabase, name='export_database'),
+    url('import_database/$', views.ImportDatabase, name='import_database'),
     url('media_autocomplete/$', views.MediaAutocompleteView.as_view(), name='select2_fk_media',),
     url('place_autocomplete/$', views.PlaceAutocompleteView.as_view(), name='select2_fk_place',),
     url('place_resource_autocomplete/$', views.PlaceResourceAutocompleteView.as_view(), name='select2_fk_placeresource',),
