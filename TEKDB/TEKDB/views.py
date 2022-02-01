@@ -1,11 +1,14 @@
+import contextlib
 from dal import autocomplete
 from datetime import datetime
 from django.contrib.auth.decorators import user_passes_test
 from django.core import management
 from django.core.management.commands import loaddata, dumpdata
+from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, Http404, FileResponse
 from django.shortcuts import render
+import io
 import os
 import shutil
 from TEKDB.models import *
@@ -74,6 +77,14 @@ def ExportDatabase(request):
 
     return HttpResponse()
 
+def getDBTruncateCommand():
+    f = io.StringIO()
+    with contextlib.redirect_stdout(f):
+        management.call_command('sqlflush')
+    full_output = f.getvalue()
+    return full_output.split('\n')[1]
+
+
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ImportDatabase(request):
@@ -81,30 +92,45 @@ def ImportDatabase(request):
         if 'MEDIA_DIR' in request.POST.keys() and os.path.exists(request.POST['MEDIA_DIR']):
             media_dir = request.POST['MEDIA_DIR']
         else:
-            media_dir = split(settings.MEDIA_ROOT)[-1]
+            media_dir = os.path.split(settings.MEDIA_ROOT)[-1]
         # Unzip file
-        import ipdb; ipdb.set_trace()
-        if 'import_file' in request.FILES.keys() and os.path.exists(request.FILES['import_file']):
-            tempdir = tempfile.gettempdir()
-            import_file = request.FILES['import_file']
-            if zipfile.is_zipfile(import_file.name):
-                zip = zipfile.ZipFile(import_file.name, "r")
-                print("TODO: Validate Zip Contents")
-                fixture_name = [x for x in zip.namelist() if 'media' not in x and '.json' in x][0]
-                try:
-                    zip.extractall(tempdir)
-                    # Drop DB -- if exists.
-                    print("TODO: Drop DB!!!")
-                    # Create DB
-                    print("TODO: Create Empty DB!!!")
-                    # Migrate DB
-                    print("TODO: Migrate DB!!!")
-                    # Load Fixture
-                    management.call_command('loaddata', os.path.join(tempdir, fixture_name))
-                    # Copy media into MEDIA dir
-                    shutil.copytree(os.path.join(tempdir, 'media'), media_dir)
-                except Exception as e:
-                    return HttpResponse(500, e)
+        if 'import_file' in request.FILES.keys():
+            with tempfile.TemporaryDirectory() as tempdir:
+                # tempdir = tempfile.gettempdir()
+                # import_file = request.FILES['import_file']
+                tmp_zip_file = tempfile.NamedTemporaryFile(mode='wb+',delete=True, suffix='.zip')
+                for chunk in request.FILES['import_file'].chunks():
+                    tmp_zip_file.write(chunk)
+                tmp_zip_file.seek(0)
+                if zipfile.is_zipfile(tmp_zip_file.name):
+                    zip = zipfile.ZipFile(tmp_zip_file.name, "r")
+                    non_media = [x for x in zip.namelist() if 'media' not in x and '.json' in x]
+                    # Validate Zip Contents
+                    if not len(non_media) == 1 or len(zip.namelist()) < 2:
+                        return HttpResponse(500, "Received malformed import file. Must be a zipfile contailing one JSON file and a directory named 'media'")
+                    fixture_name = non_media[0]
+                    try:
+                        import ipdb; ipdb.set_trace()
+                        zip.extractall(tempdir)
+                        # for mediafile in os.scandir(os.path.join(tempdir, 'media')):
+                        #     shutil.move(os.path.join(tempdir, 'media', mediafile.name), media_dir)
+
+                        # Drop DB -- if exists.
+                        print("Emptying DB tables")
+                        # drop_db_lines = management.call_command('sqlflush')
+                        with connection.cursor() as cursor:
+                            # cursor.execute(drop_db_lines)
+                            cursor.execute(getDBTruncateCommand())
+                        # Create DB
+                        # print("TODO: Create Empty DB!!!")
+                        # Migrate DB
+                        print("Loading in DB Fixture")
+                        # Load Fixture
+                        management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+                        # Copy media into MEDIA dir
+                        shutil.copytree(os.path.join(tempdir, 'media'), media_dir)
+                    except Exception as e:
+                        return HttpResponse(500, e)
 
     return HttpResponse()
 

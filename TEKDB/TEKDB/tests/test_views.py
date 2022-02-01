@@ -2,6 +2,8 @@ from base64 import b64encode
 from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.core.files import File
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import connection
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -9,7 +11,7 @@ from django.urls import reverse
 # from django.utils import timezone
 import hashlib
 from os import listdir, remove
-from os.path import isfile, join, split
+from os.path import isfile, join, split, getsize
 import shutil
 # from TEKDB.forms import *
 from TEKDB.models import *
@@ -155,18 +157,32 @@ class ImportTest(TestCase):
             reverse('import_database'),
             {
                 'MEDIA_DIR': cls.tempmediadir,
+                'content_type':'application/zip',
+                'content_disposition':"attachment; filename=uploaded.dump"
             },
             headers = {
                 "Authorization": f"Basic {cls.credentials}"
             },
+            # content_type='application/octet-stream',
+            # content_disposition="attachment; filename=uploaded.dump"
         )
         with open(zipname, 'rb') as z:
-            cls.import_request.FILES['import_file'] = z
-            cls.import_request.FILES['import_file'].read()
-            z.seek(0)
+            import_file = InMemoryUploadedFile(
+                z,
+                'import_file',
+                'exported_db.zip',
+                'application/zip',
+                getsize(zipname),
+                None    # charset. 'utf8'? How is this relevant for bytes?
+            )
+            cls.import_request.FILES['import_file'] = import_file
+            # with open(zipname, 'rb') as z:
+            #     cls.import_request.FILES['import_file'] = z
+            #     cls.import_request.FILES['import_file'].read()
+            #     z.seek(0)
 
-        cls.import_request.user = Users.objects.get(username='admin')
-        response = ImportDatabase(cls.import_request)
+            cls.import_request.user = Users.objects.get(username='admin')
+            response = ImportDatabase(cls.import_request)
 
     def test_import(self):
         self.assertEqual(Resources.objects.all().count(), 238)

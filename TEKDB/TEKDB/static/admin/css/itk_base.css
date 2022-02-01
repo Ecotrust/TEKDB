@@ -6,6 +6,7 @@
   :root {
     --bs-body-bg: #000 !important;
     --modal-header-color: black;
+    --bs-body-color: #EEEEEE !important;
   }
 }
 

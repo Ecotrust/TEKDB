@@ -29,6 +29,17 @@
 
     <hr />
 
+    <div class="module" id="import-module">
+      <h2>{% translate 'Import database' %}</h2>
+      <form method="post" enctype="multipart/form-data" action="/import_database/">
+        {% csrf_token %}
+        <input type="file" name="import_file">
+        <button type="submit">Import</button>
+      </form>
+    </div>
+
+    <hr />
+
     <div class="module" id="recent-actions-module">
         <h2>{% translate 'Recent actions' %}</h2>
         <h3>{% translate 'My actions' %}</h3>
