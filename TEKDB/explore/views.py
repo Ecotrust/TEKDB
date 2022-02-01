@@ -447,12 +447,6 @@ def getResults(keyword_string, categories):
     # Sort results from all models by rank, then similarity (descending)
     return sorted(resultlist, key=lambda res: (res['rank'], res['similarity']), reverse=True)
 
-@login_required
-def query(request):
-    from django.http import JsonResponse
-    results = {'resultList': getResults(request)}
-    return JsonResponse(results)
-
 def get_category_list(request):
     categories = []
     for category in ['places','resources','activities','sources','media']:
