@@ -5,7 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import connection
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 # from django.utils import timezone
@@ -75,7 +75,7 @@ class ExportTest(TestCase):
         self.credentials = b64encode(b"admin:admin").decode("ascii")
         new_record = Resources.objects.create(commonname="Dummy Record 1")
         new_record.save()
-        Resources.moderated_object.fget(new_record).approve()
+        # Resources.moderated_object.fget(new_record).approve()
 
     def test_export(self):
         # dump data
@@ -137,19 +137,25 @@ class ExportTest(TestCase):
         remove(dumpfile)
         remove(zipname)
 
-class ImportTest(TestCase):
+class ImportTest(TransactionTestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpTestData(cls):
         cls.factory = RequestFactory()
+
+        # import ipdb; ipdb.set_trace()
+
+        # test_admin = Users.objects.create(username='admin', password='admin', is_superuser=True)
+        # test_admin.save()
+
         cls.credentials = b64encode(b"admin:admin").decode("ascii")
         cls.dummy_1_name = "Dummy Record 1"
         cls.dummy_2_name = "Dummy Record 2"
 
         new_record = Resources.objects.create(commonname=cls.dummy_1_name)
         new_record.save()
-        Resources.moderated_object.fget(new_record).approve()
+        # Resources.moderated_object.fget(new_record).approve()
 
         zipname = join(settings.BASE_DIR, 'TEKDB', 'tests', 'test_files', 'exported_db.zip')
         cls.tempmediadir = tempfile.gettempdir()

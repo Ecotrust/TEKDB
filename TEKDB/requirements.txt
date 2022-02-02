@@ -11,7 +11,7 @@ django-reversion
 psycopg2-binary
 uwsgi
 XlsxWriter
--e git+https://github.com/dominno/django-moderation.git@master#egg=moderation
+#-e git+https://github.com/dominno/django-moderation.git@master#egg=moderation
 
 #DEPENDENCIES
 cryptography>=3.3.2

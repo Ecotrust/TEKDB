@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.translation import ugettext, ugettext_lazy as _
 from dal import autocomplete
-from moderation.admin import ModerationAdmin
+# from moderation.admin import ModerationAdmin
 import nested_admin
 from ckeditor.widgets import CKEditorWidget
 from reversion.admin import VersionAdmin
@@ -277,7 +277,8 @@ class LocalityGISSelectionsInline(admin.TabularInline):
 ### MODEL ADMINS ###
 ####################
 #### PROXY MODELS ####
-class RecordAdminProxy(VersionAdmin, ModerationAdmin):
+# class RecordAdminProxy(VersionAdmin, ModerationAdmin):
+class RecordAdminProxy(VersionAdmin):
     readonly_fields = ('enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
     'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
 
@@ -338,7 +339,8 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
             instance.save()
 
 #### RECORD MODELS ####
-class RecordModelAdmin(VersionAdmin, ModerationAdmin):
+# class RecordModelAdmin(VersionAdmin, ModerationAdmin):
+class RecordModelAdmin(VersionAdmin):
     record_form = '%s/TEKDB/templates/admin/RecordForm.html' % BASE_DIR
     add_form_template = record_form
     change_form_template = record_form

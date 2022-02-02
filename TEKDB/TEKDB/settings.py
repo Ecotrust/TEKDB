@@ -47,9 +47,9 @@ SITE_ID = 1
 INSTALLED_APPS = [
     'dal',
     'dal_select2',
+    'django.contrib.contenttypes',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'Relationships',
     'reversion',
     'django.contrib.sites',
-    'moderation.apps.SimpleModerationConfig',
+    # 'moderation.apps.SimpleModerationConfig',
 ]
 
 MIDDLEWARE = [

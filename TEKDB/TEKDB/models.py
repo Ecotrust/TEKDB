@@ -16,7 +16,7 @@ from django.utils import timezone
 from TEKDB import settings
 from django.contrib.gis.db.models import GeometryField
 from ckeditor.fields import RichTextField
-from moderation.db import ModeratedModel
+# from moderation.db import ModeratedModel
 
 MANAGED = True
 
@@ -70,6 +70,10 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     )
 
     return results
+
+class ModeratedModel(models.Model):
+    class Meta:
+        abstract = True
 
 class DefaultModeratedModel(models.Model):
     class Moderator:
