@@ -6,6 +6,7 @@ from django.core import management
 from django.core.management.commands import loaddata, dumpdata
 from django.db import connection
 from django.db.models import Q
+from django.db.utils import OperationalError
 from django.http import HttpResponse, Http404, FileResponse
 from django.shortcuts import render
 import io
@@ -82,7 +83,8 @@ def getDBTruncateCommand():
     with contextlib.redirect_stdout(f):
         management.call_command('sqlflush')
     full_output = f.getvalue()
-    return full_output.split('\n')[1]
+    cmd_list = full_output.split('\n')
+    return [x for x in cmd_list if not x == '']
 
 
 # Only Admins!
@@ -110,27 +112,24 @@ def ImportDatabase(request):
                         return HttpResponse(500, "Received malformed import file. Must be a zipfile contailing one JSON file and a directory named 'media'")
                     fixture_name = non_media[0]
                     try:
-                        import ipdb; ipdb.set_trace()
                         zip.extractall(tempdir)
                         # for mediafile in os.scandir(os.path.join(tempdir, 'media')):
                         #     shutil.move(os.path.join(tempdir, 'media', mediafile.name), media_dir)
 
-                        # Drop DB -- if exists.
-                        print("Emptying DB tables")
-                        # drop_db_lines = management.call_command('sqlflush')
+                        # Emptying DB tables
+                        truncate_tables_cmds = getDBTruncateCommand()
                         with connection.cursor() as cursor:
-                            # cursor.execute(drop_db_lines)
-                            cursor.execute(getDBTruncateCommand())
-                        # Create DB
-                        # print("TODO: Create Empty DB!!!")
-                        # Migrate DB
-                        print("Loading in DB Fixture")
-                        # Load Fixture
-                        management.call_command('loaddata', os.path.join(tempdir, fixture_name))
-                        # Copy media into MEDIA dir
-                        shutil.copytree(os.path.join(tempdir, 'media'), media_dir)
+                            for sql_command in truncate_tables_cmds:
+                                cursor.execute(sql_command)
+
                     except Exception as e:
                         return HttpResponse(500, e)
+
+                    # Loading in DB Fixture
+                    management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+
+                    # Copy media into MEDIA dir
+                    shutil.copytree(os.path.join(tempdir, 'media'), media_dir)
 
     return HttpResponse()
 

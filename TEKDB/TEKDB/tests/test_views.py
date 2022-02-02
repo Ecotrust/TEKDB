@@ -144,14 +144,8 @@ class ImportTest(TransactionTestCase):
     def setUpTestData(cls):
         cls.factory = RequestFactory()
 
-        # import ipdb; ipdb.set_trace()
-
-        # test_admin = Users.objects.create(username='admin', password='admin', is_superuser=True)
-        # test_admin.save()
-
         cls.credentials = b64encode(b"admin:admin").decode("ascii")
         cls.dummy_1_name = "Dummy Record 1"
-        cls.dummy_2_name = "Dummy Record 2"
 
         new_record = Resources.objects.create(commonname=cls.dummy_1_name)
         new_record.save()
@@ -169,8 +163,6 @@ class ImportTest(TransactionTestCase):
             headers = {
                 "Authorization": f"Basic {cls.credentials}"
             },
-            # content_type='application/octet-stream',
-            # content_disposition="attachment; filename=uploaded.dump"
         )
         with open(zipname, 'rb') as z:
             import_file = InMemoryUploadedFile(
@@ -179,19 +171,16 @@ class ImportTest(TransactionTestCase):
                 'exported_db.zip',
                 'application/zip',
                 getsize(zipname),
-                None    # charset. 'utf8'? How is this relevant for bytes?
+                None
             )
             cls.import_request.FILES['import_file'] = import_file
-            # with open(zipname, 'rb') as z:
-            #     cls.import_request.FILES['import_file'] = z
-            #     cls.import_request.FILES['import_file'].read()
-            #     z.seek(0)
 
             cls.import_request.user = Users.objects.get(username='admin')
             response = ImportDatabase(cls.import_request)
 
     def test_import(self):
         self.assertEqual(Resources.objects.all().count(), 238)
+        self.assertEqual(Resources.objects.filter(commonname="Dummy Record 1").count(), 0)
 
 
 
