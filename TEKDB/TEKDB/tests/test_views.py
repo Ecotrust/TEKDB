@@ -10,7 +10,7 @@ from django.test.client import RequestFactory
 from django.urls import reverse
 # from django.utils import timezone
 import hashlib
-from os import listdir, remove
+from os import listdir, remove, sep
 from os.path import isfile, join, split, getsize
 import shutil
 # from TEKDB.forms import *
@@ -18,7 +18,6 @@ from TEKDB.models import *
 from TEKDB.views import ExportDatabase, ImportDatabase
 import tempfile
 import zipfile
-# from zipfile import ZipFile
 
 #########################################################################
 # Run with:
@@ -141,22 +140,23 @@ class ImportTest(TransactionTestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
-    def setUpTestData(cls):
+    def setUp(cls):
         cls.factory = RequestFactory()
 
         cls.credentials = b64encode(b"admin:admin").decode("ascii")
         cls.dummy_1_name = "Dummy Record 1"
 
+        cls.old_resources_count = Resources.objects.all().count()
         new_record = Resources.objects.create(commonname=cls.dummy_1_name)
         new_record.save()
         # Resources.moderated_object.fget(new_record).approve()
 
-        zipname = join(settings.BASE_DIR, 'TEKDB', 'tests', 'test_files', 'exported_db.zip')
-        cls.tempmediadir = tempfile.gettempdir()
+        cls.zipname = join(settings.BASE_DIR, 'TEKDB', 'tests', 'test_files', 'exported_db.zip')
+        cls.tempmediadir = tempfile.TemporaryDirectory()
         cls.import_request = cls.factory.post(
             reverse('import_database'),
             {
-                'MEDIA_DIR': cls.tempmediadir,
+                'MEDIA_DIR': cls.tempmediadir.name,
                 'content_type':'application/zip',
                 'content_disposition':"attachment; filename=uploaded.dump"
             },
@@ -164,13 +164,13 @@ class ImportTest(TransactionTestCase):
                 "Authorization": f"Basic {cls.credentials}"
             },
         )
-        with open(zipname, 'rb') as z:
+        with open(cls.zipname, 'rb') as z:
             import_file = InMemoryUploadedFile(
                 z,
                 'import_file',
                 'exported_db.zip',
                 'application/zip',
-                getsize(zipname),
+                getsize(cls.zipname),
                 None
             )
             cls.import_request.FILES['import_file'] = import_file
@@ -179,8 +179,15 @@ class ImportTest(TransactionTestCase):
             response = ImportDatabase(cls.import_request)
 
     def test_import(self):
-        self.assertEqual(Resources.objects.all().count(), 238)
-        self.assertEqual(Resources.objects.filter(commonname="Dummy Record 1").count(), 0)
+        self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
+        self.assertEqual(Resources.objects.filter(commonname=self.dummy_1_name).count(), 0)
+        # Test for media files in the temp dir
+        zip = zipfile.ZipFile(self.zipname, "r")
+        for filename in zip.namelist():
+            if 'media' in filename and filename.index('media') == 0:
+                media_name = sep.join(filename.split(sep)[1:])
+                self.assertTrue(media_name in listdir(self.tempmediadir.name))
+        shutil.rmtree(self.tempmediadir.name)
 
 
 

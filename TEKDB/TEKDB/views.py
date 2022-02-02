@@ -98,8 +98,6 @@ def ImportDatabase(request):
         # Unzip file
         if 'import_file' in request.FILES.keys():
             with tempfile.TemporaryDirectory() as tempdir:
-                # tempdir = tempfile.gettempdir()
-                # import_file = request.FILES['import_file']
                 tmp_zip_file = tempfile.NamedTemporaryFile(mode='wb+',delete=True, suffix='.zip')
                 for chunk in request.FILES['import_file'].chunks():
                     tmp_zip_file.write(chunk)
@@ -113,8 +111,6 @@ def ImportDatabase(request):
                     fixture_name = non_media[0]
                     try:
                         zip.extractall(tempdir)
-                        # for mediafile in os.scandir(os.path.join(tempdir, 'media')):
-                        #     shutil.move(os.path.join(tempdir, 'media', mediafile.name), media_dir)
 
                         # Emptying DB tables
                         truncate_tables_cmds = getDBTruncateCommand()
@@ -129,7 +125,7 @@ def ImportDatabase(request):
                     management.call_command('loaddata', os.path.join(tempdir, fixture_name))
 
                     # Copy media into MEDIA dir
-                    shutil.copytree(os.path.join(tempdir, 'media'), media_dir)
+                    shutil.copytree(os.path.join(tempdir, 'media'), media_dir, dirs_exist_ok=True)
 
     return HttpResponse()
 
