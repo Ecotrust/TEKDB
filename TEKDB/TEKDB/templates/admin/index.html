@@ -17,28 +17,38 @@
   <script type="text/javascript" src="/static/assets/bootstrap-5.1.3-dist/js/bootstrap.js"></script>
 {% endblock %}
 
+{% block extrahead %}
+  {{ block.super }}
+  <script src="{% static 'admin/js/admin_index.js' %}" defer></script>
+{% endblock %}
+
+
 {% block sidebar %}
 <div id="content-related">
 
-    <div class="module" id="export-module">
-      <h2>{% translate 'Export database' %}</h2>
-      <a href="/export_database/" class="btn btn-primary">
-        Export to .zip
-      </a>
-    </div>
+    {% if user.is_superuser %}
+      <div class="module" id="export-module">
+        <h2>{% translate 'Export database' %}<button class='btn btn-info' id='export-info'>Info</button></h2>
+        <a href="/export_database/" class="btn btn-primary">
+          Export to .zip
+        </a>
+      </div>
 
-    <hr />
+      <hr />
 
-    <div class="module" id="import-module">
-      <h2>{% translate 'Import database' %}</h2>
-      <form method="post" enctype="multipart/form-data" action="/import_database/">
-        {% csrf_token %}
-        <input type="file" name="import_file">
-        <button type="submit">Import</button>
-      </form>
-    </div>
+      <div class="module" id="import-module">
+        <h2>{% translate 'Import database' %}<button class='btn btn-info' id='import-info'>Info</button></h2>
+        <!-- <form method="post" enctype="multipart/form-data" action="/import_database/"> -->
+        <form method="post" enctype="multipart/form-data" id='import-database-form'>
+          {% csrf_token %}
+          <input type="file" name="import_file" id='import_database_file_field'>
+          <button type="submit" id='import-button' class='btn btn-success'>Import</button>
+        </form>
+      </div>
 
-    <hr />
+      <hr />
+    {% endif %}
+
 
     <div class="module" id="recent-actions-module">
         <h2>{% translate 'Recent actions' %}</h2>

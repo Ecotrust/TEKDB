@@ -8,6 +8,7 @@
     --modal-header-color: black;
     --bs-body-color: #EEEEEE !important;
   }
+
 }
 
 /* GENERIC FIXES */
@@ -60,8 +61,15 @@ span.select2-results {
   background-color: var(--body-bg);
 }
 
-/* EXPORT MODULE */
+/* EXPORT/IMPORT MODULES */
 
-div#export-module a {
+div#export-module a,
+button#import-button {
   margin: 1rem;
+}
+
+button.btn-info#export-info,
+button.btn-info#import-info {
+  margin: -0.5rem 0 1rem 1rem;
+  float: right;
 }

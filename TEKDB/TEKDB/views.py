@@ -7,7 +7,7 @@ from django.core.management.commands import loaddata, dumpdata
 from django.db import connection
 from django.db.models import Q
 from django.db.utils import OperationalError
-from django.http import HttpResponse, Http404, FileResponse
+from django.http import HttpResponse, Http404, FileResponse, JsonResponse
 from django.shortcuts import render
 import io
 import os
@@ -90,44 +90,101 @@ def getDBTruncateCommand():
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ImportDatabase(request):
-    if request.method == 'POST':
+    status_code = 500
+    status_message = 'An unknown error occurred.'
+    if not request.method == 'POST':
+        status_code = 405
+        status_message = 'Request method not allowed. Must be a post.'
+    else:
         if 'MEDIA_DIR' in request.POST.keys() and os.path.exists(request.POST['MEDIA_DIR']):
+            # used for testing so current media is not overwritten
             media_dir = request.POST['MEDIA_DIR']
         else:
-            media_dir = os.path.split(settings.MEDIA_ROOT)[-1]
+            media_dir = settings.MEDIA_ROOT
         # Unzip file
         if 'import_file' in request.FILES.keys():
             with tempfile.TemporaryDirectory() as tempdir:
-                tmp_zip_file = tempfile.NamedTemporaryFile(mode='wb+',delete=True, suffix='.zip')
-                for chunk in request.FILES['import_file'].chunks():
-                    tmp_zip_file.write(chunk)
-                tmp_zip_file.seek(0)
+                try:
+                    tmp_zip_file = tempfile.NamedTemporaryFile(mode='wb+',delete=True, suffix='.zip')
+                    for chunk in request.FILES['import_file'].chunks():
+                        tmp_zip_file.write(chunk)
+                    tmp_zip_file.seek(0)
+                except Exception as e:
+                    status_code = 500
+                    status_message = 'Unable to read the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(e)
+                    return JsonResponse({
+                        'status_code': status_code,
+                        'status_message': status_message
+                    })
                 if zipfile.is_zipfile(tmp_zip_file.name):
                     zip = zipfile.ZipFile(tmp_zip_file.name, "r")
                     non_media = [x for x in zip.namelist() if 'media' not in x and '.json' in x]
                     # Validate Zip Contents
                     if not len(non_media) == 1 or len(zip.namelist()) < 2:
-                        return HttpResponse(500, "Received malformed import file. Must be a zipfile contailing one JSON file and a directory named 'media'")
+                        status_code = 500
+                        status_message = "Received malformed import file. Must be a zipfile contailing one JSON file and a directory named 'media'"
+                        return JsonResponse({
+                            'status_code': status_code,
+                            'status_message': status_message
+                        })
                     fixture_name = non_media[0]
                     try:
                         zip.extractall(tempdir)
-
+                    except Exception as e:
+                        status_code = 500
+                        status_message = 'Unable to unzip the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(e)
+                        return JsonResponse({
+                            'status_code': status_code,
+                            'status_message': status_message
+                        })
+                    try:
                         # Emptying DB tables
                         truncate_tables_cmds = getDBTruncateCommand()
                         with connection.cursor() as cursor:
                             for sql_command in truncate_tables_cmds:
                                 cursor.execute(sql_command)
-
                     except Exception as e:
-                        return HttpResponse(500, e)
+                        status_code = 500
+                        status_message = 'Error while attempting to remove old database data. New data has NOT been imported. Significant data loss possible. Please check your import file and try again. {}'.format(e)
+                        return JsonResponse({
+                            'status_code': status_code,
+                            'status_message': status_message
+                        })
 
-                    # Loading in DB Fixture
-                    management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+                    try:
+                        # Loading in DB Fixture
+                        management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+                    except Exception as e:
+                        status_code = 500
+                        status_message = 'Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {}'.format(e)
+                        return JsonResponse({
+                            'status_code': status_code,
+                            'status_message': status_message
+                        })
 
-                    # Copy media into MEDIA dir
-                    shutil.copytree(os.path.join(tempdir, 'media'), media_dir, dirs_exist_ok=True)
+                    try:
+                        # Copy media into MEDIA dir
+                        shutil.copytree(os.path.join(tempdir, 'media'), media_dir, dirs_exist_ok=True)
+                    except Exception as e:
+                        status_code = 500
+                        status_message = 'Error while restoring your media files. Please work with IT to restore these, providing them your zipfile and this error message:\n {}'.format(e)
+                        return JsonResponse({
+                            'status_code': status_code,
+                            'status_message': status_message
+                        })
+                    status_code = 200
+                    status_message = 'Database import completed successfully.'
+                else:
+                    status_code = 400
+                    status_message = 'Uploaded file is not recognized as a zipfile. Be sure you have a valid backup file and try again.'
+        else:
+            status_code = 400
+            status_message = 'Request must have an attached zipfile to restore the database from'
 
-    return HttpResponse()
+    return JsonResponse({
+        'status_code': status_code,
+        'status_message': status_message
+    })
 
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
