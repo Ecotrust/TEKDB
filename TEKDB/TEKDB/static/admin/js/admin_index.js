@@ -11,6 +11,9 @@ $(function() {
               "your current database status so that you may restore to your " +
               "present state, AND that you COORDINATE WITH IT professionals " +
               "prior to attempting this. \n\n" +
+              "You will need to log in again using administrator credentials " +
+              "as defined by the new data: your current account will cease to " +
+              "exist.\n\n" +
               "Are you sure you understand and are prepared to take this risk?"
             )
           ) {
@@ -24,7 +27,8 @@ $(function() {
               success: function(data, status) {
                 if (data.hasOwnProperty('status_code') && data.hasOwnProperty('status_message')) {
                   if (data.status_code == 200) {
-                    window.alert(data.status_message);
+                    window.alert(data.status_message + "\n\nYou will now be logged out.");
+                    window.location.reload();
                   } else {
                     window.alert("Error Code: " + data.status_code + "\n\n" + data.status_message);
                   }
