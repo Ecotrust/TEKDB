@@ -57,6 +57,9 @@ def get_export_file_from_response(response, tempdir=False, datestamp=False):
     with open(zipname, "wb") as f:
         f.write(stream)
 
+    response.file_to_stream.close()
+    remove(response.file_to_stream.name)
+
     return zipname
 
 
@@ -91,7 +94,7 @@ class ExportTest(TestCase):
         self.assertEqual(bad_response.status_code, 302)
 
         export_request.user = Users.objects.get(username='admin')
-        response = ExportDatabase(export_request)
+        response = ExportDatabase(export_request, test=True)
         self.assertEqual(response.status_code, 200)
 
         with tempfile.TemporaryDirectory() as tempdir:

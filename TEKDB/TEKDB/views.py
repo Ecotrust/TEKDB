@@ -50,36 +50,33 @@ def get_all_file_paths(directory, cwd=False):
 
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
-def ExportDatabase(request):
-    # tmp_zip = tempfile.NamedTemporaryFile(delete=False, prefix="{}_backup_".format(datestamp), suffix='.zip')
+def ExportDatabase(request, test=False):
+    datestamp = datetime.now().strftime('%Y%m%d')
+    tmp_zip = tempfile.NamedTemporaryFile(delete=False, prefix="{}_backup_".format(datestamp), suffix='.zip')
     os.chdir(os.path.join(settings.MEDIA_ROOT, '..'))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
     try:
-        datestamp = datetime.now().strftime('%Y%m%d')
-        tmp_dir = tempfile.TemporaryDirectory()
-        tmp_zip_name = os.path.join('{}_backup.zip'.format(datestamp))
-        # create filename
-        dumpfile = "{}_backup.json".format(datestamp)
-        dumpfile_location = os.path.join(tmp_dir.name, dumpfile)
-        with open(dumpfile_location, 'w') as of:
-            management.call_command('dumpdata', '--indent=2', stdout=of)
-        # zip up:
-        #   * Data Dump file
-        #   * Media files
-        zip_name_split = [x for x in os.path.split(tmp_dir.name)] + [tmp_zip_name]
-        full_zip_path = os.path.join(*zip_name_split)
-        zip = zipfile.ZipFile(full_zip_path, 'w')
-        zip.write(dumpfile_location, dumpfile)
-        for media_file in media_paths:
-            zip.write(media_file)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            # create filename
+            dumpfile = "{}_backup.json".format(datestamp)
+            dumpfile_location = os.path.join(tmp_dir, dumpfile)
+            with open(dumpfile_location, 'w') as of:
+                management.call_command('dumpdata', '--indent=2', stdout=of)
+            # zip up:
+            #   * Data Dump file
+            #   * Media files
+            with zipfile.ZipFile(tmp_zip.name, 'w') as zip:
+                zip.write(dumpfile_location, dumpfile)
+                for media_file in media_paths:
+                    zip.write(media_file)
 
-        zip.close()
-        response = FileResponse(open(full_zip_path, 'rb'))
+        response = FileResponse(open(tmp_zip.name, 'rb'))
         return response
     finally:
         try:
-            tmp_dir.cleanup()
+            if not test:
+                os.remove(tmp_zip.name)
         except (PermissionError, NotADirectoryError):
             pass
 
