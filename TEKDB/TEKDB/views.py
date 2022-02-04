@@ -58,7 +58,7 @@ def ExportDatabase(request):
     try:
         datestamp = datetime.now().strftime('%Y%m%d')
         tmp_dir = tempfile.TemporaryDirectory()
-        tmp_zip_name = os.path.join('{}_backup_.zip'.format(datestamp))
+        tmp_zip_name = os.path.join('{}_backup.zip'.format(datestamp))
         # create filename
         dumpfile = "{}_backup.json".format(datestamp)
         dumpfile_location = os.path.join(tmp_dir.name, dumpfile)
@@ -74,6 +74,7 @@ def ExportDatabase(request):
         for media_file in media_paths:
             zip.write(media_file)
 
+        zip.close()
         response = FileResponse(open(full_zip_path, 'rb'))
         return response
     finally:
@@ -81,6 +82,9 @@ def ExportDatabase(request):
             tmp_dir.cleanup()
             # os.remove(tmp_zip.name)
         except PermissionError:
+            pass
+        except Exception as e:
+            print(e)
             pass
 
     return HttpResponse()

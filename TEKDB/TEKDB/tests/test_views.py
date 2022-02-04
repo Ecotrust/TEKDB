@@ -94,47 +94,45 @@ class ExportTest(TestCase):
         response = ExportDatabase(export_request)
         self.assertEqual(response.status_code, 200)
 
-        tempdir = tempfile.gettempdir()
-        datestamp = datetime.now().strftime('%Y%m%d')
-        zipname = get_export_file_from_response(response, tempdir, datestamp)
+        with tempfile.TemporaryDirectory() as tempdir:
+            datestamp = datetime.now().strftime('%Y%m%d')
+            zipname = get_export_file_from_response(response, tempdir, datestamp)
 
-        # test for dump files
-        #   * .zip
-        self.assertTrue(isfile(zipname))
-        self.assertTrue(zipfile.is_zipfile(zipname))
-        zip = zipfile.ZipFile(zipname, "r")
-        media_folder_name = split(settings.MEDIA_ROOT)[-1]
-        try:
-            zip.extractall(tempdir)
-        except Exception as e:
-            print(e)
-            self.assertTrue(False)
-        # Test that all media files were captured in the zip
-        for mediafile in listdir(settings.MEDIA_ROOT):
-            source_file_location = join(settings.MEDIA_ROOT, mediafile)
-            source_file_relative_name = join('media', mediafile)
-            temp_file_location = join(tempdir, source_file_relative_name)
-            self.assertTrue(source_file_relative_name in zip.namelist())
-            self.assertTrue(isfile(temp_file_location))
-            source_checksum = get_checksum(source_file_location, "md5")
-            temp_checksum = get_checksum(temp_file_location, "md5")
-            self.assertEqual(source_checksum, temp_checksum)
-        zip.close()
-        shutil.rmtree(join(tempdir, media_folder_name))
-        dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
-        self.assertTrue(isfile(dumpfile))
+            # test for dump files
+            #   * .zip
+            self.assertTrue(isfile(zipname))
+            self.assertTrue(zipfile.is_zipfile(zipname))
+            zip = zipfile.ZipFile(zipname, "r")
+            media_folder_name = split(settings.MEDIA_ROOT)[-1]
+            try:
+                zip.extractall(tempdir)
+            except Exception as e:
+                print(e)
+                self.assertTrue(False)
 
-        new_record_found = False
-        with open(dumpfile) as outfile:
-            fixture_lines = outfile.readlines()
-        for line in fixture_lines:
-            if '"commonname": "Dummy Record 1"' in line:
-                new_record_found = True
-                break
-        self.assertTrue(new_record_found)
+            # Test that all media files were captured in the zip
+            for mediafile in listdir(settings.MEDIA_ROOT):
+                source_file_location = join(settings.MEDIA_ROOT, mediafile)
+                source_file_relative_name = join('media', mediafile)
+                temp_file_location = join(tempdir, source_file_relative_name)
+                self.assertTrue(source_file_relative_name in zip.namelist())
+                self.assertTrue(isfile(temp_file_location))
+                source_checksum = get_checksum(source_file_location, "md5")
+                temp_checksum = get_checksum(temp_file_location, "md5")
+                self.assertEqual(source_checksum, temp_checksum)
+            zip.close()
+            shutil.rmtree(join(tempdir, media_folder_name))
+            dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
+            self.assertTrue(isfile(dumpfile))
 
-        remove(dumpfile)
-        remove(zipname)
+            new_record_found = False
+            with open(dumpfile) as outfile:
+                fixture_lines = outfile.readlines()
+            for line in fixture_lines:
+                if '"commonname": "Dummy Record 1"' in line:
+                    new_record_found = True
+                    break
+            self.assertTrue(new_record_found)
 
 class ImportTest(TransactionTestCase):
     fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
