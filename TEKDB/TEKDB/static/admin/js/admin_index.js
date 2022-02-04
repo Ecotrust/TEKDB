@@ -27,7 +27,7 @@ $(function() {
               success: function(data, status) {
                 if (data.hasOwnProperty('status_code') && data.hasOwnProperty('status_message')) {
                   if (data.status_code == 200) {
-                    window.alert(data.status_message + "\n\nYou will now be logged out.");
+                    window.alert(data.status_message + "\n\nYou may now be logged out.");
                     window.location.reload();
                   } else {
                     window.alert("Error Code: " + data.status_code + "\n\n" + data.status_message);

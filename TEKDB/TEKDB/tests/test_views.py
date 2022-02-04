@@ -186,7 +186,8 @@ class ImportTest(TransactionTestCase):
         zip = zipfile.ZipFile(self.zipname, "r")
         for filename in zip.namelist():
             if 'media' in filename and filename.index('media') == 0:
-                media_name = sep.join(filename.split(sep)[1:])
+                # NOTE: zipfiles always use "/" as a separator.
+                media_name = sep.join(filename.split("/")[1:])
                 self.assertTrue(media_name in listdir(self.tempmediadir.name))
         shutil.rmtree(self.tempmediadir.name)
 
