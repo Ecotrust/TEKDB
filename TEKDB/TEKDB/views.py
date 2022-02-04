@@ -50,7 +50,7 @@ def get_all_file_paths(directory, cwd=False):
 
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
-def ExportDatabase(request):
+def ExportDatabase(request, test=False):
     datestamp = datetime.now().strftime('%Y%m%d')
     tmp_zip = tempfile.NamedTemporaryFile(delete=False, prefix="{}_backup_".format(datestamp), suffix='.zip')
     os.chdir(os.path.join(settings.MEDIA_ROOT, '..'))
@@ -74,7 +74,11 @@ def ExportDatabase(request):
         response = FileResponse(open(tmp_zip.name, 'rb'))
         return response
     finally:
-        os.remove(tmp_zip.name)
+        try:
+            if not test:
+                os.remove(tmp_zip.name)
+        except (PermissionError, NotADirectoryError):
+            pass
 
     return HttpResponse()
 
@@ -153,7 +157,18 @@ def ImportDatabase(request):
 
                     try:
                         # Loading in DB Fixture
-                        management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+                        fixture_file_path = os.path.join(tempdir, fixture_name)
+                        with open(fixture_file_path) as source_fixture:
+                            source_encoding = source_fixture.encoding
+                        if not source_encoding.lower() == 'utf-8':
+                            with open(fixture_file_path, 'rb') as source_fixture:
+                                with open(os.path.join(tempdir, 'UTF8_fixture.json'), 'w+b') as target_fixture:
+                                    contents = source_fixture.read()
+                                    target_fixture.write(contents.decode(source_encoding).encode('utf-8'))
+                                    reencoded = True
+                                    fixture_file_path = target_fixture.name
+
+                        management.call_command('loaddata', fixture_file_path)
                     except Exception as e:
                         status_code = 500
                         status_message = 'Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {}'.format(e)
