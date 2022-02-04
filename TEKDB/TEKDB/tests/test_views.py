@@ -111,16 +111,16 @@ class ExportTest(TestCase):
                 self.assertTrue(False)
 
             # Test that all media files were captured in the zip
+            zip.close()
             for mediafile in listdir(settings.MEDIA_ROOT):
                 source_file_location = join(settings.MEDIA_ROOT, mediafile)
                 source_file_relative_name = join('media', mediafile)
                 temp_file_location = join(tempdir, source_file_relative_name)
-                self.assertTrue(source_file_relative_name in zip.namelist())
+                self.assertTrue("/".join(split(source_file_relative_name)) in zip.namelist())
                 self.assertTrue(isfile(temp_file_location))
                 source_checksum = get_checksum(source_file_location, "md5")
                 temp_checksum = get_checksum(temp_file_location, "md5")
                 self.assertEqual(source_checksum, temp_checksum)
-            zip.close()
             shutil.rmtree(join(tempdir, media_folder_name))
             dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
             self.assertTrue(isfile(dumpfile))

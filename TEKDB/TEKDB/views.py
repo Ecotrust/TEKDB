@@ -80,11 +80,7 @@ def ExportDatabase(request):
     finally:
         try:
             tmp_dir.cleanup()
-            # os.remove(tmp_zip.name)
-        except PermissionError:
-            pass
-        except Exception as e:
-            print(e)
+        except (PermissionError, NotADirectoryError):
             pass
 
     return HttpResponse()
