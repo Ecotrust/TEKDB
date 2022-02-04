@@ -116,8 +116,8 @@ def ImportDatabase(request):
                         'status_code': status_code,
                         'status_message': status_message
                     })
-                if zipfile.is_zipfile(tmp_zip_file.name):
-                    zip = zipfile.ZipFile(tmp_zip_file.name, "r")
+                if zipfile.is_zipfile(tmp_zip_file):
+                    zip = zipfile.ZipFile(tmp_zip_file, "r")
                     non_media = [x for x in zip.namelist() if 'media' not in x and '.json' in x]
                     # Validate Zip Contents
                     if not len(non_media) == 1 or len(zip.namelist()) < 2:

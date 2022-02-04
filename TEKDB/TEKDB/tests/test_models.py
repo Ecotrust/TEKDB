@@ -204,11 +204,11 @@ class ResourcesActivityEventsTest(TestCase):
         ### TEST TEXT & CHAR FIELD SEARCH ###
         #####################################
         # fields:
-        
+
         keyword = 'men'
-        activity_results = ResourcesActivityEvents.keyword_search(keyword) 
+        activity_results = ResourcesActivityEvents.keyword_search(keyword)
         self.assertEqual(activity_results.count(), 2)
-        
+
         for result in activity_results:
             self.assertTrue(hasattr(result, 'similarity'))
             self.assertTrue(
@@ -217,7 +217,7 @@ class ResourcesActivityEventsTest(TestCase):
                     result.similarity > settings.MIN_SEARCH_SIMILARITY
                 )
             )
-         
+
 
 
 # People
@@ -326,10 +326,10 @@ class MediaTest(TestCase):
         ### TEST TEXT & CHAR FIELD SEARCH ###
         #####################################
         # fields:
-        
+
         keyword = 'sample'
-        media_results = Media.keyword_search(keyword) 
-        self.assertEqual(media_results.count(), 3)      
+        media_results = Media.keyword_search(keyword)
+        self.assertEqual(media_results.count(), 2)
 
         for result in media_results:
             self.assertTrue(hasattr(result, 'similarity'))
@@ -338,7 +338,7 @@ class MediaTest(TestCase):
                     result.similarity and
                     result.similarity > settings.MIN_SEARCH_SIMILARITY
                 )
-            )  
+            )
 
 
 # MediaCitationEvents
