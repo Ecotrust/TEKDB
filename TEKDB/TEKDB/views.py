@@ -157,7 +157,18 @@ def ImportDatabase(request):
 
                     try:
                         # Loading in DB Fixture
-                        management.call_command('loaddata', os.path.join(tempdir, fixture_name))
+                        fixture_file_path = os.path.join(tempdir, fixture_name)
+                        with open(fixture_file_path) as source_fixture:
+                            source_encoding = source_fixture.encoding
+                        if not source_encoding.lower() == 'utf-8':
+                            with open(fixture_file_path, 'rb') as source_fixture:
+                                with open(os.path.join(tempdir, 'UTF8_fixture.json'), 'w+b') as target_fixture:
+                                    contents = source_fixture.read()
+                                    target_fixture.write(contents.decode(source_encoding).encode('utf-8'))
+                                    reencoded = True
+                                    fixture_file_path = target_fixture.name
+
+                        management.call_command('loaddata', fixture_file_path)
                     except Exception as e:
                         status_code = 500
                         status_message = 'Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {}'.format(e)
