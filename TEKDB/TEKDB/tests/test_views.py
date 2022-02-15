@@ -11,7 +11,7 @@ from django.urls import reverse
 # from django.utils import timezone
 import hashlib
 from os import listdir, remove, sep
-from os.path import isfile, join, split, getsize
+from os.path import isfile, isdir, join, split, getsize
 import shutil
 # from TEKDB.forms import *
 from TEKDB.models import *
@@ -119,11 +119,13 @@ class ExportTest(TestCase):
                 source_file_location = join(settings.MEDIA_ROOT, mediafile)
                 source_file_relative_name = join('media', mediafile)
                 temp_file_location = join(tempdir, source_file_relative_name)
-                # self.assertTrue("/".join(split(source_file_relative_name)) in zip.namelist())
-                self.assertTrue(isfile(temp_file_location))
-                source_checksum = get_checksum(source_file_location, "md5")
-                temp_checksum = get_checksum(temp_file_location, "md5")
-                self.assertEqual(source_checksum, temp_checksum)
+                # if a directory exists in media, then the folder name won't be the whole match
+                if not isdir(source_file_relative_name):
+                    self.assertTrue(source_file_relative_name in zip.namelist())
+                    self.assertTrue(isfile(temp_file_location) or isdir(temp_file_location))
+                    source_checksum = get_checksum(source_file_location, "md5")
+                    temp_checksum = get_checksum(temp_file_location, "md5")
+                    self.assertEqual(source_checksum, temp_checksum)
             shutil.rmtree(join(tempdir, media_folder_name))
             dumpfile = join(tempdir, "{}_backup.json".format(datestamp))
             self.assertTrue(isfile(dumpfile))
