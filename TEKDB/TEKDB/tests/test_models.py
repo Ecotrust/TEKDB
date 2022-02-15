@@ -15,6 +15,51 @@ from django.db import connection
 #   MODELS W/ keyword_search
 ###
 
+class MiscSearchTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_empty_string_search(self):
+        """
+        Test that an empty string search returns all objects
+        """
+        keyword = ''
+        categories = ['places','resources','activities','sources','media']
+        
+        from explore.views import get_model_by_type
+
+        for category in categories:
+            query_models = get_model_by_type(category)
+            resultlist = []
+            for model in query_models:
+                # Find all results matching keyword in this model
+                print("\n\ttest empty string search for {} equals count of {}.objects.count".format(model.__name__, model.__name__))
+                model_results = model.keyword_search(keyword)
+                for result in model_results:
+                    resultlist.append(result)
+
+                self.assertTrue(len(resultlist) == model.objects.count())
+
+    def test_phrase_search(self):
+        """
+        Test that a phrase search returns all objects that contain the phrase
+        """
+        keyword = "salmon trout"
+        
+        from explore.views import getResults
+        
+        search_results = getResults(keyword, categories=['places','resources','activities','sources','media'])
+        # 24 is king salmon
+        self.assertTrue(24 in [x['id'] for x in search_results])
+        # 362 is cutthroat trout
+        self.assertTrue(362 in [x['id'] for x in search_results])
+
+
 # LookupTribe
 
 

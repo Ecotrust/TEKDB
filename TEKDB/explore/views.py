@@ -379,10 +379,10 @@ def search(request):
         query_string_visible = query_string
 
     if query_string not in [None, '', '*']:
-        query_value = ' value=%s' % query_string
+        query_value = ' value="%s"' % query_string
     else:
         query_value = ''
-    keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="Search Phrase"%s>' % query_value
+    keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="" %s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')
@@ -436,17 +436,16 @@ def getResults(keyword_string, categories):
             for result in model_results:
                 # Create JSON object to be resturned
                 result_json = result.get_response_format()
-                result_json['rank'] = result.rank
-                result_json['similarity'] = result.similarity
+                if keyword_string != '':
+                    result_json['rank'] = result.rank
+                    result_json['similarity'] = result.similarity
+                else:
+                    result_json['rank'] = 0
+                    result_json['similarity'] = 0
+
                 resultlist.append(result_json)
     # Sort results from all models by rank, then similarity (descending)
     return sorted(resultlist, key=lambda res: (res['rank'], res['similarity']), reverse=True)
-
-@login_required
-def query(request):
-    from django.http import JsonResponse
-    results = {'resultList': getResults(request)}
-    return JsonResponse(results)
 
 def get_category_list(request):
     categories = []
