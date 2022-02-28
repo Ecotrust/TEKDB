@@ -33,5 +33,5 @@ class SearchTest(TestCase):
             }
         )
         request.user = Users.objects.get(username='admin')
-        # Assert that the search query string matches the query string submitted
+        # Assert that the search query string matches the query string submitted    
         self.assertEqual(query_string, request.GET['query'])
