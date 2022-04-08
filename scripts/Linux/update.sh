@@ -1,25 +1,36 @@
 #!/bin/bash
 
-# CWD=`pwd`
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-# PROJ_ROOT=${BASH_SOURCE}/../..
-# PROJ_ROOT=${0}/../..
 PROJ_ROOT=$SCRIPT_DIR/../..
-# TODO
-#   Test if $PROJ_ROOT/env exists and is a dir
-ENV_BIN=$PROJ_ROOT/../env/bin
-#   If not, test if $PROJ_ROOT/TEKDB/env exists is a dir
-#ENV_BINT=$PROJ_ROOT/TEKDB/env/bin
-#   If not:
-# echo "Python virtual environment does not exist in a standard location."
-# echo -n "Please enter the source directory for your Py Venv: "
-# read filename
-# IF EXISTS:
-# ENV_BIN=$filename/bin
+
+# Test if $PROJ_ROOT/env exists and is a dir
+if [ -d $PROJ_ROOT/env ]
+    then
+        # This matches the suggested production install pattern
+        ENV_BIN=$PROJ_ROOT/env/bin
+        echo env bin found: $ENV_BIN
+    #   If not, test if $PROJ_ROOT/TEKDB/env exists is a dir
+    elif [ -d $PROJ_ROOT/../env ]
+        then
+            # This matches vagrant dev environment install pattern
+            ENV_BIN=$PROJ_ROOT/../env/bin
+            echo env bin found: $ENV_BIN
+    #   If not:
+else
+    echo Proj root identified here: $PROJ_ROOT
+    echo "Python virtual environment does not exist in a standard location."
+    echo -n "Please enter the source directory for your Py Venv: "
+    read filename
+    ENV_BIN=$filename/bin
+    # IF it doesn't exist:
+    if [[ ! -d $ENV_BIN ]]
+    then
+        echo Virtual Environment $filename does not contain 'bin' directory
+        exit 0
+    fi
+fi
 PYTHON=$ENV_BIN/python
 PIP=$ENV_BIN/pip
-echo $PYTHON
-
 
 cd $PROJ_ROOT
 git pull origin main
