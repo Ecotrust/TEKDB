@@ -1,6 +1,6 @@
 @echo off
 set CWD=%~dp0
-set PROJ_ROOT=%CWD%..
+set PROJ_ROOT=%CWD%..\..
 set PYTHON=%PROJ_ROOT%\env\Scripts\python.exe
 cd %PROJ_ROOT%
 
