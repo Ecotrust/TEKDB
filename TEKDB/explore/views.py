@@ -126,6 +126,14 @@ def get_by_model_type(request, model_type):
     }
     return render(request, "results.html", context)
 
+def get_project_geography():
+    from TEKDB.settings import DATABASE_GEOGRAPHY
+
+    #RDH 2022-04-11: TODO: have users define their study area, save it to the DB, and format that like settings.DATABASE_GEOGRAPHY
+    #   --FOOTHOLD--
+
+    return DATABASE_GEOGRAPHY
+
 @login_required
 def get_by_model_id(request, model_type, id):
     state = "?%s" % request.GET.urlencode()
@@ -159,7 +167,7 @@ def get_by_model_id(request, model_type, id):
     }
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
-        from TEKDB.settings import DATABASE_GEOGRAPHY
+        DATABASE_GEOGRAPHY = get_project_geography()
         context['default_lon'] = DATABASE_GEOGRAPHY['default_lon']
         context['default_lat'] = DATABASE_GEOGRAPHY['default_lat']
         context['default_zoom'] = DATABASE_GEOGRAPHY['default_zoom']
@@ -399,6 +407,8 @@ def search(request):
     if view == None:
         view = 'list'
 
+    DATABASE_GEOGRAPHY = get_project_geography()
+
     context = {
         'items_per_page': items_per_page,
         'results': json.dumps(resultlist),
@@ -416,7 +426,14 @@ def search(request):
             'page' : int(page),
             'items_per_page' : int(items_per_page),
         },
+        'default_lon': DATABASE_GEOGRAPHY['default_lon'],
+        'default_lat': DATABASE_GEOGRAPHY['default_lat'],
+        'default_zoom': DATABASE_GEOGRAPHY['default_zoom'],
+        'min_zoom': DATABASE_GEOGRAPHY['min_zoom'],
+        'max_zoom': DATABASE_GEOGRAPHY['max_zoom'],
+        'map_extent': DATABASE_GEOGRAPHY['map_extent'],
     }
+
 
     request.META.pop('QUERY_STRING')
 

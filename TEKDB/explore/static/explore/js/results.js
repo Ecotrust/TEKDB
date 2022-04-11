@@ -15,6 +15,21 @@ function resultViewModel() {
     return this.state_view() == 'list';
   }, this);
 
+  this.place_results = ko.observableArray([]);
+
+  this.loadPlaceResults = function(results){
+    var new_place_results = [];
+    for (var i = 0; i < results.length; i++) {
+      if (results[i].type = "places") {
+        new_place_results.push(results[i]);
+      }
+    }
+    app.resultViewModel.place_results(new_place_results);
+  };
+
+
+  this.results.subscribe(this.loadPlaceResults);
+
   this.loadStateFromHash = function(){
     if ($.query.get('view') == 'tile' || $.query.get('view') == 'list'){
       this.state_view($.query.get('view'));
@@ -174,5 +189,18 @@ function resize_desc_to_fit(self){
     text_length = self.text().length;
     self.text(self.text().substring(0,text_length-10) + '...');
     resize_desc_to_fit(self);
+  }
+}
+
+function show_map_results() {
+  const modal = $('#resultsMapModal');
+
+  // TODO: 
+  //    Clear features from vector source
+  //    Add results features to  vector source
+
+  if (modal) {
+    modal.modal('show');
+    setTimeout(function(){map.updateSize();}, 150);
   }
 }
