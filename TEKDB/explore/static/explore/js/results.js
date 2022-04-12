@@ -25,6 +25,7 @@ function resultViewModel() {
       }
     }
     app.resultViewModel.place_results(new_place_results);
+    show_map_results();
   };
 
 
