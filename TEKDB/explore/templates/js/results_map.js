@@ -89,7 +89,7 @@
       new ol.layer.Group({
         title: 'Overlays',
         layers: [
-          // vectorLayer,
+          vectorLayer,
           esriLabels
         ],
         zIndex: 10
