@@ -51,6 +51,7 @@
   // });
   var vectorLayer = new ol.layer.Vector({
     source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
       // features: new ol.format.GeoJSON().readFeatures([])
       // features: []
     }),

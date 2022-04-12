@@ -195,12 +195,39 @@ function resize_desc_to_fit(self){
 function show_map_results() {
   const modal = $('#resultsMapModal');
 
-  // TODO: 
+  var features = [];
+
   //    Clear features from vector source
+  vectorLayer.getSource().clear();
   //    Add results features to  vector source
+  var place_results = app.resultViewModel.place_results();
+  for (var i = 0; i < place_results.length; i++) {
+    var record = place_results[i];
+    var geom = JSON.parse(record.feature);
+    if (geom) {
+      // TODO: append record details to feature attributes/properties
+      features.push(geom);
+    }
+  }
+  
+  const featureCollection = {
+    'type': 'FeatureCollection',
+    'crs': {
+      'type': 'name',
+      'properties': {
+        'name': 'EPSG:3857',
+      },
+    },
+    'features': features
+  };
+  
+  var jsonFeatures = new ol.format.GeoJSON().readFeatures(featureCollection);
+  vectorLayer.getSource().addFeatures(jsonFeatures);
 
   if (modal) {
     modal.modal('show');
     setTimeout(function(){map.updateSize();}, 150);
+    var geometry_extent = vectorLayer.getSource().getExtent();
+    map.getView().fit(geometry_extent,map.getSize());
   }
 }
