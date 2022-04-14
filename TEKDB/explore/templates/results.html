@@ -10,23 +10,27 @@
 
 {% block contentwrapper %}
 <div class="container content-container">
-  <form class="query-form" method='post' action='/search/'>
+  <form class="query-form" method='post' action='/search/' id="filter-form">
     {% csrf_token %}
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-10">
         {{ keyword_search_input | safe }}
+        <input type="submit" value='Apply Filter'>
       </div>
-      <div class="col-md-4">
-      </div>
-      <div class="col-md-4">
+      <div class="col-md-1">
       </div>
     </div>
     <div class="row content-row">
-      <div class="col-md-2">
-        <p>Type:</p>
-        {{ category_checkboxes | safe }}
-        <input type="submit" value='Apply Filter'>
+      <div class="col-md-12">
+        <p id="filter-checkboxes">
+          Filter By: 
+          {{ category_checkboxes | safe }}
+        </p>
       </div>
+    </div>
+    <div class="row content-row">
       <div class="col-md-8">
         <div class="pagination-row row">
           <div class="pagination col-md-6">
@@ -98,7 +102,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-4">
         <table>
           <tr><td>Download</td></tr>
           <tr>

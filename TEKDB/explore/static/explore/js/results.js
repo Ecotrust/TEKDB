@@ -20,7 +20,7 @@ function resultViewModel() {
   this.loadPlaceResults = function(results){
     var new_place_results = [];
     for (var i = 0; i < results.length; i++) {
-      if (results[i].type = "places") {
+      if (results[i].type == "places") {
         new_place_results.push(results[i]);
       }
     }
@@ -225,10 +225,25 @@ function show_map_results() {
   var jsonFeatures = new ol.format.GeoJSON().readFeatures(featureCollection);
   vectorLayer.getSource().addFeatures(jsonFeatures);
 
-  if (modal) {
-    modal.modal('show');
-    setTimeout(function(){map.updateSize();}, 150);
-    var geometry_extent = vectorLayer.getSource().getExtent();
-    map.getView().fit(geometry_extent,map.getSize());
+  if (vectorLayer.getSource().getFeatures().length > 0) {
+    if (modal) {
+      modal.modal('show');
+      setTimeout(function(){map.updateSize();}, 150);
+      var geometry_extent = vectorLayer.getSource().getExtent();
+      map.getView().fit(geometry_extent,map.getSize());
+    }
+  } else {
+    $("#map").hide();
   }
+
 }
+
+var set_triggers = function() {
+  $("#filter-checkboxes").children('input').change(function(){
+    $('#filter-form').submit();
+  });
+}
+
+$(document).ready(function() {
+  set_triggers();
+});
