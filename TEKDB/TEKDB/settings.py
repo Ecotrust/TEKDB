@@ -257,6 +257,17 @@ MEDIA_ROOT = '/vol/web/media'
 
 MODERATE_STAFF = False
 
+PROJ_CSS = {
+    'primary_a': '#8f371c',
+    'primary_b': '#e9e0ce',
+    'primary_c': '#0e1421',
+    'primary_d': '#cfd2d9',
+    'secondary_a': '#51713a',
+    'secondary_b': '#8d9d34',
+    'secondary_c': '#acc760',
+    'secondary_d': '#c5b3c3'
+}
+
 try:
     from TEKDB.local_settings import *
 except Exception as e:

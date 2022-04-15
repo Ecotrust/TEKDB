@@ -65,6 +65,7 @@ a:hover {
   list-style-type: none;
 }
 #export-links li a,
+#export-links a,
 #export-links li span{
-  color: blue;
+  color: var(--link_color);
 }

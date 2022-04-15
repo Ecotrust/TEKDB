@@ -6,6 +6,20 @@
     <link rel="stylesheet" href="/static/explore/css/header.css">
     <link rel="stylesheet" href="/static/explore/css/modals.css">
     <link rel="stylesheet" href="/static/explore/css/forms.css">
+    <style>
+      :root {
+        --primary_a: {{ proj_css.primary_a }};
+        --primary_b: {{ proj_css.primary_b }};
+        --primary_c: {{ proj_css.primary_c }};
+        --primary_d: {{ proj_css.primary_d }};
+        --secondary_a: {{ proj_css.secondary_a }};
+        --secondary_b: {{ proj_css.secondary_b }};
+        --secondary_c: {{ proj_css.secondary_c }};
+        --secondary_d: {{ proj_css.secondary_d }};
+        --dark_font: var(--primary_c);
+        --link_color: var(--secondary_a);
+      }
+    </style>
 
     {% block extra_css %}{% endblock %}
   </head>

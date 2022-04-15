@@ -109,6 +109,11 @@
   background-color: white;
 }
 
+.results-controls-left,
+.results-controls-center {
+  border-right: 1px solid var(--dark_font);
+}
+
 .list-image {
   height: 25px;
 }
@@ -242,4 +247,14 @@
 #results_table_info {
   float: right;
   /*margin-top: -0.75em;*/
+}
+
+#results_table_length label {
+  display: none;
+}
+
+#results_table_paginate,
+#results_table_paginate a {
+  color: var(--dark_font);
+  font-size: 1.7rem;
 }

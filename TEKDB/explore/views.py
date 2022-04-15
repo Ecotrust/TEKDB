@@ -3,6 +3,42 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
 
+def get_proj_css():
+    proj_css = {
+        'primary_a': '#8f371c',
+        'primary_b': '#e9e0ce',
+        'primary_c': '#0e1421',
+        'primary_d': '#cfd2d9',
+        'secondary_a': '#51713a',
+        'secondary_b': '#8d9d34',
+        'secondary_c': '#acc760',
+        'secondary_d': '#c5b3c3'
+    }
+    try:
+        from TEKDB.settings import PROJ_CSS
+        if 'primary_a' in PROJ_CSS.keys():
+            proj_css['primary_a'] = PROJ_CSS['primary_a']
+        if 'primary_b' in PROJ_CSS.keys():
+            proj_css['primary_b'] = PROJ_CSS['primary_b']
+        if 'primary_c' in PROJ_CSS.keys():
+            proj_css['primary_c'] = PROJ_CSS['primary_c']
+        if 'primary_d' in PROJ_CSS.keys():
+            proj_css['primary_d'] = PROJ_CSS['primary_d']
+        if 'secondary_a' in PROJ_CSS.keys():
+            proj_css['secondary_a'] = PROJ_CSS['secondary_a']
+        if 'secondary_b' in PROJ_CSS.keys():
+            proj_css['secondary_b'] = PROJ_CSS['secondary_b']
+        if 'secondary_c' in PROJ_CSS.keys():
+            proj_css['secondary_c'] = PROJ_CSS['secondary_c']
+        if 'secondary_d' in PROJ_CSS.keys():
+            proj_css['secondary_d'] = PROJ_CSS['secondary_d']
+    except ImportError as e:
+        pass
+
+    # TODO: allow for admin-defined 8-color palettes
+
+    return proj_css
+
 # Create your views here.
 def home(request):
     try:
@@ -18,7 +54,8 @@ def home(request):
         'page':'home',
         'pageTitle':'Welcome',
         'pageContent':page_content,
-        'user': request.user
+        'user': request.user,
+        'proj_css': get_proj_css()
     }
     return render(request, "welcome.html", context)
 
@@ -35,7 +72,8 @@ def about(request):
         'page':'about',
         'pageTitle':False,
         'pageContent':page_content,
-        'user': request.user
+        'user': request.user,
+        'proj_css': get_proj_css()
     }
     return render(request, "tek_index.html", context)
 
@@ -52,7 +90,8 @@ def help(request):
         'page':'help',
         'pageTitle':False,
         'pageContent':page_content,
-        'user': request.user
+        'user': request.user,
+        'proj_css': get_proj_css()
     }
     return render(request, "tek_index.html", context)
 
@@ -62,7 +101,8 @@ def explore(request):
         'page':'explore',
         'pageTitle':'Explore',
         'pageContent':"<p>In in mi vitae nibh posuere condimentum vitae eget quam. Etiam et urna id odio fringilla aliquet id hendrerit nisl. Ut sed ex vel felis rhoncus eleifend. Ut auctor facilisis vehicula. Ut sed dui nec ipsum pellentesque tempus.</p>",
-        'user': request.user
+        'user': request.user,
+        'proj_css': get_proj_css()
     }
     return render(request, "explore.html", context)
 
@@ -164,6 +204,7 @@ def get_by_model_id(request, model_type, id):
         'id': id,
         'back_link': back_link,
         'state': state,
+        'proj_css': get_proj_css(),
     }
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
@@ -382,7 +423,7 @@ def search(request):
         category_checkboxes = '%s<input type="checkbox" name="%s" value="%s"%s>%s\n' % (category_checkboxes, category, category,checked,category.capitalize())
 
     if query_string in [None, '', '*']:
-        query_string_visible = 'No keyword search specified.'
+        query_string_visible = False
     else:
         query_string_visible = query_string
 
@@ -412,6 +453,7 @@ def search(request):
 
     context = {
         'items_per_page': items_per_page,
+        'results_qs': resultlist,
         'results': json.dumps(resultlist),
         'query': query_string,
         'keyword': query_string_visible,
@@ -433,6 +475,7 @@ def search(request):
         'min_zoom': DATABASE_GEOGRAPHY['min_zoom'],
         'max_zoom': DATABASE_GEOGRAPHY['max_zoom'],
         'map_extent': DATABASE_GEOGRAPHY['map_extent'],
+        'proj_css': get_proj_css()
     }
 
 
