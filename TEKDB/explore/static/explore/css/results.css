@@ -197,6 +197,6 @@ table#results_table>thead {
 #results_table_paginate,
 #results_table_paginate a {
   color: var(--dark_font);
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   padding: 0 0.5rem;
 }

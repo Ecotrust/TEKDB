@@ -194,8 +194,6 @@ function resize_desc_to_fit(self){
 }
 
 function show_map_results() {
-  const modal = $('#resultsMapModal');
-
   var features = [];
 
   //    Clear features from vector source
@@ -226,12 +224,9 @@ function show_map_results() {
   vectorLayer.getSource().addFeatures(jsonFeatures);
 
   if (vectorLayer.getSource().getFeatures().length > 0) {
-    if (modal) {
-      modal.modal('show');
-      setTimeout(function(){map.updateSize();}, 150);
-      var geometry_extent = vectorLayer.getSource().getExtent();
-      map.getView().fit(geometry_extent,map.getSize());
-    }
+    setTimeout(function(){map.updateSize();}, 150);
+    var geometry_extent = vectorLayer.getSource().getExtent();
+    map.getView().fit(geometry_extent,map.getSize());
   } else {
     $("#map").hide();
   }

@@ -5,10 +5,8 @@ var esriLabels = new ol.layer.Tile({
   source: new ol.source.XYZ({
     url: "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
     attributions: [
-      new ol.Attribution({
-        html: "<br/><a href='http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
+      "<br/><a href='http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
         Labels Sources: Esri, HERE, DeLorme, MapmyIndia, Â© OpenStreetMap contributors, and the GIS user community</a>"
-      })
     ]
   })
 });
@@ -19,10 +17,8 @@ var esriAerial = new ol.layer.Tile({
   source: new ol.source.XYZ({
     url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
     attributions: [
-      new ol.Attribution({
-        html: "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
+      "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
         Aerial Sources: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community</a>"
-      })
     ]
   })
 });
@@ -32,10 +28,8 @@ var esri_2d = new ol.layer.Tile({
   source: new ol.source.XYZ({
       url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
       attributions: [
-        new ol.Attribution({
-          html: "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
+        "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
           >Topo Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
-        })
       ]
   })
 });
@@ -47,9 +41,7 @@ var nautical_charts = new ol.layer.Tile({
     // params: {'LAYERS': 'NOAA_RNC'},
     params: {'LAYERS': '0'},
     attributions: [
-      new ol.Attribution({
-        html: 'Natical Source: NOAA Office of Coast Survey'
-      })
+      'Natical Source: NOAA Office of Coast Survey'
     ]
   })
 });
@@ -99,9 +91,9 @@ var map = new ol.Map({
     new ol.layer.Group({
       'title': 'Base Maps',
       layers: [
-        nautical_charts,
-        esri_2d,
-        osmLayer,
+        // nautical_charts,
+        // esri_2d,
+        // osmLayer,
         esriAerial
       ],
       zIndex: 0
