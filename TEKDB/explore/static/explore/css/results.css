@@ -39,6 +39,14 @@
 }
 
 .results-controls-left,
+/* .results-controls-center, */
+#results_table_paginate,
+.results-controls-right {
+  justify-content: center;
+  display: flex;
+}
+
+.results-controls-left,
 .results-controls-center {
   border-right: 1px solid var(--default_font);
 }
@@ -190,4 +198,5 @@ table#results_table>thead {
 #results_table_paginate a {
   color: var(--dark_font);
   font-size: 1.7rem;
+  padding: 0 0.5rem;
 }

@@ -51,19 +51,19 @@ function resultViewModel() {
   this.state_view.subscribe(this.show_pagination);
 
   this.state_page.subscribe(function(newPage) {
-    if (app.tileViewModel && app.tileViewModel.tilepagination()){
-      app.tileViewModel.tilepagination().pagination(newPage);
-    }
+    // if (app.tileViewModel && app.tileViewModel.tilepagination()){
+      // app.tileViewModel.tilepagination().pagination(newPage);
+    // }
     if (app.hasOwnProperty('datatable')) {
       app.datatable.page(newPage-1).draw('page');
     }
   });
 
-  this.state_items_per_page.subscribe(function(new_ipp){
-    if (app.tileViewModel) {
-      app.tileViewModel.reset_tilepagination();
-    }
-  });
+  // this.state_items_per_page.subscribe(function(new_ipp){
+  //   if (app.tileViewModel) {
+  //     app.tileViewModel.reset_tilepagination();
+  //   }
+  // });
 
   this.get_state = function() {
     state = [];
@@ -239,7 +239,7 @@ function show_map_results() {
 }
 
 var set_triggers = function() {
-  $("#filter-checkboxes").children('input').change(function(){
+  $("#filter-checkboxes").find('input').change(function(){
     $('#filter-form').submit();
   });
 }

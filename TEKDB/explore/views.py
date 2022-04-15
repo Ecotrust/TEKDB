@@ -420,7 +420,7 @@ def search(request):
             checked = ' checked=true'
         else:
             checked = ''
-        category_checkboxes = '%s<input type="checkbox" name="%s" value="%s"%s>%s\n' % (category_checkboxes, category, category,checked,category.capitalize())
+        category_checkboxes += '<div class="col-md-2"><input type="checkbox" name="%s" value="%s"%s>%s</input></div>' % (category, category,checked,category.capitalize())
 
     if query_string in [None, '', '*']:
         query_string_visible = False

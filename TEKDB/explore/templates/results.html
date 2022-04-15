@@ -22,13 +22,13 @@
       <div class="col-md-1">
       </div>
     </div>
-    <div class="row content-row">
-      <div class="col-md-12">
-        <p id="filter-checkboxes">
+    <div class="row content-row"  id="filter-checkboxes">
+      <div class="col-md-2">
+        <p>
           Filter By: 
-          {{ category_checkboxes | safe }}
         </p>
       </div>
+      {{ category_checkboxes | safe }}
     </div>
   </form>
   
@@ -75,7 +75,7 @@
                 <tr>
                   <th></th>
                   <th id='name_col'>Name</th>
-                  <th id='category_col'>Category</th>
+                  <!-- <th id='category_col'>Category</th> -->
                   <th id='description_col'>Description</th>
                 </tr>
               </thead>
@@ -83,7 +83,7 @@
                 <tr data-bind="click: rowclick">
                   <td><img class='list-image' data-bind="attr: { src: $data.image }" /></td>
                   <td data-bind='html: $data.name'>name</td>
-                  <td data-bind='text: $data.category_name'></td>
+                  <!-- <td data-bind='text: $data.category_name'></td> -->
                   <td data-bind='html: $data.description'></td>
                 </tr>
               </tbody>
