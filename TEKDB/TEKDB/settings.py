@@ -259,13 +259,13 @@ MODERATE_STAFF = False
 
 PROJ_CSS = {
     'primary_a': '#8f371c',
-    'primary_b': '#e9e0ce',
-    'primary_c': '#0e1421',
-    'primary_d': '#cfd2d9',
-    'secondary_a': '#51713a',
-    'secondary_b': '#8d9d34',
-    'secondary_c': '#acc760',
-    'secondary_d': '#c5b3c3'
+    'primary_b': '#f7f3eb',
+    'primary_c': '#0e1522',
+    'primary_d': '#ced2da',
+    'secondary_a': '#51723b',
+    'secondary_b': '#839230',
+    'secondary_c': '#6ea32e',
+    'secondary_d': '#b44ba3'
 }
 
 try:
