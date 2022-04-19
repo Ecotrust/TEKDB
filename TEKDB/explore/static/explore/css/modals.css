@@ -1,6 +1,6 @@
 .modal-content {
-  background-color: #99AA99;
-  color: white;
+  background-color: var(--accent_bg);
+  color: var(--default_font);
 }
 
 .modal-header {
@@ -9,7 +9,7 @@
 }
 
 .modal-header h4 {
-  color: white;
+  color: var(--default_font);
   font-size: 36px;
   padding: 15px 0;
 }
@@ -19,9 +19,13 @@
 }
 
 .modal-body .form-group .form-control {
-  color: white;
-  background-color: #777;
+  color: var(--light_font);
+  background-color: var(--alt_field_bg);
   border: none;
+}
+
+.modal-body .form-group .form-control::placeholder {
+  color: var(--placeholder_font);
 }
 
 .modal-center {
@@ -30,8 +34,9 @@
 
 .modal-center .btn {
   width: 200px;
-  background-color: #444;
+  background-color: var(--ok_button_bg);
   margin: 20px 0;
+  color: var(--light_font);
 }
 
 .modal-center .splitter {
