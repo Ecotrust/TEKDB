@@ -221,15 +221,6 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-RECORD_ICONS = {
-    'activity': '/static/explore/img/activity.png',
-    'citation': '/static/explore/img/citation.png',
-    'place': '/static/explore/img/place.png',
-    'media': '/static/explore/img/media.png',
-    'event': '/static/explore/img/activity.png',
-    'resource': '/static/explore/img/resource.png',
-}
-
 ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin')
 
 TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
@@ -275,6 +266,16 @@ PROJ_ICONS = {
     'activity_icon': 'explore/img/record_icons/activity_icon.png',
     'source_icon': 'explore/img/record_icons/source_icon.png',
     'media_icon': 'explore/img/record_icons/media_icon.png',
+}
+
+RECORD_ICONS = {
+    'person': '/static/explore/img/activity.png',
+    'activity': '/static/{}'.format(PROJ_ICONS['activity_icon']),
+    'citation': '/static/{}'.format(PROJ_ICONS['source_icon']),
+    'place': '/static/{}'.format(PROJ_ICONS['place_icon']),
+    'media': '/static/{}'.format(PROJ_ICONS['media_icon']),
+    'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
+    'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
 }
 
 try:

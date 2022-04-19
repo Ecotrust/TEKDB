@@ -1073,7 +1073,7 @@ class People(DefaultModeratedModel, ModeratedModel):
 
     def image(self):
         #TODO: Better icon or no icon
-        return '/static/explore/img/activity.png'
+        return settings.RECORD_ICONS['person']
 
     def data(self):
         return [
