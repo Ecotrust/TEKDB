@@ -1,4 +1,4 @@
-body { padding-top: 90px; }
+body { padding-top: var(--header_height); }
 
 h1 { text-align: center; }
 

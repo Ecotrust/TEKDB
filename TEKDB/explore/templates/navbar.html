@@ -1,77 +1,57 @@
-<div class="row">
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-2">
-      </div>
-      <div class="col-md-8 header-title-content">
-        <a href="/">
-          {% block headerTitle %}
-          <div class="row">
-            <div class="col-md-12 header-title">
-              <h1>TEK</h1>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <p>Traditional Ethnographic Knowledge Database</p>
-            </div>
-          </div>
-          {% endblock %}
-        </a>
-      </div>
-      <div class="col-md-2">
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    {% block headerButtons %}
-    <div class="row header-button-row">
-      {% if user.is_authenticated %}
-      {% ifnotequal pageTitle "Explore" %}
-      <a href="/explore" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endif %}
-        Explore
-      </a>
-      {% ifnotequal pageTitle "About" %}
-      <a href="/about" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-        About
-      </a>
-      {% ifnotequal pageTitle "Help" %}
-      <a href="/help" class="col-sm-2 col-md-2 header-button">
-      {% else %}
-      <a class="col-sm-2 col-md-2 header-button-selected">
-      {% endifnotequal %}
-        Help
-      </a>
-      <a class="col-sm-1 col-md-1">
+{% load static %}
+<nav class="navbar navbar-expand-md fixed-top navbar-light">
+  <div class="container-fluid">
 
-      </a>
-      {% if user.is_authenticated %}
-      <div class="dropdown col-sm-3 col-md-3">
-        <button class="btn dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          {{ user.username }}
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-          {% if user.is_staff %}
-          <li><a class="dropdown-item" href="/admin">Administration</a></li>
+    <a class="navbar-brand" href="/"><img src="{% static proj_icons.logo %}" class="header-logo"></a>
+  
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {% block headerButtons %}
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item {% ifequal pageTitle 'About' %}active{% endifequal %}">
+            <a href="/about" class="nav-link">
+              About
+            </a>
+          </li>
+          <li class="nav-item {% ifequal pageTitle 'Results' %}active{% endifequal %}{% ifequal pageTitle 'Search' %}active{% endifequal %}">
+            {% if user.is_authenticated %}
+                <a href="/explore" class="nav-link">
+            {% else %}
+              <a class="nav-link disabled">
+            {% endif %}
+            Search
+            </a>
+          </li>
+          <li class="nav-item {% ifequal pageTitle 'Help' %}active{% endifequal %}">
+            <a href="/help" class="nav-link">
+              Help
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown user-menu">
+              <a class="nav-link dropdown-toggle" hred="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                {% if user.is_staff %}
+                  <li><a class="dropdown-item" href="/admin" target="_blank">Administration</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
+              </ul>
+            </li>
+          {% else %}
+            <li class="nav-item user-menu">
+              <a class="header-button nav-link" data-bs-toggle="modal" data-bs-target="#loginModal">
+                Login
+              </a>
+            </li>
           {% endif %}
-          <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
         </ul>
-      </div>
-      {% else %}
-      <a class="col-sm-3 col-md-3 header-button" data-toggle="modal" data-target="#loginModal">
-        Login
-      </a>
-      {% endif %}
+      {% endblock %}
     </div>
-    {% endblock %}
+
   </div>
-</div>
+</nav>

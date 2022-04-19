@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/explore/css/forms.css">
     <style>
       :root {
+        --header_height: 8rem;
         --primary_a: {{ proj_css.primary_a }};
         --primary_b: {{ proj_css.primary_b }};
         --primary_c: {{ proj_css.primary_c }};
@@ -18,7 +19,8 @@
         --secondary_d: {{ proj_css.secondary_d }};
         /* PRIMARY A: Vivid, unique. ORIGINAL: SIENNA */
         --current_pg_index: var(--primary_a);
-        --highlight_underline: var(--primary_a)
+        --highlight_underline: var(--primary_a);
+        --highlight_font: var(--primary_a);
         /* PRIMARY B VERY faint. ORIGINAL: OFF-WHITE */
         --light_font: var(--primary_b);
         --accent_bg: var(--primary_b);
@@ -37,6 +39,7 @@
         --default_background: white;
         --default_alt_font: white;
         --default_font: black;
+        --default_border: black;
       }
     </style>
 
@@ -46,11 +49,7 @@
     {% include 'modals.html' %}
 
     {% block header %}
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        {% include 'navbar.html' %}
-      </div>
-    </nav>
+      {% include 'navbar.html' %}
     {% endblock %}
 
 
@@ -61,7 +60,7 @@
         </div>
         <div class="col-md-10 well content-well">
           {% block content %}
-            <h1>{{pageTitle}}</h1>
+            /* <h1>{{pageTitle}}</h1> */
             {{pageContent}}
           {% endblock %}
         </div>
