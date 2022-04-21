@@ -41,13 +41,13 @@ def get_proj_css():
 
 def get_proj_icons():
     proj_icons = {
-    'logo': 'explore/img/logos/ITK_lines_logo.png',
-    'place_icon': 'explore/img/record_icons/place_icon.png',
-    'resource_icon': 'explore/img/record_icons/resource_icon.png',
-    'activity_icon': 'explore/img/record_icons/activity_icon.png',
-    'source_icon': 'explore/img/record_icons/source_icon.png',
-    'media_icon': 'explore/img/record_icons/media_icon.png',
-}
+        'logo': 'explore/img/logos/ITK_lines_logo.png',
+        'place_icon': 'explore/img/record_icons/place_icon.png',
+        'resource_icon': 'explore/img/record_icons/resource_icon.png',
+        'activity_icon': 'explore/img/record_icons/activity_icon.png',
+        'source_icon': 'explore/img/record_icons/source_icon.png',
+        'media_icon': 'explore/img/record_icons/media_icon.png',
+    }
     try:
         from TEKDB.settings import PROJ_ICONS
         if 'logo' in PROJ_ICONS.keys():
