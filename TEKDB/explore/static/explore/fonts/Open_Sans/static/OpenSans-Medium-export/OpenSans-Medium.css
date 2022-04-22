@@ -1,0 +1,7 @@
+
+@font-face {
+    font-family:"Open Sans Medium";
+    src:url("OpenSans-Medium.woff2") format("woff2"),url("OpenSans-Medium.woff") format("woff"),url("OpenSans-Medium.otf") format("opentype");
+    font-style:normal;font-weight:400;
+}
+        

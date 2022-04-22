@@ -279,6 +279,15 @@ RECORD_ICONS = {
     'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
 }
 
+# Not sure if this is the best way to implement fonts. 
+# It gets tricky bc there will likely be multiple formats for each font.
+# For example: .ttf, .otf, .woff, .woff2, .svg
+# We'll need to figure out how to handle this better. 
+# TODO: Plan to revisit this later.
+PROJ_FONTS = {
+    'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
+}
+
 try:
     from TEKDB.local_settings import *
 except Exception as e:
