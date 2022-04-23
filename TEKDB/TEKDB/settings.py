@@ -286,6 +286,7 @@ RECORD_ICONS = {
 # TODO: Plan to revisit this later.
 PROJ_FONTS = {
     'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
+    'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
 }
 
 try:

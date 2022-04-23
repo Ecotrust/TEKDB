@@ -14,6 +14,7 @@ def get_proj_css():
         'secondary_c': '#6ea32e',
         'secondary_d': '#b44ba3',
         'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
+        'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
     }
     try:
         from TEKDB.settings import PROJ_CSS
@@ -35,6 +36,8 @@ def get_proj_css():
             proj_css['secondary_d'] = PROJ_CSS['secondary_d']
         if 'font_face_primary' in PROJ_CSS.keys():
             proj_css['font_face_primary'] = PROJ_CSS['font_face_primary']
+        if 'font_face_primary_bold' in PROJ_CSS.keys():
+            proj_css['font_face_primary_bold'] = PROJ_CSS['font_face_primary_bold']
     except ImportError as e:
         pass
 

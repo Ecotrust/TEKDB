@@ -2,14 +2,12 @@ nav.navbar {
   background-color: var(--default_background);
   border-bottom: 1px solid var(--default_border);
   /* margin: 0 3vw; */
-
   height: var(--header_height);
 }
 
 img.header-logo {
-  padding: 1.5rem 4rem;
-  max-height: var(--header_height);
-  max-width: 50vw;
+  height: auto;
+  width: 94px;
 }
 
 ul.navbar-nav {
@@ -27,8 +25,9 @@ ul.navbar-nav li.nav-item {
 }
 
 ul.navbar-nav li.nav-item a.nav-link {
-  font-size: 2rem;
-  color: var(--dark_font);
+  color: var(--black);
+  font-size: 1.125em;
+  font-family: var(--font-sans-serif-bold);
   /* keep other header items from shifting on hover*/
   /* border: 1px solid var(--default_background); */
   margin-top: 1px;
