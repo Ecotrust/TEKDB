@@ -44,8 +44,9 @@ ul.navbar-nav li.nav-item a.nav-link:hover {
 }
 
 ul.navbar-nav li.nav-item.active a.nav-link {
-  border-bottom: 0.3rem solid var(--highlight_underline);
+  border-bottom: 3px solid var(--highlight_underline);
   border-radius: 0;
+  display: inline-block;
 }
 ul.navbar-nav li.nav-item.active a.nav-link:hover {
   border-top: none;

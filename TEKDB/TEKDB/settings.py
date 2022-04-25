@@ -261,7 +261,7 @@ PROJ_CSS = {
 
 # Will be replaced by svg 
 PROJ_ICONS = {
-    'logo': 'explore/img/logos/logo_weave.svg',
+    'logo': 'explore/img/logos/logo_teardrop.svg',
     'place_icon': 'explore/img/icons/i_place.svg',
     'resource_icon': 'explore/img/icons/i_resource.svg',
     'activity_icon': 'explore/img/icons/i_activity.svg',
