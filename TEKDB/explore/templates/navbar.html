@@ -1,6 +1,6 @@
 {% load static %}
 <nav class="navbar navbar-expand-md fixed-top navbar-light">
-  <div class="container-fluid">
+  <div class="container">
 
     <a class="navbar-brand" href="/">
       <div class="navbar-brand-wrapper" style="background-image: url({%  static proj_icons.logo %});">
@@ -15,7 +15,7 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       {% block headerButtons %}
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0 justify-content-end align-items-center">
           <li class="nav-item {% ifequal pageTitle 'About' %}active{% endifequal %}">
             <a href="/about" class="nav-link">
               About

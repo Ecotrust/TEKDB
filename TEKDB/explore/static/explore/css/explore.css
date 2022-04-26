@@ -14,7 +14,7 @@ a,
 }
 
 a:hover {
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 #search-category-type {
