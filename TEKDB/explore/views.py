@@ -15,6 +15,7 @@ def get_proj_css():
         'secondary_d': '#b44ba3',
         'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
         'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
+        'font_face_primary_extrabold': '/static/explore/fonts/Open_Sans/static/OpenSans-ExtraBold-export/OpenSans-ExtraBold.css',
     }
     try:
         from TEKDB.settings import PROJ_CSS
@@ -71,13 +72,23 @@ def get_proj_icons():
     except ImportError as e:
         pass
 
-    # TODO: allow for admin-defined logos
-
     return proj_icons
+
+def get_proj_logo_text():
+    # TODO: allow for admin-defined logos
+    project_logo_text = 'ITK'
+    try:
+        from TEKDB.settings import PROJ_LOGO_TEXT
+        if len(PROJ_LOGO_TEXT) > 0:
+            project_logo_text = PROJ_LOGO_TEXT
+    except ImportError as e:
+        pass
+    return project_logo_text
 
 def apply_root_context(context={}):
     context['proj_css'] = get_proj_css()
     context['proj_icons'] = get_proj_icons()
+    context['proj_logo_text'] = get_proj_logo_text()
 
     return context
 

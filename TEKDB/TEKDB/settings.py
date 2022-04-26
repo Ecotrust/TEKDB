@@ -259,9 +259,10 @@ PROJ_CSS = {
     'secondary_d': '#b44ba3'
 }
 
-# Will be replaced by svg 
+PROJ_LOGO_TEXT = 'ITK'
+
 PROJ_ICONS = {
-    'logo': 'explore/img/logos/logo_teardrop.svg',
+    'logo': 'explore/img/logos/logo_weave.svg',
     'place_icon': 'explore/img/icons/i_place.svg',
     'resource_icon': 'explore/img/icons/i_resource.svg',
     'activity_icon': 'explore/img/icons/i_activity.svg',

@@ -2,7 +2,12 @@
 <nav class="navbar navbar-expand-md fixed-top navbar-light">
   <div class="container-fluid">
 
-    <a class="navbar-brand" href="/"><img src="{% static proj_icons.logo %}" class="header-logo"></a>
+    <a class="navbar-brand" href="/">
+      <div class="navbar-brand-wrapper" style="background-image: url({%  static proj_icons.logo %});">
+        {% comment %} <img src="{% static proj_icons.logo %}" class="header-logo"> {% endcomment %}
+        <div class="navbar-brand-text">{{ proj_logo_text }}</div>
+      </div>
+    </a>
   
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
