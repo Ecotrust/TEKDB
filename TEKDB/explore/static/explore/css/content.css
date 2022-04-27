@@ -3,3 +3,8 @@ a:hover {
   /* color: #336633; */
   /* font-weight: bold; */
 }
+
+img {
+  height: auto;
+  max-width: 100%;
+}

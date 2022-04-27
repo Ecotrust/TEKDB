@@ -63,23 +63,24 @@
     {% block header %}
       {% include 'navbar.html' %}
     {% endblock %}
-
-
-    {% block contentwrapper %}
-    <div class="container content-container">
-      <div class="row content-row">
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-10 well content-well">
-          {% block content %}
-            {{pageContent}}
-          {% endblock %}
-        </div>
-        <div class="col-md-1">
+    
+    <main class="content-wrapper" style="background-color: {{ proj_color_select }}">
+      {% block contentwrapper %}
+      <div class="container content-container">
+        <div class="row content-row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-10 well content-well">
+            {% block content %}
+              {{pageContent}}
+            {% endblock %}
+          </div>
+          <div class="col-md-1">
+          </div>
         </div>
       </div>
-    </div>
-    {% endblock %}
+      {% endblock %}
+    </main>
 
     <!-- JQuery -->
     <script src="/static/assets/jquery/jquery-3.6.1.min.js"></script>

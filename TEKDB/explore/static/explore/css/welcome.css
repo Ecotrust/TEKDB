@@ -9,3 +9,12 @@
   color: white;
   font: icon;
 }
+
+.welcome-content-wrapper {
+  text-align: left;
+  color: #fff; // needs to be dynamic
+}
+
+.proj-image-select-wrapper {
+  padding: 3em;
+}

@@ -85,10 +85,32 @@ def get_proj_logo_text():
         pass
     return project_logo_text
 
+def get_proj_color_select():
+    project_color_select = '#000000'
+    try:
+        from TEKBD.settings import PROJ_COLOR_SELECT
+        if len(PROJ_COLOR_SELECT) > 0:
+            project_color_select = PROJ_COLOR_SELECT
+    except ImportError as e:
+        pass
+    return project_color_select
+
+def get_project_image_select():
+    project_image_select = '/explore/img/abalone_1200.jpg'
+    try:
+        from TEKDB.settings import PROJ_IMAGE_SELECT
+        if len(PROJ_IMAGE_SELECT) > 0:
+            project_image_select = PROJ_IMAGE_SELECT
+    except ImportError as e:
+        pass
+    return project_image_select
+
 def apply_root_context(context={}):
     context['proj_css'] = get_proj_css()
     context['proj_icons'] = get_proj_icons()
     context['proj_logo_text'] = get_proj_logo_text()
+    context['proj_color_select'] = get_proj_color_select()
+    context['proj_image_select'] = get_project_image_select()
 
     return context
 
