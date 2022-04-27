@@ -259,17 +259,18 @@ PROJ_CSS = {
     'secondary_d': '#b44ba3'
 }
 
+# Will be replaced by svg 
 PROJ_ICONS = {
-    'logo': 'explore/img/logos/ITK_lines_logo.png',
-    'place_icon': 'explore/img/record_icons/place_icon.png',
-    'resource_icon': 'explore/img/record_icons/resource_icon.png',
-    'activity_icon': 'explore/img/record_icons/activity_icon.png',
-    'source_icon': 'explore/img/record_icons/source_icon.png',
-    'media_icon': 'explore/img/record_icons/media_icon.png',
+    'logo': 'explore/img/logos/logo_weave.svg',
+    'place_icon': 'explore/img/icons/i_place.svg',
+    'resource_icon': 'explore/img/icons/i_resource.svg',
+    'activity_icon': 'explore/img/icons/i_activity.svg',
+    'source_icon': 'explore/img/icons/i_source.svg',
+    'media_icon': 'explore/img/icons/i_media.svg',
 }
 
 RECORD_ICONS = {
-    'person': '/static/explore/img/activity.png',
+    'person': '/static/explore/img/icons/i_activity.png',
     'activity': '/static/{}'.format(PROJ_ICONS['activity_icon']),
     'citation': '/static/{}'.format(PROJ_ICONS['source_icon']),
     'place': '/static/{}'.format(PROJ_ICONS['place_icon']),
