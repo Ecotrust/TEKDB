@@ -1,57 +1,27 @@
-a,
-.well a.btn-download,
-.well a.btn {
-  color: var(--light_font);
-}
-
-.well a {
-  color: var(--dark_font);
-}
-
-a:hover {
-  /* font-weight: bold; */
-}
-
-#search-category-type {
-  display: none;
-}
-
-.btn-default {
-  color: var(--default_font);
-}
-
-.well {
-  /* background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%); */
-  background-color: var(--accent_bg);
-}
-.content-well {
-  padding-bottom: 200px;
-}
-
 .content-well h1 {
   margin: 40px auto;
-  font-size: 55px;
-  letter-spacing: 5px;
 }
 
-.odd-well {
-  /* background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%); */
-  background-color: var(--alt_bg);
+#search-icon-label {
+  border-color: var(--secondary_a);
+  border-radius: 2em 0 0 2em;
+  border-right: none;
+  border-width: 2px;
+  background: var(--white);
+  padding: .375rem 1.125rem;
+}
+
+#search-text {
+  border-color: var(--secondary_a);
+  border-radius: 0 2em 2em 0;
+  border-left: none;
+  border-width: 2px;
+  font-size: 1.125em;
+  line-height: 2;
 }
 
 .explore-form {
-  text-align: center;
-  margin: 80px 150px;
-}
-
-.explore-logo {
-  margin-top: 100px;
-  text-align: center;
-}
-
-.explore-logo img {
-  height: 50px;
-  width: 50px;
+  margin: 80px auto;
 }
 
 #export-links {

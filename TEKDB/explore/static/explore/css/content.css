@@ -69,3 +69,11 @@ h1 {
   margin-bottom: var(--margin_bottom);
   text-align: left;
 }
+
+.accent-bg {
+  background: var(--accent_bg);
+}
+
+.white-bg {
+  background: var(--white);
+}
