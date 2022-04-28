@@ -8,7 +8,7 @@
 
 {% block contentwrapper %}
   <div class="container">
-    <div class="row gx-4">
+    <div class="row gx-4 align-items-center">
       <div class="col col-md-5">
         <div class="welcome-content-wrapper">
           {% block content %}
@@ -18,9 +18,9 @@
         <div class="welcome-login-button-wrapper">
         <!-- <a href="/login"> -->
           {% if not user.is_authenticated %}
-          <button type="button" class="btn welcome-login-btn"  data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+          <button type="button" class="btn welcome-login-btn"  data-bs-toggle="modal" data-bs-target="#loginModal">Login <span class="arrow-right"></span></button>
           {% else %}
-          <a href="/explore" type="button" class="btn welcome-login-btn">Explore</a>
+          <a href="/explore" type="button" class="btn welcome-login-btn">Explore <span class="arrow-right"></span></a>
           {% endif %}
         <!-- </a> -->
         </div>

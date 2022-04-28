@@ -48,10 +48,15 @@
         --default_alt_font: white;
         --default_font: black;
         --default_border: black;
+        --btn_border: 2px solid #fff;
+        --btn_color: #fff;
         /* FONT OVERRIDES */
         --bs-font-sans-serif: "Open Sans Regular", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         --font-sans-serif-bold: "Open Sans Bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         --font-sans-serif-extrabold: "Open Sans ExtraBold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+        /* Spacing */
+        --margin_bottom: 1.5em; 
       }
     </style>
 
@@ -64,6 +69,7 @@
       {% include 'navbar.html' %}
     {% endblock %}
     
+    <!-- TODO: Add dynamic font color based on background color -->
     <main class="content-wrapper" style="background-color: {{ proj_color_select }}">
       {% block contentwrapper %}
       <div class="container content-container">

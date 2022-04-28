@@ -1,18 +1,10 @@
-.welcome-login-button-wrapper{
-  text-align: center;
-}
-.welcome-login-btn {
-  margin: 50px auto;
-  width: 200px;
-  padding: 15px;
-  background-color: #777;
-  color: white;
-  font: icon;
-}
-
 .welcome-content-wrapper {
   text-align: left;
   color: #fff; // needs to be dynamic
+}
+
+.welcome-content-wrapper p {
+  font-family: var(--font-sans-serif-bold);
 }
 
 .proj-image-select-wrapper {
