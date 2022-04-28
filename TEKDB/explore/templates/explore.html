@@ -1,39 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form class="explore-form" method='post' action='/search/'>
-  {% csrf_token %}
-  <input type="text" id="search-category-type" name="category" value="all" required>
-  <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('all')">All</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('places')">Place</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('resources')">Resource</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('activities')">Activity</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default"onclick="setCategoryType('sources')">Source</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default"onclick="setCategoryType('media')">Media</button>
+<div class="row">
+  <div class="col">
+    <h1>Browse by category</h1>
+    <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
+    <div class="form-wrapper">
+      <form class="explore-form" method='post' action='/search/'>
+        {% csrf_token %}
+        <input type="text" id="search-category-type" name="category" value="all" required>
+        <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
+          <div class="btn-group" role="category-group">
+            <button type="button" class="btn btn-default" onclick="setCategoryType('all')">All</button>
+          </div>
+          <div class="btn-group" role="category-group">
+            <button type="button" class="btn btn-default" onclick="setCategoryType('places')">Place</button>
+          </div>
+          <div class="btn-group" role="category-group">
+            <button type="button" class="btn btn-default" onclick="setCategoryType('resources')">Resource</button>
+          </div>
+          <div class="btn-group" role="category-group">
+            <button type="button" class="btn btn-default" onclick="setCategoryType('activities')">Activity</button>
+          </div>
+          <div class="btn-group" role="category-group">
+            <button type="button" class="btn btn-default"onclick="setCategoryType('sources')">Source</button>
+          </div>
+          <div class="btn-group" role="category-group">
+            <button type="button" class="btn btn-default"onclick="setCategoryType('media')">Media</button>
+          </div>
+        </div>
+          <div class="input-group">
+            <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Keywords">
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" type="submit">Search</button>
+            </span>
+          </div>
+      </form>
     </div>
   </div>
-    <div class="input-group">
-      <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Keywords">
-      <span class="input-group-btn">
-        <button class="btn btn-secondary" type="submit">Search</button>
-      </span>
-    </div>
-</form>
-<div class='explore-logo'>
-  <img src='/static/explore/img/icons/compass.png'>
-  <p>Explore</p>
+  <div class="col">
+
+  </div>
 </div>
 {% endblock %}
 
