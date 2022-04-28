@@ -22,6 +22,7 @@
         --secondary_c: {{ proj_css.secondary_c }};
         --secondary_d: {{ proj_css.secondary_d }};
         --black: #000000;
+        --white: #ffffff;
         /* PRIMARY A: Vivid, unique. ORIGINAL: SIENNA */
         --current_pg_index: var(--primary_a);
         --highlight_underline: var(--primary_a);
@@ -50,6 +51,9 @@
         --default_border: black;
         --btn_border: 2px solid #fff;
         --btn_color: #fff;
+        /* Theme Colors */
+        --theme_bg_color: var(--black);
+        --theme_color: var(--white);
         /* FONT OVERRIDES */
         --bs-font-sans-serif: "Open Sans Regular", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         --font-sans-serif-bold: "Open Sans Bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -57,6 +61,19 @@
 
         /* Spacing */
         --margin_bottom: 1.5em; 
+      }
+
+      main[data-theme="dark"] {
+        background: var(--black);
+      }
+
+      main[data-theme="light"] {
+        --btn_border: 2px solid var(--black);
+        --btn_color: var(--black);
+        --theme_bg_color: var(--black);
+        --theme_color: var(--black);
+
+        background: #fff;
       }
     </style>
 
@@ -70,19 +87,19 @@
     {% endblock %}
     
     <!-- TODO: Add dynamic font color based on background color -->
-    <main class="content-wrapper" style="background-color: {{ proj_color_select }}">
+    <main class="content-wrapper" data-theme="{{ proj_color_select }}">
       {% block contentwrapper %}
       <div class="container content-container">
         <div class="row content-row">
-          <div class="col-md-1">
-          </div>
-          <div class="col-md-10 well content-well">
+          {% comment %} <div class="col-md-1">
+          </div> {% endcomment %}
+          <div class="col well content-well">
             {% block content %}
               {{pageContent}}
             {% endblock %}
           </div>
-          <div class="col-md-1">
-          </div>
+          {% comment %} <div class="col-md-1">
+          </div> {% endcomment %}
         </div>
       </div>
       {% endblock %}

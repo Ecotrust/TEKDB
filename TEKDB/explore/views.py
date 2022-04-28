@@ -88,7 +88,7 @@ def get_proj_logo_text():
 def get_proj_color_select():
     project_color_select = '#000000'
     try:
-        from TEKBD.settings import PROJ_COLOR_SELECT
+        from TEKDB.settings import PROJ_COLOR_SELECT
         if len(PROJ_COLOR_SELECT) > 0:
             project_color_select = PROJ_COLOR_SELECT
     except ImportError as e:

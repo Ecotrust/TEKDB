@@ -260,7 +260,7 @@ PROJ_CSS = {
 }
 
 PROJ_LOGO_TEXT = 'ITK'
-PROJ_COLOR_SELECT = '#000000'
+PROJ_COLOR_SELECT = 'dark'
 PROJ_IMAGE_SELECT = 'static/explore/img/abalone_1200.jpg'
 
 PROJ_ICONS = {

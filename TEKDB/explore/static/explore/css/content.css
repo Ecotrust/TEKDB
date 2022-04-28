@@ -20,7 +20,7 @@ a:hover {
   } 
 
 .arrow-right {
-  background: #fff;
+  background: var(--theme_color);
   display: inline-flex;
   height: 2px;
   margin-left: 4px;
@@ -31,7 +31,7 @@ a:hover {
 
   .arrow-right::before,
   .arrow-right::after {
-    background: #fff;
+    background: var(--theme_color);
     content: "";
     height: 2px;
     position: absolute;
