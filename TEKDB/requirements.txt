@@ -8,6 +8,7 @@ django-leaflet
 django-nested-admin
 django-registration
 django-reversion
+pillow
 psycopg2-binary
 
 XlsxWriter

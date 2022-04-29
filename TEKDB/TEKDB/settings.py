@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'nested_admin',
     'ckeditor',
     'coverage',
+    'configuration',
     'explore',
     'login',
     'TEKDB',
