@@ -509,7 +509,7 @@ def search(request):
     else:
         query_value = ''
     keyword_search_input = '<!--<label for="search-text">Search Phrase</label>-->\
-        <input type="text" class="form-control" id="search-text" name="query" placeholder="" %s>' % query_value
+        <input type="text" class="form-control" id="search-text" name="query" placeholder="Keywords" %s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')

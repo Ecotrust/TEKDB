@@ -200,3 +200,41 @@ table#results_table>thead {
   font-size: 1.4rem;
   padding: 0 0.5rem;
 }
+
+.query-input-group::after {
+  background: var(--secondary_a);
+  content: '';
+  height: 2em;
+  position: absolute;
+  right: 6em;
+  top: .625em;
+  width: 2px;
+}
+
+.arrow-right.search-arrow,
+.arrow-right.search-arrow::before,
+.arrow-right.search-arrow::after {
+  background: var(--primary_a);
+}
+
+.arrow-right.search-arrow {
+  position: absolute;
+  right: 2.5em;
+  top: 1.5625em;
+  pointer-events: none;
+}
+
+.query-input-group {
+  position: relative;
+}
+
+#query-form-submit {
+  height: 100%;
+  opacity: 0;
+  pointer-events: all;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5em;
+  z-index: 9;
+}

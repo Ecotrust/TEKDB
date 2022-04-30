@@ -5,8 +5,8 @@
   <div class="row content-row">
     <div class="col well content-well">
       {% block content %}
-      <div class="row g-4">
-        <div class="col col-md-6 white-bg">
+      <div class="row g-4 align-items-stretch">
+        <div class="col col-md-6 white-bg p-4">
           <h1>Browse by category</h1>
           <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
           <form class="explore-form" method="post" action="/search/">
@@ -33,7 +33,7 @@
             </div>
           </form>
         </div>
-        <div class="col col-md-6 accent-bg">
+        <div class="col col-md-6 accent-bg p-4">
           <h1>Search by keyword</h1>
           <div class="form-wrapper">
             <form class="explore-form" method='post' action='/search/'>

@@ -1,27 +1,9 @@
-.content-well h1 {
-  margin: 40px auto;
-}
-
-#search-icon-label {
-  border-color: var(--secondary_a);
-  border-radius: 2em 0 0 2em;
-  border-right: none;
-  border-width: 2px;
-  background: var(--white);
-  padding: .375rem 1.125rem;
-}
-
-#search-text {
-  border-color: var(--secondary_a);
-  border-radius: 0 2em 2em 0;
-  border-left: none;
-  border-width: 2px;
-  font-size: 1.125em;
-  line-height: 2;
-}
-
 .explore-form {
-  margin: 80px auto;
+  margin: var(--margin_top) auto;
+}
+
+.explore-form .btn {
+  border: 1px solid var(--primary_d):
 }
 
 #export-links {
