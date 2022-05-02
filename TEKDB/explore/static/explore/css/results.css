@@ -238,3 +238,28 @@ table#results_table>thead {
   width: 5em;
   z-index: 9;
 }
+
+#filter-checkboxes div {
+  position: relative;
+}
+
+#filter-checkboxes input[type=checkbox] {
+  height: 80%;
+  opacity: 0;
+  position: absolute;
+  width: 80%;
+  z-index: 9;
+}
+
+#filter-checkboxes input[type=checkbox]:checked ~ label {
+  background-color: var(--secondary_a);
+}
+
+#filter-checkboxes label {
+  background: var(--white);
+  border: 2px solid var(--secondary_a);
+  display: inline-block;
+  margin-bottom: 1px;
+  padding: 5px;
+  vertical-align: middle;
+}
