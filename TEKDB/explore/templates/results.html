@@ -12,10 +12,10 @@
 <div class="container content-container">
   <form class="query-form" method='post' action='/search/' id="filter-form">
     {% csrf_token %}
-    <div class="form-group row p-4">
-      <div class="col-md-1">
+    <div class="form-group row">
+      <div class="col col-md-2">
       </div>
-      <div class="col-md-10">
+      <div class="col col-md-8">
         <div class="input-group query-input-group">
           <span class="input-group-text" id="search-icon-label">
             <svg id="Symbol_62_2" data-name="Symbol 62 – 2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
@@ -29,11 +29,11 @@
           <input type="submit" id="query-form-submit" value='Apply Filter'>
         </div>
       </div>
-      <div class="col-md-1">
+      <div class="col col-md-2">
       </div>
     </div>
     <div class="row content-row"  id="filter-checkboxes">
-      <div class="col-md-2">
+      <div class="col col-md-2">
         <p>
           Filter By: 
         </p>
@@ -43,11 +43,11 @@
   </form>
   
   <div class="row content-row">
-    <div class="col-md-8 results-left">
+    <div class="col col-md-8 results-left">
       {% block content %}
       <div class="row">
         <!-- <div class="col-md-12 well content-well"> -->
-        <div class="col-md-4 results-controls-left">
+        <div class="col col-md-4 results-controls-left">
           <p>
             <b>{{ results_qs|length }}</b>&nbsp;
             <i>

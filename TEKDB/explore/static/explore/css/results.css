@@ -1,3 +1,7 @@
+#filter-form {
+  margin-top: calc(var(--margin_top) * 2);
+}
+
 .pagination {
   margin: 0 auto 0 auto;
 }
@@ -208,7 +212,7 @@ table#results_table>thead {
   position: absolute;
   right: 6em;
   top: .625em;
-  width: 2px;
+  width: 1px;
 }
 
 .arrow-right.search-arrow,
@@ -239,8 +243,20 @@ table#results_table>thead {
   z-index: 9;
 }
 
+/* Filter Category Checkboxs */
+#filter-checkboxes {
+  margin: var(--margin_top) auto;
+}
+
 #filter-checkboxes div {
+  font-family: var(--font-sans-serif-extrabold);
+  letter-spacing: 0.025em;
   position: relative;
+}
+
+#filter-checkboxes div p {
+  font-family: var(--font-sans-serif);
+  font-size: .875em;
 }
 
 #filter-checkboxes input[type=checkbox] {
@@ -259,7 +275,8 @@ table#results_table>thead {
   background: var(--white);
   border: 2px solid var(--secondary_a);
   display: inline-block;
-  margin-bottom: 1px;
-  padding: 5px;
+  margin-bottom: 2px;
+  margin-right: 4px;
+  padding: 6px;
   vertical-align: middle;
 }
