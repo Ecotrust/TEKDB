@@ -1,3 +1,7 @@
+main {
+  background: var(--white);
+}
+
 #filter-form {
   margin-top: calc(var(--margin_top) * 2);
 }

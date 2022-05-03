@@ -65,18 +65,6 @@
         --margin_bottom: 1.5em; 
         --margin_top: 1.5em; 
       }
-
-      main[data-theme="dark"] {
-        background: var(--black);
-      }
-
-      main[data-theme="light"] {
-        background: #fff;
-        --btn_border: 2px solid var(--black);
-        --btn_color: var(--black);
-        --theme_bg_color: var(--black);
-        --theme_color: var(--black);
-      }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -89,7 +77,8 @@
     {% endblock %}
     
     <!-- TODO: Add dynamic font color based on background color -->
-    <main class="content-wrapper" data-theme="{{ proj_color_select }}">
+    <!-- <main class="content-wrapper" data-theme="{{ proj_color_select }}"> -->
+    <main class="content-wrapper">
       {% block contentwrapper %}
       <div class="container content-container">
         <div class="row content-row">
