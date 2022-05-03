@@ -1,3 +1,7 @@
+main {
+  background-color: var(--primary_b);
+}
+
 .record-icon {
   height: 80px;
   background-size: cover;
