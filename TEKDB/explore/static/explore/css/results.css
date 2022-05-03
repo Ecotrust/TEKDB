@@ -219,6 +219,11 @@ table#results_table>thead {
   vertical-align: middle;
 }
 
+#results_table td:last-of-type {
+  font-family: var(--font-sans-serif);
+  font-size: .875em;
+}
+
 #results_table_length {
   width: 100%;
 }
