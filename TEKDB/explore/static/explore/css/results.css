@@ -75,7 +75,9 @@
 }
 
 .list-image {
-  height: 25px;
+  height: 100%;
+  margin-left: 2em;
+  width: 34px;
 }
 
 .table-hover>tbody>tr:hover {
@@ -204,6 +206,19 @@ table#results_table>thead {
   display: none;
 }
 
+#results_table {
+  background-color: transparent;
+}
+
+#results_table td {
+  background-color: transparent;
+  box-shadow: none;
+  font-family: var(--font-sans-serif-bold);
+  line-height: 1.5;
+  padding: .75em .625em;
+  vertical-align: middle;
+}
+
 #results_table_length {
   width: 100%;
 }
@@ -226,6 +241,18 @@ table#results_table>thead {
 
 #results_table_paginate .paginate_button.current {
   color: var(--primary_a);
+}
+
+.link-result {
+  cursor: pointer;
+}
+
+.link-result.odd {
+  background-color: var(--white);
+}
+
+.link-result.even {
+  background-color: #f7f7f7;
 }
 
 .query-input-group::after {
