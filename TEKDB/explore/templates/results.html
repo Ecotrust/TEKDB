@@ -45,11 +45,10 @@
   <div class="row content-row">
     <div class="col col-md-8 results-left">
       {% block content %}
-      <div class="row">
+      <div class="row justify-content-center">
         <!-- <div class="col-md-12 well content-well"> -->
-        <div class="col col-md-4 results-controls-left">
-          <p>
-            <b>{{ results_qs|length }}</b>&nbsp;
+        <div class="col-auto px-4 results-controls-left">
+          <span>{{ results_qs|length }}
             <i>
               {% if keyword %}
                 Results for "{{ keyword }}"
@@ -57,14 +56,16 @@
                 Results
               {% endif %}
             </i>
-          </p>
+          </span>
         </div>
-        <div class="col-md-4 results-controls-center">
+        <div class="col-auto px-3 results-controls-center">
           <div id="page-controls"></div>
         </div>
-        <div class="col-md-4 results-controls-right">
+        <div class="col-auto px-4 results-controls-right">
           <div id="export-links">
-            <span>Download</span>
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="14.571" viewBox="0 0 12 14.571">
+              <path id="Icon_material-file-download" data-name="Icon material-file-download" d="M19.5,9.643H16.071V4.5H10.929V9.643H7.5l6,6Zm-12,7.714v1.714h12V17.357Z" transform="translate(-7.5 -4.5)"/>
+            </svg></span>
             <a data-bind="attr: {href: '/export?format=csv&query=' + app.resultViewModel.db_query() + app.resultViewModel.filter_categories()}">.csv</a>
             |
             <a data-bind="attr: {href: '/export?format=xlsx&query=' + app.resultViewModel.db_query() + app.resultViewModel.filter_categories()}">.xlsx</a>
@@ -72,13 +73,13 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col mt-3">
           <div id="results-controls">
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col">
           <div data-bind="visible: app.resultViewModel.view_is_list">
             <table id='results_table' class="table table-striped table-hover result-list">
               <thead>
