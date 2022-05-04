@@ -14,7 +14,7 @@ from django.contrib.gis.forms.widgets import OpenLayersWidget, BaseGeometryWidge
 # class OpenLayersWidget(BaseGeometryWidget):
 # class OpenLayers6Widget(OpenLayersWidget):
 class OpenLayers6Widget(BaseGeometryWidget):
-    template_name = 'gis/openlayers_with_mapoptions.html'
+    template_name = 'gis/openlayers_widget_itkdb.html'
     map_srid = 3857
 
     class Media:
