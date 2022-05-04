@@ -1,0 +1,10 @@
+{% extends 'gis/openlayers.html' %}
+
+{% block map_options %}
+            var map_options = {
+                {% if default_lat %}'default_lat': {{ default_lat }},{% endif %}
+                {% if default_lon %}'default_lon': {{ default_lon }},{% endif %}
+                {% if default_zoom %}'default_zoom': {{ default_zoom }},{% endif %}
+                {% if map_extent %}'map_extent': {{ map_extent }},{% endif %}
+            };
+{% endblock %}

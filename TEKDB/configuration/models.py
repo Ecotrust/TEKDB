@@ -44,3 +44,4 @@ class Configuration(models.Model):
 
     def __str__(self):
         return "Site Configuration: '{}' ({})".format(self.preferredInitialism, self.pk)
+
