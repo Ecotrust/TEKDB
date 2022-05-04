@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.gis.db.models import GeometryField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from TEKDB.widgets import OpenLayers6Widget
 
 # Create your models here.
 class Configuration(models.Model):

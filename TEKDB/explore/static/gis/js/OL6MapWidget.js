@@ -56,7 +56,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         this.options = {
             default_lat: 0,
             default_lon: 0,
-            default_zoom: 12,
+            default_zoom: 1,
             is_collection: options.geom_name.includes('Multi') || options.geom_name.includes('Collection')
         };
 
@@ -106,9 +106,17 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
                 ol.extent.extend(extent, feature.getGeometry().getExtent());
             }, this);
             // Center/zoom the map
-            this.map.getView().fit(extent, {maxZoom: this.options.default_zoom});
+            this.map.getView().fit(extent);
         } else {
-            this.map.getView().setCenter(this.defaultCenter());
+            if (
+                    this.options.map_options.hasOwnProperty('map_extent') && 
+                    Array.isArray(this.options.map_options.map_extent) && 
+                    this.options.map_options.map_extent.length == 4
+            ) {
+                this.map.getView().fit(this.options.map_options.map_extent);
+            } else {
+                this.map.getView().setCenter(this.defaultCenter());
+            }
         }
         this.createInteractions();
         if (initial_value && !this.options.is_collection) {
@@ -118,11 +126,19 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     }
 
     MapWidget.prototype.createMap = function() {
+        var default_zoom = this.options.default_zoom;
+        if (
+                this.options.hasOwnProperty('map_options') && 
+                this.options.map_options.hasOwnProperty('default_zoom') &&
+                typeof this.options.map_options.default_zoom === 'number'
+        ){
+            default_zoom = this.options.map_options.default_zoom;
+        }
         const map = new ol.Map({
             target: this.options.map_id,
             layers: [this.options.base_layer],
             view: new ol.View({
-                zoom: this.options.default_zoom
+                zoom: default_zoom
             })
         });
         return map;
@@ -159,7 +175,25 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     };
 
     MapWidget.prototype.defaultCenter = function() {
-        const center = [this.options.default_lon, this.options.default_lat];
+        var default_lon = this.options.default_lon,
+            default_lat = this.options.default_lat;
+            
+        if (
+                this.options.hasOwnProperty('map_options') && 
+                this.options.map_options.hasOwnProperty('default_lon') &&
+                typeof this.options.map_options.default_lon === 'number'
+        ){
+            default_lon = this.options.map_options.default_lon;
+        }
+        
+        if (
+                this.options.hasOwnProperty('map_options') && 
+                this.options.map_options.hasOwnProperty('default_lat') &&
+                typeof this.options.map_options.default_lat === 'number'
+        ){
+            default_lat = this.options.map_options.default_lat;
+        }
+        const center = [default_lon, default_lat];
         if (this.options.map_srid) {
             return ol.proj.transform(center, 'EPSG:4326', this.map.getView().getProjection());
         }

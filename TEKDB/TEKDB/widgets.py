@@ -14,7 +14,7 @@ from django.contrib.gis.forms.widgets import OpenLayersWidget, BaseGeometryWidge
 # class OpenLayersWidget(BaseGeometryWidget):
 # class OpenLayers6Widget(OpenLayersWidget):
 class OpenLayers6Widget(BaseGeometryWidget):
-    template_name = 'gis/openlayers.html'
+    template_name = 'gis/openlayers_with_mapoptions.html'
     map_srid = 3857
 
     class Media:
@@ -38,3 +38,11 @@ class OpenLayers6Widget(BaseGeometryWidget):
         if geom and json_regex.match(value) and self.map_srid != 4326:
             geom.srid = self.map_srid
         return geom
+
+    def get_context(self, name, value, attrs):
+        from TEKDB.context_processors import add_map_default_context
+        request_context = add_map_default_context({})   # passing empty dict to represent unneccesary request value
+        widget_context = super().get_context(name, value, attrs)
+        widget_context.update(request_context)
+
+        return widget_context
