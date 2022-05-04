@@ -136,7 +136,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         }
         const map = new ol.Map({
             target: this.options.map_id,
-            layers: [this.options.base_layer],
+            layers: this.options.base_layer,
             view: new ol.View({
                 zoom: default_zoom
             })

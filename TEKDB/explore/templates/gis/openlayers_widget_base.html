@@ -1,4 +1,4 @@
-{% COMMENT %}
+{% comment %}
     The below was copied (and then modified slightly) from django/contrib/gis/templates/gis/openlayers.html during Django v3.2.11
     We needed to:
         * Append a layer switcher
@@ -8,7 +8,6 @@
 
 {% load i18n l10n %}
 
-{% block extra_css %}{% endblock %}
 {% block styles %}
     <style type="text/css">{% block map_css %}{% get_current_language_bidi as LANGUAGE_BIDI %}
         #{{ id }}_map { width: {{ map_width }}px; height: {{ map_height }}px; }
@@ -18,14 +17,21 @@
         {% endblock %}
     </style>
 {% endblock %}
+{% block extra_css %}{% endblock %}
 
-<div id="{{ id }}_div_map">
-    <div id="{{ id }}_map"></div>
-    {% if not disabled %}<span class="clear_features"><a href="javascript:{{ module }}.clearFeatures()">{% translate "Delete all Features" %}</a></span>{% endif %}
-    {% if display_raw %}<p>{% translate "Debugging window (serialized value)" %}</p>{% endif %}
-    <textarea id="{{ id }}" class="vSerializedField required" cols="150" rows="10" name="{{ name }}">{{ serialized }}</textarea>
+{% block pre_widget %}{% endblock %}
 
+{% block widget %}
+    <div id="{{ id }}_div_map">
+        <div id="{{ id }}_map"></div>
+        {% if not disabled %}<span class="clear_features"><a href="javascript:{{ module }}.clearFeatures()">{% translate "Delete all Features" %}</a></span>{% endif %}
+        {% if display_raw %}<p>{% translate "Debugging window (serialized value)" %}</p>{% endif %}
+        <textarea id="{{ id }}" class="vSerializedField required" cols="150" rows="10" name="{{ name }}">{{ serialized }}</textarea>
+    </div>
+{% endblock %}
 
+{% block post_widget %}{% endblock %}
+{% block script %}
     <script>
         {% block map_options %}var map_options = {};{% endblock %}
         {% block base_layer %}
@@ -51,5 +57,6 @@
         {% endblock %}
         var {{ module }} = new MapWidget(options);
     </script>
-    {% block extra_js %}{% endblock %}
-</div>
+{% endblock %}
+{% block extra_js %}{% endblock %}
+

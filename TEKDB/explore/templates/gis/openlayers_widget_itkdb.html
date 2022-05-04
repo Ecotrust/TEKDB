@@ -1,4 +1,84 @@
-{% extends 'gis/openlayers.html' %}
+{% extends 'gis/openlayers_widget_base.html' %}
+{% load static i18n l10n %}
+
+{% block extra_css %}{% endblock %}
+
+{% block pre_widget %}{% endblock %}
+
+{% block post_widget %}
+    <div id="{{id}}_map_layerswitcher" class="ol_layerswitcher"></div>
+{% endblock %}
+
+{% block base_layer %}
+            var osm_layer = new ol.layer.Tile({
+                source: new ol.source.OSM()
+            });
+            var satellite_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer">ArcGIS</a>',
+                        'Sources: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and others',
+                    ],
+                    maxZoom: 19,
+                    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var topo_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                        'Sources: Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), (c) OpenStreetMap contributors, and the GIS User Community'
+                    ],
+                    maxZoom: 16,
+                    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var ocean_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer">ArcGIS</a>',
+                        'Sources: Esri, GEBCO, NOAA, National Geographic, Garmin, HERE, Geonames.org, and other contributors'
+                    ],
+                    maxZoom: 16,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+
+            var layer_lookup = {
+                'satellite': satellite_layer,
+                //'nautical': nautical_layer,
+                'physical': topo_layer,
+                'osm': osm_layer,
+                //'ocean': ocean_layer,
+            };
+
+            var layer_id_list = Object.keys(layer_lookup);
+
+            var layers = [];
+
+            for (i = 0; i < layer_id_list.length; i++) {
+                var layer_key = layer_id_list[i];
+                var layer = layer_lookup[layer_key];
+                layers.push(layer);
+                layer.setVisible(i==0);
+                document.getElementById("{{id}}_map_layerswitcher").innerHTML += ''+
+                    '<input type="radio" id="' + layer_key + '_radio" name="base_layer" value="' + layer_key + '">' + 
+                    '<label for="' + layer_key + '">' + layer_key + '</label><br><br>';
+            }
+            document.getElementById(layer_id_list[0] + "_radio").checked = true;
+
+{% endblock %}
+{% block options %}
+            var options = {
+                base_layer: layers,
+                geom_name: '{{ geom_type }}',
+                id: '{{ id }}',
+                map_id: '{{ id }}_map',
+                map_options: map_options,
+                map_srid: {{ map_srid|unlocalize }},
+                name: '{{ name }}'
+            };
+{% endblock %}
 
 {% block map_options %}
             var map_options = {
@@ -7,4 +87,8 @@
                 {% if default_zoom %}'default_zoom': {{ default_zoom }},{% endif %}
                 {% if map_extent %}'map_extent': {{ map_extent }},{% endif %}
             };
+{% endblock %}
+
+{% block extra_js %}
+            
 {% endblock %}
