@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.forms import ModelForm
 from TEKDB.widgets import OpenLayers6Widget
+from reversion.admin import VersionAdmin
 
-# Register your models here.
 from configuration.models import Configuration
 
 
@@ -14,7 +14,7 @@ class ConfigurationForm(ModelForm):
         }
         fields = '__all__'
 
-class ConfigurationAdmin(admin.ModelAdmin):
+class ConfigurationAdmin(VersionAdmin):
     form = ConfigurationForm
     
     # Limit to only ONE configuration record, as laid out here: https://stackoverflow.com/a/25088487/706797 by radtek
