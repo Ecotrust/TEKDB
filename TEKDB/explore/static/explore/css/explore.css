@@ -5,12 +5,3 @@
 .explore-form .btn {
   border: 1px solid var(--primary_d):
 }
-
-#export-links {
-  list-style-type: none;
-}
-#export-links li a,
-#export-links a,
-#export-links li span{
-  color: var(--link_color);
-}
