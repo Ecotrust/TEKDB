@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'nested_admin',
     'ckeditor',
     'coverage',
+    'configuration',
     'explore',
     'login',
     'TEKDB',
@@ -98,6 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'TEKDB.context_processors.add_map_default_context'
             ],
         },
     },
@@ -221,15 +223,6 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-RECORD_ICONS = {
-    'activity': '/static/explore/img/activity.png',
-    'citation': '/static/explore/img/citation.png',
-    'place': '/static/explore/img/place.png',
-    'media': '/static/explore/img/media.png',
-    'event': '/static/explore/img/activity.png',
-    'resource': '/static/explore/img/resource.png',
-}
-
 ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin')
 
 TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
@@ -256,6 +249,37 @@ STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
 
 MODERATE_STAFF = False
+
+PROJ_CSS = {
+    'primary_a': '#8f371c',
+    'primary_b': '#f7f3eb',
+    'primary_c': '#0e1522',
+    'primary_d': '#ced2da',
+    'secondary_a': '#51723b',
+    'secondary_b': '#839230',
+    'secondary_c': '#6ea32e',
+    'secondary_d': '#b44ba3'
+}
+
+# Will be replaced by svg 
+PROJ_ICONS = {
+    'logo': 'explore/img/logos/logo_weave.svg',
+    'place_icon': 'explore/img/icons/i_place.svg',
+    'resource_icon': 'explore/img/icons/i_resource.svg',
+    'activity_icon': 'explore/img/icons/i_activity.svg',
+    'source_icon': 'explore/img/icons/i_source.svg',
+    'media_icon': 'explore/img/icons/i_media.svg',
+}
+
+RECORD_ICONS = {
+    'person': '/static/explore/img/icons/i_activity.png',
+    'activity': '/static/{}'.format(PROJ_ICONS['activity_icon']),
+    'citation': '/static/{}'.format(PROJ_ICONS['source_icon']),
+    'place': '/static/{}'.format(PROJ_ICONS['place_icon']),
+    'media': '/static/{}'.format(PROJ_ICONS['media_icon']),
+    'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
+    'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
+}
 
 try:
     from TEKDB.local_settings import *

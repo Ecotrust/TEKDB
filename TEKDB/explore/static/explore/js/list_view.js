@@ -121,7 +121,8 @@ $(document).ready( function () {
     ]
   });
 
-  $('#pagination-container').append( $('#results_table_paginate') );
+  // $('#pagination-container').append( $('#results_table_paginate') );
+  $('#page-controls').append( $('#results_table_paginate') );
   $('#results_table_filter').detach();
   $('#results_table_length').append( $('#results_table_info') );
   $('#results-controls').append( $('#results_table_length') );

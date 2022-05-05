@@ -15,6 +15,22 @@ function resultViewModel() {
     return this.state_view() == 'list';
   }, this);
 
+  this.place_results = ko.observableArray([]);
+
+  this.loadPlaceResults = function(results){
+    var new_place_results = [];
+    for (var i = 0; i < results.length; i++) {
+      if (results[i].type == "places") {
+        new_place_results.push(results[i]);
+      }
+    }
+    app.resultViewModel.place_results(new_place_results);
+    show_map_results();
+  };
+
+
+  this.results.subscribe(this.loadPlaceResults);
+
   this.loadStateFromHash = function(){
     if ($.query.get('view') == 'tile' || $.query.get('view') == 'list'){
       this.state_view($.query.get('view'));
@@ -35,19 +51,19 @@ function resultViewModel() {
   this.state_view.subscribe(this.show_pagination);
 
   this.state_page.subscribe(function(newPage) {
-    if (app.tileViewModel && app.tileViewModel.tilepagination()){
-      app.tileViewModel.tilepagination().pagination(newPage);
-    }
+    // if (app.tileViewModel && app.tileViewModel.tilepagination()){
+      // app.tileViewModel.tilepagination().pagination(newPage);
+    // }
     if (app.hasOwnProperty('datatable')) {
       app.datatable.page(newPage-1).draw('page');
     }
   });
 
-  this.state_items_per_page.subscribe(function(new_ipp){
-    if (app.tileViewModel) {
-      app.tileViewModel.reset_tilepagination();
-    }
-  });
+  // this.state_items_per_page.subscribe(function(new_ipp){
+  //   if (app.tileViewModel) {
+  //     app.tileViewModel.reset_tilepagination();
+  //   }
+  // });
 
   this.get_state = function() {
     state = [];
@@ -176,3 +192,53 @@ function resize_desc_to_fit(self){
     resize_desc_to_fit(self);
   }
 }
+
+function show_map_results() {
+  var features = [];
+
+  //    Clear features from vector source
+  vectorLayer.getSource().clear();
+  //    Add results features to  vector source
+  var place_results = app.resultViewModel.place_results();
+  for (var i = 0; i < place_results.length; i++) {
+    var record = place_results[i];
+    var geom = JSON.parse(record.feature);
+    if (geom) {
+      // TODO: append record details to feature attributes/properties
+      features.push(geom);
+    }
+  }
+  
+  const featureCollection = {
+    'type': 'FeatureCollection',
+    'crs': {
+      'type': 'name',
+      'properties': {
+        'name': 'EPSG:3857',
+      },
+    },
+    'features': features
+  };
+  
+  var jsonFeatures = new ol.format.GeoJSON().readFeatures(featureCollection);
+  vectorLayer.getSource().addFeatures(jsonFeatures);
+
+  if (vectorLayer.getSource().getFeatures().length > 0) {
+    setTimeout(function(){map.updateSize();}, 150);
+    var geometry_extent = vectorLayer.getSource().getExtent();
+    map.getView().fit(geometry_extent,map.getSize());
+  } else {
+    $("#map").hide();
+  }
+
+}
+
+var set_triggers = function() {
+  $("#filter-checkboxes").find('input').change(function(){
+    $('#filter-form').submit();
+  });
+}
+
+$(document).ready(function() {
+  set_triggers();
+});

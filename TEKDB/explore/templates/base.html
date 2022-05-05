@@ -1,11 +1,50 @@
 <HTML>
   <head>
-    <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/assets/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="/static/assets/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" href="/static/explore/css/explore.css">
     <link rel="stylesheet" href="/static/explore/css/header.css">
     <link rel="stylesheet" href="/static/explore/css/modals.css">
     <link rel="stylesheet" href="/static/explore/css/forms.css">
+    <style>
+      :root {
+        --header_height: 8rem;
+        --primary_a: {{ proj_css.primary_a }};
+        --primary_b: {{ proj_css.primary_b }};
+        --primary_c: {{ proj_css.primary_c }};
+        --primary_d: {{ proj_css.primary_d }};
+        --secondary_a: {{ proj_css.secondary_a }};
+        --secondary_b: {{ proj_css.secondary_b }};
+        --secondary_c: {{ proj_css.secondary_c }};
+        --secondary_d: {{ proj_css.secondary_d }};
+        /* PRIMARY A: Vivid, unique. ORIGINAL: SIENNA */
+        --current_pg_index: var(--primary_a);
+        --highlight_underline: var(--primary_a);
+        --highlight_font: var(--primary_a);
+        /* PRIMARY B VERY faint. ORIGINAL: OFF-WHITE */
+        --light_font: var(--primary_b);
+        --accent_bg: var(--primary_b);
+        /* PRIMARY C VERY dark, bold. ORIGINAL: OFF-BLACK */
+        --dark_font: var(--primary_c);
+        /* PRIMARY D neutral. ORIGINAL: GRAY */
+        --result_highlight: var(--primary_d);
+        --alt_bg: var(--primary_d);
+        --light_border: var(--primary_d);
+        /* SECONDARY A Themed, dark. ORIGINAL: FOREST-GREEN */
+        --link_color: var(--secondary_a);
+        --alt_field_bg: var(--secondary_a);
+        /* SECONDARY B Themed, moderate. ORIGINAL: OLIVE-GREEN */
+        /* SECONDARY C Themed, vivid. ORIGINAL: GREEN */
+        --ok_button_bg: var(--secondary_c);
+        --placeholder_font: var(--secondary_c);
+        /* SECONDARY D Vivid, unique, accent. ORIGINAL: FUCHSIA*/
+        /* PALETTE OVERRIDES */
+        --default_background: white;
+        --default_alt_font: white;
+        --default_font: black;
+        --default_border: black;
+      }
+    </style>
 
     {% block extra_css %}{% endblock %}
   </head>
@@ -13,11 +52,7 @@
     {% include 'modals.html' %}
 
     {% block header %}
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        {% include 'navbar.html' %}
-      </div>
-    </nav>
+      {% include 'navbar.html' %}
     {% endblock %}
 
 
@@ -28,7 +63,6 @@
         </div>
         <div class="col-md-10 well content-well">
           {% block content %}
-            <h1>{{pageTitle}}</h1>
             {{pageContent}}
           {% endblock %}
         </div>
@@ -39,9 +73,11 @@
     {% endblock %}
 
     <!-- JQuery -->
-    <script src="/static/assets/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/static/assets/jquery/jquery-3.6.1.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
-    <script src="/static/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+    <script src="/static/assets/bootstrap-5.1.3-dist/js/bootstrap.min.js"></script>
+    
     <script src="/static/explore/js/modals.js"></script>
     <!-- Knockout JS-->
     <script src="/static/assets/knockout/knockout-3.4.2.js"></script>

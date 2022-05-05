@@ -1,0 +1,226 @@
+{% extends 'gis/openlayers_widget_base.html' %}
+{% load static i18n l10n %}
+
+{% block extra_css %}
+    <style>
+        div.ol_layerswitcher input {
+            float: left;
+            margin: 0.65rem;
+            cursor: pointer;
+        }
+        div.ol_layerswitcher label {
+            cursor: pointer;
+        }
+
+        span.clear_features {
+            display: flex;
+        }
+        span.clear_features a {
+            margin: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid;
+            border-radius: 0.5rem;
+        }
+        span.clear_features a:hover {
+            background-color: rgba(127,127,127,0.5);
+        }
+
+    </style>
+{% endblock %}
+
+{% block pre_widget %}{% endblock %}
+
+{% block post_widget %}
+    <div id="{{id}}_map_layerswitcher" class="ol_layerswitcher"></div>
+{% endblock %}
+
+{% block base_layer %}
+            var osm_layer = new ol.layer.Tile({
+                source: new ol.source.OSM()
+            });
+            var satellite_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer">ArcGIS</a>',
+                        'Sources: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and others',
+                    ],
+                    maxZoom: 19,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var topo_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+                        'Sources: Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), (c) OpenStreetMap contributors, and the GIS User Community'
+                    ],
+                    maxZoom: 19,
+                    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var ocean_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer">ArcGIS</a>',
+                        'Sources: Esri, GEBCO, NOAA, National Geographic, Garmin, HERE, Geonames.org, and other contributors'
+                    ],
+                    maxZoom: 13,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var nautical_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions:['NOAA'],
+                    maxZoom: 13,
+                    url: "https://tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png"
+                })
+            })
+            var natgeo_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer">ArcGIS</a>',
+                        'Sources: National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, increment P Corp.'
+                    ],
+                    maxZoom: 13,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var usa_topo_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer">ArcGIS</a>',
+                        'Sources: Copyright:© 2013 National Geographic Society, i-cubed'
+                    ],
+                    maxZoom: 15,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var physical_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer">ArcGIS</a>',
+                        'Sources: US National Park Service'
+                    ],
+                    maxZoom: 8,
+                    url: "https://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var street_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer">ArcGIS</a>',
+                        'Sources: Sources: Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, (c) OpenStreetMap contributors, and the GIS User Community'
+                    ],
+                    maxZoom: 19,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            var terrain_layer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    attributions: [
+                        'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer">ArcGIS</a>',
+                        'Sources: Sources: Sources: Esri, USGS, NOAA'
+                    ],
+                    maxZoom: 14,
+                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}"
+                })
+            });
+            
+
+            var layer_lookup = {
+                'Satellite Imagery': {
+                    'layer': satellite_layer,
+                    'slug': 'satellite',
+                },
+                'Nautical Charts': {
+                    'layer': nautical_layer,
+                    'slug': 'nautical',
+                },
+                'Topological Map': {
+                    'layer': topo_layer,
+                    'slug': 'topo',
+                },
+                'Open Street Map': {
+                    'layer': osm_layer,
+                    'slug': 'osm',
+                },
+                'Ocean Map': {
+                    'layer': ocean_layer,
+                    'slug': 'ocean',
+                },
+                'National Geographic': {
+                    'layer': natgeo_layer,
+                    'slug': 'natgeo',
+                },
+                'USA Topo Map': {
+                    'layer':usa_topo_layer,
+                    'slug': 'usa_topo',
+                },
+                'Street Map': {
+                    'layer': street_layer,
+                    'slug': 'street',
+                },
+                //'Physical Map': physical_layer,  // provies 0-8 for USA Topo map. Worthless otherwise.
+                //'Terrain Map': terrain_layer,   // Just a washed-out topo map. 
+            };
+
+            var layer_id_list = Object.keys(layer_lookup);
+
+            var layers = [];
+
+            
+
+            for (i = 0; i < layer_id_list.length; i++) {
+                var layer_key = layer_id_list[i];
+                var layer = layer_lookup[layer_key].layer;
+                var layer_slug = layer_lookup[layer_key].slug;
+                layers.push(layer);
+                layer.setVisible(i==0);
+                document.getElementById("{{id}}_map_layerswitcher").innerHTML += ''+
+                    '<input type="radio" id="' + layer_slug + '_radio" name="base_layer" value="' + layer_key + '" onchange="changeBaselayer(event)">' + 
+                    '<label for="' + layer_slug + '_radio" onclick="selectRadioFromLabel(event)">' + layer_key + '</label><br><br>';
+            }
+            document.getElementById(layer_lookup[layer_id_list[0]].slug + "_radio").checked = true;
+
+{% endblock %}
+{% block options %}
+            var options = {
+                base_layer: layers,
+                geom_name: '{{ geom_type }}',
+                id: '{{ id }}',
+                map_id: '{{ id }}_map',
+                map_options: map_options,
+                map_srid: {{ map_srid|unlocalize }},
+                name: '{{ name }}'
+            };
+{% endblock %}
+
+{% block map_options %}
+            var map_options = {
+                {% if default_lat %}'default_lat': {{ default_lat }},{% endif %}
+                {% if default_lon %}'default_lon': {{ default_lon }},{% endif %}
+                {% if default_zoom %}'default_zoom': {{ default_zoom }},{% endif %}
+                {% if map_extent %}'map_extent': {{ map_extent }},{% endif %}
+            };
+{% endblock %}
+
+{% block extra_js %}
+        <script>
+            var changeBaselayer = function(event) {
+                event.stopPropagation();
+                var new_layer_id = event.target.value;
+                for (var layer_id_index = 0; layer_id_index < layer_id_list.length; layer_id_index++) {
+                    var layer_id = layer_id_list[layer_id_index];
+                    var layer = layer_lookup[layer_id].layer;
+                    layer.setVisible(layer_id == new_layer_id);
+                }
+            }
+
+            var selectRadioFromLabel = function(event) {
+                var radio = document.getElementById(event.target.for);
+                if (radio) {    // avoid weird scoping error
+                    radio.checked = true;
+                }
+            }
+        </script>
+{% endblock %}

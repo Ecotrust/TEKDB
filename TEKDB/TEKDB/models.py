@@ -424,6 +424,10 @@ class Places(Queryable, Record, ModeratedModel):
     def get_response_format(self):
         type = 'places'
         category_name = 'Place'
+        try:
+            feature = self.geometry.json
+        except AttributeError as e:
+            feature = None
         return {
             'id': self.pk,
             'type': type,
@@ -431,7 +435,8 @@ class Places(Queryable, Record, ModeratedModel):
             'name': str(self),
             'image': self.image(),
             'description': self.indigenousplacenamemeaning,
-            'link': '/explore/%s/%d' % (type, self.pk)
+            'link': '/explore/%s/%d' % (type, self.pk),
+            'feature': feature
         }
 
     def get_related_objects(self, object_id):
@@ -1068,7 +1073,7 @@ class People(DefaultModeratedModel, ModeratedModel):
 
     def image(self):
         #TODO: Better icon or no icon
-        return '/static/explore/img/activity.png'
+        return settings.RECORD_ICONS['person']
 
     def data(self):
         return [

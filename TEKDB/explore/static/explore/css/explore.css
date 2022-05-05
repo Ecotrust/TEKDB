@@ -1,4 +1,4 @@
-body { padding-top: 90px; }
+body { padding-top: var(--header_height); }
 
 h1 { text-align: center; }
 
@@ -6,11 +6,11 @@ h1 { text-align: center; }
 a,
 .well a.btn-download,
 .well a.btn {
-  color: white;
+  color: var(--light_font);
 }
 
 .well a {
-  color: black;
+  color: var(--dark_font);
 }
 
 a:hover {
@@ -22,7 +22,7 @@ a:hover {
 }
 
 .btn-default {
-  color: black;
+  color: var(--default_font);
 }
 
 .content-container {
@@ -30,7 +30,8 @@ a:hover {
 }
 
 .well {
-  background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%);
+  /* background-image: linear-gradient(to bottom,#CCFFCC 0,#F0ffF0 100%); */
+  background-color: var(--accent_bg);
 }
 .content-well {
   padding-bottom: 200px;
@@ -43,7 +44,8 @@ a:hover {
 }
 
 .odd-well {
-  background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%);
+  /* background-image: linear-gradient(to top,#CCFFCC 0,#F0ffF0 100%); */
+  background-color: var(--alt_bg);
 }
 
 .explore-form {
@@ -65,6 +67,7 @@ a:hover {
   list-style-type: none;
 }
 #export-links li a,
+#export-links a,
 #export-links li span{
-  color: blue;
+  color: var(--link_color);
 }

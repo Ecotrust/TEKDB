@@ -3,6 +3,79 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
 
+def get_proj_css():
+    proj_css = {
+        'primary_a': '#8f371c',
+        'primary_b': '#f7f3eb',
+        'primary_c': '#0e1522',
+        'primary_d': '#ced2da',
+        'secondary_a': '#51723b',
+        'secondary_b': '#839230',
+        'secondary_c': '#6ea32e',
+        'secondary_d': '#b44ba3'
+    }
+    try:
+        from TEKDB.settings import PROJ_CSS
+        if 'primary_a' in PROJ_CSS.keys():
+            proj_css['primary_a'] = PROJ_CSS['primary_a']
+        if 'primary_b' in PROJ_CSS.keys():
+            proj_css['primary_b'] = PROJ_CSS['primary_b']
+        if 'primary_c' in PROJ_CSS.keys():
+            proj_css['primary_c'] = PROJ_CSS['primary_c']
+        if 'primary_d' in PROJ_CSS.keys():
+            proj_css['primary_d'] = PROJ_CSS['primary_d']
+        if 'secondary_a' in PROJ_CSS.keys():
+            proj_css['secondary_a'] = PROJ_CSS['secondary_a']
+        if 'secondary_b' in PROJ_CSS.keys():
+            proj_css['secondary_b'] = PROJ_CSS['secondary_b']
+        if 'secondary_c' in PROJ_CSS.keys():
+            proj_css['secondary_c'] = PROJ_CSS['secondary_c']
+        if 'secondary_d' in PROJ_CSS.keys():
+            proj_css['secondary_d'] = PROJ_CSS['secondary_d']
+    except ImportError as e:
+        pass
+
+    # TODO: allow for admin-defined 8-color palettes
+
+    return proj_css
+
+def get_proj_icons():
+    proj_icons = {
+    'logo': 'explore/img/logos/ITK_lines_logo.png',
+    'place_icon': 'explore/img/record_icons/place_icon.png',
+    'resource_icon': 'explore/img/record_icons/resource_icon.png',
+    'activity_icon': 'explore/img/record_icons/activity_icon.png',
+    'source_icon': 'explore/img/record_icons/source_icon.png',
+    'media_icon': 'explore/img/record_icons/media_icon.png',
+}
+    try:
+        from TEKDB.settings import PROJ_ICONS
+        if 'logo' in PROJ_ICONS.keys():
+            proj_icons['logo'] = PROJ_ICONS['logo']
+        if 'place_icon' in PROJ_ICONS.keys():
+            proj_icons['place_icon'] = PROJ_ICONS['place_icon']
+        if 'resource_icon' in PROJ_ICONS.keys():
+            proj_icons['resource_icon'] = PROJ_ICONS['resource_icon']
+        if 'activity_icon' in PROJ_ICONS.keys():
+            proj_icons['activity_icon'] = PROJ_ICONS['activity_icon']
+        if 'source_icon' in PROJ_ICONS.keys():
+            proj_icons['source_icon'] = PROJ_ICONS['source_icon']
+        if 'media_icon' in PROJ_ICONS.keys():
+            proj_icons['media_icon'] = PROJ_ICONS['media_icon']
+    except ImportError as e:
+        pass
+
+    # TODO: allow for admin-defined logos
+
+    return proj_icons
+
+def apply_root_context(context={}):
+    context['proj_css'] = get_proj_css()
+    context['proj_icons'] = get_proj_icons()
+
+    return context
+
+
 # Create your views here.
 def home(request):
     try:
@@ -18,8 +91,10 @@ def home(request):
         'page':'home',
         'pageTitle':'Welcome',
         'pageContent':page_content,
-        'user': request.user
+        'user': request.user,
     }
+    context = apply_root_context(context)
+
     return render(request, "welcome.html", context)
 
 def about(request):
@@ -33,10 +108,11 @@ def about(request):
         page_content = "<h1>About</h1><h3>Set About Page Content In Admin</h3>"
     context = {
         'page':'about',
-        'pageTitle':False,
+        'pageTitle':'About',
         'pageContent':page_content,
-        'user': request.user
+        'user': request.user,
     }
+    context = apply_root_context(context)
     return render(request, "tek_index.html", context)
 
 def help(request):
@@ -50,20 +126,22 @@ def help(request):
         page_content = "<h1>Help</h1><h3>Set Help Page Content In Admin</h3>"
     context = {
         'page':'help',
-        'pageTitle':False,
+        'pageTitle':'Help',
         'pageContent':page_content,
-        'user': request.user
+        'user': request.user,
     }
+    context = apply_root_context(context)
     return render(request, "tek_index.html", context)
 
 @login_required
 def explore(request):
     context = {
         'page':'explore',
-        'pageTitle':'Explore',
+        'pageTitle':'Search',
         'pageContent':"<p>In in mi vitae nibh posuere condimentum vitae eget quam. Etiam et urna id odio fringilla aliquet id hendrerit nisl. Ut sed ex vel felis rhoncus eleifend. Ut auctor facilisis vehicula. Ut sed dui nec ipsum pellentesque tempus.</p>",
-        'user': request.user
+        'user': request.user,
     }
+    context = apply_root_context(context)
     return render(request, "explore.html", context)
 
 def get_model_by_type(model_type):
@@ -126,6 +204,14 @@ def get_by_model_type(request, model_type):
     }
     return render(request, "results.html", context)
 
+def get_project_geography():
+    from TEKDB.settings import DATABASE_GEOGRAPHY
+
+    #RDH 2022-04-11: TODO: have users define their study area, save it to the DB, and format that like settings.DATABASE_GEOGRAPHY
+    #   --FOOTHOLD--
+
+    return DATABASE_GEOGRAPHY
+
 @login_required
 def get_by_model_id(request, model_type, id):
     state = "?%s" % request.GET.urlencode()
@@ -157,9 +243,10 @@ def get_by_model_id(request, model_type, id):
         'back_link': back_link,
         'state': state,
     }
+    context = apply_root_context(context)
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
-        from TEKDB.settings import DATABASE_GEOGRAPHY
+        DATABASE_GEOGRAPHY = get_project_geography()
         context['default_lon'] = DATABASE_GEOGRAPHY['default_lon']
         context['default_lat'] = DATABASE_GEOGRAPHY['default_lat']
         context['default_zoom'] = DATABASE_GEOGRAPHY['default_zoom']
@@ -371,10 +458,10 @@ def search(request):
             checked = ' checked=true'
         else:
             checked = ''
-        category_checkboxes = '%s<input type="checkbox" name="%s" value="%s"%s>%s<br>\n' % (category_checkboxes, category, category,checked,category.capitalize())
+        category_checkboxes += '<div class="col-md-2"><input type="checkbox" name="%s" value="%s"%s>%s</input></div>' % (category, category,checked,category.capitalize())
 
     if query_string in [None, '', '*']:
-        query_string_visible = 'No keyword search specified.'
+        query_string_visible = False
     else:
         query_string_visible = query_string
 
@@ -382,7 +469,8 @@ def search(request):
         query_value = ' value="%s"' % query_string
     else:
         query_value = ''
-    keyword_search_input = '<label for="search-text">Search Phrase</label><input type="text" class="form-control" id="search-text" name="query" placeholder="" %s>' % query_value
+    keyword_search_input = '<!--<label for="search-text">Search Phrase</label>-->\
+        <input type="text" class="form-control" id="search-text" name="query" placeholder="" %s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')
@@ -399,8 +487,11 @@ def search(request):
     if view == None:
         view = 'list'
 
+    DATABASE_GEOGRAPHY = get_project_geography()
+
     context = {
         'items_per_page': items_per_page,
+        'results_qs': resultlist,
         'results': json.dumps(resultlist),
         'query': query_string,
         'keyword': query_string_visible,
@@ -416,7 +507,14 @@ def search(request):
             'page' : int(page),
             'items_per_page' : int(items_per_page),
         },
+        'default_lon': DATABASE_GEOGRAPHY['default_lon'],
+        'default_lat': DATABASE_GEOGRAPHY['default_lat'],
+        'default_zoom': DATABASE_GEOGRAPHY['default_zoom'],
+        'min_zoom': DATABASE_GEOGRAPHY['min_zoom'],
+        'max_zoom': DATABASE_GEOGRAPHY['max_zoom'],
+        'map_extent': DATABASE_GEOGRAPHY['map_extent'],
     }
+    context = apply_root_context(context)
 
     request.META.pop('QUERY_STRING')
 
