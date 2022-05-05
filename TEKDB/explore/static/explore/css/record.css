@@ -117,3 +117,17 @@ main {
 .relationship-div {
   margin: var(--margin_top) 0 var(--margin_bottom);
 }
+
+.related-link {
+  border-bottom: 2px solid var(--primary_a);
+  text-decoration: none;
+}
+
+.record-icon {
+  width: 30px;
+  height: 100%;
+}
+
+.record-entry {
+  text-align: center;
+}

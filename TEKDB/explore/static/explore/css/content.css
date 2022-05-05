@@ -122,7 +122,7 @@ hr {
 h1 {
   font-size: 2.5em;
   font-family: var(--font-sans-serif-bold);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter_spacing);
   line-height: 1.4375;
   margin-bottom: var(--margin_bottom);
   text-align: left;
@@ -131,12 +131,17 @@ h1 {
 h2 {
   font-size: 2.5em;
   font-family: var(--font-sans-serif-bold);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter_spacing);
   line-height: 1.4375;
 }
 
 h3 {
+  color: var(--secondary_a);
+  font-family: var(--font-sans-serif-extrabold);
+  font-size: 1em;
+  letter-spacing: var(--letter_spacing);
   margin: var(--margin_top) 0 var(--margin_bottom);
+  text-transform: uppercase;
 }
 
 h2 span {
