@@ -12,7 +12,10 @@ def get_proj_css():
         'secondary_a': '#51723b',
         'secondary_b': '#839230',
         'secondary_c': '#6ea32e',
-        'secondary_d': '#b44ba3'
+        'secondary_d': '#b44ba3',
+        'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
+        'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
+        'font_face_primary_extrabold': '/static/explore/fonts/Open_Sans/static/OpenSans-ExtraBold-export/OpenSans-ExtraBold.css',
     }
     try:
         from TEKDB.settings import PROJ_CSS
@@ -32,6 +35,10 @@ def get_proj_css():
             proj_css['secondary_c'] = PROJ_CSS['secondary_c']
         if 'secondary_d' in PROJ_CSS.keys():
             proj_css['secondary_d'] = PROJ_CSS['secondary_d']
+        if 'font_face_primary' in PROJ_CSS.keys():
+            proj_css['font_face_primary'] = PROJ_CSS['font_face_primary']
+        if 'font_face_primary_bold' in PROJ_CSS.keys():
+            proj_css['font_face_primary_bold'] = PROJ_CSS['font_face_primary_bold']
     except ImportError as e:
         pass
 
@@ -41,13 +48,13 @@ def get_proj_css():
 
 def get_proj_icons():
     proj_icons = {
-    'logo': 'explore/img/logos/ITK_lines_logo.png',
-    'place_icon': 'explore/img/record_icons/place_icon.png',
-    'resource_icon': 'explore/img/record_icons/resource_icon.png',
-    'activity_icon': 'explore/img/record_icons/activity_icon.png',
-    'source_icon': 'explore/img/record_icons/source_icon.png',
-    'media_icon': 'explore/img/record_icons/media_icon.png',
-}
+        'logo': 'explore/img/logos/logo_weave.svg',
+        'place_icon': 'explore/img/icons/i_place.svg',
+        'resource_icon': 'explore/img/icons/i_resource.svg',
+        'activity_icon': 'explore/img/icons/i_activity.svg',
+        'source_icon': 'explore/img/icons/i_source.svg',
+        'media_icon': 'explore/img/icons/i_media.svg',
+    }
     try:
         from TEKDB.settings import PROJ_ICONS
         if 'logo' in PROJ_ICONS.keys():
@@ -65,13 +72,45 @@ def get_proj_icons():
     except ImportError as e:
         pass
 
-    # TODO: allow for admin-defined logos
-
     return proj_icons
+
+def get_proj_logo_text():
+    # TODO: allow for admin-defined logos
+    project_logo_text = 'ITK'
+    try:
+        from TEKDB.settings import PROJ_LOGO_TEXT
+        if len(PROJ_LOGO_TEXT) > 0:
+            project_logo_text = PROJ_LOGO_TEXT
+    except ImportError as e:
+        pass
+    return project_logo_text
+
+def get_proj_color_select():
+    project_color_select = '#000000'
+    try:
+        from TEKDB.settings import PROJ_COLOR_SELECT
+        if len(PROJ_COLOR_SELECT) > 0:
+            project_color_select = PROJ_COLOR_SELECT
+    except ImportError as e:
+        pass
+    return project_color_select
+
+def get_project_image_select():
+    project_image_select = '/explore/img/abalone_1200.jpg'
+    try:
+        from TEKDB.settings import PROJ_IMAGE_SELECT
+        if len(PROJ_IMAGE_SELECT) > 0:
+            project_image_select = PROJ_IMAGE_SELECT
+    except ImportError as e:
+        pass
+    return project_image_select
 
 def apply_root_context(context={}):
     context['proj_css'] = get_proj_css()
     context['proj_icons'] = get_proj_icons()
+    context['proj_logo_text'] = get_proj_logo_text()
+    context['proj_color_select'] = get_proj_color_select()
+    context['proj_image_select'] = get_project_image_select()
 
     return context
 
@@ -458,7 +497,7 @@ def search(request):
             checked = ' checked=true'
         else:
             checked = ''
-        category_checkboxes += '<div class="col-md-2"><input type="checkbox" name="%s" value="%s"%s>%s</input></div>' % (category, category,checked,category.capitalize())
+        category_checkboxes += '<div class="col col-md-2"><input type="checkbox" id="%s" name="%s" value="%s"%s><label for="%s"></label> %s</input></div>' % (category, category, category, checked, category, category.capitalize())
 
     if query_string in [None, '', '*']:
         query_string_visible = False
@@ -470,7 +509,7 @@ def search(request):
     else:
         query_value = ''
     keyword_search_input = '<!--<label for="search-text">Search Phrase</label>-->\
-        <input type="text" class="form-control" id="search-text" name="query" placeholder="" %s>' % query_value
+        <input type="text" class="form-control" id="search-text" name="query" placeholder="Keywords" %s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')

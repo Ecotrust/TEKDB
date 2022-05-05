@@ -1,3 +1,13 @@
+main {
+  background-color: var(--primary_b);
+}
+
+.content-container,
+.content-row {
+  padding-top: calc(var(--margin_top) * 2);
+  padding-bottom: var(--margin_bottom);
+}
+
 .record-icon {
   height: 80px;
   background-size: cover;
@@ -40,14 +50,29 @@
 }
 
 .back-button {
-  color: black;
-  border: 1px solid #777;
+  background-color: var(--white);
+  border-color: var(--black);
+  color: var(--black);
+  font-family: var(--font-sans-serif-bold);
+  line-height: 1.75;
 }
+
 .back-button:hover {
   color: #363;
   border-color: #363;
   background-color: #EEE;
 }
+
+.arrow-left {
+  top: -1px;
+}
+
+.arrow-left,
+.arrow-left::before,
+.arrow-left::after {
+  background: var(--primary_a);
+}
+
 
 .source-excerpt {
   margin-left: 1em;

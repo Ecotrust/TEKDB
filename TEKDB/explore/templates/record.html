@@ -8,24 +8,21 @@
 {% block contentwrapper %}
 <div class="container content-container">
   <div class="row">
-    <div class="col-md-1">
+    <div class="col col-md-1"></div>
+    <div class="col col-md-6">
+      <a href="{{ back_link }}" class="btn back-button"><span class="search-arrow arrow-left"></span> Back to results</a>
     </div>
-    <div class="col-md-10">
-      <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button">Back to results</button></a>
+    <div class="col col-md-4 text-right">
+      <div id="export-links">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="14.571" viewBox="0 0 12 14.571">
+          <path id="Icon_material-file-download" data-name="Icon material-file-download" d="M19.5,9.643H16.071V4.5H10.929V9.643H7.5l6,6Zm-12,7.714v1.714h12V17.357Z" transform="translate(-7.5 -4.5)"/>
+        </svg></span>
+        <a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a>
+        |
+        <a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a>
+      </div>
     </div>
-    <div class="col-md-1">
-      <table>
-        <tr><td>Download</td></tr>
-        <tr>
-          <td>
-            <ul id="export-links">
-              <li><a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a></li>
-              <li><a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a></li>
-            </ul>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <div class="col col-md-1"></div>
   </div>
   <div class="row content-row">
     <div class="col-md-1">

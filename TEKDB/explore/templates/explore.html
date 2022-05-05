@@ -1,39 +1,60 @@
 {% extends "base.html" %}
 
-{% block content %}
-<form class="explore-form" method='post' action='/search/'>
-  {% csrf_token %}
-  <input type="text" id="search-category-type" name="category" value="all" required>
-  <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('all')">All</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('places')">Place</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('resources')">Resource</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default" onclick="setCategoryType('activities')">Activity</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default"onclick="setCategoryType('sources')">Source</button>
-    </div>
-    <div class="btn-group" role="category-group">
-      <button type="button" class="btn btn-default"onclick="setCategoryType('media')">Media</button>
+{% block contentwrapper %}
+<div class="container-fluid content-container">
+  <div class="row content-row">
+    <div class="col well content-well">
+      {% block content %}
+      <div class="row g-4 align-items-stretch">
+        <div class="col col-md-6 white-bg p-4">
+          <h1>Browse by category</h1>
+          <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
+          <form class="explore-form" method="post" action="/search/">
+            <input type="text" id="search-category-type" name="category" value="all" required>
+            <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
+              <div class="btn-group" role="category-group">
+                <button type="button" class="btn btn-default" onclick="setCategoryType('all')">All</button>
+              </div>
+              <div class="btn-group" role="category-group">
+                <button type="button" class="btn btn-default" onclick="setCategoryType('places')">Place</button>
+              </div>
+              <div class="btn-group" role="category-group">
+                <button type="button" class="btn btn-default" onclick="setCategoryType('resources')">Resource</button>
+              </div>
+              <div class="btn-group" role="category-group">
+                <button type="button" class="btn btn-default" onclick="setCategoryType('activities')">Activity</button>
+              </div>
+              <div class="btn-group" role="category-group">
+                <button type="button" class="btn btn-default"onclick="setCategoryType('sources')">Source</button>
+              </div>
+              <div class="btn-group" role="category-group">
+                <button type="button" class="btn btn-default"onclick="setCategoryType('media')">Media</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col col-md-6 accent-bg p-4">
+          <h1>Search by keyword</h1>
+          <div class="form-wrapper">
+            <form class="explore-form" method='post' action='/search/'>
+              {% csrf_token %}
+                <div class="input-group">
+                  <span class="input-group-text" id="search-icon-label">
+                    <svg id="Symbol_62_2" data-name="Symbol 62 – 2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                      <rect id="Rectangle_176" data-name="Rectangle 176" width="16" height="16" fill="none"/>
+                      <path id="Path_99" data-name="Path 99" d="M15.9,14.5l-3.3-3.3A6.847,6.847,0,0,0,14,7,6.957,6.957,0,0,0,7,0,6.957,6.957,0,0,0,0,7a6.957,6.957,0,0,0,7,7,6.847,6.847,0,0,0,4.2-1.4l3.3,3.3ZM2,7A4.951,4.951,0,0,1,7,2a4.951,4.951,0,0,1,5,5,4.951,4.951,0,0,1-5,5A4.951,4.951,0,0,1,2,7Z"/>
+                    </svg>
+                  </span>
+                  <input type="search" class="form-control" id="search-text" name="query" placeholder="Keywords">
+                </div>
+                <button class="btn btn-secondary" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
     </div>
   </div>
-    <div class="input-group">
-      <input type="text" class="form-control" id="search-text" name="query" placeholder="Search Keywords">
-      <span class="input-group-btn">
-        <button class="btn btn-secondary" type="submit">Search</button>
-      </span>
-    </div>
-</form>
-<div class='explore-logo'>
-  <img src='/static/explore/img/compass.png'>
-  <p>Explore</p>
 </div>
 {% endblock %}
 

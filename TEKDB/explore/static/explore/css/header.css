@@ -2,19 +2,35 @@ nav.navbar {
   background-color: var(--default_background);
   border-bottom: 1px solid var(--default_border);
   /* margin: 0 3vw; */
-
   height: var(--header_height);
 }
 
-img.header-logo {
-  padding: 1.5rem 4rem;
-  max-height: var(--header_height);
-  max-width: 50vw;
+/* Wrapper for logo */
+/* Logo value is a django variable in navbar.html */
+/* Logo is assigned as the background-image for .navbar-brand-wrapper */
+.navbar-brand-wrapper {
+  background-repeat: no-repeat; 
+  background-size: contain;
+  font-family: var(--font-sans-serif-extrabold);
+  font-size: 1.06375em;
+  letter-spacing: 0.075em;
+  height: 70.5px;
+  line-height: 70.5px;
+  padding: 0 20px 0 0;
+  text-align: right;
+  min-width: 127.4px;
+}
+
+/* Customizable text position */
+.navbar-brand-text {
+  margin: 0 auto;
+  text-align: right;
+  width: 65%;
 }
 
 ul.navbar-nav {
-  justify-content: space-around;
   width: 100%;
+  margin-left: 10%;
 }
 
 .navbar-toggler {
@@ -27,49 +43,39 @@ ul.navbar-nav li.nav-item {
 }
 
 ul.navbar-nav li.nav-item a.nav-link {
-  font-size: 2rem;
-  color: var(--dark_font);
-  /* keep other header items from shifting on hover*/
-  /* border: 1px solid var(--default_background); */
-  margin-top: 1px;
-  margin-bottom: 1px;
-  margin-left: 4px;
-  border-radius: 0.25rem;
+  border-bottom: 3px solid transparent;
+  color: var(--black);
+  display: inline-block;
+  font-size: 1.125em;
+  font-family: var(--font-sans-serif-bold);
+  letter-spacing: 0.125em;
+  transition: border-bottom 0.2s ease-in-out;
 }
 
 ul.navbar-nav li.nav-item a.nav-link:hover {
-  color: var(--highlight_font);
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 0;
+  border-bottom: 3px solid var(--highlight_underline);
+  color: var(--black);
 }
 
 ul.navbar-nav li.nav-item.active a.nav-link {
-  border-bottom: 0.3rem solid var(--highlight_underline);
-  border-radius: 0;
-}
-ul.navbar-nav li.nav-item.active a.nav-link:hover {
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border-bottom: 3px solid var(--highlight_underline);
 }
 
 ul.navbar-nav li.nav-item.user-menu {
-  flex-grow: 4;
   text-align: right;
 }
 
 ul.navbar-nav li.nav-item.user-menu a.header-button,
 ul.navbar-nav li.nav-item.user-menu a#userDropdown {
-  float: right;
-  margin-right: 2rem;
-  background-color: var(--alt_bg);
-  padding: 1rem 2rem;
+  /* background-color: var(--alt_bg); */
+  font-family: var(--font-sans-serif);
+  font-size: .9375em;
+  padding: .6375em 1.375em;
 }
 
 ul.navbar-nav li.nav-item.user-menu a.header-button,
 ul.navbar-nav li.nav-item.user-menu a#userDropdown:hover {
-  border: 1px solid var(--default_border);
+  /* border: 1px solid var(--default_border); */
 }
 
 ul.navbar-nav li.nav-item.user-menu ul.dropdown-menu[data-bs-popper] {

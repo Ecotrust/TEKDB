@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198.47 129.02"><g style="isolation:isolate"><g style="isolation:isolate"><path d="M64.31,78.07V47.72h6.43V78.07Z" style="fill:#101623"/></g><g style="isolation:isolate"><path d="M100.18,78.07H93.74v-25H85.5V47.72h22.92v5.35h-8.24Z" style="fill:#101623"/><path d="M145.16,78.07h-7.31L129.9,65.28l-2.72,2V78.07h-6.43V47.72h6.43V61.61L129.71,58l8.23-10.32h7.14L134.49,61.15Z" style="fill:#101623"/></g></g><line x1="143.44" y1="108.43" y2="108.43" style="fill:none;stroke:#b86aab;stroke-miterlimit:10;stroke-width:3px"/><line x1="150.37" y1="120.9" x2="6.93" y2="120.9" style="fill:none;stroke:#839239;stroke-miterlimit:10;stroke-width:3px"/><line x1="170.74" y1="13.98" x2="27.99" y2="13.98" style="fill:none;stroke:#b86aab;stroke-miterlimit:10;stroke-width:3px"/><line x1="198.47" y1="1.5" x2="55.72" y2="1.5" style="fill:none;stroke:#839239;stroke-miterlimit:10;stroke-width:3px"/><line x1="20.63" y1="96.3" x2="75.07" y2="121.29" style="fill:none;stroke:#8f371c;stroke-miterlimit:10;stroke-width:3px"/><polyline points="87.16 26.46 164.07 26.46 193.35 61.66 164.33 95.95 19.5 95.95" style="fill:none;stroke:#8f371c;stroke-miterlimit:10;stroke-width:3px"/><path d="M74.52,129a6.88,6.88,0,1,0-6.86-6.9v0A6.86,6.86,0,0,0,74.5,129h0" style="fill:#101623"/><path d="M162.64,33.32a6.86,6.86,0,1,0-6.85-6.86,6.86,6.86,0,0,0,6.85,6.86" style="fill:#101623"/></svg>
+<svg class="logo-svg" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 107.4 70.5"><defs>
+<style>
+	.st0{fill:#101623;}
+	.st1{font-family:'OpenSans-Extrabold';}
+	.st2{font-size:23px;}
+	.st3{letter-spacing:5;}
+	.st4{fill:none;stroke:#B86AAB;stroke-width:3;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#839239;stroke-width:3;stroke-miterlimit:10;}
+	.st6{fill:none;stroke:#8F371C;stroke-width:3;stroke-miterlimit:10;}
+</style>
+</defs>
+<g>
+	<!-- <text transform="matrix(1 0 0 1 32.72 42.92)" class="logo-svg-text st0 st1 st2 st3">ITK</text> -->
+	<line class="st4" x1="77.6" y1="59.3" x2="0" y2="59.3"/>
+	<line class="st5" x1="81.3" y1="66.1" x2="3.8" y2="66.1"/>
+	<line class="st4" x1="92.4" y1="8.2" x2="15.1" y2="8.2"/>
+	<line class="st5" x1="107.4" y1="1.5" x2="30.1" y2="1.5"/>
+	<line class="st6" x1="11.2" y1="52.8" x2="40.6" y2="66.3"/>
+	<polyline class="st6" points="47.1,15 88.8,15 104.6,34 88.9,52.6 10.5,52.6 	"/>
+	<path class="st0" d="M40.3,70.5c2.1,0,3.7-1.7,3.7-3.7c0-2.1-1.7-3.7-3.7-3.7c-2.1,0-3.7,1.7-3.7,3.7c0,0,0,0,0,0
+		C36.6,68.8,38.3,70.5,40.3,70.5C40.3,70.5,40.3,70.5,40.3,70.5"/>
+	<path class="st0" d="M88,18.7c2,0,3.7-1.7,3.7-3.7S90,11.3,88,11.3c-2,0-3.7,1.7-3.7,3.7C84.3,17,85.9,18.7,88,18.7"/>
+</g></svg>

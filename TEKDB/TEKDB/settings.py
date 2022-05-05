@@ -251,17 +251,20 @@ MEDIA_ROOT = '/vol/web/media'
 MODERATE_STAFF = False
 
 PROJ_CSS = {
-    'primary_a': '#8f371c',
-    'primary_b': '#f7f3eb',
-    'primary_c': '#0e1522',
-    'primary_d': '#ced2da',
-    'secondary_a': '#51723b',
-    'secondary_b': '#839230',
-    'secondary_c': '#6ea32e',
-    'secondary_d': '#b44ba3'
+    'primary_a': '#8f371c', #red
+    'primary_b': '#f7f3eb', #off white
+    'primary_c': '#0e1522', #very dark blue
+    'primary_d': '#ced2da', #light gray
+    'secondary_a': '#51723b', #fern green
+    'secondary_b': '#839230', #old moss green
+    'secondary_c': '#6ea32e', #green
+    'secondary_d': '#b44ba3' #rose quartz pink
 }
 
-# Will be replaced by svg 
+PROJ_LOGO_TEXT = 'KTR'
+PROJ_COLOR_SELECT = 'light'
+PROJ_IMAGE_SELECT = 'static/explore/img/abalone_1200.jpg'
+
 PROJ_ICONS = {
     'logo': 'explore/img/logos/logo_weave.svg',
     'place_icon': 'explore/img/icons/i_place.svg',
@@ -279,6 +282,16 @@ RECORD_ICONS = {
     'media': '/static/{}'.format(PROJ_ICONS['media_icon']),
     'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
     'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
+}
+
+# Not sure if this is the best way to implement fonts. 
+# It gets tricky bc there will likely be multiple formats for each font.
+# For example: .ttf, .otf, .woff, .woff2, .svg
+# We'll need to figure out how to handle this better. 
+# TODO: Plan to revisit this later.
+PROJ_FONTS = {
+    'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
+    'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
 }
 
 try:
