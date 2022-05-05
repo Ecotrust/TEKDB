@@ -138,7 +138,8 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             target: this.options.map_id,
             layers: this.options.base_layer,
             view: new ol.View({
-                zoom: default_zoom
+                zoom: default_zoom,
+                maxZoom: 20,
             })
         });
         return map;

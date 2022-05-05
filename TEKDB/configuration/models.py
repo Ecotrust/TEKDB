@@ -24,7 +24,7 @@ class Configuration(models.Model):
         null=True, blank=True,
         verbose_name="Area of Interest",
         default=None,
-        help_text="Indicate the region in which most of your 'place' records are likely exist. This serves to set the map conveniently for staff entering records. Records are allowed to exist outside of the area you indicate, and this can be changed at any time."
+        help_text="Indicate the region in which most of your 'place' records are likely to exist. This serves to set the map conveniently for staff entering records. Records are allowed to exist outside of the area you indicate, and this can be changed at any time."
     )
     homepageImage = models.ImageField(
         blank=True, 
