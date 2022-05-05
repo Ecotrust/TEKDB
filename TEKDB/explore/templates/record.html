@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block contentwrapper %}
-<div class="container content-container">
+<div class="container record-wrapper content-container">
   <div class="row">
     <div class="col col-md-1"></div>
     <div class="col col-md-6">
@@ -25,48 +25,53 @@
     <div class="col col-md-1"></div>
   </div>
   <div class="row content-row">
-    <div class="col-md-1">
+    <div class="col col-md-1">
     </div>
-    <div class="col-md-10 well content-well">
+    <div class="col col-md-10 well content-well">
       <div class='row'>
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-10">
-          <div class='row'>
-            <div class="col record-icon" style="background-image: url({{ record.image }})">
-            </div>
-            <div class="col-md-10">
-              <h2>{{record.name | safe }}</h2>
-              <h5>{{record.subtitle | safe }}</h5>
+        <div class="col col-md-1"></div>
+        <div class="col col-md-10">
+          <div class="row">
+            <div class="col record-type record-type-{{ model }}">{{ model }}</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h2>{{record.name | safe }} <span>{{record.subtitle | safe }}</span></h2>
             </div>
           </div>
           <div class='row'>
-            <div class='well odd-well'>
-              {% if record.media.file %}
-                {% if not record.restricted %}
-                <div style="text-align: right">
-                  <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
-                  <a class='btn-download' href="download">Download</a>
-                </div>
-                {% endif %}
-                {% if record.media.type == 'image' %}
-                  <div style="text-align: center">
-                    <img style="max-height: 20em" src="{{ MEDIA_URL }}{{ record.media.file }}" />
+            <div class="col">
+              <div class='well odd-well'>
+                {% if record.media.file %}
+                  {% if not record.restricted %}
+                  <div style="text-align: right">
+                    <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
+                    <a class='btn-download' href="download">Download</a>
                   </div>
+                  {% endif %}
+                  {% if record.media.type == 'image' %}
+                    <div style="text-align: center">
+                      <img style="max-height: 20em" src="{{ MEDIA_URL }}{{ record.media.file }}" />
+                    </div>
+                  {% endif %}
                 {% endif %}
-              {% endif %}
-              {% for data in record.data %}
-              <p><b>{{ data.key }}:</b> {{ data.value | safe }}</p>
-              {% endfor %}
-              {% if record.map %}
-              {% include "map.html" %}
-              {% endif %}
+                {% for data in record.data %}
+                  <div class="record-data">
+                    <strong>{{ data.key }}:</strong> 
+                    <span>{{ data.value | safe }}</span>
+                  </div>
+                {% endfor %}
+                {% if record.map %}
+                {% include "map.html" %}
+                {% endif %}
+              </div>
             </div>
           </div>
           {% if record.relationships|length > 0 %}
+          <hr />
           <div class='row'>
-            <h4>Relationships</h4>
             <div class='well odd-well relationship-div'>
+              <h3>Relationships</h3>
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
                   <p><b>{{ relationship.key }}:</b></p>
@@ -101,7 +106,8 @@
           </div>
           {% endif %}
           <div class='row'>
-            <p>
+            <div class="col">
+              <em>
               {% if record.enteredbyname %}
                 Entered by: {{record.enteredbyname}} on
                 {% if record.enteredbydate %}
@@ -115,12 +121,13 @@
                   on {{record.modifiedbydate}}
                 {% endif %}
               {% endif %}
-            </p>
+              </em>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-1">
+    <div class="col col-md-1">
     </div>
   </div>
 </div>
