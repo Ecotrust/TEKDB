@@ -28,7 +28,7 @@
     <div class="col well content-well">
       <div class='row'>
         <div class="col col-md-1"></div>
-        {% if record.map %}
+        {% if record.map or record.media.file %}
         <div class="col-md-5">
         {% else %}
         <div class="col">
@@ -44,19 +44,6 @@
           <div class='row'>
             <div class="col">
               <div class='well odd-well'>
-                {% if record.media.file %}
-                  {% if not record.restricted %}
-                  <div style="text-align: right">
-                    <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
-                    <a class='btn-download' href="download">Download</a>
-                  </div>
-                  {% endif %}
-                  {% if record.media.type == 'image' %}
-                    <div style="text-align: center">
-                      <img style="max-height: 20em" src="{{ MEDIA_URL }}{{ record.media.file }}" />
-                    </div>
-                  {% endif %}
-                {% endif %}
                 {% for data in record.data %}
                   <div class="record-data">
                     <strong>{{ data.key }}:</strong> 
@@ -116,6 +103,27 @@
           {% include "map.html" %}
         </div>
         {% endif %}
+
+        {% if record.media.file %}
+        <div class="col-md-6">
+          {% if record.media.type == 'image' %}
+            <div>
+              <img src="{{ MEDIA_URL }}{{ record.media.file }}" />
+            </div>
+          {% endif %}
+          {% if not record.restricted %}
+          <div class="row">
+            <div class="col">
+              <div>
+                <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
+                <a class="btn btn-download" href="download">Download</a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
       </div>
         <div class='row record-entry'>
           <div class="col">

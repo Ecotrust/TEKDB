@@ -69,18 +69,13 @@ main {
 }
 
 .btn-download {
-  background-color: #777;
-  padding: 1em;
-  border-radius: 5px;
-  float: right;
+  border-color: var(--black);
+  color: var(--black);
+  margin: var(--margin_top) 0 var(--margin_bottom);
 }
 
 .btn-download:hover {
-  background-color: #555;
-  text-decoration: none;
-  padding: 1.2em;
-  margin-right: -0.4em;
-  margin-top: -0.2em;
+  
 }
 
 .back-button {
@@ -129,5 +124,6 @@ main {
 }
 
 .record-entry {
+  margin: var(--margin_top) 0 var(--margin_bottom);
   text-align: center;
 }
