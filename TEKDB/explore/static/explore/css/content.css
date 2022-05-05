@@ -1,6 +1,7 @@
 /* Main */
 main {
   background: var(--black);
+  min-height: calc(100vh - 96px);
 }
 
 main[data-theme="dark"] {
@@ -114,6 +115,10 @@ p {
   margin-bottom: var(--margin_bottom);
 }
 
+hr {
+  margin: var(--margin_top) 0 var(--margin_bottom);
+}
+
 h1 {
   font-size: 2.5em;
   font-family: var(--font-sans-serif-bold);
@@ -121,6 +126,26 @@ h1 {
   line-height: 1.4375;
   margin-bottom: var(--margin_bottom);
   text-align: left;
+}
+
+h2 {
+  font-size: 2.5em;
+  font-family: var(--font-sans-serif-bold);
+  letter-spacing: 0.05em;
+  line-height: 1.4375;
+}
+
+h3 {
+  margin: var(--margin_top) 0 var(--margin_bottom);
+}
+
+h2 span {
+  font-size: .5em;
+  font-family: var(--font-sans-serif);
+}
+
+h5 {
+  font-size: 1.25em;
 }
 
 .accent-bg {
