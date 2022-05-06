@@ -28,7 +28,7 @@
         <div class="proj-image-select-wrapper">
           <img src="{{ proj_image_select }}" alt="project image">
         </div>
-        <div id="proj-image-attribution"><p>{{ home_image_attribution|safe }}</p></div>
+        {% if home_image_attribution %}<div id="proj-image-attribution"><p>{{ home_image_attribution|safe }}</p></div>{% endif %}
       </div>
   </div>
 {% endblock %}

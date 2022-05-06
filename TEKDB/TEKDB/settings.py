@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'colorfield',
     # 'registration',
     'leaflet',
     'nested_admin',
@@ -265,9 +266,10 @@ PROJ_CSS = {
 PROJ_LOGO_TEXT = 'ITK'
 PROJ_COLOR_SELECT = 'light'
 PROJ_IMAGE_SELECT = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
+PROJ_IMAGE_ATTR = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
 
 PROJ_ICONS = {
-    'logo': 'explore/img/logos/logo_weave.svg',
+    'logo': '/static/explore/img/logos/logo_weave.svg',
     'place_icon': 'explore/img/icons/i_place.svg',
     'resource_icon': 'explore/img/icons/i_resource.svg',
     'activity_icon': 'explore/img/icons/i_activity.svg',
