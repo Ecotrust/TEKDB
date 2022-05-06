@@ -16,6 +16,7 @@ div#homepage-left-column {
 
 .welcome-content-wrapper {
   color: var(--home_font_color);
+  margin: 3rem 2rem;
 }
 
 .welcome-content-wrapper p {
@@ -25,6 +26,7 @@ div#homepage-left-column {
 div.welcome-login-button-wrapper a.btn.welcome-login-btn {
   border-color: var(--home_font_color);
   color: var(--home_font_color);
+  margin-left: 2rem;
 }
 
 div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::before,
