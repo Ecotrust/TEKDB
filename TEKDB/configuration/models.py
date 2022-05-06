@@ -70,22 +70,35 @@ class Configuration(models.Model):
         help_text = "If using a custom image that requires attribution for use, please provide that here."
     ) #CKEditor Rich Text Editor Field
 
+    COLOR_PALETTE = []
+
+    for key in settings.PROJ_CSS.keys():
+        COLOR_PALETTE.append(
+            (settings.PROJ_CSS[key], key)
+        )
+
+    COLOR_PALETTE.append(("#FFFFFF", 'white'))
+    COLOR_PALETTE.append(("#000000", 'black'))
+
     homepage_font_color = ColorField(
         default='#FFFFFF',
         help_text="Text color on homepage. Recommended: White (#FFFFFF).",
         verbose_name="Homepage Text Color",
+        samples=COLOR_PALETTE,
     )
 
     homepage_left_background = ColorField(
         default='#000000',
         help_text="Background color behind Text on homepage. Recommended: Black (#000000).",
         verbose_name="Left Homepage Background Color",
+        samples=COLOR_PALETTE,
     )
 
     homepage_right_background = ColorField(
         default='#000000',
         help_text="Background color behind image on homepage. Recommended: Black (#000000).",
         verbose_name="Right Homepage Background Color",
+        samples=COLOR_PALETTE,
     )
 
     # TODO: Allow users to:
