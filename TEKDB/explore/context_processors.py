@@ -119,7 +119,7 @@ def explore_context(request):
     #     PROJ_IMAGE_SELECT              #
     ######################################
 
-    project_image_select = '/explore/img/abalone_1200.jpg'
+    project_image_select = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
 
     if settings:
         try:
@@ -137,10 +137,17 @@ def explore_context(request):
         except Exception as e:
             pass
 
+    ######################################
+    #     HOME_IMAGE_ATTRIBUTION         #
+    ######################################
+
+    home_image_attribution = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
+
     return {
         'proj_logo_text': project_logo_text,
         'proj_css': proj_css,
         'proj_icons': proj_icons,
         'proj_color_select': project_color_select,
-        'proj_image_select': project_image_select
+        'proj_image_select': project_image_select,
+        'home_image_attribution': home_image_attribution,
     }

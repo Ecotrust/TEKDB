@@ -264,7 +264,7 @@ PROJ_CSS = {
 
 PROJ_LOGO_TEXT = 'KTR'
 PROJ_COLOR_SELECT = 'light'
-PROJ_IMAGE_SELECT = 'static/explore/img/abalone_1200.jpg'
+PROJ_IMAGE_SELECT = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
 
 PROJ_ICONS = {
     'logo': 'explore/img/logos/logo_weave.svg',
