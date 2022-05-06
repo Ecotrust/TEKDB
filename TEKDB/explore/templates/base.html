@@ -64,6 +64,7 @@
         /* Spacing */
         --margin_bottom: 1.5em; 
         --margin_top: 1.5em; 
+        --letter_spacing: 0.05em;
       }
     </style>
 
@@ -73,7 +74,9 @@
     {% include 'modals.html' %}
 
     {% block header %}
-      {% include 'navbar.html' %}
+      <header>
+        {% include 'navbar.html' %}
+      </header>
     {% endblock %}
     
     <!-- TODO: Add dynamic font color based on background color -->

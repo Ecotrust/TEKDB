@@ -8,11 +8,45 @@ main {
   padding-bottom: var(--margin_bottom);
 }
 
-.record-icon {
-  height: 80px;
-  background-size: cover;
-  float: left;
-  width: 84px;
+.record-type {
+  font-family: var(--font-sans-serif-extrabold);
+  letter-spacing: var(--letter_spacing);
+  text-transform: uppercase;
+}
+
+.record-type-resources {
+  color: var(--secondary_d);
+}
+
+.record-type-places {
+  color: var(--secondary_c);
+}
+
+.record-type-citations {
+  color: var(--primary_c);
+}
+
+.record-type-media {
+  color: var(--secondary_b);
+}
+
+
+.record-data {
+  margin-top: calc(var(--margin_top) / 2);
+}
+
+.record-data strong {
+  font-family: var(--font-sans-serif-bold);
+  font-size: .75em;
+  font-weight: 400;
+  letter-spacing: 0.125em;
+  margin-right: 4px;
+  text-transform: uppercase;
+}
+
+.record-data span {
+  font-size: 1.125em;
+  letter-spacing: 0.05em;
 }
 
 .relationship-row {
@@ -35,18 +69,13 @@ main {
 }
 
 .btn-download {
-  background-color: #777;
-  padding: 1em;
-  border-radius: 5px;
-  float: right;
+  border-color: var(--black);
+  color: var(--black);
+  margin: var(--margin_top) 0 var(--margin_bottom);
 }
 
 .btn-download:hover {
-  background-color: #555;
-  text-decoration: none;
-  padding: 1.2em;
-  margin-right: -0.4em;
-  margin-top: -0.2em;
+  
 }
 
 .back-button {
@@ -78,4 +107,23 @@ main {
   margin-left: 1em;
   color: #555;
   font-size: 12px;
+}
+
+.relationship-div {
+  margin: var(--margin_top) 0 var(--margin_bottom);
+}
+
+.related-link {
+  border-bottom: 2px solid var(--primary_a);
+  text-decoration: none;
+}
+
+.record-icon {
+  width: 30px;
+  height: 100%;
+}
+
+.record-entry {
+  margin: var(--margin_top) 0 var(--margin_bottom);
+  text-align: center;
 }
