@@ -46,12 +46,12 @@
         --placeholder_font: var(--secondary_c);
         /* SECONDARY D Vivid, unique, accent. ORIGINAL: FUCHSIA*/
         /* PALETTE OVERRIDES */
-        --default_background: white;
-        --default_alt_font: white;
-        --default_font: black;
-        --default_border: black;
-        --btn_border: 2px solid #fff;
-        --btn_color: #fff;
+        --default_background: var(--white);
+        --default_alt_font: var(--white);
+        --default_font: var(--black);
+        --default_border: var(--black);
+        --btn_border: 2px solid var(--white);
+        --btn_color: var(--white);
         /* Theme Colors */
         --theme_bg_color: var(--black);
         --theme_color: var(--white);
@@ -60,11 +60,16 @@
         --font-sans-serif: var(--bs-font-sans-serif);
         --font-sans-serif-bold: "Open Sans Bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         --font-sans-serif-extrabold: "Open Sans ExtraBold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --small_font_size: 0.7rem;
 
         /* Spacing */
         --margin_bottom: 1.5em; 
         --margin_top: 1.5em; 
         --letter_spacing: 0.05em;
+
+        /* Borders */
+        --default_border: 1px solid var(--default_font);
+        --default_border_radius: 0.3rem;
       }
     </style>
 

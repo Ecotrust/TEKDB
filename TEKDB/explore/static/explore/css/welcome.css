@@ -10,3 +10,13 @@
 .proj-image-select-wrapper {
   padding: 3em;
 }
+
+div#proj-image-attribution {
+  color: var(--dark_font);
+  background-color: var(--accent_bg);
+  opacity: 80%;
+  border: var(--default_border);
+  border-radius: var(--default_border_radius);
+  padding: 0.3rem;
+  font-size: var(--small_font_size);
+}
