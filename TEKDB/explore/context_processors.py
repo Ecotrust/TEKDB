@@ -92,7 +92,15 @@ def explore_context(request):
         for key in proj_icons.keys():
             try:
                 if hasattr(configs, key) and getattr(configs, key):
-                    proj_icons[key] = getattr(configs, key)
+                    icon_value = getattr(configs, key)
+                    if icon_value == 'Other':
+                        if hasattr(configs, '{}_override'.format(key)) and getattr(configs, '{}_override'.format(key)):
+                            abs_project_icon_override_filename = getattr(configs, '{}_override'.format(key)).file.name
+                            rel_filename = abs_project_icon_override_filename.split(settings.MEDIA_ROOT)[-1]
+                            icon_override_select = "{}{}".format(settings.MEDIA_URL, rel_filename)
+                            proj_icons[key] = icon_override_select
+                    else:
+                        proj_icons[key] = getattr(configs, key)
             except Exception as e:
                 pass
 
@@ -116,7 +124,7 @@ def explore_context(request):
             pass
 
     ######################################
-    #     PROJ_IMAGE_SELECT              #
+    #     HOME IMAGE/Attribution         #
     ######################################
 
     project_image_select = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
@@ -130,18 +138,53 @@ def explore_context(request):
 
     if configs:
         try:
-            if hasattr(configs, 'homepageImage') and getattr(configs, 'homepageImage'):
-                abs_project_image_filename = getattr(configs, 'homepageImage').file.name
+            if hasattr(configs, 'homepage_image') and getattr(configs, 'homepage_image'):
+                abs_project_image_filename = getattr(configs, 'homepage_image').file.name
                 rel_filename = abs_project_image_filename.split(settings.MEDIA_ROOT)[-1]
                 project_image_select = "{}{}".format(settings.MEDIA_URL, rel_filename)
         except Exception as e:
             pass
 
+    home_image_attribution = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
+
     ######################################
-    #     HOME_IMAGE_ATTRIBUTION         #
+    #     HOME_COLORS                #
     ######################################
 
-    home_image_attribution = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
+    home_font_color = '#FFFFFF'
+    homepage_left_background = '#666666'
+    homepage_right_background = '#333333'
+
+    if settings:
+        try:
+            home_font_color = settings.HOME_FONT_COLOR
+        except Exception as e:
+            pass
+        try:
+            homepage_left_background = settings.HOME_LEFT_BACKGROUND
+        except Exception as e:
+            pass
+        try:
+            homepage_right_background = settings.HOME_RIGHT_BACKGROUND
+        except Exception as e:
+            pass
+    
+    if configs:
+        try:
+            if hasattr(configs, 'home_font_color') and getattr(configs, 'home_font_color'):
+                home_font_color = getattr(configs, 'home_font_color')
+        except Exception as e:
+            pass
+        try:
+            if hasattr(configs, 'homepage_left_background') and getattr(configs, 'homepage_left_background'):
+                homepage_left_background = getattr(configs, 'homepage_left_background')
+        except Exception as e:
+            pass
+        try:
+            if hasattr(configs, 'homepage_right_background') and getattr(configs, 'homepage_right_background'):
+                homepage_right_background = getattr(configs, 'homepage_right_background')
+        except Exception as e:
+            pass
 
     return {
         'proj_logo_text': project_logo_text,
@@ -150,4 +193,7 @@ def explore_context(request):
         'proj_color_select': project_color_select,
         'proj_image_select': project_image_select,
         'home_image_attribution': home_image_attribution,
+        'home_font_color': home_font_color,
+        'homepage_left_background': homepage_left_background,
+        'homepage_right_background': homepage_right_background,
     }

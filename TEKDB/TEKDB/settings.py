@@ -262,7 +262,7 @@ PROJ_CSS = {
     'secondary_d': '#b44ba3' #rose quartz pink
 }
 
-PROJ_LOGO_TEXT = 'KTR'
+PROJ_LOGO_TEXT = 'ITK'
 PROJ_COLOR_SELECT = 'light'
 PROJ_IMAGE_SELECT = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
 
