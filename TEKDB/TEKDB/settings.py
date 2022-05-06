@@ -295,6 +295,10 @@ PROJ_FONTS = {
     'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
 }
 
+HOME_FONT_COLOR = '#FFFFFF'
+HOME_LEFT_BACKGROUND = '#000000'
+HOME_RIGHT_BACKGROUND = '#000000'
+
 try:
     from TEKDB.local_settings import *
 except Exception as e:

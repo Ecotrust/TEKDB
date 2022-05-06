@@ -152,8 +152,8 @@ def explore_context(request):
     ######################################
 
     home_font_color = '#FFFFFF'
-    homepage_left_background = '#666666'
-    homepage_right_background = '#333333'
+    homepage_left_background = '#000000'
+    homepage_right_background = '#000000'
 
     if settings:
         try:

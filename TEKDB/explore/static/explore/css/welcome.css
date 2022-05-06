@@ -22,6 +22,17 @@ div#homepage-left-column {
   font-family: var(--font-sans-serif-bold);
 }
 
+div.welcome-login-button-wrapper a.btn.welcome-login-btn {
+  border-color: var(--home_font_color);
+  color: var(--home_font_color);
+}
+
+div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::before,
+div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right,
+div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::after {
+  background: var(--home_font_color);
+}
+
 div#homepage-right-column {
   background-color: var(--homepage_right_background);
   display: flex;
