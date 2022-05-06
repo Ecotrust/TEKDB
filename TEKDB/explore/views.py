@@ -3,118 +3,6 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
 
-def get_proj_css():
-    proj_css = {
-        'primary_a': '#8f371c',
-        'primary_b': '#f7f3eb',
-        'primary_c': '#0e1522',
-        'primary_d': '#ced2da',
-        'secondary_a': '#51723b',
-        'secondary_b': '#839230',
-        'secondary_c': '#6ea32e',
-        'secondary_d': '#b44ba3',
-        'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
-        'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
-        'font_face_primary_extrabold': '/static/explore/fonts/Open_Sans/static/OpenSans-ExtraBold-export/OpenSans-ExtraBold.css',
-    }
-    try:
-        from TEKDB.settings import PROJ_CSS
-        if 'primary_a' in PROJ_CSS.keys():
-            proj_css['primary_a'] = PROJ_CSS['primary_a']
-        if 'primary_b' in PROJ_CSS.keys():
-            proj_css['primary_b'] = PROJ_CSS['primary_b']
-        if 'primary_c' in PROJ_CSS.keys():
-            proj_css['primary_c'] = PROJ_CSS['primary_c']
-        if 'primary_d' in PROJ_CSS.keys():
-            proj_css['primary_d'] = PROJ_CSS['primary_d']
-        if 'secondary_a' in PROJ_CSS.keys():
-            proj_css['secondary_a'] = PROJ_CSS['secondary_a']
-        if 'secondary_b' in PROJ_CSS.keys():
-            proj_css['secondary_b'] = PROJ_CSS['secondary_b']
-        if 'secondary_c' in PROJ_CSS.keys():
-            proj_css['secondary_c'] = PROJ_CSS['secondary_c']
-        if 'secondary_d' in PROJ_CSS.keys():
-            proj_css['secondary_d'] = PROJ_CSS['secondary_d']
-        if 'font_face_primary' in PROJ_CSS.keys():
-            proj_css['font_face_primary'] = PROJ_CSS['font_face_primary']
-        if 'font_face_primary_bold' in PROJ_CSS.keys():
-            proj_css['font_face_primary_bold'] = PROJ_CSS['font_face_primary_bold']
-    except ImportError as e:
-        pass
-
-    # TODO: allow for admin-defined 8-color palettes
-
-    return proj_css
-
-def get_proj_icons():
-    proj_icons = {
-        'logo': 'explore/img/logos/logo_weave.svg',
-        'place_icon': 'explore/img/icons/i_place.svg',
-        'resource_icon': 'explore/img/icons/i_resource.svg',
-        'activity_icon': 'explore/img/icons/i_activity.svg',
-        'source_icon': 'explore/img/icons/i_source.svg',
-        'media_icon': 'explore/img/icons/i_media.svg',
-    }
-    try:
-        from TEKDB.settings import PROJ_ICONS
-        if 'logo' in PROJ_ICONS.keys():
-            proj_icons['logo'] = PROJ_ICONS['logo']
-        if 'place_icon' in PROJ_ICONS.keys():
-            proj_icons['place_icon'] = PROJ_ICONS['place_icon']
-        if 'resource_icon' in PROJ_ICONS.keys():
-            proj_icons['resource_icon'] = PROJ_ICONS['resource_icon']
-        if 'activity_icon' in PROJ_ICONS.keys():
-            proj_icons['activity_icon'] = PROJ_ICONS['activity_icon']
-        if 'source_icon' in PROJ_ICONS.keys():
-            proj_icons['source_icon'] = PROJ_ICONS['source_icon']
-        if 'media_icon' in PROJ_ICONS.keys():
-            proj_icons['media_icon'] = PROJ_ICONS['media_icon']
-    except ImportError as e:
-        pass
-
-    return proj_icons
-
-def get_proj_logo_text():
-    # TODO: allow for admin-defined logos
-    project_logo_text = 'ITK'
-    try:
-        from TEKDB.settings import PROJ_LOGO_TEXT
-        if len(PROJ_LOGO_TEXT) > 0:
-            project_logo_text = PROJ_LOGO_TEXT
-    except ImportError as e:
-        pass
-    return project_logo_text
-
-def get_proj_color_select():
-    project_color_select = '#000000'
-    try:
-        from TEKDB.settings import PROJ_COLOR_SELECT
-        if len(PROJ_COLOR_SELECT) > 0:
-            project_color_select = PROJ_COLOR_SELECT
-    except ImportError as e:
-        pass
-    return project_color_select
-
-def get_project_image_select():
-    project_image_select = '/explore/img/abalone_1200.jpg'
-    try:
-        from TEKDB.settings import PROJ_IMAGE_SELECT
-        if len(PROJ_IMAGE_SELECT) > 0:
-            project_image_select = PROJ_IMAGE_SELECT
-    except ImportError as e:
-        pass
-    return project_image_select
-
-def apply_root_context(context={}):
-    context['proj_css'] = get_proj_css()
-    context['proj_icons'] = get_proj_icons()
-    context['proj_logo_text'] = get_proj_logo_text()
-    context['proj_color_select'] = get_proj_color_select()
-    context['proj_image_select'] = get_project_image_select()
-
-    return context
-
-
 # Create your views here.
 def home(request):
     try:
@@ -132,7 +20,6 @@ def home(request):
         'pageContent':page_content,
         'user': request.user,
     }
-    context = apply_root_context(context)
 
     return render(request, "welcome.html", context)
 
@@ -151,7 +38,6 @@ def about(request):
         'pageContent':page_content,
         'user': request.user,
     }
-    context = apply_root_context(context)
     return render(request, "tek_index.html", context)
 
 def help(request):
@@ -169,7 +55,6 @@ def help(request):
         'pageContent':page_content,
         'user': request.user,
     }
-    context = apply_root_context(context)
     return render(request, "tek_index.html", context)
 
 @login_required
@@ -180,7 +65,6 @@ def explore(request):
         'pageContent':"<p>In in mi vitae nibh posuere condimentum vitae eget quam. Etiam et urna id odio fringilla aliquet id hendrerit nisl. Ut sed ex vel felis rhoncus eleifend. Ut auctor facilisis vehicula. Ut sed dui nec ipsum pellentesque tempus.</p>",
         'user': request.user,
     }
-    context = apply_root_context(context)
     return render(request, "explore.html", context)
 
 def get_model_by_type(model_type):
@@ -282,7 +166,6 @@ def get_by_model_id(request, model_type, id):
         'back_link': back_link,
         'state': state,
     }
-    context = apply_root_context(context)
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
         DATABASE_GEOGRAPHY = get_project_geography()
@@ -553,7 +436,6 @@ def search(request):
         'max_zoom': DATABASE_GEOGRAPHY['max_zoom'],
         'map_extent': DATABASE_GEOGRAPHY['map_extent'],
     }
-    context = apply_root_context(context)
 
     request.META.pop('QUERY_STRING')
 
