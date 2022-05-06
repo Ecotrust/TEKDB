@@ -118,7 +118,7 @@ def explore_context(request):
     ######################################
     #     PROJ_IMAGE_SELECT              #
     ######################################
-    
+
     project_image_select = '/explore/img/abalone_1200.jpg'
 
     if settings:
@@ -130,8 +130,10 @@ def explore_context(request):
 
     if configs:
         try:
-            if hasattr(configs, 'project_image_select') and len(getattr(configs, 'project_image_select')) > 0:
-                project_image_select = getattr(configs, 'project_image_select')
+            if hasattr(configs, 'homepageImage') and getattr(configs, 'homepageImage'):
+                abs_project_image_filename = getattr(configs, 'homepageImage').file.name
+                rel_filename = abs_project_image_filename.split(settings.MEDIA_ROOT)[-1]
+                project_image_select = "{}{}".format(settings.MEDIA_URL, rel_filename)
         except Exception as e:
             pass
 
