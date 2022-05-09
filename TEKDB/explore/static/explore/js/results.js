@@ -205,7 +205,18 @@ function show_map_results() {
     var geom = JSON.parse(record.feature);
     if (geom) {
       // TODO: append record details to feature attributes/properties
-      features.push(geom);
+      features.push({
+        'id': record.id,
+        'type': 'Feature',
+        'geometry': geom,
+        'properties': {
+          'id': record.id,
+          'row-id': 'results_row_places_' + record.id,
+          'name': record.name,
+          'image': record.image,
+          'description': record.description,
+        }
+      });
     }
   }
   
