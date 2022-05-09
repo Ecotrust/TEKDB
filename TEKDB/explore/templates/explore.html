@@ -5,35 +5,42 @@
   <div class="row content-row">
     <div class="col well content-well">
       {% block content %}
-      <div class="row g-4 align-items-stretch">
+      <div class="row g-4 align-items-stretch min-full-height">
         <div class="col col-md-6 white-bg p-4">
           <h1>Browse by category</h1>
-          <p>To see all items in a category, select a box below.</p>
+          <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
           <form class="explore-form" method="post" action="/search/">
             <input type="text" id="search-category-type" name="category" value="all" hidden default>
-            <div class="btn-group btn-group-justified" role="category-group" aria-label="category-type-selection-buttons">
-              <div class="col-md-2" role="category-group">
-                <input type="checkbox" onclick="setCategoryType('all')" id="check-all"><label for="check-all">All</label>
+            <div class="row" id="filter-checkboxes" aria-label="category-type-selection">
+              <div class="col col-md-3">
+                <p>
+                  Filter By: 
+                </p>
               </div>
-              <div class="col-md-2" role="category-group">
-                <input type="checkbox" onclick="setCategoryType('places')" id="check-places"><label for="check-places">Places</label>
+              <div class="col-md-3" role="category-group">
+                <input type="checkbox" onclick="setCategoryType('all')" id="check-all"><label for="check-all"></label> All
               </div>
-              <div class="col-md-2" role="category-group">
-                <input type="checkbox" onclick="setCategoryType('resources')" id="check-resources"><label for="check-resources">Resources</label>
+              <div class="col-md-3" role="category-group">
+                <input type="checkbox" onclick="setCategoryType('places')" id="check-places"><label for="check-places"></label> Places
               </div>
-              <div class="col-md-2" role="category-group">
-                <input type="checkbox" onclick="setCategoryType('activities')" id="check-activities"><label for="check-activities">Activity</label>
+              <div class="col-md-3" role="category-group">
+                <input type="checkbox" onclick="setCategoryType('resources')" id="check-resources"><label for="check-resources"></label> Resources
               </div>
-              <div class="col-md-2" role="category-group">
-                <input type="checkbox" onclick="setCategoryType('sources')" id="check-sources"><label for="check-sources">Source</label>
+              <div class="col col-md-3"></div>
+              <div class="col-md-3" role="category-group">
+                <input type="checkbox" onclick="setCategoryType('activities')" id="check-activities"><label for="check-activities"></label> Activity
               </div>
-              <div class="col-md-2" role="category-group">
-                <input type="checkbox" onclick="setCategoryType('media')" id="check-media"><label for="check-media">Media</label>
+              <div class="col-md-3" role="category-group">
+                <input type="checkbox" onclick="setCategoryType('sources')" id="check-sources"><label for="check-sources"></label> Source
+              </div>
+              <div class="col-md-3" role="category-group">
+                <input type="checkbox" onclick="setCategoryType('media')" id="check-media"><label for="check-media"></label> Media
               </div>
             </div>
           </form>
         </div>
         <div class="col col-md-6 accent-bg p-4">
+          <h1>Search by keyword</h1>
           <div class="form-wrapper">
             <form class="explore-form" method='post' action='/search/'>
               {% csrf_token %}
