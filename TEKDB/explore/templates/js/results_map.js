@@ -31,9 +31,6 @@ const default_fill_color = 'rgba(255, 96, 0, ' + default_fill_opacity + ')';
 const selected_stroke_color = '#b44ba3';
 const selected_fill_color = 'rgba(180,75,163,' + default_fill_opacity + ')';
 
-///////
-// DEFAULT OL STYLES:
-
 const fill = new ol.style.Fill({
   color: default_fill_color,
 });

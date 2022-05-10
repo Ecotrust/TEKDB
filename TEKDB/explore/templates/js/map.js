@@ -1,13 +1,14 @@
 /* ---- STYLES ---- */
 
-///////
-// DEFAULT OL STYLES:
+const default_stroke_color = '#FF6000';
+const default_fill_opacity = 0.4;
+const default_fill_color = 'rgba(255, 96, 0, ' + default_fill_opacity + ')';
 
 const fill = new ol.style.Fill({
-  color: 'rgba(255,255,255,0.4)',
+  color: default_fill_color,
 });
 const stroke = new ol.style.Stroke({
-  color: '#3399CC',
+  color: default_stroke_color,
   width: 1.25,
 });
 const styles = [
