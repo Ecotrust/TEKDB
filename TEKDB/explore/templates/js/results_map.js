@@ -25,14 +25,20 @@ var esriAerial = new ol.layer.Tile({
 
 /* ---- STYLES ---- */
 
+const default_stroke_color = '#FF6000';
+const default_fill_opacity = 0.4;
+const default_fill_color = 'rgba(255, 96, 0, ' + default_fill_opacity + ')';
+const selected_stroke_color = '#b44ba3';
+const selected_fill_color = 'rgba(180,75,163,' + default_fill_opacity + ')';
+
 ///////
 // DEFAULT OL STYLES:
 
 const fill = new ol.style.Fill({
-  color: 'rgba(255,255,255,0.4)',
+  color: default_fill_color,
 });
 const stroke = new ol.style.Stroke({
-  color: '#3399CC',
+  color: default_stroke_color,
   width: 1.25,
 });
 const styles = [
@@ -46,6 +52,23 @@ const styles = [
     stroke: stroke,
   }),
 ];
+
+const selectStyle = new ol.style.Style({
+  fill: new ol.style.Fill({
+    color: selected_fill_color,
+  }),
+  stroke: new ol.style.Stroke({
+    color: selected_stroke_color,
+    width: 2,
+  }),
+  image: new ol.style.Icon({
+    anchor: [0.5, 1],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    src: '{{ map_pin_selected }}',
+    scale: 0.1
+  })
+});
 
 const styleFunction = function(feature) {
   var style = feature.getStyle();
@@ -173,23 +196,6 @@ if (vectorLayer.getSource().getFeatures().length > 0) {
 
 // Largely ripped from https://openlayers.org/en/latest/examples/select-hover-features.html
 
-const selectStyle = new ol.style.Style({
-  fill: new ol.style.Fill({
-    color: '#eeeeee',
-  }),
-  stroke: new ol.style.Stroke({
-    color: 'rgba(255, 255, 255, 0.7)',
-    width: 2,
-  }),
-  image: new ol.style.Icon({
-    anchor: [0.5, 1],
-    anchorXUnits: 'fraction',
-    anchorYUnits: 'fraction',
-    src: '{{ map_pin_selected }}',
-    scale: 0.1
-  })
-});
-
 let selected = null;
 map.on('pointermove', function(e){
   if (selected !== null) {
@@ -199,7 +205,6 @@ map.on('pointermove', function(e){
 
   map.forEachFeatureAtPixel(e.pixel, function (f) {
     selected = f;
-    selectStyle.getFill().setColor(f.get('COLOR') || '#eeeeee');
     f.setStyle(selectStyle);
     return true;
   });
