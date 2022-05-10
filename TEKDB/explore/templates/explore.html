@@ -12,23 +12,35 @@
       <section class="explore-form-row row min-full-height">
         <div class="col accent-bg p-4">
           <div class="container">
-            <div class="row">
-              <div class="col-xl-9">
+            <div class="row justify-content-end">
+              <div class="col-xl-8">
                 <div class="form-info-wrapper">
                   <h1>Search by keyword</h1>
+                  <h1>Browse by category</h1>
+                  <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-auto white-bg p-4">
+        <div class="col white-bg p-4">
           <div class="container">
             <div class="row">
-              <div class="col-xl-11">
-                <h1>Browse by category</h1>
-                <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
+              <div class="col-xl-10">
                 <form class="explore-form" method="post" action="/search/">
                   {% csrf_token %}
+                  <div class="input-group query-input-group">
+                    <span class="input-group-text" id="search-icon-label">
+                      <svg id="Symbol_62_2" data-name="Symbol 62 – 2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                        <rect id="Rectangle_176" data-name="Rectangle 176" width="16" height="16" fill="none"/>
+                        <path id="Path_99" data-name="Path 99" d="M15.9,14.5l-3.3-3.3A6.847,6.847,0,0,0,14,7,6.957,6.957,0,0,0,7,0,6.957,6.957,0,0,0,0,7a6.957,6.957,0,0,0,7,7,6.847,6.847,0,0,0,4.2-1.4l3.3,3.3ZM2,7A4.951,4.951,0,0,1,7,2a4.951,4.951,0,0,1,5,5,4.951,4.951,0,0,1-5,5A4.951,4.951,0,0,1,2,7Z"/>
+                      </svg>
+                    </span>
+                    <input type="search" class="form-control" id="search-text" name="query" placeholder="Keywords" aria-describedby="">
+                    <span class="search-arrow arrow-right"></span>
+                    <input type="submit" id="query-form-submit" value="GO">
+                  </div>
+
                   <input type="text" id="search-category-type" name="category" value="all" hidden>
                   <div class="row" id="filter-checkboxes" aria-label="category-type-selection">
                     <div class="col col-md-3">
@@ -55,18 +67,6 @@
                     <div class="col-md-3" role="category-group">
                       <input type="checkbox" onclick="setCategoryType('media')" id="check-media"><label for="check-media"></label> Media
                     </div>
-                  </div>
-                  
-                  <div class="input-group query-input-group">
-                    <span class="input-group-text" id="search-icon-label">
-                      <svg id="Symbol_62_2" data-name="Symbol 62 – 2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                        <rect id="Rectangle_176" data-name="Rectangle 176" width="16" height="16" fill="none"/>
-                        <path id="Path_99" data-name="Path 99" d="M15.9,14.5l-3.3-3.3A6.847,6.847,0,0,0,14,7,6.957,6.957,0,0,0,7,0,6.957,6.957,0,0,0,0,7a6.957,6.957,0,0,0,7,7,6.847,6.847,0,0,0,4.2-1.4l3.3,3.3ZM2,7A4.951,4.951,0,0,1,7,2a4.951,4.951,0,0,1,5,5,4.951,4.951,0,0,1-5,5A4.951,4.951,0,0,1,2,7Z"/>
-                      </svg>
-                    </span>
-                    <input type="search" class="form-control" id="search-text" name="query" placeholder="Keywords" aria-describedby="">
-                    <span class="search-arrow arrow-right"></span>
-                    <input type="submit" id="query-form-submit" value="GO">
                   </div>
 
                   <div class="button-wrapper">
