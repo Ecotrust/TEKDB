@@ -75,16 +75,16 @@
                           {% endif %}
 
                       {% else %}
-                        {% if link.link %}
                         <div class="col-auto">
                           <img src="{{ link.image }}" class="record-icon" />
                         </div>
                         <div class="col-md-10">
-                          <a href="{{ link.link }}{{ state }}" class="related-link">{{ link.name }}</a>
+                          {% if link.link %}
+                            <a href="{{ link.link }}{{ state }}" class="related-link">{{ link.name }}</a>
+                          {% else %}
+                            {{ link.name }}
+                          {% endif %}
                         </div>
-                        {% else %}
-                        {{ link.name }}
-                        {% endif %}
                       {% endif %}
                     </div>
                     {% if forloop.last %}
