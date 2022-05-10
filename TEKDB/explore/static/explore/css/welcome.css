@@ -1,46 +1,22 @@
-.homepage-column {
-  /* height: calc(100vh - var(--header_height)); */
-  /* max-height: calc(100vh - var(--header_height)); */
-  margin-top: calc(var(--margin_top) * 2);
+main.content-wrapper div.container {
+  min-width: 100vw;
+  max-width: 100vw;
+  margin: 0;
 }
 
-#homepage-left-column {
-  /* background-color: var(--homepage_left_background); */
-  /* overflow-y: auto; */
+div.homepage-column {
+  height: calc(100vh - var(--header_height));
+  max-height: calc(100vh - var(--header_height));
 }
 
-  #homepage-left-column::after {
-    background-color: var(--homepage_left_background);
-    bottom: 0;
-    content: "";
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: calc(100% / 12 * 5);
-    z-index: -1;
-  }
-
-#homepage-right-column {
-  /* background-color: var(--homepage_right_background); */
-  display: flex;
-  flex-direction: column;
+div#homepage-left-column {
+  background-color: var(--homepage_left_background);
+  overflow-y: auto;
 }
-
-  #homepage-right-column::after {
-    background-color: var(--homepage_right_background);
-    bottom: 0;
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: calc(100% / 12 * 7);
-    z-index: -1;
-  }
-
 
 .welcome-content-wrapper {
   color: var(--home_font_color);
-  margin: var(--margin);
+  margin: 3rem 2rem;
 }
 
 .welcome-content-wrapper p {
@@ -59,6 +35,12 @@ div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::after
   background: var(--home_font_color);
 }
 
+div#homepage-right-column {
+  background-color: var(--homepage_right_background);
+  display: flex;
+  flex-direction: column;
+}
+
 div.proj-image-select-wrapper {
   max-height: 100%;
   display: flex;
@@ -67,8 +49,6 @@ div.proj-image-select-wrapper {
 }
 
 .proj-image-select-wrapper img {
-  height: auto;
-  width: 100%;
   object-fit: contain;
 }
 
