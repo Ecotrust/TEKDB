@@ -305,6 +305,8 @@ HOME_FONT_COLOR = '#FFFFFF'
 HOME_LEFT_BACKGROUND = '#000000'
 HOME_RIGHT_BACKGROUND = '#000000'
 
+DEFAULT_MAXIMUM_RESULTS = 500
+
 try:
     from TEKDB.local_settings import *
 except Exception as e:

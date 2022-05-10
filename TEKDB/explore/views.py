@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
+from configuration.models import Configuration
 
 # Create your views here.
 def home(request):
@@ -412,10 +413,23 @@ def search(request):
 
     DATABASE_GEOGRAPHY = get_project_geography()
 
+    try:
+        config = Configuration.objects.all()[0]
+        max_results = config.max_results_returned
+    except Exception as e:
+        from TEKDB.settings import DEFAULT_MAXIMUM_RESULTS
+        max_results = DEFAULT_MAXIMUM_RESULTS
+        pass
+
+    too_many_results = len(resultlist) > max_results
+    if too_many_results:
+        resultlist = resultlist[:max_results]
+
     context = {
         'items_per_page': items_per_page,
         'results_qs': resultlist,
         'results': json.dumps(resultlist),
+        'too_many_results': too_many_results,
         'query': query_string,
         'keyword': query_string_visible,
         'keyword_search_input': keyword_search_input,

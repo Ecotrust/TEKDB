@@ -101,6 +101,12 @@ class Configuration(models.Model):
         samples=COLOR_PALETTE,
     )
 
+    max_results_returned = models.IntegerField(
+        default=500,
+        verbose_name='Maximum no. of search results',
+        help_text='500 is recommended. Allowing more may result in poor website performance or strain on the server.'
+    )
+
     # TODO: Allow users to:
     #   * Override default theme colors (x8)
     # Look into Django-Colorfield: https://stackoverflow.com/a/57080102/706797 
