@@ -181,6 +181,13 @@ const selectStyle = new ol.style.Style({
     color: 'rgba(255, 255, 255, 0.7)',
     width: 2,
   }),
+  image: new ol.style.Icon({
+    anchor: [0.5, 1],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    src: '{{ map_pin_selected }}',
+    scale: 0.1
+  })
 });
 
 let selected = null;

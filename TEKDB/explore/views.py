@@ -176,7 +176,6 @@ def get_by_model_id(request, model_type, id):
         context['min_zoom'] = DATABASE_GEOGRAPHY['min_zoom']
         context['max_zoom'] = DATABASE_GEOGRAPHY['max_zoom']
         context['map_extent'] = DATABASE_GEOGRAPHY['map_extent']
-        context['map_pin'] = RECORD_ICONS['map_pin']
 
     request.META.pop('QUERY_STRING')
 

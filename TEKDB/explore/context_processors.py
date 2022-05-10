@@ -179,6 +179,8 @@ def explore_context(request):
         except Exception as e:
             pass
 
+    from TEKDB.settings import RECORD_ICONS
+
     return {
         'proj_logo_text': project_logo_text,
         'proj_css': proj_css,
@@ -188,4 +190,6 @@ def explore_context(request):
         'home_font_color': home_font_color,
         'homepage_left_background': homepage_left_background,
         'homepage_right_background': homepage_right_background,
+        'map_pin': RECORD_ICONS['map_pin'],
+        'map_pin_selected': RECORD_ICONS['map_pin_selected']
     }

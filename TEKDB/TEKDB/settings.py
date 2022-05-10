@@ -276,6 +276,7 @@ PROJ_ICONS = {
     'source_icon': 'explore/img/icons/i_source.svg',
     'media_icon': 'explore/img/icons/i_media.svg',
     'map_pin_icon': 'explore/img/icons/explore_map_pin.svg',
+    'map_pin_selected_icon': 'explore/img/icons/explore_map_pin_selected.svg',
 }
 
 RECORD_ICONS = {
@@ -287,6 +288,7 @@ RECORD_ICONS = {
     'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
     'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
     'map_pin': '/static/{}'.format(PROJ_ICONS['map_pin_icon']),
+    'map_pin_selected': '/static/{}'.format(PROJ_ICONS['map_pin_selected_icon']),
 }
 
 # Not sure if this is the best way to implement fonts. 
