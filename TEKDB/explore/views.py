@@ -326,7 +326,12 @@ def search(request):
     if request.method == 'POST':
         query_string=request.POST['query']
         if 'category' in request.POST.keys():
-            categories = [request.POST['category']]
+            try:
+                categories = request.POST['category'].split(',')
+            except Exception as e:
+                categories = all_categories
+                pass
+
         else:
             keys = request.POST.keys()
             categories = []
@@ -373,8 +378,11 @@ def search(request):
             if categories == []:
                 categories = ['all']
 
-    if categories == ['all']:
-        categories = all_categories
+    # Zero tolerance for mispelled or 'all' categories. if it's not perfect, fail to 'all'
+    for category in categories:
+        if category not in all_categories:
+            categories = all_categories
+            break
 
     category_checkboxes = ''
     for category in all_categories:
