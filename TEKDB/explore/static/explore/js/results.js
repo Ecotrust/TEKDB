@@ -214,6 +214,7 @@ function show_map_results() {
           'row-id': 'results_row_places_' + record.id,
           'name': record.name,
           'image': record.image,
+          'map_pin': record.map_pin,
           'description': record.description,
         }
       });

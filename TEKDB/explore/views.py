@@ -137,6 +137,7 @@ def get_project_geography():
 
 @login_required
 def get_by_model_id(request, model_type, id):
+    from TEKDB.settings import RECORD_ICONS
     state = "?%s" % request.GET.urlencode()
     back_link = '%s%s' % ('/search/', state)
     models = get_model_by_type(model_type)
@@ -175,6 +176,7 @@ def get_by_model_id(request, model_type, id):
         context['min_zoom'] = DATABASE_GEOGRAPHY['min_zoom']
         context['max_zoom'] = DATABASE_GEOGRAPHY['max_zoom']
         context['map_extent'] = DATABASE_GEOGRAPHY['map_extent']
+        context['map_pin'] = RECORD_ICONS['map_pin']
 
     request.META.pop('QUERY_STRING')
 
@@ -447,6 +449,7 @@ def getResults(keyword_string, categories):
         keyword_string = ''
 
     resultlist = []
+
     for category in categories:
         query_models = get_model_by_type(category)
         for model in query_models:

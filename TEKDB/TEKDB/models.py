@@ -434,10 +434,16 @@ class Places(Queryable, Record, ModeratedModel):
             'category_name': category_name,
             'name': str(self),
             'image': self.image(),
+            'map_pin': settings.RECORD_ICONS['map_pin'],
             'description': self.indigenousplacenamemeaning,
             'link': '/explore/%s/%d' % (type, self.pk),
             'feature': feature
         }
+
+    # def get_record_dict(self, user, srid=3857):
+    #     record_dict = super(Places, self).get_record_dict(user, srid)
+    #     record_dict['map_pin'] = settings.RECORD_ICONS['map_pin']
+    #     return record_dict
 
     def get_related_objects(self, object_id):
         # place = Places.objects.get(pk=object_id)
