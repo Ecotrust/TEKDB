@@ -3,7 +3,7 @@ main {
 }
 
 .min-full-height {
-  min-height: calc(100vh - 96px - 10rem);
+  min-height: calc(100vh - 96px);
 }
 
 h1 {
