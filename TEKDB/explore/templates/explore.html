@@ -41,15 +41,12 @@
                     <input type="submit" id="query-form-submit" value="GO">
                   </div>
 
-                  <input type="text" id="search-category-type" name="category" value="all" hidden>
+                  <input type="text" id="search-category-type" name="category" value="" hidden>
                   <div class="row" id="filter-checkboxes" aria-label="category-type-selection">
                     <div class="col col-md-3">
                       <p>
                         Categories: 
                       </p>
-                    </div>
-                    <div class="col-md-3" role="category-group">
-                      <input type="checkbox" onclick="setCategoryType('all')" id="check-all" checked><label for="check-all"></label> All
                     </div>
                     <div class="col-md-3" role="category-group">
                       <input type="checkbox" onclick="setCategoryType('places')" id="check-places"><label for="check-places"></label> Places
