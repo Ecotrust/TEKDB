@@ -9,43 +9,39 @@
   <div class="row content-row">
     <div class="col well content-well">
       {% block content %}
-      <h1>What knowledge are you seeking?</h1>
       <section class="explore-form-row row min-full-height">
         <div class="col accent-bg p-4">
           <div class="container">
             <div class="row justify-content-end">
-              <div class="col-xl-9">
+              <div class="col-xl-8">
                 <div class="form-info-wrapper">
-                  <h2>Search by keyword</h2>
-                  <h2>Browse by category</h2>
-                  <p>To see items in a category, check a box. You may select multiple boxes.</p>
+                  <h1>Search by keyword</h1>
+                  <h1>Browse by category</h1>
+                  <p>To see all items in a category, select a box below. You may select multiple boxes.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-auto white-bg p-4">
+        <div class="col white-bg p-4">
           <div class="container">
             <div class="row">
-              <div class="col-xl-11">
-                <div class="form-wrapper">
-                  <form class="explore-form" method='post' action='/search/'>
-                    {% csrf_token %}
-                      <div class="input-group query-input-group">
-                        <span class="input-group-text" id="search-icon-label">
-                          <svg id="Symbol_62_2" data-name="Symbol 62 – 2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                            <rect id="Rectangle_176" data-name="Rectangle 176" width="16" height="16" fill="none"/>
-                            <path id="Path_99" data-name="Path 99" d="M15.9,14.5l-3.3-3.3A6.847,6.847,0,0,0,14,7,6.957,6.957,0,0,0,7,0,6.957,6.957,0,0,0,0,7a6.957,6.957,0,0,0,7,7,6.847,6.847,0,0,0,4.2-1.4l3.3,3.3ZM2,7A4.951,4.951,0,0,1,7,2a4.951,4.951,0,0,1,5,5,4.951,4.951,0,0,1-5,5A4.951,4.951,0,0,1,2,7Z"/>
-                          </svg>
-                        </span>
-                        <input type="search" class="form-control" id="search-text" name="query" placeholder="Keywords" aria-describedby="">
-                        <span class="search-arrow arrow-right"></span>
-                        <input type="submit" id="query-form-submit" value="Go">
-                      </div>
-                  </form>
-                </div>
+              <div class="col-xl-10">
                 <form class="explore-form" method="post" action="/search/">
-                  <input type="text" id="search-category-type" name="category" value="all" hidden default>
+                  {% csrf_token %}
+                  <div class="input-group query-input-group">
+                    <span class="input-group-text" id="search-icon-label">
+                      <svg id="Symbol_62_2" data-name="Symbol 62 – 2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                        <rect id="Rectangle_176" data-name="Rectangle 176" width="16" height="16" fill="none"/>
+                        <path id="Path_99" data-name="Path 99" d="M15.9,14.5l-3.3-3.3A6.847,6.847,0,0,0,14,7,6.957,6.957,0,0,0,7,0,6.957,6.957,0,0,0,0,7a6.957,6.957,0,0,0,7,7,6.847,6.847,0,0,0,4.2-1.4l3.3,3.3ZM2,7A4.951,4.951,0,0,1,7,2a4.951,4.951,0,0,1,5,5,4.951,4.951,0,0,1-5,5A4.951,4.951,0,0,1,2,7Z"/>
+                      </svg>
+                    </span>
+                    <input type="search" class="form-control" id="search-text" name="query" placeholder="Keywords" aria-describedby="">
+                    <span class="search-arrow arrow-right"></span>
+                    <input type="submit" id="query-form-submit" value="GO">
+                  </div>
+
+                  <input type="text" id="search-category-type" name="category" value="all" hidden>
                   <div class="row" id="filter-checkboxes" aria-label="category-type-selection">
                     <div class="col col-md-3">
                       <p>
@@ -53,7 +49,7 @@
                       </p>
                     </div>
                     <div class="col-md-3" role="category-group">
-                      <input type="checkbox" onclick="setCategoryType('all')" id="check-all"><label for="check-all"></label> All
+                      <input type="checkbox" onclick="setCategoryType('all')" id="check-all" checked><label for="check-all"></label> All
                     </div>
                     <div class="col-md-3" role="category-group">
                       <input type="checkbox" onclick="setCategoryType('places')" id="check-places"><label for="check-places"></label> Places
@@ -72,9 +68,11 @@
                       <input type="checkbox" onclick="setCategoryType('media')" id="check-media"><label for="check-media"></label> Media
                     </div>
                   </div>
+
                   <div class="button-wrapper">
                     <button class="btn btn-style" type="submit">GO <span class="arrow-right"></span></button>
                   </div>
+                  
                 </form>
               </div>
             </div>
@@ -92,7 +90,26 @@
 
 <script>
   function setCategoryType(category) {
-    $('#search-category-type')[0].value = category;
+    const catSelection = document.getElementById('search-category-type');
+    if (event.target.checked) {
+      if (!catSelection.value.includes(category)) {
+        if (catSelection.value.length > 0) {
+          catSelection.value += ',' + category;  
+        } else {
+          catSelection.value += category;
+        }
+      }
+    } else {
+      if (catSelection.value.includes(category)) {
+        if (catSelection.value.includes(',')) {
+          var newVal = catSelection.value.replace(',' + category, '');
+        } else {
+          var newVal = catSelection.value.replace(category, '');
+        }
+        catSelection.value = newVal;
+      }
+    }
+    
   }
 </script>
 

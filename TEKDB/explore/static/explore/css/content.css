@@ -1,6 +1,5 @@
 /* Main */
 main {
-  background: var(--black);
   min-height: calc(100vh - 96px);
 }
 
@@ -10,7 +9,7 @@ main {
 
 
 main[data-theme="dark"] {
-  background: var(--black);
+  /* background: var(--black); */
 }
 
 main[data-theme="light"] {
@@ -198,8 +197,6 @@ h5 {
 .text-right {
   text-align: right;  
 }
-
-
 
 .query-input-group::after {
   background: var(--secondary_a);

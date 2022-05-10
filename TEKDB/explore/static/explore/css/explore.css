@@ -3,13 +3,12 @@ main {
 }
 
 .min-full-height {
-  min-height: calc(100vh - 96px - 10rem);
+  min-height: calc(100vh - 96px);
 }
 
 h1 {
   display: block;
-  text-align: center;
-  margin: var(--margin_top) 0 var(--margin_bottom);
+  margin: var(--margin_top) 0 0;
 }
 
 h2 {
@@ -31,7 +30,11 @@ p {
 }
 
 .explore-form {
-  /* margin: var(--margin_top) auto; */
+  margin-top: calc(var(--margin_top) * 2.6125);
+}
+
+.query-input-group {
+  margin-bottom: calc(var(--margin_bottom) * 2.6125);
 }
 
 .explore-form .btn {
@@ -42,7 +45,6 @@ p {
 .button-wrapper {
   /* justify-content: ; */
   display: flex;
-  padding-top: var(--margin_top);
   position: relative;
 }
 
