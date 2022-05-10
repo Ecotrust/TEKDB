@@ -31,7 +31,7 @@ a:hover {
 .btn-style {
   background: transparent;
   border: var(--btn_border);
-  border-radius: 0;
+  border-radius: var(--default_border_radius);
   color: var(--btn_color);
   font-size: .9375em;
   letter-spacing: 0.125em;

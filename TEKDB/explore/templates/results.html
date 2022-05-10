@@ -43,6 +43,14 @@
   <div class="row content-row">
     <div class="col col-md-8 results-left">
       {% block content %}
+      {% if too_many_results %}
+        <div class="alert-notification">
+          <p>Too many results were found to show all at once. Refine your search to get more specific results.</p>
+          {% if user.is_superuser %}
+            <p>As an administrator, you may change this setting in the admin dashboard in the 'Configurations' form.</p>
+          {% endif %}
+        </div>
+      {% endif %}
       <div class="row justify-content-center">
         <!-- <div class="col-md-12 well content-well"> -->
         <div class="col-auto px-4 results-controls-left">

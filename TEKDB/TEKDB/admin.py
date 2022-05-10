@@ -16,6 +16,7 @@ from TEKDB.settings import ADMIN_SITE_HEADER
 admin.site.site_header = ADMIN_SITE_HEADER
 
 from TEKDB.settings import BASE_DIR
+from TEKDB.widgets import OpenLayers6Widget
 
 #############
 ### FORMS ###
@@ -60,6 +61,13 @@ class PlacesForm(forms.ModelForm):
         self.fields['planningunitid'].queryset = LookupPlanningUnit.objects.order_by(Lower('planningunitname'))
         self.fields['primaryhabitat'].queryset = LookupHabitat.objects.order_by(Lower('habitat'))
         self.fields['tribeid'].queryset = LookupTribe.objects.order_by(Lower('tribe'))
+
+    class Meta:
+        model = Places
+        widgets = {
+            'geometry': OpenLayers6Widget(),
+        }
+        fields = '__all__'
 
 class ResourcesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -431,7 +439,8 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     )
     form = MediaForm
 
-class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
+# class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
+class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('indigenousplacename','englishplacename','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
@@ -461,12 +470,6 @@ class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
         'modifiedbytribe'
     )
 
-    from TEKDB.settings import DATABASE_GEOGRAPHY
-    #TODO: check SRID from settings, set lat/lon in 4326, then convert to 3857 if necessary
-    default_lon = DATABASE_GEOGRAPHY['default_lon']
-    default_lat = DATABASE_GEOGRAPHY['default_lat']
-    default_zoom = DATABASE_GEOGRAPHY['default_zoom']
-    map_template = DATABASE_GEOGRAPHY['map_template']
     form = PlacesForm
 
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
@@ -557,11 +560,6 @@ class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
         LocalityplaceresourceeventInline,
         LocalityGISSelectionsInline,
     ]
-    from TEKDB.settings import DATABASE_GEOGRAPHY
-    default_lon = DATABASE_GEOGRAPHY['default_lon']
-    default_lat = DATABASE_GEOGRAPHY['default_lat']
-    default_zoom = DATABASE_GEOGRAPHY['default_zoom']
-    map_template = DATABASE_GEOGRAPHY['map_template']
 
 #### RELATIONSHIP MODELS ####
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):

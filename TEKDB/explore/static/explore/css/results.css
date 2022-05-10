@@ -340,3 +340,19 @@ table#results_table>thead {
   padding: 6px;
   vertical-align: middle;
 }
+
+div.alert-notification {
+  background: var(--accent_bg);
+  border: var(--default_border);
+  border-radius: var(--default_border_radius);
+  border-color: var(--light_border);
+  padding: 0.5rem;
+  margin: 0.5rem;
+  margin-top: 0;
+}
+
+div.alert-notification p {
+  color: var(--highlight_font);
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}

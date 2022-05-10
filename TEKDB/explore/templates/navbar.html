@@ -3,8 +3,8 @@
   <div class="container">
 
     <a class="navbar-brand" href="/">
-      <div class="navbar-brand-wrapper" style="background-image: url({%  static proj_icons.logo %});">
-        {% comment %} <img src="{% static proj_icons.logo %}" class="header-logo"> {% endcomment %}
+      <div class="navbar-brand-wrapper" style="background-image: url({{ proj_icons.logo }});">
+        {% comment %} <img src="{{ proj_icons.logo }}" class="header-logo"> {% endcomment %}
         <div class="navbar-brand-text">{{ proj_logo_text }}</div>
       </div>
     </a>

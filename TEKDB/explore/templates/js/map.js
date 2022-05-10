@@ -1,3 +1,44 @@
+/* ---- STYLES ---- */
+
+///////
+// DEFAULT OL STYLES:
+
+const fill = new ol.style.Fill({
+  color: 'rgba(255,255,255,0.4)',
+});
+const stroke = new ol.style.Stroke({
+  color: '#3399CC',
+  width: 1.25,
+});
+const styles = [
+  new ol.style.Style({
+    image: new ol.style.Circle({
+      fill: fill,
+      stroke: stroke,
+      radius: 5,
+    }),
+    fill: fill,
+    stroke: stroke,
+  }),
+];
+
+const styleFunction = function(feature) {
+  var style = feature.getStyle();
+  if (!style) {
+    style = styles[0]
+  }
+  if (feature.getGeometry().getType() == 'Point' && "{{ map_pin }}" != "") {
+    style.setImage( new ol.style.Icon({
+      anchor: [0.5, 1],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'fraction',
+      src: '{{ map_pin }}',
+      scale: 0.1
+    }))
+  }
+  return style;
+}
+
 /* --- LAYERS --*/
 var esriLabels = new ol.layer.Tile({
   title: 'Labels',
@@ -22,41 +63,45 @@ var esriAerial = new ol.layer.Tile({
     ]
   })
 });
-var esri_2d = new ol.layer.Tile({
-  title: 'Topo',
-  type: 'base',
-  source: new ol.source.XYZ({
-      url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-      attributions: [
-        "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
-          >Topo Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
-      ]
-  })
-});
-var nautical_charts = new ol.layer.Tile({
-  title: 'Nautical',
-  type: 'base',
-  source: new ol.source.TileWMS({
-    url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/services/RNC/NOAA_RNC/ImageServer/WMSServer',
-    // params: {'LAYERS': 'NOAA_RNC'},
-    params: {'LAYERS': '0'},
-    attributions: [
-      'Natical Source: NOAA Office of Coast Survey'
-    ]
-  })
-});
+// var esri_2d = new ol.layer.Tile({
+//   title: 'Topo',
+//   type: 'base',
+//   source: new ol.source.XYZ({
+//       url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+//       attributions: [
+//         "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
+//           >Topo Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
+//       ]
+//   })
+// });
+// var nautical_charts = new ol.layer.Tile({
+//   title: 'Nautical',
+//   type: 'base',
+//   source: new ol.source.TileWMS({
+//     url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/services/RNC/NOAA_RNC/ImageServer/WMSServer',
+//     // params: {'LAYERS': 'NOAA_RNC'},
+//     params: {'LAYERS': '0'},
+//     attributions: [
+//       'Natical Source: NOAA Office of Coast Survey'
+//     ]
+//   })
+// });
+
+// const vector_feature = JSON.parse('{{ record.map | safe }}');
+
 var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
     features: new ol.format.GeoJSON().readFeatures(JSON.parse('{{ record.map | safe }}'))
   }),
   title: 'Place',
-  zIndex: 100
+  zIndex: 100,
+  style: styleFunction,
 });
-var osmLayer = new ol.layer.Tile({
-  source: new ol.source.OSM(),
-  title: 'Street',
-  type: 'base'
-});
+// var osmLayer = new ol.layer.Tile({
+//   source: new ol.source.OSM(),
+//   title: 'Street',
+//   type: 'base'
+// });
 
 /* --- CONTROLS --*/
 var scaleLineControl = new ol.control.ScaleLine({
@@ -112,5 +157,5 @@ if (vectorLayer.getSource().getFeatures().length > 0) {
   var geometry_extent = vectorLayer.getSource().getExtent();
   map.getView().fit(geometry_extent,map.getSize());
 }
-var layerSwitcher = new ol.control.LayerSwitcher();
-map.addControl(layerSwitcher);
+// var layerSwitcher = new ol.control.LayerSwitcher();
+// map.addControl(layerSwitcher);

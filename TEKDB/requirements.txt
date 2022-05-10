@@ -1,13 +1,15 @@
 #REQUIRED
 confusable-homoglyphs
 coverage
-django >=3.2.10,<3.3
+django >=3.2.13,<3.3
 django-autocomplete-light
 django-ckeditor
+django-colorfield
 django-leaflet
 django-nested-admin
 django-registration
 django-reversion
+pillow
 psycopg2-binary
 
 XlsxWriter
@@ -20,7 +22,7 @@ jinja2>=2.11.3
 pyyaml>=5.4
 SecretStorage>=3.3.1
 testresources
-twisted>=20.3.0
+twisted>=22.4.0
 urllib3>=1.26.5
 
 #OPTIONAL, BUT LOVELY FOR DEBUGGING

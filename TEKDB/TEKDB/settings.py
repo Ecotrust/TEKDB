@@ -54,11 +54,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'colorfield',
     # 'registration',
     'leaflet',
     'nested_admin',
     'ckeditor',
     'coverage',
+    'configuration',
     'explore',
     'login',
     'TEKDB',
@@ -98,6 +100,8 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'explore.context_processors.explore_context',
+                # 'TEKDB.context_processors.add_map_default_context'
             ],
         },
     },
@@ -259,17 +263,20 @@ PROJ_CSS = {
     'secondary_d': '#b44ba3' #rose quartz pink
 }
 
-PROJ_LOGO_TEXT = 'KTR'
+PROJ_LOGO_TEXT = 'ITK'
 PROJ_COLOR_SELECT = 'light'
-PROJ_IMAGE_SELECT = 'static/explore/img/abalone_1200.jpg'
+PROJ_IMAGE_SELECT = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
+PROJ_IMAGE_ATTR = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
 
 PROJ_ICONS = {
-    'logo': 'explore/img/logos/logo_weave.svg',
+    'logo': '/static/explore/img/logos/logo_weave.svg',
     'place_icon': 'explore/img/icons/i_place.svg',
     'resource_icon': 'explore/img/icons/i_resource.svg',
     'activity_icon': 'explore/img/icons/i_activity.svg',
     'source_icon': 'explore/img/icons/i_source.svg',
     'media_icon': 'explore/img/icons/i_media.svg',
+    'map_pin_icon': 'explore/img/icons/explore_map_pin.svg',
+    'map_pin_selected_icon': 'explore/img/icons/explore_map_pin_selected.svg',
 }
 
 RECORD_ICONS = {
@@ -280,6 +287,8 @@ RECORD_ICONS = {
     'media': '/static/{}'.format(PROJ_ICONS['media_icon']),
     'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
     'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
+    'map_pin': '/static/{}'.format(PROJ_ICONS['map_pin_icon']),
+    'map_pin_selected': '/static/{}'.format(PROJ_ICONS['map_pin_selected_icon']),
 }
 
 # Not sure if this is the best way to implement fonts. 
@@ -291,6 +300,12 @@ PROJ_FONTS = {
     'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
     'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
 }
+
+HOME_FONT_COLOR = '#FFFFFF'
+HOME_LEFT_BACKGROUND = '#000000'
+HOME_RIGHT_BACKGROUND = '#000000'
+
+DEFAULT_MAXIMUM_RESULTS = 500
 
 try:
     from TEKDB.local_settings import *

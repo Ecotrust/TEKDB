@@ -8,7 +8,7 @@
 {% block contentwrapper %}
   <div class="container">
     <div class="row gx-4 align-items-center">
-      <div class="col col-md-5">
+      <div class="col col-md-5 homepage-column" id="homepage-left-column">
         <div class="welcome-content-wrapper">
           {% block content %}
             {{pageContent | safe}}
@@ -24,10 +24,11 @@
         <!-- </a> -->
         </div>
       </div>
-      <div class="col col-md-7">
+      <div class="col col-md-7 homepage-column" id="homepage-right-column">
         <div class="proj-image-select-wrapper">
           <img src="{{ proj_image_select }}" alt="project image">
         </div>
+        {% if home_image_attribution %}<div id="proj-image-attribution"><p>{{ home_image_attribution|safe }}</p></div>{% endif %}
       </div>
   </div>
 {% endblock %}

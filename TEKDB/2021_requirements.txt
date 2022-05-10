@@ -18,7 +18,7 @@ dbus-python==1.2.16
 decorator==5.1.0
 distro==1.4.0
 distro-info===0.23ubuntu1
-Django==3.2.12
+Django==3.2.13
 django-autocomplete-light==3.8.2
 django-ckeditor==6.1.0
 django-js-asset==1.2.2
@@ -89,7 +89,7 @@ systemd-python==234
 testresources==2.0.1
 toml==0.10.2
 traitlets==5.1.0
-Twisted==22.2.0
+Twisted==22.4.0
 typing-extensions==3.10.0.2
 ubuntu-advantage-tools==27.2
 ufw==0.36
