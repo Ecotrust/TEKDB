@@ -2,6 +2,11 @@ main {
   background: var(--white);
 }
 
+.results-right #map {
+  position: sticky;
+  top: 20px;
+}
+
 #filter-form {
   margin-top: calc(var(--margin_top) * 2);
 }
