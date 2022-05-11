@@ -45,6 +45,7 @@ div#homepage-right-column {
   background-color: var(--homepage_right_background);
   display: flex;
   flex-direction: column;
+  max-height: calc(100vh - var(--header_height));
 }
 
 div.proj-image-select-wrapper {
