@@ -107,7 +107,7 @@ main {
 
 .paginationjs {
   display: none;
-  visiblity: hidden;
+  visibility: hidden;
 }
 
 .paginationjs .paginationjs-pages li:last-child ,
@@ -184,7 +184,7 @@ main {
   margin-right: 0px;
   height: 36px;
   line-height: 20px;
-  border: 1px solid transparent
+  border: 1px solid transparent;
   text-align: center;
 }
 
