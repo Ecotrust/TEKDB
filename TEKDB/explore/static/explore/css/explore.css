@@ -9,6 +9,7 @@ main {
 h1 {
   display: block;
   /* margin: var(--margin_top) 0 calc(var(--margin_bottom) / 2); */
+  margin-bottom: 0;
   position: relative;
   text-align: center;
 }
@@ -19,7 +20,9 @@ h2 {
 }
 
 p {
-  font-size: 1em;
+  font-size: 1.25em;
+  letter-spacing: .05em;
+  margin: calc(var(--margin_top) / 2) 0 calc(var(--margin_bottom) * 2);
 }
 
 .explore-form-row {
@@ -109,4 +112,8 @@ button.btn:hover .arrow-right::after {
 #filter-checkboxes {
   flex-direction: row;
   text-align: left;
+}
+
+#filter-checkboxes p {
+  margin: 0;
 }
