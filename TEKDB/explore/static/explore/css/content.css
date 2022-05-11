@@ -266,8 +266,7 @@ h5 {
 
 #filter-checkboxes input[type=checkbox]:focus ~ label,
 #filter-checkboxes input[type=checkbox]:active ~ label {
-  background-color: var(--secondary_a);
-  opacity: .6;
+  outline: 2px solid var(--secondary_c);
 }
 
 #filter-checkboxes label {
