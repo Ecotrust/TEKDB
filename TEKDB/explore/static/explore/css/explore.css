@@ -8,7 +8,9 @@ main {
 
 h1 {
   display: block;
-  margin: var(--margin_top) 0 0;
+  /* margin: var(--margin_top) 0 calc(var(--margin_bottom) / 2); */
+  position: relative;
+  text-align: center;
 }
 
 h2 {
@@ -30,11 +32,11 @@ p {
 }
 
 .explore-form {
-  margin-top: calc(var(--margin_top) * 2.6125);
+  margin-top: calc(var(--margin_top) * 2);
 }
 
-.query-input-group {
-  margin-bottom: calc(var(--margin_bottom) * 2.6125);
+.explore-input-group {
+  padding: 0 10%; 
 }
 
 .explore-form .btn {
@@ -44,18 +46,24 @@ p {
 
 .button-wrapper {
   /* justify-content: ; */
-  display: flex;
+  margin: calc(var(--margin_top) * 2) 0;
   position: relative;
+  text-align: center;
 }
 
 button.btn {
-  background: var(--primary_a);
-  color: var(--white);
+  background: var(--white);
+  border-color: var(--black);
+  border-radius: 0;
+  color: var(--black);
+  font-family: var(--font-sans-serif);
+  font-size: 1.0375em;
 }
 
 button.btn:hover {
-  background: var(--primary_b);
-  color: var(--primary_a);
+  background: var(--primary_a);
+  border-color: var(--black);
+  color: var(--white);
 }
 
 .arrow-right {
@@ -63,17 +71,42 @@ button.btn:hover {
   position: relative;
 }
 
-button.btn:hover .arrow-right,
-button.btn:hover .arrow-right::before,
-button.btn:hover .arrow-right::after {
+button.btn .arrow-right,
+button.btn .arrow-right::before,
+button.btn .arrow-right::after {
   background: var(--primary_a);
 }
 
-.form-info-wrapper,
-.form-wrapper {
-  margin-top: calc(var(--margin_top) * 2);
+button.btn:hover .arrow-right,
+button.btn:hover .arrow-right::before,
+button.btn:hover .arrow-right::after {
+  background: var(--white);
 }
 
 .form-wrapper {
-  margin-bottom: calc(var(--margin_top) * 2);
+  margin-top: calc(var(--margin_top) * 2);
+  text-align: center;
+}
+
+
+.form-wrapper .explore-form h1:nth-of-type(2)::after {
+  background: var(--secondary_b);
+  border-radius: 50%;
+  color: var(--white);
+  content: "OR";
+  font-size: .3125em;
+  height: 4em;
+  left: 50%;
+  line-height: 4em;
+  position: absolute;
+  text-align: center;
+  top: -5em;
+  transform: translateX(-50%);
+  width: 4em;
+  white-space: nowrap;
+}
+
+#filter-checkboxes {
+  flex-direction: row;
+  text-align: left;
 }
