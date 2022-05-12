@@ -12,8 +12,10 @@ ALLOWED_HOSTS = [
 #         'USER': 'add user',
 #         'PASSWORD': 'add password',
 #         'HOST': 'add host',
-#         'PORT': 'add number',
+#         'PORT': add number,
 #     }
 # }
 
-#TIME_ZONE = 'America/Los_Angeles' # To see all Timezone options, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+# TIME_ZONE = 'America/Los_Angeles' # To see all Timezone options, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+
+# DEBUG = False
