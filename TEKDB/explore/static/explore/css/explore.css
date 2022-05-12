@@ -22,7 +22,7 @@ h2 {
 p {
   font-size: 1.25em;
   letter-spacing: .05em;
-  margin: calc(var(--margin_top) / 2) 0 calc(var(--margin_bottom) * 2);
+  margin: calc(var(--margin_top) * 2) 0 var(--margin_bottom);
 }
 
 .explore-form-row {
@@ -39,7 +39,13 @@ p {
 }
 
 .explore-input-group {
+  margin: var(--margin_top) 0 calc(var(--margin_bottom) * 2);
   padding: 0 10%; 
+}
+
+hr {
+  font-size: 1.25em;
+  margin: calc(var(--margin_top) * 2) 0 calc(var(--margin_bottom) * 2);
 }
 
 .explore-form .btn {
@@ -111,9 +117,14 @@ button.btn:hover .arrow-right::after {
 
 #filter-checkboxes {
   flex-direction: row;
-  text-align: left;
+  text-transform: uppercase;
+  /* text-align: left; */
+}
+
+#filter-checkboxes div {
+  letter-spacing: .1em;
 }
 
 #filter-checkboxes p {
-  margin: 0;
+  /* margin: 0; */
 }

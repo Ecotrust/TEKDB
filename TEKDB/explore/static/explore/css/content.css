@@ -243,7 +243,7 @@ h5 {
 
 #filter-checkboxes div {
   font-family: var(--font-sans-serif-extrabold);
-  letter-spacing: 0.025em;
+  letter-spacing: 0.05em;
   position: relative;
 }
 
