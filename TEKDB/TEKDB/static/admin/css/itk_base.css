@@ -36,6 +36,12 @@ hr {
   border-color: var(--hairline-color);
 }
 
+/* Dashboard */
+.dashboard #content {
+  width: 70vw;
+  max-width: 900px;
+}
+
 /* INDEX Page */
 /* Why are the selection tables inverted!? */
 table {
