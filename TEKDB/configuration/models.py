@@ -26,7 +26,7 @@ class Configuration(models.Model):
     logo_help_text = "Choose your logo for the site header. You can choose between: <ul>"
     for logo_choice in LOGO_CHOICES[:-1]:
         logo_help_text += "<li style=\"padding-left: 1rem\">'{}' <img src=\"{}\" style=\"max-width: 70px; padding:0.5rem; background-color:white\"></li>".format(logo_choice[1], logo_choice[0])
-    logo_help_text += "<li>Or choose 'Custom' and add your own using the Override field below.</li></ul>"
+    logo_help_text += "<li>Or choose 'Custom' and add your own using the <b>Header Logo Override Image</b> field.</li></ul>"
     
     logo = models.CharField(
         default=LOGO_CHOICES[0],
