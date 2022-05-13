@@ -832,4 +832,4 @@ admin.site.register(UserAccess)
 ###Cruft
 admin.site.register(LookupAuthorType)
 admin.site.register(LookupUserInfo)
-admin.site.register(CurrentVersion)
+# admin.site.register(CurrentVersion)
