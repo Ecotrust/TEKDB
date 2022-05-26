@@ -144,7 +144,7 @@ const overlay = new ol.Overlay({
 var map = new ol.Map({
   controls: ol.control.defaults({
     attributionOptions: ({
-      collapsible: false
+      collapsible: true
     })
   }).extend([
     scaleLineControl,
