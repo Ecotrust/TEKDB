@@ -39,5 +39,5 @@ $PIP install -r $PROJ_ROOT/TEKDB/requirements_linux.txt
 $PYTHON $PROJ_ROOT/TEKDB/manage.py migrate
 $PYTHON $PROJ_ROOT/TEKDB/manage.py collectstatic --no-input
 
-service uwsgi restart
-service nginx restart
+sudo service uwsgi restart
+sudo service nginx restart
