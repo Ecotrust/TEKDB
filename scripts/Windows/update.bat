@@ -16,7 +16,6 @@ git pull
 %PYTHON% -m pip install -r %PROJ_ROOT%\TEKDB\requirements.txt
 %PYTHON% %PROJ_ROOT%\TEKDB\manage.py migrate
 %PYTHON% %PROJ_ROOT%\TEKDB\manage.py collectstatic --no-input
-%PYTHON% %PROJ_ROOT%\TEKDB\manage.py compress
 C:\Windows\System32\iisreset.exe
 
 :END
