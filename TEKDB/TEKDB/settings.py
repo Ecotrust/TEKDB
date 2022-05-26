@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'colorfield',
     # 'registration',
     'leaflet',
     'nested_admin',
@@ -99,6 +100,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'explore.context_processors.explore_context',
                 # 'TEKDB.context_processors.add_map_default_context'
             ],
         },
@@ -245,30 +247,36 @@ DATABASE_GEOGRAPHY = {
     'min_zoom': 2,
     'max_zoom': 19,
 }
-STATIC_ROOT = '/vol/web/static'
-MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 MODERATE_STAFF = False
 
 PROJ_CSS = {
-    'primary_a': '#8f371c',
-    'primary_b': '#f7f3eb',
-    'primary_c': '#0e1522',
-    'primary_d': '#ced2da',
-    'secondary_a': '#51723b',
-    'secondary_b': '#839230',
-    'secondary_c': '#6ea32e',
-    'secondary_d': '#b44ba3'
+    'primary_a': '#8f371c', #red
+    'primary_b': '#f7f3eb', #off white
+    'primary_c': '#0e1522', #very dark blue
+    'primary_d': '#ced2da', #light gray
+    'secondary_a': '#51723b', #fern green
+    'secondary_b': '#839230', #old moss green
+    'secondary_c': '#6ea32e', #green
+    'secondary_d': '#b44ba3' #rose quartz pink
 }
 
-# Will be replaced by svg 
+PROJ_LOGO_TEXT = 'ITK'
+PROJ_COLOR_SELECT = 'light'
+PROJ_IMAGE_SELECT = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
+PROJ_IMAGE_ATTR = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
+
 PROJ_ICONS = {
-    'logo': 'explore/img/logos/logo_weave.svg',
+    'logo': '/static/explore/img/logos/logo_weave.svg',
     'place_icon': 'explore/img/icons/i_place.svg',
     'resource_icon': 'explore/img/icons/i_resource.svg',
     'activity_icon': 'explore/img/icons/i_activity.svg',
     'source_icon': 'explore/img/icons/i_source.svg',
     'media_icon': 'explore/img/icons/i_media.svg',
+    'map_pin_icon': 'explore/img/icons/explore_map_pin.svg',
+    'map_pin_selected_icon': 'explore/img/icons/explore_map_pin_selected.svg',
 }
 
 RECORD_ICONS = {
@@ -279,7 +287,25 @@ RECORD_ICONS = {
     'media': '/static/{}'.format(PROJ_ICONS['media_icon']),
     'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
     'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
+    'map_pin': '/static/{}'.format(PROJ_ICONS['map_pin_icon']),
+    'map_pin_selected': '/static/{}'.format(PROJ_ICONS['map_pin_selected_icon']),
 }
+
+# Not sure if this is the best way to implement fonts. 
+# It gets tricky bc there will likely be multiple formats for each font.
+# For example: .ttf, .otf, .woff, .woff2, .svg
+# We'll need to figure out how to handle this better. 
+# TODO: Plan to revisit this later.
+PROJ_FONTS = {
+    'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
+    'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
+}
+
+HOME_FONT_COLOR = '#FFFFFF'
+HOME_LEFT_BACKGROUND = '#000000'
+HOME_RIGHT_BACKGROUND = '#000000'
+
+DEFAULT_MAXIMUM_RESULTS = 500
 
 try:
     from TEKDB.local_settings import *

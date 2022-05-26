@@ -6,93 +6,87 @@
 {% endblock %}
 
 {% block contentwrapper %}
-<div class="container content-container">
+<div class="container record-wrapper content-container">
   <div class="row">
-    <div class="col-md-1">
+    <div class="col col-md-1"></div>
+    <div class="col col-md-6">
+      <a href="{{ back_link }}" class="btn back-button"><span class="search-arrow arrow-left"></span> Back to results</a>
     </div>
-    <div class="col-md-10">
-      <a href='{{ back_link }}'><button type="button" class="btn btn-secondary btn-lg back-button">Back to results</button></a>
+    <div class="col col-md-4 text-right">
+      <div id="export-links">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="14.571" viewBox="0 0 12 14.571">
+          <path id="Icon_material-file-download" data-name="Icon material-file-download" d="M19.5,9.643H16.071V4.5H10.929V9.643H7.5l6,6Zm-12,7.714v1.714h12V17.357Z" transform="translate(-7.5 -4.5)"/>
+        </svg></span>
+        <a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a>
+        |
+        <a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a>
+      </div>
     </div>
-    <div class="col-md-1">
-      <table>
-        <tr><td>Download</td></tr>
-        <tr>
-          <td>
-            <ul id="export-links">
-              <li><a href='/export/{{ model }}/{{ id }}/csv/'>.csv</a></li>
-              <li><a href='/export/{{ model }}/{{ id }}/xls/'>.xls</a></li>
-            </ul>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <div class="col col-md-1"></div>
   </div>
   <div class="row content-row">
-    <div class="col-md-1">
-    </div>
-    <div class="col-md-10 well content-well">
+    <div class="col well content-well">
       <div class='row'>
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-10">
-          <div class='row'>
-            <div class="col record-icon" style="background-image: url({{ record.image }})">
-            </div>
-            <div class="col-md-10">
-              <h2>{{record.name | safe }}</h2>
-              <h5>{{record.subtitle | safe }}</h5>
+        <div class="col col-md-1"></div>
+        {% if record.map or record.media.file %}
+        <div class="col-md-5">
+        {% else %}
+        <div class="col">
+        {% endif %}
+          <div class="row">
+            <div class="col record-type record-type-{{ model }}">{{ model }}</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h2>{{record.name | safe }} <span>{{record.subtitle | safe }}</span></h2>
             </div>
           </div>
           <div class='row'>
-            <div class='well odd-well'>
-              {% if record.media.file %}
-                {% if not record.restricted %}
-                <div style="text-align: right">
-                  <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
-                  <a class='btn-download' href="download">Download</a>
-                </div>
-                {% endif %}
-                {% if record.media.type == 'image' %}
-                  <div style="text-align: center">
-                    <img style="max-height: 20em" src="{{ MEDIA_URL }}{{ record.media.file }}" />
+            <div class="col">
+              <div class='well odd-well'>
+                {% for data in record.data %}
+                  <div class="record-data">
+                    <strong>{{ data.key }}:</strong> 
+                    <span>{{ data.value | safe }}</span>
                   </div>
-                {% endif %}
-              {% endif %}
-              {% for data in record.data %}
-              <p><b>{{ data.key }}:</b> {{ data.value | safe }}</p>
-              {% endfor %}
-              {% if record.map %}
-              {% include "map.html" %}
-              {% endif %}
+                {% endfor %}
+              </div>
             </div>
           </div>
           {% if record.relationships|length > 0 %}
+          <hr />
           <div class='row'>
-            <h4>Relationships</h4>
             <div class='well odd-well relationship-div'>
+              <h3>Related Materials</h3>
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
-                  <p><b>{{ relationship.key }}:</b></p>
                   {% for link in relationship.value %}
                     {% if forloop.counter0 == 0 %}
                     <div class='relationship-row'>
                     {% endif %}
-                    {% if link.issimplerelationship %}
-                        <a href="{{ link.link }}{{ state }}">{{ link.name }}</a>
-                        {% if link.data.description %}
-                          <div class='source-excerpt'>
-                            {{ link.data.description | safe }}
-                            {% if link.data.pages %}&nbsp(Pages: {{ link.data.pages }}){% endif %}
-                          </div>
-                        {% endif %}
+                    <div class="row align-items-baseline">
+                      {% if link.issimplerelationship %}
+                          <a href="{{ link.link }}{{ state }}"><strong>{{ link.name }}</strong></a>
+                          {% if link.data.description %}
+                            <div class='source-excerpt'>
+                              {{ link.data.description | safe }}
+                              {% if link.data.pages %}&nbsp(Pages: {{ link.data.pages }}){% endif %}
+                            </div>
+                          {% endif %}
 
-                    {% else %}
-                      {% if link.link %}
-                      <a href="{{ link.link }}{{ state }}">{{ link.name }}</a>
                       {% else %}
-                      {{ link.name }}
+                        <div class="col-auto">
+                          <img src="{{ link.image }}" class="record-icon" />
+                        </div>
+                        <div class="col-md-10">
+                          {% if link.link %}
+                            <a href="{{ link.link }}{{ state }}" class="related-link">{{ link.name }}</a>
+                          {% else %}
+                            {{ link.name }}
+                          {% endif %}
+                        </div>
                       {% endif %}
-                    {% endif %}
+                    </div>
                     {% if forloop.last %}
                     </div>
                     {% endif %}
@@ -103,27 +97,57 @@
             </div>
           </div>
           {% endif %}
-          <div class='row'>
-            <p>
-              {% if record.enteredbyname %}
-                Entered by: {{record.enteredbyname}} on
-                {% if record.enteredbydate %}
-                  {{record.enteredbydate}}
-                {% endif %}
-                &nbsp &nbsp|&nbsp &nbsp
+        </div>
+        {% if record.map %}
+        <div class="col-md-6">
+          {% include "map.html" %}
+        </div>
+        {% endif %}
+
+        {% if record.media.file %}
+        <div class="col-md-6">
+          {% if record.media.type == 'image' %}
+            <div>
+              <img src="{{ MEDIA_URL }}{{ record.media.file }}" />
+            </div>
+          {% endif %}
+          {% if not record.restricted %}
+          <div class="row">
+            <div class="col">
+              <div>
+                <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
+                <a class="btn btn-download" href="download">Download</a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+        <div class='row record-entry'>
+          <div class="col">
+            <em>
+            {% if record.enteredbyname %}
+              Entered by: {{record.enteredbyname}} on
+              {% if record.enteredbydate %}
+                {{record.enteredbydate}}
               {% endif %}
-              {% if record.modifiedbyname %}
-                Last modified by: {{record.modifiedbyname}}
-                {% if record.modifiedbydate %}
-                  on {{record.modifiedbydate}}
-                {% endif %}
+              &nbsp &nbsp|&nbsp &nbsp
+            {% endif %}
+            {% if record.modifiedbyname %}
+              Last modified by: {{record.modifiedbyname}}
+              {% if record.modifiedbydate %}
+                on {{record.modifiedbydate}}
               {% endif %}
-            </p>
+            {% endif %}
+            </em>
           </div>
         </div>
       </div>
+      </div>
     </div>
-    <div class="col-md-1">
+    <div class="col col-md-1">
     </div>
   </div>
 </div>

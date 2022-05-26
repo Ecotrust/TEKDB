@@ -2,79 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .models import *
-
-def get_proj_css():
-    proj_css = {
-        'primary_a': '#8f371c',
-        'primary_b': '#f7f3eb',
-        'primary_c': '#0e1522',
-        'primary_d': '#ced2da',
-        'secondary_a': '#51723b',
-        'secondary_b': '#839230',
-        'secondary_c': '#6ea32e',
-        'secondary_d': '#b44ba3'
-    }
-    try:
-        from TEKDB.settings import PROJ_CSS
-        if 'primary_a' in PROJ_CSS.keys():
-            proj_css['primary_a'] = PROJ_CSS['primary_a']
-        if 'primary_b' in PROJ_CSS.keys():
-            proj_css['primary_b'] = PROJ_CSS['primary_b']
-        if 'primary_c' in PROJ_CSS.keys():
-            proj_css['primary_c'] = PROJ_CSS['primary_c']
-        if 'primary_d' in PROJ_CSS.keys():
-            proj_css['primary_d'] = PROJ_CSS['primary_d']
-        if 'secondary_a' in PROJ_CSS.keys():
-            proj_css['secondary_a'] = PROJ_CSS['secondary_a']
-        if 'secondary_b' in PROJ_CSS.keys():
-            proj_css['secondary_b'] = PROJ_CSS['secondary_b']
-        if 'secondary_c' in PROJ_CSS.keys():
-            proj_css['secondary_c'] = PROJ_CSS['secondary_c']
-        if 'secondary_d' in PROJ_CSS.keys():
-            proj_css['secondary_d'] = PROJ_CSS['secondary_d']
-    except ImportError as e:
-        pass
-
-    # TODO: allow for admin-defined 8-color palettes
-
-    return proj_css
-
-def get_proj_icons():
-    proj_icons = {
-    'logo': 'explore/img/logos/ITK_lines_logo.png',
-    'place_icon': 'explore/img/record_icons/place_icon.png',
-    'resource_icon': 'explore/img/record_icons/resource_icon.png',
-    'activity_icon': 'explore/img/record_icons/activity_icon.png',
-    'source_icon': 'explore/img/record_icons/source_icon.png',
-    'media_icon': 'explore/img/record_icons/media_icon.png',
-}
-    try:
-        from TEKDB.settings import PROJ_ICONS
-        if 'logo' in PROJ_ICONS.keys():
-            proj_icons['logo'] = PROJ_ICONS['logo']
-        if 'place_icon' in PROJ_ICONS.keys():
-            proj_icons['place_icon'] = PROJ_ICONS['place_icon']
-        if 'resource_icon' in PROJ_ICONS.keys():
-            proj_icons['resource_icon'] = PROJ_ICONS['resource_icon']
-        if 'activity_icon' in PROJ_ICONS.keys():
-            proj_icons['activity_icon'] = PROJ_ICONS['activity_icon']
-        if 'source_icon' in PROJ_ICONS.keys():
-            proj_icons['source_icon'] = PROJ_ICONS['source_icon']
-        if 'media_icon' in PROJ_ICONS.keys():
-            proj_icons['media_icon'] = PROJ_ICONS['media_icon']
-    except ImportError as e:
-        pass
-
-    # TODO: allow for admin-defined logos
-
-    return proj_icons
-
-def apply_root_context(context={}):
-    context['proj_css'] = get_proj_css()
-    context['proj_icons'] = get_proj_icons()
-
-    return context
-
+from configuration.models import Configuration
 
 # Create your views here.
 def home(request):
@@ -93,7 +21,6 @@ def home(request):
         'pageContent':page_content,
         'user': request.user,
     }
-    context = apply_root_context(context)
 
     return render(request, "welcome.html", context)
 
@@ -112,7 +39,6 @@ def about(request):
         'pageContent':page_content,
         'user': request.user,
     }
-    context = apply_root_context(context)
     return render(request, "tek_index.html", context)
 
 def help(request):
@@ -130,7 +56,6 @@ def help(request):
         'pageContent':page_content,
         'user': request.user,
     }
-    context = apply_root_context(context)
     return render(request, "tek_index.html", context)
 
 @login_required
@@ -141,7 +66,6 @@ def explore(request):
         'pageContent':"<p>In in mi vitae nibh posuere condimentum vitae eget quam. Etiam et urna id odio fringilla aliquet id hendrerit nisl. Ut sed ex vel felis rhoncus eleifend. Ut auctor facilisis vehicula. Ut sed dui nec ipsum pellentesque tempus.</p>",
         'user': request.user,
     }
-    context = apply_root_context(context)
     return render(request, "explore.html", context)
 
 def get_model_by_type(model_type):
@@ -214,6 +138,7 @@ def get_project_geography():
 
 @login_required
 def get_by_model_id(request, model_type, id):
+    from TEKDB.settings import RECORD_ICONS
     state = "?%s" % request.GET.urlencode()
     back_link = '%s%s' % ('/search/', state)
     models = get_model_by_type(model_type)
@@ -243,7 +168,6 @@ def get_by_model_id(request, model_type, id):
         'back_link': back_link,
         'state': state,
     }
-    context = apply_root_context(context)
 
     if 'map' in record_dict.keys() and not record_dict['map'] == None:
         DATABASE_GEOGRAPHY = get_project_geography()
@@ -402,7 +326,12 @@ def search(request):
     if request.method == 'POST':
         query_string=request.POST['query']
         if 'category' in request.POST.keys():
-            categories = [request.POST['category']]
+            try:
+                categories = request.POST['category'].split(',')
+            except Exception as e:
+                categories = all_categories
+                pass
+
         else:
             keys = request.POST.keys()
             categories = []
@@ -449,8 +378,11 @@ def search(request):
             if categories == []:
                 categories = ['all']
 
-    if categories == ['all']:
-        categories = all_categories
+    # Zero tolerance for mispelled or 'all' categories. if it's not perfect, fail to 'all'
+    for category in categories:
+        if category not in all_categories:
+            categories = all_categories
+            break
 
     category_checkboxes = ''
     for category in all_categories:
@@ -458,7 +390,7 @@ def search(request):
             checked = ' checked=true'
         else:
             checked = ''
-        category_checkboxes += '<div class="col-md-2"><input type="checkbox" name="%s" value="%s"%s>%s</input></div>' % (category, category,checked,category.capitalize())
+        category_checkboxes += '<div class="col col-md-2"><input type="checkbox" id="%s" name="%s" value="%s"%s><label for="%s"></label> %s</input></div>' % (category, category, category, checked, category, category.capitalize())
 
     if query_string in [None, '', '*']:
         query_string_visible = False
@@ -470,7 +402,7 @@ def search(request):
     else:
         query_value = ''
     keyword_search_input = '<!--<label for="search-text">Search Phrase</label>-->\
-        <input type="text" class="form-control" id="search-text" name="query" placeholder="" %s>' % query_value
+        <input type="text" class="form-control" id="search-text" name="query" placeholder="Keywords" %s>' % query_value
 
     resultlist = getResults(query_string, categories)
     items_per_page = request.GET.get('items_per_page')
@@ -489,10 +421,23 @@ def search(request):
 
     DATABASE_GEOGRAPHY = get_project_geography()
 
+    try:
+        config = Configuration.objects.all()[0]
+        max_results = config.max_results_returned
+    except Exception as e:
+        from TEKDB.settings import DEFAULT_MAXIMUM_RESULTS
+        max_results = DEFAULT_MAXIMUM_RESULTS
+        pass
+
+    too_many_results = len(resultlist) > max_results
+    if too_many_results:
+        resultlist = resultlist[:max_results]
+
     context = {
         'items_per_page': items_per_page,
         'results_qs': resultlist,
         'results': json.dumps(resultlist),
+        'too_many_results': too_many_results,
         'query': query_string,
         'keyword': query_string_visible,
         'keyword_search_input': keyword_search_input,
@@ -514,7 +459,6 @@ def search(request):
         'max_zoom': DATABASE_GEOGRAPHY['max_zoom'],
         'map_extent': DATABASE_GEOGRAPHY['map_extent'],
     }
-    context = apply_root_context(context)
 
     request.META.pop('QUERY_STRING')
 
@@ -526,6 +470,7 @@ def getResults(keyword_string, categories):
         keyword_string = ''
 
     resultlist = []
+
     for category in categories:
         query_models = get_model_by_type(category)
         for model in query_models:

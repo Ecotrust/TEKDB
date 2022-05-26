@@ -46,3 +46,17 @@ class OpenLayers6Widget(BaseGeometryWidget):
         widget_context.update(request_context)
 
         return widget_context
+
+class OpenLayers6PolygonWidget(OpenLayers6Widget):
+    class Media:
+        css = {
+            'all': (
+                'assets/openlayers6/ol.css',
+                'gis/css/ol3.css',
+                'gis/css/OpenLayers6PolygonWidget.css',
+            )
+        }
+        js = (
+            'assets/openlayers6/ol.js',
+            'gis/js/OL6MapPolygonWidget.js',
+        )

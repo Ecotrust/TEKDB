@@ -4,6 +4,7 @@ TEKDB/TEKDB/local_settings.py
 TEKDB/TEKDB/Dockerfile
 TEKDB/db.sqlite3
 TEKDB/static/*
+TEKDB/media/*
 TEKDB/env_TEKvir
 old_code/
 __pycache__/

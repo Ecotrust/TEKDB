@@ -4,6 +4,7 @@ coverage
 django >=3.2.13,<3.3
 django-autocomplete-light
 django-ckeditor
+django-colorfield
 django-leaflet
 django-nested-admin
 django-registration
