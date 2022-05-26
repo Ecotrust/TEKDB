@@ -243,7 +243,7 @@ h5 {
 
 #filter-checkboxes div {
   font-family: var(--font-sans-serif-extrabold);
-  letter-spacing: 0.025em;
+  letter-spacing: 0.05em;
   position: relative;
 }
 
@@ -262,6 +262,11 @@ h5 {
 
 #filter-checkboxes input[type=checkbox]:checked ~ label {
   background-color: var(--secondary_a);
+}
+
+#filter-checkboxes input[type=checkbox]:focus ~ label,
+#filter-checkboxes input[type=checkbox]:active ~ label {
+  outline: 2px solid var(--secondary_c);
 }
 
 #filter-checkboxes label {

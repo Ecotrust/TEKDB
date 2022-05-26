@@ -4,9 +4,15 @@ main.content-wrapper div.container {
   margin: 0;
 }
 
-div.homepage-column {
-  height: calc(100vh - var(--header_height));
-  max-height: calc(100vh - var(--header_height));
+@media screen and (min-width: 992px) { 
+  div.homepage-column {
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: calc(100vh - var(--header_height));
+    /* max-height: calc(100vh - var(--header_height)); */
+  }
 }
 
 div#homepage-left-column {
@@ -39,6 +45,18 @@ div#homepage-right-column {
   background-color: var(--homepage_right_background);
   display: flex;
   flex-direction: column;
+  max-height: calc(100vh - var(--header_height));
+}
+
+div#homepage-right-column::after {
+  background: var(--homepage_right_background);
+  bottom: 0;
+  content: "";
+  left: 40%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: -1;
 }
 
 div.proj-image-select-wrapper {

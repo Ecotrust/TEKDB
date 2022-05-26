@@ -2,6 +2,11 @@ main {
   background: var(--white);
 }
 
+.results-right #map {
+  position: sticky;
+  top: 20px;
+}
+
 #filter-form {
   margin-top: calc(var(--margin_top) * 2);
 }
@@ -102,7 +107,7 @@ main {
 
 .paginationjs {
   display: none;
-  visiblity: hidden;
+  visibility: hidden;
 }
 
 .paginationjs .paginationjs-pages li:last-child ,
@@ -179,7 +184,7 @@ main {
   margin-right: 0px;
   height: 36px;
   line-height: 20px;
-  border: 1px solid transparent
+  border: 1px solid transparent;
   text-align: center;
 }
 

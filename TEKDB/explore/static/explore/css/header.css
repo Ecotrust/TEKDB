@@ -1,6 +1,6 @@
 nav.navbar {
   background-color: var(--default_background);
-  border-bottom: 1px solid var(--default_border);
+  border-bottom: 1px solid var(--black);
   /* margin: 0 3vw; */
   height: var(--header_height);
 }

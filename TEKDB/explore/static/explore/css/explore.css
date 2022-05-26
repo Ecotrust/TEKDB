@@ -8,7 +8,10 @@ main {
 
 h1 {
   display: block;
-  margin: var(--margin_top) 0 0;
+  /* margin: var(--margin_top) 0 calc(var(--margin_bottom) / 2); */
+  margin-bottom: 0;
+  position: relative;
+  text-align: center;
 }
 
 h2 {
@@ -17,7 +20,9 @@ h2 {
 }
 
 p {
-  font-size: 1em;
+  font-size: 1.25em;
+  letter-spacing: .05em;
+  margin: calc(var(--margin_top) * 2) 0 var(--margin_bottom);
 }
 
 .explore-form-row {
@@ -30,11 +35,17 @@ p {
 }
 
 .explore-form {
-  margin-top: calc(var(--margin_top) * 2.6125);
+  margin-top: calc(var(--margin_top) * 2);
 }
 
-.query-input-group {
-  margin-bottom: calc(var(--margin_bottom) * 2.6125);
+.explore-input-group {
+  margin: var(--margin_top) 0 calc(var(--margin_bottom) * 2);
+  padding: 0 10%; 
+}
+
+hr {
+  font-size: 1.25em;
+  margin: calc(var(--margin_top) * 2) 0 calc(var(--margin_bottom) * 2);
 }
 
 .explore-form .btn {
@@ -44,18 +55,24 @@ p {
 
 .button-wrapper {
   /* justify-content: ; */
-  display: flex;
+  margin: calc(var(--margin_top) * 2) 0;
   position: relative;
+  text-align: center;
 }
 
 button.btn {
-  background: var(--primary_a);
-  color: var(--white);
+  background: var(--white);
+  border-color: var(--black);
+  border-radius: 0;
+  color: var(--black);
+  font-family: var(--font-sans-serif);
+  font-size: 1.0375em;
 }
 
 button.btn:hover {
-  background: var(--primary_b);
-  color: var(--primary_a);
+  background: var(--primary_a);
+  border-color: var(--black);
+  color: var(--white);
 }
 
 .arrow-right {
@@ -63,17 +80,51 @@ button.btn:hover {
   position: relative;
 }
 
-button.btn:hover .arrow-right,
-button.btn:hover .arrow-right::before,
-button.btn:hover .arrow-right::after {
+button.btn .arrow-right,
+button.btn .arrow-right::before,
+button.btn .arrow-right::after {
   background: var(--primary_a);
 }
 
-.form-info-wrapper,
-.form-wrapper {
-  margin-top: calc(var(--margin_top) * 2);
+button.btn:hover .arrow-right,
+button.btn:hover .arrow-right::before,
+button.btn:hover .arrow-right::after {
+  background: var(--white);
 }
 
 .form-wrapper {
-  margin-bottom: calc(var(--margin_top) * 2);
+  margin-top: calc(var(--margin_top) * 2);
+  text-align: center;
+}
+
+
+.form-wrapper .explore-form h1:nth-of-type(2)::after {
+  background: var(--secondary_b);
+  border-radius: 50%;
+  color: var(--white);
+  content: "OR";
+  font-size: .3125em;
+  height: 4em;
+  left: 50%;
+  line-height: 4em;
+  position: absolute;
+  text-align: center;
+  top: -5em;
+  transform: translateX(-50%);
+  width: 4em;
+  white-space: nowrap;
+}
+
+#filter-checkboxes {
+  flex-direction: row;
+  text-transform: uppercase;
+  /* text-align: left; */
+}
+
+#filter-checkboxes div {
+  letter-spacing: .1em;
+}
+
+#filter-checkboxes p {
+  /* margin: 0; */
 }
