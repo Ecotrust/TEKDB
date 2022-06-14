@@ -22,6 +22,7 @@ main[data-theme="light"] {
 
 /* a { color: #336633; } */
 a:hover {
+  cursor: pointer;
   /* color: #336633; */
   /* font-weight: bold; */
 }
@@ -154,6 +155,13 @@ h2 span {
   font-family: var(--font-sans-serif);
 }
 
+h4 {
+  font-size: 2em;
+  font-family: var(--font-sans-serif-bold);
+  letter-spacing: var(--letter_spacing);
+  margin: 0 0 var(--margin_bottom);
+}
+
 h5 {
   font-size: 1.25em;
 }
@@ -176,12 +184,8 @@ h5 {
 }
 
 #search-text {
-  border-color: var(--secondary_a);
   border-radius: 0 2em 2em 0;
   border-left: none;
-  border-width: 2px;
-  font-size: 1.125em;
-  line-height: 2;
 }
 
 

@@ -5,3 +5,14 @@
 .registration-form .helptext {
   visibility: hidden;
 }
+
+input[type="text"],
+.form-control,
+input[type="password"] {
+  background: var(--white);
+  border-color: var(--secondary_a);
+  border-radius: 2em;
+  border-width: 2px;
+  font-size: 1.125em;
+  line-height: 2;
+}
