@@ -36,6 +36,7 @@ from . import models
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
     url(r'^login/$', login_views.login, name='login'),
+    url(r'^login_async/$', login_views.login_async, name='login_async'),
     url(r'^logout/$', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     url(r'^accounts/', include('django_registration.backends.one_step.urls')),
     url(r'^admin/', admin.site.urls),

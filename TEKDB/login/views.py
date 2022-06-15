@@ -1,8 +1,10 @@
 # Create your views here.
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout
 
 def index(request):
     context = {
@@ -36,3 +38,33 @@ def login(request):
             'user': request.user
         }
         return render(request, "error.html", context)
+
+def login_logic(request, context={}):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    # user = authenticate(request, username=username, password=password)
+    if user is not None:
+        auth_login(request, user)
+        context = {
+            'success': True,
+            'username': user.username,
+        }
+        from explore.views import explore
+        return explore(request)
+    else:
+        context = {
+            "success": False,
+            "error": "Username or password incorrect.",
+            'username': request.username
+        }
+        return context
+        # return render(request, "error.html", context)
+
+def login_async(request):
+    login_user = login_logic(request) # run default logic
+    json = {
+        'success': login_user['success'],
+        'username': login_user['username'],
+    }
+    return JsonResponse(json)
