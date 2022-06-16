@@ -43,7 +43,6 @@ def login_logic(request, context={}):
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(username=username, password=password)
-    # user = authenticate(request, username=username, password=password)
     if user is not None:
         auth_login(request, user)
         context = {
@@ -56,7 +55,6 @@ def login_logic(request, context={}):
             "success": False,
         }
         return context
-        # return render(request, "error.html", context)
 
 def login_async(request):
     login_user = login_logic(request) # run default logic

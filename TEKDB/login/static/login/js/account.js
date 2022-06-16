@@ -41,7 +41,6 @@ var account = {
                 if (response.success === true) {
                     console.log('%csuccessfully signed in user', 'color:green;');
                     callback(true);
-                    // main.auth.success(response);
                 } else {
                     console.log('%cerror with sign in credentials: %o', 'color: red;', response);
                     callback(false);

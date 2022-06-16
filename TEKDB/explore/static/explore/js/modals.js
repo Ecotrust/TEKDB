@@ -1,8 +1,6 @@
-
 $('#loginModal').on('shown.bs.modal', function () {
   $('#loginInput').focus()
   var loginForm = document.querySelector('#loginModal form');
-  console.log(loginForm);
   loginForm.addEventListener('submit', function(event) {
     event.preventDefault();
     var signIn = account.signIn(event, this, function(success) {
@@ -16,12 +14,5 @@ $('#loginModal').on('shown.bs.modal', function () {
         loginForm.append('Invalid username or password');
       }
     });
-    /** 
-     * 1. Write a test for this
-     * then code:
-     * 2. Make login AJAX request
-     * 3. Added logic for better error message
-     * 4. ...
-     * */
   });
 })
