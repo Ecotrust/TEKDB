@@ -54,8 +54,6 @@ def login_logic(request, context={}):
     else:
         context = {
             "success": False,
-            "error": "Username or password incorrect.",
-            'username': request.username
         }
         return context
         # return render(request, "error.html", context)

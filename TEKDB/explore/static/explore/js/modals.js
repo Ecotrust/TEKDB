@@ -12,9 +12,8 @@ $('#loginModal').on('shown.bs.modal', function () {
         exploreLink.classList.remove('disabled');
         exploreLink.href = '/explore';
         exploreLink.click();
-        
       } else {
-        document.querySelector('#login-error').innerHTML = 'Invalid username or password';
+        loginForm.append('Invalid username or password');
       }
     });
     /** 
