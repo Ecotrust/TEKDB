@@ -1,5 +1,35 @@
+// using jQuery to get CSRF Token
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
 var account = {
-    signIn: function(event, form) {
+    signIn: function(event, form, callback) {
         var formData = $(form).serialize();
         var url = '/login_async/'; // default form action url
         $.ajax({
@@ -10,23 +40,16 @@ var account = {
             success: function(response) {
                 if (response.success === true) {
                     console.log('%csuccessfully signed in user', 'color:green;');
+                    callback(true);
                     // main.auth.success(response);
                 } else {
-                    if (response.username.length > 0) {
-                        console.log('%cerror wrong username or password: %o', 'color: red;', response);
-                        if ($('.alert').length === 0) {
-                            $('#login-collapse .login-form').prepend(`<div class="alert alert-warning fade show" role="alert" style="position: relative; display: block; font-size: .875em;"></div>`);
-                        }
-                        var $alert = $('.alert');
-                        $alert.html(`Password does not match username. Please try again.<br />You may also <a href="/account/forgot/">reset your password</a>. Reseting your password will cause your current progress to be lost.`);
-                    }
                     console.log('%cerror with sign in credentials: %o', 'color: red;', response);
                 }
             },
             error: function(response) {
                 console.log('%cerror with sign in request submission: %o', 'color: red', response);
             }
-        })
+        });
     },
     logOut: function() {
         $.ajax({

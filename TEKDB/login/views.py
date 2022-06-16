@@ -50,8 +50,7 @@ def login_logic(request, context={}):
             'success': True,
             'username': user.username,
         }
-        from explore.views import explore
-        return explore(request)
+        return context
     else:
         context = {
             "success": False,
@@ -63,8 +62,7 @@ def login_logic(request, context={}):
 
 def login_async(request):
     login_user = login_logic(request) # run default logic
-    json = {
+    context = {
         'success': login_user['success'],
-        'username': login_user['username'],
     }
-    return JsonResponse(json)
+    return JsonResponse(context)
