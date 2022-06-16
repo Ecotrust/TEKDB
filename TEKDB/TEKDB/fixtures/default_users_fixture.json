@@ -1,47 +1,1890 @@
 [
 {
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 1,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 1,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 1,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 1,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 2,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 2,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 2,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 2,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 3,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 3,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 3,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 3,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 4,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 4,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 4,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 4,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 5,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 5,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 5,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 5,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add configuration",
+    "content_type": 6,
+    "codename": "add_configuration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change configuration",
+    "content_type": 6,
+    "codename": "change_configuration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete configuration",
+    "content_type": 6,
+    "codename": "delete_configuration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view configuration",
+    "content_type": 6,
+    "codename": "view_configuration"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add page content",
+    "content_type": 7,
+    "codename": "add_pagecontent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change page content",
+    "content_type": 7,
+    "codename": "change_pagecontent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete page content",
+    "content_type": 7,
+    "codename": "delete_pagecontent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view page content",
+    "content_type": 7,
+    "codename": "view_pagecontent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can add Bibliographic Source",
+    "content_type": 8,
+    "codename": "add_citations"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can change Bibliographic Source",
+    "content_type": 8,
+    "codename": "change_citations"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can delete Bibliographic Source",
+    "content_type": 8,
+    "codename": "delete_citations"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can view Bibliographic Source",
+    "content_type": 8,
+    "codename": "view_citations"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can add Locality",
+    "content_type": 9,
+    "codename": "add_locality"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can change Locality",
+    "content_type": 9,
+    "codename": "change_locality"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can delete Locality",
+    "content_type": 9,
+    "codename": "delete_locality"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can view Locality",
+    "content_type": 9,
+    "codename": "view_locality"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add Medium",
+    "content_type": 10,
+    "codename": "add_media"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change Medium",
+    "content_type": 10,
+    "codename": "change_media"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete Medium",
+    "content_type": 10,
+    "codename": "delete_media"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can view Medium",
+    "content_type": 10,
+    "codename": "view_media"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can add Place",
+    "content_type": 11,
+    "codename": "add_places"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can change Place",
+    "content_type": 11,
+    "codename": "change_places"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can delete Place",
+    "content_type": 11,
+    "codename": "delete_places"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can view Place",
+    "content_type": 11,
+    "codename": "view_places"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add Resource",
+    "content_type": 12,
+    "codename": "add_resources"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change Resource",
+    "content_type": 12,
+    "codename": "change_resources"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete Resource",
+    "content_type": 12,
+    "codename": "delete_resources"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view Resource",
+    "content_type": 12,
+    "codename": "view_resources"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add Activity",
+    "content_type": 13,
+    "codename": "add_resourcesactivityevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can change Activity",
+    "content_type": 13,
+    "codename": "change_resourcesactivityevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can delete Activity",
+    "content_type": 13,
+    "codename": "delete_resourcesactivityevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can view Activity",
+    "content_type": 13,
+    "codename": "view_resourcesactivityevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add current version",
+    "content_type": 14,
+    "codename": "add_currentversion"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change current version",
+    "content_type": 14,
+    "codename": "change_currentversion"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete current version",
+    "content_type": 14,
+    "codename": "delete_currentversion"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can view current version",
+    "content_type": 14,
+    "codename": "view_currentversion"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can add activity",
+    "content_type": 15,
+    "codename": "add_lookupactivity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can change activity",
+    "content_type": 15,
+    "codename": "change_lookupactivity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can delete activity",
+    "content_type": 15,
+    "codename": "delete_lookupactivity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can view activity",
+    "content_type": 15,
+    "codename": "view_lookupactivity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Can add author type",
+    "content_type": 16,
+    "codename": "add_lookupauthortype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Can change author type",
+    "content_type": 16,
+    "codename": "change_lookupauthortype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Can delete author type",
+    "content_type": 16,
+    "codename": "delete_lookupauthortype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Can view author type",
+    "content_type": 16,
+    "codename": "view_lookupauthortype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Can add customary use",
+    "content_type": 17,
+    "codename": "add_lookupcustomaryuse"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Can change customary use",
+    "content_type": 17,
+    "codename": "change_lookupcustomaryuse"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Can delete customary use",
+    "content_type": 17,
+    "codename": "delete_lookupcustomaryuse"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Can view customary use",
+    "content_type": 17,
+    "codename": "view_lookupcustomaryuse"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can add habitat",
+    "content_type": 18,
+    "codename": "add_lookuphabitat"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can change habitat",
+    "content_type": 18,
+    "codename": "change_lookuphabitat"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can delete habitat",
+    "content_type": 18,
+    "codename": "delete_lookuphabitat"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can view habitat",
+    "content_type": 18,
+    "codename": "view_lookuphabitat"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can add locality type",
+    "content_type": 19,
+    "codename": "add_lookuplocalitytype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can change locality type",
+    "content_type": 19,
+    "codename": "change_lookuplocalitytype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can delete locality type",
+    "content_type": 19,
+    "codename": "delete_lookuplocalitytype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can view locality type",
+    "content_type": 19,
+    "codename": "view_lookuplocalitytype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add media type",
+    "content_type": 20,
+    "codename": "add_lookupmediatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change media type",
+    "content_type": 20,
+    "codename": "change_lookupmediatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete media type",
+    "content_type": 20,
+    "codename": "delete_lookupmediatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can view media type",
+    "content_type": 20,
+    "codename": "view_lookupmediatype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 81,
+  "fields": {
+    "name": "Can add participant",
+    "content_type": 21,
+    "codename": "add_lookupparticipants"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 82,
+  "fields": {
+    "name": "Can change participant",
+    "content_type": 21,
+    "codename": "change_lookupparticipants"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 83,
+  "fields": {
+    "name": "Can delete participant",
+    "content_type": 21,
+    "codename": "delete_lookupparticipants"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 84,
+  "fields": {
+    "name": "Can view participant",
+    "content_type": 21,
+    "codename": "view_lookupparticipants"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 85,
+  "fields": {
+    "name": "Can add part used",
+    "content_type": 22,
+    "codename": "add_lookuppartused"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 86,
+  "fields": {
+    "name": "Can change part used",
+    "content_type": 22,
+    "codename": "change_lookuppartused"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 87,
+  "fields": {
+    "name": "Can delete part used",
+    "content_type": 22,
+    "codename": "delete_lookuppartused"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Can view part used",
+    "content_type": 22,
+    "codename": "view_lookuppartused"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Can add planning unit",
+    "content_type": 23,
+    "codename": "add_lookupplanningunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Can change planning unit",
+    "content_type": 23,
+    "codename": "change_lookupplanningunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 91,
+  "fields": {
+    "name": "Can delete planning unit",
+    "content_type": 23,
+    "codename": "delete_lookupplanningunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 92,
+  "fields": {
+    "name": "Can view planning unit",
+    "content_type": 23,
+    "codename": "view_lookupplanningunit"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 93,
+  "fields": {
+    "name": "Can add reference type",
+    "content_type": 24,
+    "codename": "add_lookupreferencetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 94,
+  "fields": {
+    "name": "Can change reference type",
+    "content_type": 24,
+    "codename": "change_lookupreferencetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 95,
+  "fields": {
+    "name": "Can delete reference type",
+    "content_type": 24,
+    "codename": "delete_lookupreferencetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 96,
+  "fields": {
+    "name": "Can view reference type",
+    "content_type": 24,
+    "codename": "view_lookupreferencetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 97,
+  "fields": {
+    "name": "Can add resource group",
+    "content_type": 25,
+    "codename": "add_lookupresourcegroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 98,
+  "fields": {
+    "name": "Can change resource group",
+    "content_type": 25,
+    "codename": "change_lookupresourcegroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 99,
+  "fields": {
+    "name": "Can delete resource group",
+    "content_type": 25,
+    "codename": "delete_lookupresourcegroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 100,
+  "fields": {
+    "name": "Can view resource group",
+    "content_type": 25,
+    "codename": "view_lookupresourcegroup"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 101,
+  "fields": {
+    "name": "Can add season",
+    "content_type": 26,
+    "codename": "add_lookupseason"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 102,
+  "fields": {
+    "name": "Can change season",
+    "content_type": 26,
+    "codename": "change_lookupseason"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 103,
+  "fields": {
+    "name": "Can delete season",
+    "content_type": 26,
+    "codename": "delete_lookupseason"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 104,
+  "fields": {
+    "name": "Can view season",
+    "content_type": 26,
+    "codename": "view_lookupseason"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 105,
+  "fields": {
+    "name": "Can add technique",
+    "content_type": 27,
+    "codename": "add_lookuptechniques"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 106,
+  "fields": {
+    "name": "Can change technique",
+    "content_type": 27,
+    "codename": "change_lookuptechniques"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 107,
+  "fields": {
+    "name": "Can delete technique",
+    "content_type": 27,
+    "codename": "delete_lookuptechniques"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 108,
+  "fields": {
+    "name": "Can view technique",
+    "content_type": 27,
+    "codename": "view_lookuptechniques"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 109,
+  "fields": {
+    "name": "Can add timing",
+    "content_type": 28,
+    "codename": "add_lookuptiming"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 110,
+  "fields": {
+    "name": "Can change timing",
+    "content_type": 28,
+    "codename": "change_lookuptiming"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 111,
+  "fields": {
+    "name": "Can delete timing",
+    "content_type": 28,
+    "codename": "delete_lookuptiming"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 112,
+  "fields": {
+    "name": "Can view timing",
+    "content_type": 28,
+    "codename": "view_lookuptiming"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 113,
+  "fields": {
+    "name": "Can add tribe",
+    "content_type": 29,
+    "codename": "add_lookuptribe"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 114,
+  "fields": {
+    "name": "Can change tribe",
+    "content_type": 29,
+    "codename": "change_lookuptribe"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 115,
+  "fields": {
+    "name": "Can delete tribe",
+    "content_type": 29,
+    "codename": "delete_lookuptribe"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 116,
+  "fields": {
+    "name": "Can view tribe",
+    "content_type": 29,
+    "codename": "view_lookuptribe"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 117,
+  "fields": {
+    "name": "Can add user info",
+    "content_type": 30,
+    "codename": "add_lookupuserinfo"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 118,
+  "fields": {
+    "name": "Can change user info",
+    "content_type": 30,
+    "codename": "change_lookupuserinfo"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 119,
+  "fields": {
+    "name": "Can delete user info",
+    "content_type": 30,
+    "codename": "delete_lookupuserinfo"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 120,
+  "fields": {
+    "name": "Can view user info",
+    "content_type": 30,
+    "codename": "view_lookupuserinfo"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 121,
+  "fields": {
+    "name": "Can add person",
+    "content_type": 31,
+    "codename": "add_people"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 122,
+  "fields": {
+    "name": "Can change person",
+    "content_type": 31,
+    "codename": "change_people"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 123,
+  "fields": {
+    "name": "Can delete person",
+    "content_type": 31,
+    "codename": "delete_people"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 124,
+  "fields": {
+    "name": "Can view person",
+    "content_type": 31,
+    "codename": "view_people"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 125,
+  "fields": {
+    "name": "Can add user access",
+    "content_type": 32,
+    "codename": "add_useraccess"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 126,
+  "fields": {
+    "name": "Can change user access",
+    "content_type": 32,
+    "codename": "change_useraccess"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 127,
+  "fields": {
+    "name": "Can delete user access",
+    "content_type": 32,
+    "codename": "delete_useraccess"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 128,
+  "fields": {
+    "name": "Can view user access",
+    "content_type": 32,
+    "codename": "view_useraccess"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 129,
+  "fields": {
+    "name": "Can add User",
+    "content_type": 33,
+    "codename": "add_users"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 130,
+  "fields": {
+    "name": "Can change User",
+    "content_type": 33,
+    "codename": "change_users"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 131,
+  "fields": {
+    "name": "Can delete User",
+    "content_type": 33,
+    "codename": "delete_users"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 132,
+  "fields": {
+    "name": "Can view User",
+    "content_type": 33,
+    "codename": "view_users"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 133,
+  "fields": {
+    "name": "Can add locality gis selections",
+    "content_type": 34,
+    "codename": "add_localitygisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 134,
+  "fields": {
+    "name": "Can change locality gis selections",
+    "content_type": 34,
+    "codename": "change_localitygisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 135,
+  "fields": {
+    "name": "Can delete locality gis selections",
+    "content_type": 34,
+    "codename": "delete_localitygisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 136,
+  "fields": {
+    "name": "Can view locality gis selections",
+    "content_type": 34,
+    "codename": "view_localitygisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 137,
+  "fields": {
+    "name": "Can add locality place resource event",
+    "content_type": 35,
+    "codename": "add_localityplaceresourceevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 138,
+  "fields": {
+    "name": "Can change locality place resource event",
+    "content_type": 35,
+    "codename": "change_localityplaceresourceevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 139,
+  "fields": {
+    "name": "Can delete locality place resource event",
+    "content_type": 35,
+    "codename": "delete_localityplaceresourceevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 140,
+  "fields": {
+    "name": "Can view locality place resource event",
+    "content_type": 35,
+    "codename": "view_localityplaceresourceevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 141,
+  "fields": {
+    "name": "Can add Medium - Source",
+    "content_type": 36,
+    "codename": "add_mediacitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 142,
+  "fields": {
+    "name": "Can change Medium - Source",
+    "content_type": 36,
+    "codename": "change_mediacitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 143,
+  "fields": {
+    "name": "Can delete Medium - Source",
+    "content_type": 36,
+    "codename": "delete_mediacitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 144,
+  "fields": {
+    "name": "Can view Medium - Source",
+    "content_type": 36,
+    "codename": "view_mediacitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 145,
+  "fields": {
+    "name": "Can add Place - Alternate Name",
+    "content_type": 37,
+    "codename": "add_placealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 146,
+  "fields": {
+    "name": "Can change Place - Alternate Name",
+    "content_type": 37,
+    "codename": "change_placealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 147,
+  "fields": {
+    "name": "Can delete Place - Alternate Name",
+    "content_type": 37,
+    "codename": "delete_placealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 148,
+  "fields": {
+    "name": "Can view Place - Alternate Name",
+    "content_type": 37,
+    "codename": "view_placealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 149,
+  "fields": {
+    "name": "Can add place gis selections",
+    "content_type": 38,
+    "codename": "add_placegisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 150,
+  "fields": {
+    "name": "Can change place gis selections",
+    "content_type": 38,
+    "codename": "change_placegisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 151,
+  "fields": {
+    "name": "Can delete place gis selections",
+    "content_type": 38,
+    "codename": "delete_placegisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 152,
+  "fields": {
+    "name": "Can view place gis selections",
+    "content_type": 38,
+    "codename": "view_placegisselections"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 153,
+  "fields": {
+    "name": "Can add Place - Source",
+    "content_type": 39,
+    "codename": "add_placescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 154,
+  "fields": {
+    "name": "Can change Place - Source",
+    "content_type": 39,
+    "codename": "change_placescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 155,
+  "fields": {
+    "name": "Can delete Place - Source",
+    "content_type": 39,
+    "codename": "delete_placescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 156,
+  "fields": {
+    "name": "Can view Place - Source",
+    "content_type": 39,
+    "codename": "view_placescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 157,
+  "fields": {
+    "name": "Can add Place - Medium",
+    "content_type": 40,
+    "codename": "add_placesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 158,
+  "fields": {
+    "name": "Can change Place - Medium",
+    "content_type": 40,
+    "codename": "change_placesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 159,
+  "fields": {
+    "name": "Can delete Place - Medium",
+    "content_type": 40,
+    "codename": "delete_placesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 160,
+  "fields": {
+    "name": "Can view Place - Medium",
+    "content_type": 40,
+    "codename": "view_placesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 161,
+  "fields": {
+    "name": "Can add places resource citation events",
+    "content_type": 41,
+    "codename": "add_placesresourcecitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 162,
+  "fields": {
+    "name": "Can change places resource citation events",
+    "content_type": 41,
+    "codename": "change_placesresourcecitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 163,
+  "fields": {
+    "name": "Can delete places resource citation events",
+    "content_type": 41,
+    "codename": "delete_placesresourcecitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 164,
+  "fields": {
+    "name": "Can view places resource citation events",
+    "content_type": 41,
+    "codename": "view_placesresourcecitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 165,
+  "fields": {
+    "name": "Can add Place - Resource",
+    "content_type": 42,
+    "codename": "add_placesresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 166,
+  "fields": {
+    "name": "Can change Place - Resource",
+    "content_type": 42,
+    "codename": "change_placesresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 167,
+  "fields": {
+    "name": "Can delete Place - Resource",
+    "content_type": 42,
+    "codename": "delete_placesresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 168,
+  "fields": {
+    "name": "Can view Place - Resource",
+    "content_type": 42,
+    "codename": "view_placesresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 169,
+  "fields": {
+    "name": "Can add places resource media events",
+    "content_type": 43,
+    "codename": "add_placesresourcemediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 170,
+  "fields": {
+    "name": "Can change places resource media events",
+    "content_type": 43,
+    "codename": "change_placesresourcemediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 171,
+  "fields": {
+    "name": "Can delete places resource media events",
+    "content_type": 43,
+    "codename": "delete_placesresourcemediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 172,
+  "fields": {
+    "name": "Can view places resource media events",
+    "content_type": 43,
+    "codename": "view_placesresourcemediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 173,
+  "fields": {
+    "name": "Can add resource activity citation events",
+    "content_type": 44,
+    "codename": "add_resourceactivitycitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 174,
+  "fields": {
+    "name": "Can change resource activity citation events",
+    "content_type": 44,
+    "codename": "change_resourceactivitycitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 175,
+  "fields": {
+    "name": "Can delete resource activity citation events",
+    "content_type": 44,
+    "codename": "delete_resourceactivitycitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 176,
+  "fields": {
+    "name": "Can view resource activity citation events",
+    "content_type": 44,
+    "codename": "view_resourceactivitycitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 177,
+  "fields": {
+    "name": "Can add resource activity media events",
+    "content_type": 45,
+    "codename": "add_resourceactivitymediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 178,
+  "fields": {
+    "name": "Can change resource activity media events",
+    "content_type": 45,
+    "codename": "change_resourceactivitymediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 179,
+  "fields": {
+    "name": "Can delete resource activity media events",
+    "content_type": 45,
+    "codename": "delete_resourceactivitymediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 180,
+  "fields": {
+    "name": "Can view resource activity media events",
+    "content_type": 45,
+    "codename": "view_resourceactivitymediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 181,
+  "fields": {
+    "name": "Can add Resource Alternative Name",
+    "content_type": 46,
+    "codename": "add_resourcealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 182,
+  "fields": {
+    "name": "Can change Resource Alternative Name",
+    "content_type": 46,
+    "codename": "change_resourcealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 183,
+  "fields": {
+    "name": "Can delete Resource Alternative Name",
+    "content_type": 46,
+    "codename": "delete_resourcealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 184,
+  "fields": {
+    "name": "Can view Resource Alternative Name",
+    "content_type": 46,
+    "codename": "view_resourcealtindigenousname"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 185,
+  "fields": {
+    "name": "Can add resource resource events",
+    "content_type": 47,
+    "codename": "add_resourceresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 186,
+  "fields": {
+    "name": "Can change resource resource events",
+    "content_type": 47,
+    "codename": "change_resourceresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 187,
+  "fields": {
+    "name": "Can delete resource resource events",
+    "content_type": 47,
+    "codename": "delete_resourceresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 188,
+  "fields": {
+    "name": "Can view resource resource events",
+    "content_type": 47,
+    "codename": "view_resourceresourceevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 189,
+  "fields": {
+    "name": "Can add Resource - Source",
+    "content_type": 48,
+    "codename": "add_resourcescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 190,
+  "fields": {
+    "name": "Can change Resource - Source",
+    "content_type": 48,
+    "codename": "change_resourcescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 191,
+  "fields": {
+    "name": "Can delete Resource - Source",
+    "content_type": 48,
+    "codename": "delete_resourcescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 192,
+  "fields": {
+    "name": "Can view Resource - Source",
+    "content_type": 48,
+    "codename": "view_resourcescitationevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 193,
+  "fields": {
+    "name": "Can add Resource - Medium",
+    "content_type": 49,
+    "codename": "add_resourcesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 194,
+  "fields": {
+    "name": "Can change Resource - Medium",
+    "content_type": 49,
+    "codename": "change_resourcesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 195,
+  "fields": {
+    "name": "Can delete Resource - Medium",
+    "content_type": 49,
+    "codename": "delete_resourcesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 196,
+  "fields": {
+    "name": "Can view Resource - Medium",
+    "content_type": 49,
+    "codename": "view_resourcesmediaevents"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 197,
+  "fields": {
+    "name": "Can add revision",
+    "content_type": 50,
+    "codename": "add_revision"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 198,
+  "fields": {
+    "name": "Can change revision",
+    "content_type": 50,
+    "codename": "change_revision"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 199,
+  "fields": {
+    "name": "Can delete revision",
+    "content_type": 50,
+    "codename": "delete_revision"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 200,
+  "fields": {
+    "name": "Can view revision",
+    "content_type": 50,
+    "codename": "view_revision"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 201,
+  "fields": {
+    "name": "Can add version",
+    "content_type": 51,
+    "codename": "add_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 202,
+  "fields": {
+    "name": "Can change version",
+    "content_type": 51,
+    "codename": "change_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 203,
+  "fields": {
+    "name": "Can delete version",
+    "content_type": 51,
+    "codename": "delete_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 204,
+  "fields": {
+    "name": "Can view version",
+    "content_type": 51,
+    "codename": "view_version"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 205,
+  "fields": {
+    "name": "Can add site",
+    "content_type": 52,
+    "codename": "add_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 206,
+  "fields": {
+    "name": "Can change site",
+    "content_type": 52,
+    "codename": "change_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 207,
+  "fields": {
+    "name": "Can delete site",
+    "content_type": 52,
+    "codename": "delete_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 208,
+  "fields": {
+    "name": "Can view site",
+    "content_type": 52,
+    "codename": "view_site"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
     "name": "Administrator",
     "permissions": [
-      91,
-      92,
-      93,
-      94,
-      95,
-      96,
-      1,
-      2,
-      3,
-      7,
-      8,
-      9,
-      4,
-      5,
-      6,
-      10,
-      11,
-      12,
-      16,
-      17,
-      18,
-      37,
-      38,
-      39,
-      40,
-      41,
-      42,
-      43,
-      44,
-      45,
-      46,
-      47,
-      48,
-      49,
-      50,
-      51,
-      52,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
       53,
       54,
       55,
@@ -80,6 +1923,12 @@
       88,
       89,
       90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
       97,
       98,
       99,
@@ -108,14 +1957,6 @@
       122,
       123,
       124,
-      125,
-      126,
-      127,
-      128,
-      129,
-      130,
-      131,
-      132,
       133,
       134,
       135,
@@ -128,19 +1969,58 @@
       142,
       143,
       144,
-      13,
-      14,
-      15,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
       29,
       30,
       31,
@@ -148,7 +2028,63 @@
       33,
       34,
       35,
-      36
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      5,
+      6,
+      7,
+      8,
+      13,
+      14,
+      15,
+      16,
+      9,
+      10,
+      11,
+      12,
+      21,
+      22,
+      23,
+      24,
+      1,
+      2,
+      3,
+      4,
+      25,
+      26,
+      27,
+      28,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      17,
+      18,
+      19,
+      20,
+      205,
+      206,
+      207,
+      208
     ]
   }
 },
@@ -158,41 +2094,7 @@
   "fields": {
     "name": "Editor",
     "permissions": [
-      97,
-      98,
-      99,
-      100,
-      101,
-      102,
-      103,
-      104,
-      105,
-      106,
-      107,
-      108,
-      109,
-      110,
-      111,
-      112,
-      113,
-      114,
-      115,
-      116,
-      117,
-      118,
-      119,
-      120,
-      121,
-      122,
-      123,
-      124,
-      125,
-      126,
-      127,
       128,
-      129,
-      130,
-      131,
       132,
       133,
       134,
@@ -206,16 +2108,58 @@
       142,
       143,
       144,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
       29,
       30,
       31,
@@ -223,7 +2167,36 @@
       33,
       34,
       35,
-      36
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      8,
+      16,
+      12,
+      24,
+      28,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204
     ]
   }
 },
@@ -263,9 +2236,9 @@
   "model": "Accounts.users",
   "pk": 1,
   "fields": {
-    "last_login": "2018-05-10T20:35:52.295Z",
+    "last_login": "2022-06-15T16:53:07.631Z",
     "username": "admin",
-    "password": "pbkdf2_sha256$36000$VvL4d3WNXkAy$ttRCDQrPK2cFd2gcU4MssvpzvZZ+ycjrccRFmV9Jom0=",
+    "password": "pbkdf2_sha256$260000$qAHaEVjAe0wkVIKHzm5lj2$AcSF59xrG3Yc7/XENON3mG/0LJ8yh6I94laxTBuWuaE=",
     "first_name": "Administrator",
     "last_name": "Admin",
     "affiliation": "Tribe",
