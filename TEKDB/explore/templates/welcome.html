@@ -28,7 +28,14 @@
         <div class="proj-image-select-wrapper">
           <img src="{{ proj_image_select }}" alt="project image">
         </div>
-        {% if home_image_attribution %}<div id="proj-image-attribution"><p>{{ home_image_attribution|safe }}</p></div>{% endif %}
+        {% if home_image_attribution %}
+          <div id="proj-image-attribution">
+            <a class="attribution-toggle" data-bs-toggle="collapse" href="#collapseAttribution" role="button" aria-expanded="false" aria-controls="collapseAttribution">i</a>
+            <div class="collapse" id="collapseAttribution">
+              <p>{{ home_image_attribution|safe }}</p>
+            </div>
+          </div>
+        {% endif %}
       </div>
   </div>
 {% endblock %}
