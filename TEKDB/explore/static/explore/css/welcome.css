@@ -29,10 +29,13 @@ div#homepage-left-column {
   font-family: var(--font-sans-serif-bold);
 }
 
+div.welcome-login-button-wrapper {
+  margin: 0 2rem;
+}
+
 div.welcome-login-button-wrapper a.btn.welcome-login-btn {
   border-color: var(--home_font_color);
   color: var(--home_font_color);
-  margin-left: 2rem;
 }
 
 div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::before,
