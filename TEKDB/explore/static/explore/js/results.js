@@ -246,6 +246,11 @@ function show_map_results() {
 }
 
 var set_triggers = function() {
+  const filterForm = document.querySelector('#filter-form');
+  filterForm.onsubmit = (e) => {
+    filterForm.style.pointerEvents = 'none';
+  };
+
   $("#filter-checkboxes").find('input').change(function(){
     $('#filter-form').submit();
   });
