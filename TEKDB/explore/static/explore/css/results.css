@@ -270,6 +270,13 @@ table#results_table>thead {
   background-color: #f7f7f7;
 }
 
+.link-result td span {
+  color: var(--secondary_a);
+  font-size: .75em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
 .query-input-group::after {
   background: var(--secondary_a);
   content: '';
