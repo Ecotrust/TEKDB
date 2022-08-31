@@ -57,8 +57,9 @@
           <hr />
           <div class='row'>
             <div class='well odd-well relationship-div'>
-              <h3>Related Materials</h3>
+              <h4>Related Materials</h4>
               {% for relationship in record.relationships %}
+                <h3>{{ relationship.key }}</h3>
                 {% if relationship.value|length > 0 %}
                   {% for link in relationship.value %}
                     {% if forloop.counter0 == 0 %}
@@ -73,7 +74,6 @@
                               {% if link.data.pages %}&nbsp(Pages: {{ link.data.pages }}){% endif %}
                             </div>
                           {% endif %}
-
                       {% else %}
                         <div class="col-auto">
                           <img src="{{ link.image }}" class="record-icon" />
