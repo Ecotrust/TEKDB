@@ -1903,6 +1903,11 @@ class Media(Queryable, Record, ModeratedModel):
             'link': '/explore/%s/%d' % (type, self.pk)
         }
 
+    def get_record_dict(self, user, srid=3857):
+        record_dict = super(Media, self).get_record_dict(user, srid)
+        record_dict['name'] = self.medianame
+        return record_dict
+
     __original_file = None
 
     def __init__(self, *args, **kwargs):
