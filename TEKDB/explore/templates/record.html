@@ -57,10 +57,12 @@
           <hr />
           <div class='row'>
             <div class='well odd-well relationship-div'>
-              <h4>Related Materials</h4>
+              {% if record.relationships|length > 0 %}
+                <h4>Related Materials</h4>
+              {% endif %}
               {% for relationship in record.relationships %}
-                <h3>{{ relationship.key }}</h3>
                 {% if relationship.value|length > 0 %}
+                  <h3>{{ relationship.key }}</h3>
                   {% for link in relationship.value %}
                     {% if forloop.counter0 == 0 %}
                     <div class='relationship-row'>

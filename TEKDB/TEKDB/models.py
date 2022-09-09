@@ -402,13 +402,21 @@ class Places(Queryable, Record, ModeratedModel):
         ]
 
     def relationships(self):
-        return [
-            {'key':'Alternate Names', 'value': [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]},
-            {'key':'Resources', 'value': [res.get_query_json() for res in self.placesresourceevents_set.all()]},
-            {'key':'Media', 'value': [media.get_relationship_json(type(self)) for media in self.placesmediaevents_set.all()]},
-            {'key':'Bibliographic Sources', 'value': [citation.get_relationship_json(type(self)) for citation in self.placescitationevents_set.all()]},
-            # {'key':'Localities', 'value': [media.get_query_json() for media in self.placesmediaevents_set.all()]},
-        ]
+        relationship_list = []
+        alt_names = [ainame.get_query_json() for ainame in  self.placealtindigenousname_set.all()]
+        if len(alt_names) > 0:
+            relationship_list.append({'key':'Alternate Names', 'value':alt_names})
+        resources = [res.get_query_json() for res in self.placesresourceevents_set.all()]
+        if len(resources) > 0:
+            relationship_list.append({'key':'Resources', 'value':resources})
+        media = [media.get_relationship_json(type(self)) for media in self.placesmediaevents_set.all()]
+        if len(media) > 0:
+            relationship_list.append({'key':'Media', 'value':media})
+        sources = [citation.get_relationship_json(type(self)) for citation in self.placescitationevents_set.all()]
+        if len(sources) > 0:
+            relationship_list.append({'key':'Bibliographic Sources', 'value':sources})
+
+        return relationship_list
 
     def map(self, srid=3857):
         try:
@@ -578,7 +586,9 @@ class Resources(Queryable, Record, ModeratedModel):
 
     def relationships(self):
         relationship_list = []
-        relationship_list.append({'key':'Alternate Names', 'value': [altname.get_query_json() for altname in  self.resourcealtindigenousname_set.all()]})
+        alternate_names = [altname.get_query_json() for altname in  self.resourcealtindigenousname_set.all()]
+        if len(alternate_names) > 0:
+            relationship_list.append({'key':'Alternate Names', 'value': alternate_names})
         placeresources = self.placesresourceevents_set.all()
         placeresourceidlist = [x.pk for x in placeresources]
         activities = [x.get_query_json() for x in ResourcesActivityEvents.objects.filter(placeresourceid__in=placeresourceidlist)]
@@ -1586,7 +1596,9 @@ class Locality(Queryable):
 
     def relationships(self):
         relationship_list = []
-        relationship_list.append({'key': 'Place', 'value':[self.placeid.get_query_json()]})
+        places = [self.placeid.get_query_json()]
+        if len(places) > 0:
+            relationship_list.append({'key': 'Place', 'value': places})
         placeresources = [x.get_query_json() for x in self.localityplaceresourceevents_set.all()]
         if len(placeresources) > 0:
             relationship_list.append({'key': 'Place-resources', 'value': placeresources})
