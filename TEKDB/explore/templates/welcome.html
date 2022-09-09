@@ -30,7 +30,9 @@
         </div>
         {% if home_image_attribution %}
           <div id="proj-image-attribution">
-            <a class="attribution-toggle" data-bs-toggle="collapse" href="#collapseAttribution" role="button" aria-expanded="false" aria-controls="collapseAttribution">i</a>
+            <a class="attribution-toggle" data-bs-toggle="collapse" href="#collapseAttribution" role="button" aria-expanded="false" aria-controls="collapseAttribution">
+              <i class="bi bi-info-circle"></i>
+            </a>
             <div class="collapse" id="collapseAttribution">
               <p>{{ home_image_attribution|safe }}</p>
             </div>
