@@ -157,6 +157,20 @@ def get_by_model_id(request, model_type, id):
     if state == "?":
         state = ''
 
+    model_name = model_type
+    if model_type.lower() == 'places':
+        model_name = 'Place'
+    if model_type.lower() == 'resources':
+        model_name = 'Resource'
+    if model_type.lower() == 'resourcesactivityevents':
+        model_name = 'Activity'
+    if model_type.lower() == 'media':
+        model_name = 'Media'
+    if model_type.lower() == 'placesresourceevents':
+        model_name = 'Place-Resource Event'
+    if model_type.lower() == 'citations':
+        model_name = 'Bibliographic Source'
+
     context = {
         'page':'Record',
         'pageTitle':'Record',
@@ -164,6 +178,7 @@ def get_by_model_id(request, model_type, id):
         'record': record_dict,
         'user': request.user,
         'model': model_type,
+        'model_name': model_name,
         'id': id,
         'back_link': back_link,
         'state': state,

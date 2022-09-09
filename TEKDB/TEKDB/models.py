@@ -408,7 +408,7 @@ class Places(Queryable, Record, ModeratedModel):
             relationship_list.append({'key':'Alternate Names', 'value':alt_names})
         resources = [res.get_query_json() for res in self.placesresourceevents_set.all()]
         if len(resources) > 0:
-            relationship_list.append({'key':'Resources', 'value':resources})
+            relationship_list.append({'key':'Place-Resource Events', 'value':resources})
         media = [media.get_relationship_json(type(self)) for media in self.placesmediaevents_set.all()]
         if len(media) > 0:
             relationship_list.append({'key':'Media', 'value':media})
@@ -602,7 +602,7 @@ class Resources(Queryable, Record, ModeratedModel):
             relationship_list.append({'key':'Bibliographic Sources', 'value': citations})
         places = [x.get_query_json() for x in placeresources]
         if len(places) > 0:
-            relationship_list.append({'key':'Places', 'value': places})
+            relationship_list.append({'key':'Place-Resource Events', 'value': places})
         resources = [x.get_relationship_json(type(self)) for x in ResourceResourceEvents.objects.filter(altresourceid=self)]
         if len(resources) > 0:
             relationship_list.append({'key':'Resources', 'value': resources})
