@@ -809,17 +809,24 @@ class PlacesResourceEvents(Queryable):
         else:
             months = 'None'
 
-        return [
-            {'key':'place', 'value': str(self.placeid)},
-            {'key':'resource', 'value': str(self.resourceid)},
-            {'key':'excerpt', 'value': self.relationshipdescription},
-            {'key':'part used', 'value': str(self.partused)},
-            {'key':'used for barter', 'value': barter},
-            {'key':'season', 'value': str(self.season)},
-            {'key':'timing', 'value': str(self.timing)},
-            {'key':'months', 'value': months},
-            {'key':'year', 'value': str(self.timing)},
-        ]
+        data_list = []
+        data_list.append({'key':'place', 'value': str(self.placeid)})
+        data_list.append({'key':'resource', 'value': str(self.resourceid)})
+        if not self.relationshipdescription == None and len(self.relationshipdescription) > 0:
+            data_list.append({'key':'excerpt', 'value': self.relationshipdescription})
+        if self.partused:
+            data_list.append({'key':'part used', 'value': str(self.partused)})
+        data_list.append({'key':'used for barter', 'value': barter})
+        if not self.season == None:
+            data_list.append({'key':'season', 'value': str(self.season)})
+        if not self.timing == None:
+            data_list.append({'key':'timing', 'value': str(self.timing)})
+        if not months == 'None':
+            data_list.append({'key':'months', 'value': months})
+        if not self.year == None:
+            data_list.append({'key':'year', 'value': str(self.year)})
+
+        return data_list
 
     def link(self):
         return '/explore/placesresourceevents/%s' % self.pk
