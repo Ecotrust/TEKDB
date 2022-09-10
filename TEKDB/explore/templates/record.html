@@ -38,7 +38,12 @@
           </div>
           <div class="row">
             <div class="col">
-              <h2>{{record.name | safe }} <br/><span>{{record.subtitle | safe }}</span></h2>
+              <h2>{{record.name | safe }} 
+                {% if record.subtitle %}
+                  <br/>
+                  <span>{{record.subtitle | safe }}</span>
+                {% endif %}
+              </h2>
             </div>
           </div>
           <div class='row'>
@@ -47,7 +52,11 @@
                 {% for data in record.data %}
                   <div class="record-data">
                     <strong>{{ data.key }}:</strong> 
-                    <span>{{ data.value | safe }}</span>
+                    {% if data.link %}
+                      <span><a href="{{ data.link }}{{ state }}" class="related-link">{{ data.value }}</a></span>
+                    {% else %}
+                      <span>{{ data.value | safe }}</span>
+                    {% endif %}
                   </div>
                 {% endfor %}
               </div>

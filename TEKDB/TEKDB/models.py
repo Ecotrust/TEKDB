@@ -790,7 +790,7 @@ class PlacesResourceEvents(Queryable):
         return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
-        return self.relationshipdescription
+        return None
 
     def data(self):
         if self.barterresource:
@@ -810,8 +810,8 @@ class PlacesResourceEvents(Queryable):
             months = 'None'
 
         data_list = []
-        data_list.append({'key':'place', 'value': str(self.placeid)})
-        data_list.append({'key':'resource', 'value': str(self.resourceid)})
+        data_list.append({'key':'place', 'value': str(self.placeid), 'link': "/explore/places/{id}/".format(id=self.placeid.pk)})
+        data_list.append({'key':'resource', 'value': str(self.resourceid), 'link': "/explore/resources/{id}/".format(id=self.resourceid.pk)})
         if not self.relationshipdescription == None and len(self.relationshipdescription) > 0:
             data_list.append({'key':'excerpt', 'value': self.relationshipdescription})
         if self.partused:
@@ -935,7 +935,12 @@ class ResourcesActivityEvents(Queryable, Record, ModeratedModel):
         return unicode("%s: %s" % (str(self.placeresourceid), self.activityshortdescription))
 
     def __str__(self):
-        return "%s: %s" % (str(self.placeresourceid), self.activityshortdescription) or ''
+        if not self.activityshortdescription == None:
+            activity_name = self.activityshortdescription
+        else:
+            activity_name = 'Unspecified Activity'
+        return "{activity} at {place} involving {resource}".format(activity=activity_name, place=self.placeresourceid.placeid, resource=self.placeresourceid.resourceid)
+        # return "%s: %s" % (str(self.placeresourceid), self.activityshortdescription) or ''
 
     @property
     def excerpt_text(self):
@@ -1012,7 +1017,7 @@ class ResourcesActivityEvents(Queryable, Record, ModeratedModel):
         return settings.RECORD_ICONS['activity']
 
     def subtitle(self):
-        return self.relationshipdescription
+        return None
 
     def link(self):
         return '/explore/resourcesactivityevents/%d/' % self.pk
@@ -1029,20 +1034,32 @@ class ResourcesActivityEvents(Queryable, Record, ModeratedModel):
         return relationship_list
 
     def data(self):
-        return [
-            {'key':'place', 'value': str(self.placeresourceid.placeid)},
-            {'key':'resource', 'value': str(self.placeresourceid.resourceid)},
-            {'key':'excerpt', 'value': self.relationshipdescription},
-            {'key':'part used', 'value': str(self.partused)},
-            {'key':'activity type', 'value': str(self.activityshortdescription)},
-            {'key':'full description', 'value': self.activitylongdescription},
-            {'key':'participants', 'value': str(self.participants)},
-            {'key':'technique', 'value': str(self.technique)},
-            {'key':'gear', 'value': self.gear},
-            {'key':'customary use', 'value': str(self.customaryuse)},
-            {'key':'timing', 'value': str(self.timing)},
-            {'key':'timing description', 'value': self.timingdescription}
-        ]
+        data_list = []
+
+        data_list.append({'key':'place', 'value': str(self.placeresourceid.placeid), 'link': "/explore/places/{id}/".format(id=self.placeresourceid.placeid.pk)})
+        data_list.append({'key':'resource', 'value': str(self.placeresourceid.resourceid), 'link': "/explore/resources/{id}/".format(id=self.placeresourceid.resourceid.pk)})
+        if not self.relationshipdescription == None and len(self.relationshipdescription) > 0:
+            data_list.append({'key':'excerpt', 'value': self.relationshipdescription})
+        if not self.partused == None:
+            data_list.append({'key':'part used', 'value': str(self.partused)})
+        if not self.activityshortdescription == None:
+            data_list.append({'key':'activity type', 'value': str(self.activityshortdescription)})
+        if not self.activitylongdescription == None and not self.activitylongdescription == '':
+            data_list.append({'key':'full description', 'value': self.activitylongdescription})
+        if not self.participants == None:
+            data_list.append({'key':'participants', 'value': str(self.participants)})
+        if not self.technique == None:
+            data_list.append({'key':'technique', 'value': str(self.technique)})
+        if not self.gear == None:
+            data_list.append({'key':'gear', 'value': self.gear})
+        if not self.customaryuse == None:
+            data_list.append({'key':'customary use', 'value': str(self.customaryuse)})
+        if not self.timing == None:
+            data_list.append({'key':'timing', 'value': str(self.timing)})
+        if not self.timingdescription == None:
+            data_list.append({'key':'timing description', 'value': self.timingdescription})
+
+        return data_list
 
     def get_response_format(self):
         type = 'Resourcesactivityevents'
