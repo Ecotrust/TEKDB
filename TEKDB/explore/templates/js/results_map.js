@@ -139,6 +139,20 @@ const overlay = new ol.Overlay({
 //   return false;
 // };
 
+/*--- MAP ZOOM ---*/
+function buffer_extent(extent, buffer) {
+  let lat_total = extent[2] - extent[0];
+  let lon_total = extent[3] - extent[1];
+  let lat_buffer = lat_total*buffer;
+  let lon_buffer = lon_total*buffer;
+  return [
+    extent[0]-lat_buffer,
+    extent[1]-lon_buffer,
+    extent[2]+lat_buffer,
+    extent[3]+lon_buffer,
+  ];
+}
+
 
 /*--- MAP ---*/
 var map = new ol.Map({
@@ -182,6 +196,7 @@ var map = new ol.Map({
 });
 if (vectorLayer.getSource().getFeatures().length > 0) {
   var geometry_extent = vectorLayer.getSource().getExtent();
+  geometry_extent = buffer_extent(geometry_extent, 0.1);
   map.getView().fit(geometry_extent,map.getSize());
 }
 // var layerSwitcher = new ol.control.LayerSwitcher();

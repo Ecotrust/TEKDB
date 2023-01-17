@@ -193,6 +193,19 @@ function resize_desc_to_fit(self){
   }
 }
 
+function buffer_extent(extent, buffer) {
+  let lat_total = extent[2] - extent[0];
+  let lon_total = extent[3] - extent[1];
+  let lat_buffer = lat_total*buffer;
+  let lon_buffer = lon_total*buffer;
+  return [
+    extent[0]-lat_buffer,
+    extent[1]-lon_buffer,
+    extent[2]+lat_buffer,
+    extent[3]+lon_buffer,
+  ];
+}
+
 function show_map_results() {
   var features = [];
 
@@ -238,6 +251,7 @@ function show_map_results() {
   if (vectorLayer.getSource().getFeatures().length > 0) {
     setTimeout(function(){map.updateSize();}, 150);
     var geometry_extent = vectorLayer.getSource().getExtent();
+    geometry_extent = buffer_extent(geometry_extent, 0.1);
     map.getView().fit(geometry_extent,map.getSize());
   } else {
     $("#map").hide();
