@@ -1214,6 +1214,7 @@ class Citations(Queryable, Record, ModeratedModel):
     publisher = models.CharField(db_column='publisher', max_length=100, blank=True, null=True)
     publishercity = models.CharField(db_column='publishercity', max_length=255, blank=True, null=True, verbose_name='city')
     preparedfor = models.CharField(db_column='preparedfor', max_length=100, blank=True, null=True, verbose_name='prepared_for')
+    rawcitation = RichTextField(db_column='rawcitation', blank=True, null=True, verbose_name='Raw, formatted bibliographic citation', help_text="If you have the text for a bibliographic citation already formatted as you'd like it, please share it here.", config_name="custom") #CKEditor Rich Text Editor Field
     comments = RichTextField(db_column='comments', blank=True, null=True, config_name="custom") #CKEditor Rich Text Editor Field
     journal = models.TextField(db_column='journal', blank=True, null=True, verbose_name='journal')
     journalpages = models.TextField(db_column='journalpages', blank=True, null=True, verbose_name='journal pages')
@@ -1336,6 +1337,7 @@ class Citations(Queryable, Record, ModeratedModel):
                 {'key':'secondary author', 'value': self.authorsecondary},
                 {'key':'publisher', 'value': self.publisher},
                 {'key':'publisher city', 'value': self.publishercity},
+                {'key':'raw citation', 'value': self.rawcitation},
                 {'key':'comments', 'value': self.comments},
             ]
         if str(self.referencetype).lower() == 'edited volume':
@@ -1351,6 +1353,7 @@ class Citations(Queryable, Record, ModeratedModel):
                 {'key':'series volume', 'value': self.seriesvolume},
                 {'key':'series title', 'value': self.seriestitle},
                 {'key':'series editor', 'value': self.serieseditor},
+                {'key':'raw citation', 'value': self.rawcitation},
                 {'key':'comments', 'value': self.comments},
             ]
 
@@ -1362,6 +1365,7 @@ class Citations(Queryable, Record, ModeratedModel):
                 {'key':'interviewer', 'value': str(self.interviewerid)},
                 {'key':'year', 'value': self.year},
                 {'key':'place of interview', 'value': self.placeofinterview},
+                {'key':'raw citation', 'value': self.rawcitation},
                 {'key':'comments', 'value': self.comments},
             ]
 
@@ -1383,6 +1387,7 @@ class Citations(Queryable, Record, ModeratedModel):
             {'key':'journal', 'value': self.journal},
             {'key':'journal pages', 'value': self.journalpages},
             {'key':'prepared for', 'value': self.preparedfor},
+            {'key':'raw citation', 'value': self.rawcitation},
             {'key':'comments', 'value': self.comments},
         ]
 

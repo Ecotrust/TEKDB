@@ -381,6 +381,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                 'placeofinterview',
                 ('journal', 'journalpages'),
                 'preparedfor',
+                'rawcitation',
                 'comments'
             )
         }),
@@ -404,8 +405,8 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
         'referencetext', 'authorprimary', 'authorsecondary',
         'placeofinterview', 'title', 'seriestitle',
         'seriesvolume', 'serieseditor', 'publisher',
-        'publishercity', 'preparedfor', 'comments',
-        'journal',
+        'publishercity', 'preparedfor', 'rawcitation',
+        'comments', 'journal',
         'enteredbyname', 'enteredbytribe', 'modifiedbyname',
         'modifiedbytribe'
     )
