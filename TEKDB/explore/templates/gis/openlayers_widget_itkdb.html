@@ -65,14 +65,14 @@
                         'Sources: Esri, GEBCO, NOAA, National Geographic, Garmin, HERE, Geonames.org, and other contributors'
                     ],
                     maxZoom: 13,
-                    url: "https://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}"
+                    url: "https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}"
                 })
             });
             var nautical_layer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
+                source: new ol.source.TileArcGISRest({
                     attributions:['NOAA'],
                     maxZoom: 13,
-                    url: "https://tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png"
+                    url: "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export"
                 })
             })
             var natgeo_layer = new ol.layer.Tile({
