@@ -374,6 +374,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                 'referencetext',
                 ('authorprimary', 'authorsecondary'),
                 ('intervieweeid', 'interviewerid'),
+                'date',
                 'year',
                 ('publisher', 'publishercity'),
                 'seriestitle',

@@ -1206,6 +1206,7 @@ class Citations(Queryable, Record, ModeratedModel):
     intervieweeid = models.ForeignKey(People, db_column='intervieweeid', related_name='interviewee', blank=True, null=True, verbose_name='interviewee', default=None, on_delete=models.SET_DEFAULT)
     interviewerid = models.ForeignKey(People, db_column='interviewerid', related_name='interviewer', blank=True, null=True, verbose_name='interviewer', default=None, on_delete=models.SET_DEFAULT)
     placeofinterview = models.CharField(db_column='placeofinterview', max_length=255, blank=True, null=True, verbose_name='place of interview')
+    date = models.DateField(db_column='date', blank=True, null=True, default=None)
     year = models.IntegerField(db_column='year', blank=True, null=True)
     title = models.TextField(db_column='title', blank=True, null=True)
     seriestitle = models.CharField(db_column='seriestitle', max_length=255, blank=True, null=True, verbose_name='series title')
