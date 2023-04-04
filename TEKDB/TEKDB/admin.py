@@ -382,7 +382,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                 'placeofinterview',
                 ('journal', 'journalpages'),
                 'preparedfor',
-                'rawcitation',
+                # 'rawcitation',
                 'comments'
             )
         }),

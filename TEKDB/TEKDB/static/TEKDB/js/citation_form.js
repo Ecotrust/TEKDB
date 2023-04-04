@@ -33,7 +33,7 @@ show_reftype_form = function(reftype) {
       $('.form-row.field-preparedfor').hide();
 
       $('.form-row.field-referencetext').show();
-      $('.form-row.field-rawcitation').show();
+      $('.form-row.field-rawcitation').hide();
       $('.form-row.field-comments').show();
 
       break;
@@ -52,7 +52,7 @@ show_reftype_form = function(reftype) {
       $('.form-row.field-preparedfor').hide();
 
       $('.form-row.field-referencetext').show();
-      $('.form-row.field-rawcitation').show();
+      $('.form-row.field-rawcitation').hide();
       $('.form-row.field-comments').show();
       break;
     case 'Interview':
@@ -71,7 +71,7 @@ show_reftype_form = function(reftype) {
       $('.form-row.field-preparedfor').hide();
 
       $('.form-row.field-referencetext').show();
-      $('.form-row.field-rawcitation').show();
+      $('.form-row.field-rawcitation').hide();
       $('.form-row.field-comments').show();
       break;
     case 'Raw Data':
@@ -89,7 +89,7 @@ show_reftype_form = function(reftype) {
       $('.form-row.field-preparedfor').hide();
 
       $('.form-row.field-referencetext').show();
-      $('.form-row.field-rawcitation').show();
+      $('.form-row.field-rawcitation').hide();
       $('.form-row.field-comments').show();
       break;
     default:
@@ -107,7 +107,7 @@ show_reftype_form = function(reftype) {
       $('.form-row.field-journal.field-journalpages').show();
       $('.form-row.field-preparedfor').show();
       $('.form-row.field-referencetext').show();
-      $('.form-row.field-rawcitation').show();
+      $('.form-row.field-rawcitation').hide();
       $('.form-row.field-comments').show();
       break;
   }
