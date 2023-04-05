@@ -1,6 +1,7 @@
 import contextlib
 from dal import autocomplete
 from datetime import datetime
+from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.core import management
 from django.core.management.commands import loaddata, dumpdata
@@ -51,6 +52,7 @@ def get_all_file_paths(directory, cwd=False):
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request, test=False):
+    from django.conf import settings
     datestamp = datetime.now().strftime('%Y%m%d')
     tmp_zip = tempfile.NamedTemporaryFile(delete=False, prefix="{}_backup_".format(datestamp), suffix='.zip')
     os.chdir(os.path.join(settings.MEDIA_ROOT, '..'))
@@ -94,6 +96,7 @@ def getDBTruncateCommand():
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ImportDatabase(request):
+    from django.conf import settings
     status_code = 500
     status_message = 'An unknown error occurred.'
     if not request.method == 'POST':

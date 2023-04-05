@@ -13,7 +13,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from TEKDB import settings
+from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
 from ckeditor.fields import RichTextField
 # from moderation.db import ModeratedModel

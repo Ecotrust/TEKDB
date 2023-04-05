@@ -1,10 +1,13 @@
 def explore_context(request):
     try:
-        from TEKDB import settings
+        from django.conf import settings
     except Exception as e:
-        print('Could not import settings from TEKDB')
-        print(e)
-        settings = False
+        try:
+            from TEKDB import settings
+        except Exception as e:
+            print('Could not import settings from TEKDB')
+            print(e)
+            settings = False
 
     try:
         from configuration.models import Configuration
