@@ -143,6 +143,13 @@ class Record(DefaultModeratedModel):
     class Meta:
         abstract = True
 
+class Reviewable(models.Model):
+    needsReview = models.BooleanField(db_column='needsreview', default=False, verbose_name="Needs Review")
+    researchComments = models.TextField(db_column='researchcomments', blank=True, null=True, default=None, verbose_name="Research Comments")
+
+    class Meta:
+        abstract = True
+
 class Queryable(models.Model):
     enteredbyname = models.CharField(db_column='enteredbyname', max_length=25, blank=True, null=True, verbose_name='entered by name')
     enteredbytribe = models.CharField(db_column='enteredbytribe', max_length=100, blank=True, null=True, verbose_name='entered by tribe')
@@ -324,7 +331,7 @@ class LookupHabitat(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.habitat or ''
 
-class Places(Queryable, Record, ModeratedModel):
+class Places(Reviewable, Queryable, Record, ModeratedModel):
     placeid = models.AutoField(db_column='placeid', primary_key=True)
     # PlaceID
     indigenousplacename = models.CharField(db_column='indigenousplacename', max_length=255, blank=True, null=True, verbose_name='indigenous name')
@@ -502,7 +509,7 @@ class LookupResourceGroup(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.resourceclassificationgroup or ''
 
-class Resources(Queryable, Record, ModeratedModel):
+class Resources(Reviewable, Queryable, Record, ModeratedModel):
     resourceid = models.AutoField(db_column='resourceid', primary_key=True)
     commonname = models.CharField(db_column='commonname', max_length=255, blank=True, null=True, unique=True, verbose_name='common name')
     indigenousname = models.CharField(db_column='indigenousname', max_length=255, blank=True, null=True, verbose_name='indigenous name')
@@ -719,7 +726,7 @@ class LookupTiming(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.timing or ''
 
-class PlacesResourceEvents(Queryable):
+class PlacesResourceEvents(Reviewable, Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place', on_delete=models.PROTECT)
     resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource', on_delete=models.PROTECT)
@@ -910,7 +917,7 @@ class LookupActivity(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.activity or ''
 
-class ResourcesActivityEvents(Queryable, Record, ModeratedModel):
+class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
     resourceactivityid = models.AutoField(db_column='resourceactivityid', primary_key=True)
     placeresourceid = models.ForeignKey(PlacesResourceEvents, db_column='placeresourceid', verbose_name='place resource', on_delete=models.PROTECT)
     relationshipdescription = RichTextField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt', config_name="custom") #CKEditor Rich Text Editor Field
@@ -1196,7 +1203,7 @@ class LookupAuthorType(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.authortype or ''
 
-class Citations(Queryable, Record, ModeratedModel):
+class Citations(Reviewable, Queryable, Record, ModeratedModel):
     citationid = models.AutoField(db_column='citationid', primary_key=True)
     referencetype = models.ForeignKey(LookupReferenceType, db_column='referencetype', max_length=255, verbose_name='reference type', help_text="Select a reference type to continue", on_delete=models.PROTECT)
     referencetext = models.TextField(db_column='referencetext', blank=True, null=True, verbose_name='description')
@@ -1792,7 +1799,7 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.username or ''
 
-class Media(Queryable, Record, ModeratedModel):
+class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
     medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')

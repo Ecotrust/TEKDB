@@ -360,7 +360,7 @@ class RecordModelAdmin(VersionAdmin):
         return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
-    list_display = ('referencetype','title_text','description_text',
+    list_display = ('referencetype','title_text','description_text', 'needsReview',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -383,7 +383,13 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                 ('journal', 'journalpages'),
                 'preparedfor',
                 # 'rawcitation',
-                'comments'
+                'comments',
+            )
+        }),
+        ('Review', {
+            'fields': (
+                'needsReview',
+                'researchComments'
             )
         }),
         ('History', {
@@ -417,11 +423,17 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
     'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
-    list_display = ('medianame','mediatype','modifiedbyname','modifiedbydate',
+    list_display = ('medianame','mediatype','needsReview','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription')
+            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription',)
+        }),
+        ('Review', {
+            'fields': (
+                'needsReview',
+                'researchComments'
+            )
         }),
         ('History', {
             'fields': (
@@ -443,7 +455,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
 class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
-    list_display = ('indigenousplacename','englishplacename','modifiedbyname',
+    list_display = ('indigenousplacename','englishplacename','needsReview','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -452,7 +464,13 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
                 'englishplacename',
                 ('planningunitid','primaryhabitat'),
                 'tribeid',
-                'geometry'
+                'geometry',
+            )
+        }),
+        ('Review', {
+            'fields': (
+                'needsReview',
+                'researchComments'
             )
         }),
         ('History', {
@@ -475,14 +493,20 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     form = PlacesForm
 
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
-    list_display = ('commonname','indigenousname', 'modifiedbyname',
+    list_display = ('commonname','indigenousname', 'needsReview', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
             'fields':(
                 ('commonname', 'indigenousname'),
                 ('genus', 'species'),
-                'resourceclassificationgroup'
+                'resourceclassificationgroup',
+            )
+        }),
+        ('Review', {
+            'fields': (
+                'needsReview',
+                'researchComments'
             )
         }),
         ('History', {
@@ -502,7 +526,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     form = ResourcesForm
 
 class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
-    list_display = ('placeresourceid', 'excerpt_text',
+    list_display = ('placeresourceid', 'excerpt_text', 'needsReview',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -518,7 +542,12 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
                 'customaryuse',
                 'timing',
                 'timingdescription',
-
+            )
+        }),
+        ('Review', {
+            'fields': (
+                'needsReview',
+                'researchComments'
             )
         }),
         ('History', {
@@ -565,7 +594,8 @@ class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
 
 #### RELATIONSHIP MODELS ####
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
-    list_display = ('placeid', 'resourceid', 'partused', 'season','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
+    list_display = ('placeid', 'resourceid', 'needsReview','partused', 'season',
+                    'enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
         ('', {
             'fields': (('placeid', 'resourceid'),'relationshipdescription',
@@ -574,6 +604,12 @@ class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
                 ('january', 'february', 'march', 'april', 'may', 'june'),
                 ('july', 'august', 'september', 'october', 'november',
                 'december'), 'year',
+            )
+        }),
+        ('Review', {
+            'fields': (
+                'needsReview',
+                'researchComments'
             )
         }),
         ('History', {
