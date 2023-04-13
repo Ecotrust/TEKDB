@@ -293,4 +293,4 @@ class ResourceActivityAutocompleteView(autocomplete.Select2QuerySetView):
                 Q(activityshortdescription__activity__icontains=self.q)
             )
 
-        return qs.order_by(Lower('placeresourceid__resourceid__commonname'), Lower('placeresourceid__placeid__indigenousplacename'), Lower('activityshortdescription__activity'))
+        return qs.order_by(Lower('activityshortdescription__activity'), Lower('placeresourceid__placeid__indigenousplacename'), Lower('placeresourceid__resourceid__commonname'))
