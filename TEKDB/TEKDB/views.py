@@ -273,7 +273,7 @@ class ResourceAutocompleteView(autocomplete.Select2QuerySetView):
         if self.q:
             qs = Resources.keyword_search(self.q)
 
-        return qs.order_by(Lower('commonname'))
+        return qs
 
 class ResourceActivityAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
