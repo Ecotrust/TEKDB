@@ -2,7 +2,7 @@ import contextlib
 from dal import autocomplete
 from datetime import datetime
 from django.conf import settings
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.core import management
 from django.core.management.commands import loaddata, dumpdata
 from django.db import connection
@@ -16,6 +16,7 @@ import shutil
 from TEKDB.models import *
 import tempfile
 import zipfile
+from configuration.models import Configuration
 
 def get_related(request, model_name, id):
     from django.apps import apps
@@ -203,6 +204,25 @@ def ImportDatabase(request):
         'status_code': status_code,
         'status_message': status_message
     })
+
+# Only Authenticated Users!
+@permission_required('TEKDB.change_list')
+def mapPlaces(request):
+    # Check for max results configuration
+    try:
+        config = Configuration.objects.all()[0]
+        max_results = config.max_results_returned
+    except Exception as e:
+        from TEKDB.settings import DEFAULT_MAXIMUM_RESULTS
+        max_results = DEFAULT_MAXIMUM_RESULTS
+        pass
+
+    too_many_results = len(resultlist) > max_results
+    if too_many_results:
+        resultlist = resultlist[:max_results]
+
+    
+    
 
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
