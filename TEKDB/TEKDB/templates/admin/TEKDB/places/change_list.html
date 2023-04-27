@@ -1,14 +1,18 @@
 {% extends "reversion/change_list.html" %}
 
 {% block extrastyle %}
-    <style>
-    
-    </style>
+    <link rel="stylesheet" href="/static/assets/openlayers6/ol.css" type="text/css">
+    <script src="/static/assets/openlayers6/ol.js"></script>
 {% endblock %}
 
 {% block content %}
     {{ block.super }}
-    <div id="map">
+
+    <script>
         
+    </script>
+
+    <div id="map">
+
     </div>
 {% endblock %}
