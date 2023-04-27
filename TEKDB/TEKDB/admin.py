@@ -492,6 +492,8 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
 
     form = PlacesForm
 
+    change_list_template =  'admin/TEKDB/places/change_list.html'
+
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('commonname','indigenousname', 'needsReview', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')
