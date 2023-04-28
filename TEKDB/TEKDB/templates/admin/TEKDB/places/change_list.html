@@ -4,12 +4,34 @@
 {% block extrastyle %}
     <link rel="stylesheet" href="/static/assets/openlayers6/ol.css" type="text/css">
     <style>
+        #content {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 10px;
+            grid-auto-rows: minmax(100px, auto);
+        }
+        #content h1 {
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+        #content-main {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        #content .clear {
+            grid-column: 1 / -1;
+            grid-row: 3;
+        }
+        .map-wrap {
+            grid-column: 2;
+            grid-row: 2;
+            position: relative;
+            width: 100%;
+        }
         #map {
+            height: 100%;
             position: absolute;
-            width: 50%;
-            height: 50%;
-            right: 0;
-            top: 0;
+            width: 100%;
         }
     </style>
 {% endblock %}
@@ -22,12 +44,13 @@
 {% block content %}
     {{ block.super }}
 
-    <div id="map"></div>
-
-    <div id="mouse-position" class="mouse-position"></div>
-    <div id="popup" class="ol-popup">
-        <!-- <a href="#" id="popup-closer" class="ol-popup-closer"></a> -->
-        <div id="popup-content"></div>
+    <div class="map-wrap">
+        <div id="map"></div>
+        <div id="mouse-position" class="mouse-position"></div>
+        <div id="popup" class="ol-popup">
+            <!-- <a href="#" id="popup-closer" class="ol-popup-closer"></a> -->
+            <div id="popup-content"></div>
+        </div> 
     </div>
 
     <script src="{% static 'TEKDB/js/map.js' %}"></script>
