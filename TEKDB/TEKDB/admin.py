@@ -494,6 +494,12 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
 
     change_list_template =  'admin/TEKDB/places/change_list.html'
 
+    def changelist_view(self, request, extra_context=None):
+        from .views import getPlacesGeoJSON
+        extra_context = extra_context or {}
+        extra_context['results_geojson'] = getPlacesGeoJSON(request)
+        return super(PlacesAdmin, self).changelist_view(request, extra_context=extra_context)
+
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('commonname','indigenousname', 'needsReview', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')

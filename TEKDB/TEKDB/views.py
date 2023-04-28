@@ -207,7 +207,18 @@ def ImportDatabase(request):
 
 # Only Authenticated Users!
 @permission_required('TEKDB.change_list')
-def mapPlaces(request):
+def getPlacesGeoJSON(request):
+    from .models import Places
+
+    # Get all places
+    places = Places.objects.exclude(geometry__isnull=True)
+
+    # GeoJSON to store all places
+    geojson = {
+        'type': 'FeatureCollection',
+        'features': []
+    }
+
     # Check for max results configuration
     try:
         config = Configuration.objects.all()[0]
@@ -217,14 +228,25 @@ def mapPlaces(request):
         max_results = DEFAULT_MAXIMUM_RESULTS
         pass
 
-    too_many_results = len(resultlist) > max_results
+    too_many_results = len(places) > max_results
     if too_many_results:
-        resultlist = resultlist[:max_results]
+        resultlist = places[:max_results]
+    else:
+        resultlist = places
 
-    import ipdb; ipdb.set_trace()
+    for result in resultlist:
+        result_feature = {
+            "type": "Feature",
+            "geometry": result.geometry.geojson,
+            "properties": {
+                "indigenousplacename": result.indigenousplacename,
+                "englishplacename": result.englishplacename,
+                "placeid": result.placeid,
+            }
+        }
+        geojson['features'].append(result_feature)
 
-    HttpResponse('OK')
-
+    return geojson
     
 
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
