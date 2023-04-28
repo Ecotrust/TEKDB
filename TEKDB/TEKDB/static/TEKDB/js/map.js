@@ -45,10 +45,7 @@ var map = new ol.Map({
     // overlays: [overlay],
     target: 'map',
     view: new ol.View({
-    //   center: [{{ default_lon }}, {{ default_lat }}],
-    //   zoom: {{ default_zoom }},
-    //   minZoom: {{ min_zoom }},
-    //   maxZoom: {{ max_zoom }},
-    //   extent: {{ map_extent }}
+      center: [37.4057, 8.81566],
+      zoom: 4,
     })
   });
