@@ -31,12 +31,12 @@ const styleFunction = function(feature) {
   if (!style) {
     style = styles[0]
   }
-  if (feature.getGeometry().getType() == 'Point' && "{{ map_pin }}" != "") {
+  if (feature.getGeometry().getType() == 'Point') {
     style.setImage( new ol.style.Icon({
       anchor: [0.5, 1],
       anchorXUnits: 'fraction',
       anchorYUnits: 'fraction',
-      src: '{{ map_pin }}',
+      src: '/static/explore/img/icons/record_icons/place_icon.png',
       scale: 0.1
     }))
   }
@@ -87,6 +87,18 @@ var vectorLayer = new ol.layer.Vector({
   zIndex: 100,
   style: styleFunction,
 });
+
+/* --- CONTROLS --*/
+var scaleLineControl = new ol.control.ScaleLine({
+  units: 'us'
+  });
+  var mousePositionControl = new ol.control.MousePosition({
+  coordinateFormat: ol.coordinate.createStringXY(4),
+  projection: 'EPSG:4326',
+  target: 'mouse-position',
+  undefinedHTML: '&nbsp;'
+  });
+  
 
 var map = new ol.Map({
   layers: [
