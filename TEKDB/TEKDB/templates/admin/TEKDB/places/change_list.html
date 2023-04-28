@@ -1,18 +1,34 @@
 {% extends "reversion/change_list.html" %}
+{% load static %}
 
 {% block extrastyle %}
     <link rel="stylesheet" href="/static/assets/openlayers6/ol.css" type="text/css">
-    <script src="/static/assets/openlayers6/ol.js"></script>
+    <style>
+        #map {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            right: 0;
+            top: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% static '/assets/openlayers6/ol.js' %}"></script>
 {% endblock %}
 
 {% block content %}
     {{ block.super }}
 
-    <script>
-        
-    </script>
+    <div id="map"></div>
 
-    <div id="map">
-
+    <div id="mouse-position" class="mouse-position"></div>
+    <div id="popup" class="ol-popup">
+        <!-- <a href="#" id="popup-closer" class="ol-popup-closer"></a> -->
+        <div id="popup-content"></div>
     </div>
+
+    <script src="{% static 'TEKDB/js/map.js' %}"></script>
 {% endblock %}
