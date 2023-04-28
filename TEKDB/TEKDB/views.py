@@ -221,7 +221,10 @@ def mapPlaces(request):
     if too_many_results:
         resultlist = resultlist[:max_results]
 
-    
+    import ipdb; ipdb.set_trace()
+
+    HttpResponse('OK')
+
     
 
 class CitationAutocompleteView(autocomplete.Select2QuerySetView):
