@@ -23,6 +23,19 @@
         </div> 
     </div>
 
-    {{ results_geojson }}
+    {{ results_geojson | safe }}
+
     <script src="{% static 'TEKDB/js/map.js' %}"></script>
+    <script>
+        var results_geojson = {{ results_geojson | safe }};
+        console.log(results_geojson);
+        vectorLayer.getSource().addFeatures(new ol.format.GeoJSON().readFeatures(results_geojson));
+
+        if (vectorLayer.getSource().getFeatures().length > 0) {
+            var geometry_extent = vectorLayer.getSource().getExtent();
+            geometry_extent = buffer_extent(geometry_extent, 0.1);
+            map.getView().fit(geometry_extent,map.getSize());
+        } 
+    </script>
+
 {% endblock %}

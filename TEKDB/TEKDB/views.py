@@ -209,6 +209,7 @@ def ImportDatabase(request):
 @permission_required('TEKDB.change_list')
 def getPlacesGeoJSON(request):
     from .models import Places
+    import json
 
     # Get all places
     places = Places.objects.exclude(geometry__isnull=True)
@@ -235,13 +236,17 @@ def getPlacesGeoJSON(request):
         resultlist = places
 
     for result in resultlist:
+        result_geometry = json.loads(result.geometry.geojson)
+        result_indigenousplacename = result.indigenousplacename if result.indigenousplacename else ''
+        result_englishplacename = result.englishplacename if result.englishplacename else ''
+        result_placeid = result.placeid if result.placeid else ''
         result_feature = {
             "type": "Feature",
-            "geometry": result.geometry.geojson,
+            "geometry": result_geometry,
             "properties": {
-                "indigenousplacename": result.indigenousplacename,
-                "englishplacename": result.englishplacename,
-                "placeid": result.placeid,
+                "indigenousplacename": result_indigenousplacename,
+                "englishplacename": result_englishplacename,
+                "placeid": result_placeid
             }
         }
         geojson['features'].append(result_feature)
