@@ -85,13 +85,7 @@ var esriAerial = new ol.layer.Tile({
 });
 
 /*--- MAP ZOOM ---*/
-function 
-
-
-
-
-
-(extent, buffer) {
+function buffer_extent(extent, buffer) {
   let lat_total = extent[2] - extent[0];
   let lon_total = extent[3] - extent[1];
   let lat_buffer = lat_total*buffer;
