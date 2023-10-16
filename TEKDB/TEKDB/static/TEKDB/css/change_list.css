@@ -29,6 +29,7 @@
     min-height: 400px;
     position: relative;
     width: 100%;
+    color: black;
 }
 #map {
     height: 100%;
