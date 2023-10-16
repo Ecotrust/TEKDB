@@ -15,7 +15,7 @@ from os.path import isfile, isdir, join, split, getsize
 import shutil
 # from TEKDB.forms import *
 from TEKDB.models import *
-from TEKDB.views import ExportDatabase, ImportDatabase
+from TEKDB.views import ExportDatabase, ImportDatabase, 
 import tempfile
 import zipfile
 
@@ -193,6 +193,24 @@ class ImportTest(TransactionTestCase):
                 self.assertTrue(media_name in listdir(self.tempmediadir.name))
         shutil.rmtree(self.tempmediadir.name)
 
+
+class PlaceMapTest(TestCase):
+    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+
+    @classmethod
+    def setUp(cls):
+        cls.factory = RequestFactory()
+        cls.credentials = b64encode(b"admin:admin").decode("ascii")
+        cls.dummy_1_name = "Dummy Record 1"
+
+        new_record = Places.objects.create(commonname="Dummy Record 1")
+        new_record.save()
+
+    def test_placeMap(self):
+        request = self.factory.get(reverse('placeMap'))
+        request.user = Users.objects.get(username='admin')
+        response = placeMap(request)
+        self.assertEqual(response.status_code, 200)
 
 
 # class ExportImportTest(TestCase):

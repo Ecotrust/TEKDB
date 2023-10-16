@@ -1,0 +1,31 @@
+{% extends "reversion/change_list.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static '/assets/openlayers6/ol.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'TEKDB/css/change_list.css' %}" type="text/css">
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% static '/assets/openlayers6/ol.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="map-wrap">
+        <div id="map"></div>
+        <div id="mouse-position" class="mouse-position"></div>
+        <div id="popup" class="ol-popup">
+            <div id="popup-content"></div>
+        </div> 
+    </div>
+
+    <script>
+        var results_geojson = {{ results_geojson | safe }};
+    </script>
+
+    <script src="{% static 'TEKDB/js/change_list_map.js' %}"></script>
+
+{% endblock %}
