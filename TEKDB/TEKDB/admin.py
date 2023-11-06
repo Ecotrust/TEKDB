@@ -455,7 +455,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
 class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
-    list_display = ('indigenousplacename','englishplacename','needsReview','modifiedbyname',
+    list_display = ('indigenousplacename','englishplacename','needsReview','needs_review','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -494,6 +494,13 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
 
     change_list_template =  'admin/TEKDB/places/change_list.html'
 
+    @admin.display()
+    def needs_review(self, obj):
+        if obj.needs_review():
+            return format_html('<img style="height:16px; width: 16px;" src="/static/admin/img/icon-alert.svg" />', obj.needs_review)
+        else:
+            return ''
+            
     def changelist_view(self, request, extra_context=None):
         from .views import getPlacesGeoJSON
         extra_context = extra_context or {}

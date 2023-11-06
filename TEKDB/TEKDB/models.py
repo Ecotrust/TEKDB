@@ -150,6 +150,9 @@ class Reviewable(models.Model):
     class Meta:
         abstract = True
 
+    def needs_review(self):
+        return self.needsReview
+
 class Queryable(models.Model):
     enteredbyname = models.CharField(db_column='enteredbyname', max_length=25, blank=True, null=True, verbose_name='entered by name')
     enteredbytribe = models.CharField(db_column='enteredbytribe', max_length=100, blank=True, null=True, verbose_name='entered by tribe')
