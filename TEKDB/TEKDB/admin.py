@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.html import format_html
 from dal import autocomplete
 # from moderation.admin import ModerationAdmin
 import nested_admin
@@ -423,7 +424,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
     'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
-    list_display = ('medianame','mediatype','needsReview','modifiedbyname','modifiedbydate',
+    list_display = ('medianame','mediatype','needsReview','needs_review','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -452,6 +453,13 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
         'modifiedbytribe'
     )
     form = MediaForm
+
+    @admin.display()
+    def needs_review(self, obj):
+        if obj.needs_review():
+            return format_html('<img style="height:16px; width: 16px;" src="/static/admin/img/icon-alert.svg" />', obj.needs_review)
+        else:
+            return ''
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
 class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
@@ -500,7 +508,7 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
             return format_html('<img style="height:16px; width: 16px;" src="/static/admin/img/icon-alert.svg" />', obj.needs_review)
         else:
             return ''
-            
+
     def changelist_view(self, request, extra_context=None):
         from .views import getPlacesGeoJSON
         extra_context = extra_context or {}
