@@ -3,6 +3,7 @@ from django.db.models.functions import Lower
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
+from django.utils.html import format_html
 from django.utils.translation import ugettext, ugettext_lazy as _
 from dal import autocomplete
 # from moderation.admin import ModerationAdmin
@@ -346,12 +347,26 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
                 instance.modifiedbytitle = request.user.title
             instance.save()
 
+    @admin.display()
+    def needs_Review(self, obj):
+        if obj.needsReview:
+            return format_html('<img src="/static/admin/img/icon-alert.svg" />', obj.needsReview)
+        else:
+            return format_html('<span></span>', obj.needsReview)
+
 #### RECORD MODELS ####
 # class RecordModelAdmin(VersionAdmin, ModerationAdmin):
 class RecordModelAdmin(VersionAdmin):
     record_form = '%s/TEKDB/templates/admin/RecordForm.html' % BASE_DIR
     add_form_template = record_form
     change_form_template = record_form
+
+    @admin.display()
+    def needs_Review(self, obj):
+        if obj.needsReview:
+            return format_html('<img src="/static/admin/img/icon-alert.svg" />', obj.needsReview)
+        else:
+            return format_html('<span></span>', obj.needsReview)
 
     def change_view(self, request, object_id, form_url='', extra_context={}):
         object_instance = self.model.objects.get(pk=object_id)
@@ -360,7 +375,7 @@ class RecordModelAdmin(VersionAdmin):
         return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
-    list_display = ('referencetype','title_text','description_text', 'needsReview',
+    list_display = ('referencetype','title_text','description_text', 'needs_Review',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -423,7 +438,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
     'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
-    list_display = ('medianame','mediatype','needsReview','modifiedbyname','modifiedbydate',
+    list_display = ('medianame','mediatype','needs_Review','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -455,7 +470,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
 class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
-    list_display = ('indigenousplacename','englishplacename','needsReview','modifiedbyname',
+    list_display = ('indigenousplacename','englishplacename','needs_Review','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -501,7 +516,7 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
         return super(PlacesAdmin, self).changelist_view(request, extra_context=extra_context)
 
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
-    list_display = ('commonname','indigenousname', 'needsReview', 'modifiedbyname',
+    list_display = ('commonname','indigenousname', 'needs_Review', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -534,7 +549,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     form = ResourcesForm
 
 class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
-    list_display = ('placeresourceid', 'excerpt_text', 'needsReview',
+    list_display = ('placeresourceid', 'excerpt_text', 'needs_Review',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
@@ -602,7 +617,7 @@ class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
 
 #### RELATIONSHIP MODELS ####
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
-    list_display = ('placeid', 'resourceid', 'needsReview','partused', 'season',
+    list_display = ('placeid', 'resourceid', 'needs_Review','partused', 'season',
                     'enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
         ('', {

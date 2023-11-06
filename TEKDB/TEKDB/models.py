@@ -144,7 +144,7 @@ class Record(DefaultModeratedModel):
         abstract = True
 
 class Reviewable(models.Model):
-    needsReview = models.BooleanField(db_column='needsreview', default=False, verbose_name="Needs Review")
+    needsReview = models.BooleanField(db_column='needsreview', default=True, verbose_name="Needs Review")
     researchComments = models.TextField(db_column='researchcomments', blank=True, null=True, default=None, verbose_name="Research Comments")
 
     class Meta:
