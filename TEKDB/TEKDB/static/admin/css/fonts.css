@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'AboriginalSans';
+    src: url('/static/admin/fonts/AboriginalSansREGULAR.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.font-AboriginalSans {
+    font-family: 'AboriginalSans', sans-serif;
+}
