@@ -71,7 +71,7 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
         '-rank',
         '-similarity',
         sort_field
-    )
+    ).distinct()
 
     return results
 
@@ -960,6 +960,10 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             fields=['relationshipdescription','activitylongdescription','gear','customaryuse','timingdescription'], # fields to search
             fk_fields=[
                 ('partused','partused'),
+                ('placeresourceid','resourceid','commonname'),
+                ('placeresourceid','placeid','englishplacename'),
+                ('placeresourceid','placeid','indigenousplacename'),
+                ('placeresourceid','placeid','placealtindigenousname', 'altindigenousname'),
                 ('activityshortdescription','activity'),
                 ('participants','participants'),
                 ('technique','techniques'),
@@ -974,6 +978,7 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             'customaryuse': 'B',
             'timingdescription': 'B',
             'partused': 'C',
+            'placeresourceid': 'A',
             'activityshortdescription': 'A',
             'participants': 'C',
             'technique': 'C',
