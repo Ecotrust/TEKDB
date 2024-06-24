@@ -1,3 +1,5 @@
+@import url("./fonts.css");
+
 :root {
   --modal-header-color: var(--body-quiet-color);
 }
@@ -8,7 +10,6 @@
     --modal-header-color: black;
     --bs-body-color: #EEEEEE !important;
   }
-
 }
 
 /* GENERIC FIXES */
