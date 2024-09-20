@@ -13,6 +13,7 @@ class Configuration(models.Model):
     preferredInitialism = models.CharField(
         max_length=15, 
         default='ITK', 
+        blank=True,
         verbose_name="Preferred sharthand for traditional knowledge",
         help_text="Suggestions: 'ITK', 'TEK', etc..."
     )
