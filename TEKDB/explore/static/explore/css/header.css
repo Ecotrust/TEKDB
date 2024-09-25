@@ -17,7 +17,7 @@ nav.navbar {
   letter-spacing: 0.075em;
   height: 70.5px;
   line-height: 70.5px;
-  padding: 0 0 0 0;
+  padding: 0;
   text-align: right;
   min-width: 127.4px;
 }
@@ -43,7 +43,7 @@ nav.navbar {
 
 .navbar-brand-wrapper.text-default {
   text-align: right;
-  background-position: 50% 50%;
+  background-position: 0% 50%;
 }
 
 /* Customizable text position */
