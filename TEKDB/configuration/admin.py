@@ -16,7 +16,7 @@ class ConfigurationForm(ModelForm):
         fields = '__all__'
 
 class ConfigurationAdmin(VersionAdmin):
-    list_display = ('preferredInitialism','max_results_returned',)
+    list_display = ('preferred_initialism_or_pk','max_results_returned')
     fieldsets = (
         ('Site Header', {
             'fields':(
@@ -47,5 +47,9 @@ class ConfigurationAdmin(VersionAdmin):
     # Limit to only ONE configuration record, as laid out here: https://stackoverflow.com/a/25088487/706797 by radtek
     def has_add_permission(self, request):
         return False if self.model.objects.count() > 0 else super().has_add_permission(request)
+
+    def preferred_initialism_or_pk(self, obj):
+        return obj.pk if not obj.preferredInitialism else obj.preferredInitialism
+
 
 admin.site.register(Configuration, ConfigurationAdmin)
