@@ -22,6 +22,7 @@ class ConfigurationAdmin(VersionAdmin):
             'fields':(
                 'preferredInitialism',
                 ('logo', 'logo_override'),
+                'preferredInitialismPlacement',
             )
         }),
         ('Home Page', {

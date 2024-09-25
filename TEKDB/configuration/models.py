@@ -18,6 +18,19 @@ class Configuration(models.Model):
         help_text="Suggestions: 'ITK', 'TEK', etc..."
     )
 
+    preferredInitialismPlacementChoices = [
+        ('default', 'Default'),
+        ('before', 'Before'),
+        ('after', 'After'),
+    ]
+
+    preferredInitialismPlacement = models.CharField(
+        default=preferredInitialismPlacementChoices[0],
+        choices=preferredInitialismPlacementChoices,
+        max_length=255,
+        help_text="Select the position of the preferred initialism in relative to the logo."
+    )
+
     LOGO_CHOICES = [
         ('/static/explore/img/logos/logo_weave.svg', 'Weave'),
         ('/static/explore/img/logos/logo_drop.svg', 'Droplet'),

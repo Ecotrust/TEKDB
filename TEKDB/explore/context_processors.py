@@ -31,6 +31,7 @@ def explore_context(request):
     if configs:
         try:
             project_logo_text = configs.preferredInitialism
+            project_text_placement = configs.preferredInitialismPlacement
         except Exception as e:
             pass
 
@@ -186,6 +187,7 @@ def explore_context(request):
 
     return {
         'proj_logo_text': project_logo_text,
+        'proj_text_placement': project_text_placement,
         'proj_css': proj_css,
         'proj_icons': proj_icons,
         'proj_image_select': project_image_select,
