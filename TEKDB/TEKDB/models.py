@@ -23,8 +23,16 @@ MANAGED = True
 
 #   * Making search settings a model allows for admin customization of search settings
 class SearchSettings(models.Model):
-    min_search_rank = models.FloatField(default=settings.MIN_SEARCH_RANK)
-    min_search_similarity = models.FloatField(default=settings.MIN_SEARCH_SIMILARITY)
+    min_search_rank = models.FloatField(
+        default=settings.MIN_SEARCH_RANK, 
+        verbose_name='Minimum Search Rank', 
+        help_text='Weight 0-1 representing the minimum search rank threshold for search results.',
+    )
+    min_search_similarity = models.FloatField(
+        default=settings.MIN_SEARCH_SIMILARITY,
+        verbose_name='Minimum Search Similarity',
+        help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.',
+    )
 
     def __str__(self):
         return "Search Settings"
