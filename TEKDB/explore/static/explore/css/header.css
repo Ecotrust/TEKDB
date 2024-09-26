@@ -116,10 +116,10 @@ ul.navbar-nav li.nav-item.user-menu a#userDropdown {
   padding: .6375em 1.375em;
 }
 
-ul.navbar-nav li.nav-item.user-menu a.header-button,
+/* ul.navbar-nav li.nav-item.user-menu a.header-button,
 ul.navbar-nav li.nav-item.user-menu a#userDropdown:hover {
-  /* border: 1px solid var(--default_border); */
-}
+  border: 1px solid var(--default_border);
+} */
 
 ul.navbar-nav li.nav-item.user-menu ul.dropdown-menu[data-bs-popper] {
   left: unset;
