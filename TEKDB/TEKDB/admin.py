@@ -19,6 +19,12 @@ admin.site.site_header = ADMIN_SITE_HEADER
 from TEKDB.settings import BASE_DIR
 from TEKDB.widgets import OpenLayers6Widget
 
+################
+#### SEARCH ####
+################
+class SearchSettingsAdmin(admin.ModelAdmin):
+    list_display = ('min_search_rank', 'min_search_similarity')
+
 #############
 ### FORMS ###
 #############
@@ -889,6 +895,9 @@ admin.site.register(ResourcesCitationEvents, ResourcesCitationEventsAdmin)
 admin.site.register(ResourcesMediaEvents, ResourcesMediaEventsAdmin)
 admin.site.register(Users, UsersAdmin)
 admin.site.register(UserAccess)
+
+### SEARCH
+admin.site.register(SearchSettings)
 
 ###Cruft
 admin.site.register(LookupAuthorType)

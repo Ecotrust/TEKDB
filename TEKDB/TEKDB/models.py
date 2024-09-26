@@ -18,7 +18,16 @@ from django.contrib.gis.db.models import GeometryField
 from ckeditor.fields import RichTextField
 # from moderation.db import ModeratedModel
 
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 MANAGED = True
+
+#   * Making search settings a model allows for admin customization of search settings
+class SearchSettings(models.Model):
+    min_search_rank = models.FloatField(default=settings.MIN_SEARCH_RANK)
+    min_search_similarity = models.FloatField(default=settings.MIN_SEARCH_SIMILARITY)
+
+    def __str__(self):
+        return "Search Settings"
 
 def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_field):
     # model -> the model calling this function
@@ -51,6 +60,15 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
     query = SearchQuery(keyword)
 
+    try:
+        search_settings = SearchSettings.objects.first()
+        if search_settings:
+            min_search_rank = search_settings.min_search_rank
+            min_search_similarity = search_settings.min_search_similarity
+    except Exception as e:
+        min_search_rank = settings.MIN_SEARCH_RANK
+        min_search_similarity = settings.MIN_SEARCH_SIMILARITY
+
     if len(similarities) > 1:
         similarity = Greatest(*similarities)
     elif len(similarities) == 1:
@@ -65,8 +83,8 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     ).filter(
         # Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
         # Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
-        Q(rank__gte=settings.MIN_SEARCH_RANK) |
-        Q(similarity__gte=settings.MIN_SEARCH_SIMILARITY)
+        Q(rank__gte=min_search_rank) |
+        Q(similarity__gte=min_search_similarity)
     ).order_by(
         '-rank',
         '-similarity',

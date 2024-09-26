@@ -1,3 +1,23 @@
+def search_settings(request):
+    from django.conf import settings
+    from .models import SearchSettings
+
+    try:
+        # Get the search settings from the database
+        search_settings = SearchSettings.objects.first()
+        if search_settings:
+            return {
+                'MIN_SEARCH_RANK': search_settings.min_search_rank,
+                'MIN_SEARCH_SIMILARITY': search_settings.min_search_similarity,
+            }
+    except Exception as e:
+        print(e)
+        pass
+
+    return {
+        'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,  # Default value
+        'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,  # Default value
+    }
 
 
 def add_map_default_context(request):
