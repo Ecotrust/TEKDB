@@ -1,14 +1,16 @@
-<svg class="logo-svg" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 107.4 70.5"><defs><style>
-	.st0{fill:#101623;}
-	.st0{fill:#8F371C;}
-	.st1{fill:#B24D9D;}
-	.st2{fill:none;stroke:#231F20;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;}
-</style>
-</defs>
-<line class="st4" x1="77.6" y1="59.3" x2="0" y2="59.3"/>
+<svg class="logo-svg" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140.4 70.5">
+	<defs>
+		<style>
+			.st0{fill:#101623;}
+			.st0{fill:#8F371C;}
+			.st1{fill:#B24D9D;}
+			.st2{fill:none;stroke:#231F20;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;}
+		</style>
+	</defs>
+	<line class="st4" x1="77.6" y1="59.3" x2="0" y2="59.3"/>
 	<path class="st0" d="M31.2,15.6c0,8.6-15.6,31.2-15.6,31.2S0,24.2,0,15.6C0,7,7,0,15.6,0S31.2,7,31.2,15.6z"/>
-<path class="st1" d="M34.3,70.5c-8.6,0-15.6-7-15.6-15.6c0-8.6,15.6-31.2,15.6-31.2s15.6,22.6,15.6,31.2
+	<path class="st1" d="M34.3,70.5c-8.6,0-15.6-7-15.6-15.6c0-8.6,15.6-31.2,15.6-31.2s15.6,22.6,15.6,31.2
 	C49.9,63.5,42.9,70.5,34.3,70.5z"/>
-<circle class="st2" cx="34.3" cy="25.1" r="14.6"/>
+	<circle class="st2" cx="34.3" cy="25.1" r="14.6"/>
     <!--<text class="logo-svg-text cls-4" transform="translate(101.42 88.71)">ITK</text>-->
 </svg>

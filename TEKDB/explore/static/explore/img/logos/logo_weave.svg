@@ -1,7 +1,7 @@
 <svg class="logo-svg" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 107.4 70.5"><defs>
 <style>
 	.st0{fill:#101623;}
-	.st1{font-family:'OpenSans-Extrabold';}
+	.st1{font-family:'OpenSans-Extrabold', sans-serif;}
 	.st2{font-size:23px;}
 	.st3{letter-spacing:5;}
 	.st4{fill:none;stroke:#B86AAB;stroke-width:3;stroke-miterlimit:10;}

@@ -9,17 +9,20 @@ nav.navbar {
 /* Logo value is a django variable in navbar.html */
 /* Logo is assigned as the background-image for .navbar-brand-wrapper */
 .navbar-brand-wrapper {
+  align-items: center;
   background-repeat: no-repeat; 
-  background-size: contain;
-  background-position: 50% 50%;
+  background-size: 100px auto;
+  background-position: 25% 50%;
+  display: flex;
   font-family: var(--font-sans-serif-extrabold);
   font-size: 1.06375em;
-  letter-spacing: 0.075em;
+  letter-spacing: 0.025em;
   height: 70.5px;
-  line-height: 70.5px;
+  line-height: normal;
   padding: 0;
   text-align: right;
   min-width: 127.4px;
+  width: 200px;
 }
 
 /*
@@ -27,26 +30,27 @@ nav.navbar {
   * 
   * The text position can be set to left, right, or center.
   * The background image will be positioned accordingly.
+  * For default styles see .navbar-brand-wrapper
 */
 
 .navbar-brand-wrapper.text-before {
   text-align: left;
   background-position: 100% 50%;
-  background-size: 50% auto;
 }
 
 .navbar-brand-wrapper.text-after {
   text-align: right;
   background-position: 0 50%;
-  background-size: 50% auto;
-}
-
-.navbar-brand-wrapper.text-default {
-  text-align: right;
-  background-position: 0% 50%;
 }
 
 /* Customizable text position */
+.navbar-brand-text {
+  height: auto;
+  overflow: visible;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .text-before .navbar-brand-text {
   margin: 0;
   width: 50%;
@@ -54,12 +58,11 @@ nav.navbar {
 
 .text-after .navbar-brand-text {
   margin: 0 0 0 50%;
-  width: 50%;
+  /* width: 50%; */
 }
 
 .text-default .navbar-brand-text {
   margin: 0;
-  width: 70%;
 }
 
 
