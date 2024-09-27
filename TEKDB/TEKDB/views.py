@@ -9,7 +9,7 @@ from django.db import connection
 from django.db.models import Q
 from django.db.utils import OperationalError
 from django.http import HttpResponse, Http404, FileResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import io
 import os
 import shutil
@@ -344,3 +344,42 @@ class ResourceActivityAutocompleteView(autocomplete.Select2QuerySetView):
             )
 
         return qs.order_by(Lower('activityshortdescription__activity'), Lower('placeresourceid__placeid__indigenousplacename'), Lower('placeresourceid__resourceid__commonname'))
+
+
+from django.views import View
+from .models import MediaCollection, Media
+from .forms import MediaCollectionForm
+
+# class FileFieldFormView(FormView):
+#     form_class = MediaCollectionForm
+#     template_name = "admin/MediaCollectionForm.html"  # Replace with your template.
+#     success_url = reverse()  # Replace with your URL or reverse().
+
+#     def form_valid(self, form):
+#         media_collection = form.save()
+#         for file in request.FILES.getlist('files'):
+#             Media.objects.create(
+#                 collection=media_collection,
+#                 file=file,
+#                 date=form.cleaned_data['date'],
+#                 location=form.cleaned_data['location'],
+#                 species=form.cleaned_data['species']
+#             )
+#         return super().form_valid(form)
+
+class MediaCollectionCreateView(View):
+    def get(self, request):
+        form = MediaCollectionForm()
+        return render(request, 'admin/MediaCollectionForm.html', {'form': form})
+
+    def post(self, request):
+        form = MediaCollectionForm(request.POST, request.FILES)
+        if form.is_valid():
+            media_collection = form.save()
+            for file in request.FILES.getlist('files'):
+                Media.objects.create(
+                    collection=media_collection,
+                    file=file,
+                )
+            return redirect('media_collection_list')
+        return render(request, 'admin/MediaCollectionForm.html', {'form': form})

@@ -1830,6 +1830,15 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.username or ''
 
+
+#   * Media Collection
+#   * 
+
+class MediaCollection(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
 class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
@@ -1838,6 +1847,14 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
     mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
+
+    #   * Media Collection
+    collection = models.ForeignKey(MediaCollection, related_name='media_records', on_delete=models.CASCADE, blank=True, null=True)
+    date = models.DateField(blank=True, null=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+
 
     class Meta:
         managed = MANAGED

@@ -440,6 +440,24 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     )
     form = CitationsForm
 
+#   * Media COllection Admin
+from .models import MediaCollection
+from .forms import MediaCollectionForm
+
+class MediaCollectionAdmin(admin.ModelAdmin):
+    form = MediaCollectionForm
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        for file in request.FILES.getlist('files'):
+            Media.objects.create(
+                collection=obj,
+                mediafile=file,
+                date=form.cleaned_data['date'],
+            )
+
+admin.site.register(MediaCollection, MediaCollectionAdmin)
+
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
