@@ -1849,7 +1849,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
     #   * Media Collection
-    collection = models.ForeignKey(MediaCollection, related_name='media_records', on_delete=models.CASCADE, blank=True, null=True)
+    collection = models.ForeignKey(MediaCollection, related_name='media_collection', on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField(blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
