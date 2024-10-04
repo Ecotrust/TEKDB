@@ -347,12 +347,12 @@ class ResourceActivityAutocompleteView(autocomplete.Select2QuerySetView):
 
 
 from django.views import View
-from .models import MediaCollection, Media
-from .forms import MediaCollectionForm
+from .models import MediaBulkUpload, Media
+from .forms import MediaBulkUploadForm
 
 # class FileFieldFormView(FormView):
-#     form_class = MediaCollectionForm
-#     template_name = "admin/MediaCollectionForm.html"  # Replace with your template.
+#     form_class = MediaBulkUploadForm
+#     template_name = "admin/MediaBulkUploadForm.html"  # Replace with your template.
 #     success_url = reverse()  # Replace with your URL or reverse().
 
 #     def form_valid(self, form):
@@ -367,13 +367,13 @@ from .forms import MediaCollectionForm
 #             )
 #         return super().form_valid(form)
 
-class MediaCollectionCreateView(View):
+class MediaBulkUploadCreateView(View):
     def get(self, request):
-        form = MediaCollectionForm()
-        return render(request, 'admin/MediaCollectionForm.html', {'form': form})
+        form = MediaBulkUploadForm()
+        return render(request, 'admin/MediaBulkUploadForm.html', {'form': form})
 
     def post(self, request):
-        form = MediaCollectionForm(request.POST, request.FILES)
+        form = MediaBulkUploadForm(request.POST, request.FILES)
         if form.is_valid():
             media_collection = form.save()
             for file in request.FILES.getlist('files'):
@@ -382,4 +382,4 @@ class MediaCollectionCreateView(View):
                     file=file,
                 )
             return redirect('media_collection_list')
-        return render(request, 'admin/MediaCollectionForm.html', {'form': form})
+        return render(request, 'admin/MediaBulkUploadForm.html', {'form': form})

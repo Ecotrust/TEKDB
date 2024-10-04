@@ -1834,10 +1834,62 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
 #   * Media Collection
 #   * 
 
-class MediaCollection(models.Model):
+# Through tables or one to many relationship, reference Anna's work on MidA
+#   * PlacesMediaEvents
+#   * ResourcesMediaEvents
+#   * MediaCitationEvents
+#   * ResourceActivityMediaEvents
+#   * PlacesResourceMediaEvents
+
+# Change name to reflect that this is a bulk media upload event
+# Sorting 
+class MediaBulkUpload(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    user = models.ForeignKey(LookupUserInfo, db_column='user', blank=True, null=True, verbose_name='user', default=None, on_delete=models.SET_DEFAULT)
+    media = models.ManyToManyField('Media', related_name='media', blank=True, null=True)
+    
+    # @property
+    # def count(self):
+        # number of media items uploaded
+
+    # Suggested Additions
+    # Multi upload
+    # Visual displayed of uploads
+        # Example in blue pages
+        # Gallery of Media 
+        # Ability to edit Media
+
+    # Media Fields + Relationships
+    # mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
+    # medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
+    # mediadescription = RichTextField(db_column='mediadescription', blank=True, null=True, verbose_name='description', config_name="custom") #CKEditor Rich Text Editor Field
+    # medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
+    # mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
+    
+    # PlaceMedia relationship
+    # other 5 relationships ...
+    # def relationships(self):
+    # relationship_list = []
+    # places = [x.get_relationship_json(type(self)) for x in self.placesmediaevents_set.all()]
+    # if len(places) > 0:
+    #     relationship_list.append({'key': 'Places', 'value': places})
+    # resources = [x.get_relationship_json(type(self)) for x in self.resourcesmediaevents_set.all()]
+    # if len(resources) > 0:
+    #     relationship_list.append({'key': 'Resources', 'value': resources})
+    # citations = [x.get_relationship_json(type(self)) for x in self.mediacitationevents_set.all()]
+    # if len(citations) > 0:
+    #     relationship_list.append({'key': 'Bibliographic Sources', 'value': citations})
+    # activities = [x.get_relationship_json(type(self)) for x in self.resourceactivitymediaevents_set.all()]
+    # if len(activities) > 0:
+    #     relationship_list.append({'key': 'Activities', 'value': activities})
+    # placeresources = [x.get_relationship_json(type(self)) for x in self.placesresourcemediaevents_set.all()]
+    # if len(placeresources) > 0:
+    #     relationship_list.append({'key': 'Place-Resources', 'value': placeresources})
+    # return relationship_list
+
 
 class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
@@ -1849,7 +1901,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
     #   * Media Collection
-    collection = models.ForeignKey(MediaCollection, related_name='media_collection', on_delete=models.CASCADE, blank=True, null=True)
+    media_collection = models.ManyToManyField(MediaBulkUpload, related_name='media_collection', blank=True, null=True)
     date = models.DateField(blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
