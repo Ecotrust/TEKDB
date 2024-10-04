@@ -1846,10 +1846,10 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
 class MediaBulkUpload(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     user = models.ForeignKey(LookupUserInfo, db_column='user', blank=True, null=True, verbose_name='user', default=None, on_delete=models.SET_DEFAULT)
-    media = models.ManyToManyField('Media', related_name='media', blank=True, null=True)
     
     # @property
     # def count(self):
@@ -1900,13 +1900,9 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
-    #   * Media Collection
-    media_collection = models.ManyToManyField(MediaBulkUpload, related_name='media_collection', blank=True, null=True)
-    date = models.DateField(blank=True, null=True, default=None)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-
-
+    #   * Media Bulk Upload Event
+    mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.SET_NULL)
+    # media_collection = models.ForeignKey(MediaBulkUpload, related_name='mediauploadevent', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         managed = MANAGED

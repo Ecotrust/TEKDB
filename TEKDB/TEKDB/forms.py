@@ -1,5 +1,6 @@
 from django import forms
 from .models import MediaBulkUpload, Media
+from .widgets import ThumbnailFileInput
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -17,10 +18,13 @@ class MultipleFileField(forms.FileField):
             result = [single_file_clean(data, initial)]
         return result
 
+# class MultipleFileField(forms.FileField):
+#     widget = ThumbnailFileInput
+
 class MediaBulkUploadForm(forms.ModelForm):
     files = MultipleFileField()
     date = forms.DateField(widget=forms.SelectDateWidget)
 
     class Meta:
         model = MediaBulkUpload
-        fields = ['name', 'files', 'date']
+        fields = ['name', 'description', 'files', 'date']

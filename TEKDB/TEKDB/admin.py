@@ -450,11 +450,22 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         for file in request.FILES.getlist('files'):
-            Media.objects.create(
-                collection=obj,
+            media_instance = Media(
                 mediafile=file,
-                date=form.cleaned_data['date'],
             )
+            media_instance.save()
+            obj.mediabulkupload.set([media_instance])
+
+    def thumbnail_gallery(self, obj):
+        thumbnails = [
+            format_html('<img src="{}" width="100" height="100" />', media.mediafile.url)
+            for media in obj.mediabulkupload.all()
+        ]
+        return format_html(''.join(thumbnails))
+
+    thumbnail_gallery.short_description = 'Thumbnails'
+
+    readonly_fields = ('thumbnail_gallery',)
 
 admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
 
@@ -466,7 +477,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription',)
+            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription','media_collection',)
         }),
         ('Review', {
             'fields': (
