@@ -1902,7 +1902,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
 
     #   * Media Bulk Upload Event
     mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.SET_NULL)
-    # media_collection = models.ForeignKey(MediaBulkUpload, related_name='mediauploadevent', blank=True, null=True, on_delete=models.SET_NULL)
+    media_collection = models.ForeignKey(MediaBulkUpload, related_name='mediauploadevent', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         managed = MANAGED

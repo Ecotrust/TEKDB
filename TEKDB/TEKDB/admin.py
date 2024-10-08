@@ -441,7 +441,9 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     form = CitationsForm
 
 #   * Media COllection Admin
-from .models import MediaBulkUpload
+from django.utils.html import format_html
+from django.contrib import admin
+from .models import MediaBulkUpload, Media
 from .forms import MediaBulkUploadForm
 
 class MediaBulkUploadAdmin(admin.ModelAdmin):
@@ -451,10 +453,12 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         for file in request.FILES.getlist('files'):
             media_instance = Media(
+                medianame=obj.name,
+                mediadescription=obj.description,
                 mediafile=file,
             )
             media_instance.save()
-            obj.mediabulkupload.set([media_instance])
+            obj.mediabulkupload.add(media_instance)
 
     def thumbnail_gallery(self, obj):
         thumbnails = [
@@ -466,6 +470,12 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
     thumbnail_gallery.short_description = 'Thumbnails'
 
     readonly_fields = ('thumbnail_gallery',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'description', 'files', 'date', 'thumbnail_gallery')
+        }),
+    )
 
 admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
 
