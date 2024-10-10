@@ -20,6 +20,7 @@ def explore_context(request):
     ######################################
 
     project_logo_text = 'ITK'
+    project_text_placement = 'default'
 
     if settings:
         try:
