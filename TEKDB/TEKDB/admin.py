@@ -487,7 +487,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription','media_collection',)
+            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription',)
         }),
         ('Review', {
             'fields': (
