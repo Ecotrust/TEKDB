@@ -448,6 +448,12 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
+        places = form.cleaned_data.get('places')
+        resources = form.cleaned_data.get('resources')
+        citations = form.cleaned_data.get('citations')
+        activities = form.cleaned_data.get('activities')
+        placeresources = form.cleaned_data.get('placeresources')
+
         for file in request.FILES.getlist('files'):
             media_instance = Media(
                 medianame=obj.name,
@@ -457,6 +463,24 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
             media_instance.save()
             obj.mediabulkupload.add(media_instance)
 
+            # Add relationships
+            if places:
+                for place in places:
+                    PlacesMediaEvents.objects.create(placeid=place, mediaid=media_instance)
+            if resources:
+                for resource in resources:
+                    ResourcesMediaEvents.objects.create(resourceid=resource, mediaid=media_instance)
+            if citations:
+                for citation in citations:
+                    MediaCitationEvents.objects.create(citationid=citation, mediaid=media_instance)
+            if activities:
+                for activity in activities:
+                    ResourceActivityMediaEvents.objects.create(resourceactivityid=activity, mediaid=media_instance)
+            if placeresources:
+                for placeresource in placeresources:
+                    PlaceResourceMediaEvents.objects.create(placeresourceid=placeresource, mediaid=media_instance)
+
+
     def thumbnail_gallery(self, obj):
         thumbnails = [
             format_html('<img src="{}" width="100" height="100" />', media.mediafile.url)
@@ -465,12 +489,10 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         return format_html(''.join(thumbnails))
 
     thumbnail_gallery.short_description = 'Thumbnails'
-
     readonly_fields = ('thumbnail_gallery',)
-
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'files', 'date', 'thumbnail_gallery')
+            'fields': ('name', 'description', 'files', 'date', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
         }),
     )
 
