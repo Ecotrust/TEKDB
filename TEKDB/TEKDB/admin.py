@@ -11,6 +11,7 @@ import nested_admin
 from ckeditor.widgets import CKEditorWidget
 from reversion.admin import VersionAdmin
 
+from .forms import MediaBulkUploadForm
 from .models import *
 
 from TEKDB.settings import ADMIN_SITE_HEADER
@@ -440,12 +441,8 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     )
     form = CitationsForm
 
-#   * Media COllection Admin
-from django.utils.html import format_html
-from django.contrib import admin
-from .models import MediaBulkUpload, Media
-from .forms import MediaBulkUploadForm
 
+#   * Bulk Media Upload Admin
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
@@ -478,6 +475,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
+
 
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
