@@ -1841,8 +1841,7 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
 #   * ResourceActivityMediaEvents
 #   * PlacesResourceMediaEvents
 
-# Change name to reflect that this is a bulk media upload event
-# Sorting 
+# add Sorting 
 class MediaBulkUpload(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
