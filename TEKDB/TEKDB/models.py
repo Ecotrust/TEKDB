@@ -512,10 +512,30 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         ]
 
     def __unicode__(self):
-        return unicode('%s (%s)' % (self.indigenousplacename, self.englishplacename))
+        indigenous = self.indigenousplacename or ""
+        english = self.englishplacename or ""
+
+        if indigenous and english:
+            return u'%s (%s)' % (indigenous, english)
+        elif indigenous:
+            return unicode(indigenous)
+        elif english:
+            return unicode(english)
+        else:
+            return u'No Name Given'
 
     def __str__(self):
-        return "%s (%s)" % (self.indigenousplacename, self.englishplacename) or ''
+        indigenous = self.indigenousplacename or ""
+        english = self.englishplacename or ""
+
+        if indigenous and english:
+            return "%s (%s)" % (indigenous, english)
+        elif indigenous:
+            return indigenous
+        elif english:
+            return english
+        else:
+            return "No Name Given"
 
 class LookupResourceGroup(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
