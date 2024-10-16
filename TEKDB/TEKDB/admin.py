@@ -6,6 +6,8 @@ from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.html import format_html
 from django.utils.translation import ugettext, ugettext_lazy as _
 from dal import autocomplete
+from mimetypes import guess_type
+from django.templatetags.static import static
 # from moderation.admin import ModerationAdmin
 import nested_admin
 from ckeditor.widgets import CKEditorWidget
@@ -482,10 +484,60 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
 
     def thumbnail_gallery(self, obj):
-        thumbnails = [
-            format_html('<img src="{}" width="100" height="100" />', media.mediafile.url)
-            for media in obj.mediabulkupload.all()
-        ]
+        thumbnails = []
+        for media in obj.mediabulkupload.all():
+            # Guess the MIME type of the file
+            mime_type, _ = guess_type(media.mediafile.url)
+
+            file_name = media.mediafile.name
+
+            if mime_type:
+                if mime_type.startswith('image'):
+                    thumbnails.append(format_html(
+                        '<div style="display:inline-block; text-align:center; margin: 10px;">'
+                        '<img src="{}" width="100" height="100" />'
+                        '<br /><span style="display:block; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{}</span>'
+                        '</div>', media.mediafile.url, file_name))
+                elif mime_type.startswith('video'):
+                    thumbnails.append(format_html(
+                        '<div style="display:inline-block; text-align:center; margin: 10px;">'
+                        '<video width="100" height="100" controls>'
+                        '<source src="{}" type="{}">'
+                        'Your browser does not support the video tag.'
+                        '</video>'
+                        '<br /><span style="display:block; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{}</span>'
+                        '</div>', media.mediafile.url, mime_type, file_name))
+                elif mime_type.startswith('audio'):
+                    generic_audio_icon = static('assets/audio-x-generic.svg')
+                    thumbnails.append(format_html(
+                        '<div style="display:inline-block; text-align:center; margin: 10px;">'
+                        '<img src="{}" width="100" height="100" alt="Audio File" />'
+                        '<br /><span style="display:block; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{}</span>'
+                        '</div>', generic_audio_icon, file_name))
+                elif mime_type.startswith('text') or 'application/msword' in mime_type or 'application/vnd' in mime_type:
+                    generic_doc_icon = static('assets/doc-text.svg')
+                    thumbnails.append(format_html(
+                        '<div style="display:inline-block; text-align:center; margin: 10px;">'
+                        '<img src="{}" width="100" height="100" alt="Document File" />'
+                        '<br /><span style="display:block; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{}</span>'
+                        '</div>', generic_doc_icon, file_name))
+                else:
+                    # For unknown or other file types, show a generic file image
+                    generic_file_icon = static('assets/unknown-mail.png')
+                    thumbnails.append(format_html(
+                        '<div style="display:inline-block; text-align:center; margin: 10px;">'
+                        '<img src="{}" width="100" height="100" alt="File" />'
+                        '<br /><span style="display:block; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{}</span>'
+                        '</div>', generic_file_icon, file_name))
+            else:
+                # In case the MIME type could not be determined, use a generic file icon
+                generic_file_icon = static('assets/unknown-mail.png')
+                thumbnails.append(format_html(
+                    '<div style="display:inline-block; text-align:center; margin: 10px;">'
+                    '<img src="{}" width="100" height="100" alt="File" />'
+                    '<br /><span style="display:block; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{}</span>'
+                    '</div>', generic_file_icon, file_name))
+
         return format_html(''.join(thumbnails))
 
     thumbnail_gallery.short_description = 'Thumbnails'
