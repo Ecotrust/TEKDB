@@ -448,6 +448,8 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
+    list_display = ('mediabulkname',)
+
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         places = form.cleaned_data.get('places')
@@ -458,8 +460,8 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
         for file in request.FILES.getlist('files'):
             media_instance = Media(
-                medianame=obj.name,
-                mediadescription=obj.description,
+                medianame=obj.mediabulkname,
+                mediadescription=obj.mediabulkdescription,
                 mediafile=file,
             )
             media_instance.save()
@@ -544,7 +546,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
     readonly_fields = ('thumbnail_gallery',)
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'files', 'date', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
+            'fields': ('mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
         }),
     )
 

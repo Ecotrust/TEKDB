@@ -1851,31 +1851,23 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
         return self.username or ''
 
 
-#   * Media Collection
-#   * 
-
-# Through tables or one to many relationship, reference Anna's work on MidA
-#   * PlacesMediaEvents
-#   * ResourcesMediaEvents
-#   * MediaCitationEvents
-#   * ResourceActivityMediaEvents
-#   * PlacesResourceMediaEvents
-
-# add Sorting 
-class MediaBulkUpload(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True, default=None)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    user = models.ForeignKey(LookupUserInfo, db_column='user', blank=True, null=True, verbose_name='user', default=None, on_delete=models.SET_DEFAULT)
+#   * Bulk Media Upload 
+#   formerly known as Media Collection
+# class MediaBulkUpload(models.Model):
+class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
+    mediabulkname = models.CharField(max_length=255, blank=True, null=True)
+    mediabulkdescription = models.TextField(blank=True, null=True)
+    mediabulkdate = models.DateField(blank=True, null=True, default=None)
+    # created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    # modifieddate = models.DateTimeField(auto_now=True, blank=True, null=True)
+    # user = models.ForeignKey(LookupUserInfo, db_column='user', blank=True, null=True, verbose_name='user', default=None, on_delete=models.SET_DEFAULT)
     
+    # todo add Sorting 
     # @property
     # def count(self):
         # number of media items uploaded
 
-    # Suggested Additions
-    # Multi upload
+    
     # Visual displayed of uploads
         # Example in blue pages
         # Gallery of Media 

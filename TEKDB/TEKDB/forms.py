@@ -23,7 +23,7 @@ class MultipleFileField(forms.FileField):
 
 class MediaBulkUploadForm(forms.ModelForm):
     files = MultipleFileField()
-    date = forms.DateField(widget=forms.SelectDateWidget)
+    mediabulkdate = forms.DateField(widget=forms.SelectDateWidget)
     places = forms.ModelMultipleChoiceField(queryset=Places.objects.all(), required=False)
     resources = forms.ModelMultipleChoiceField(queryset=Resources.objects.all(), required=False)
     citations = forms.ModelMultipleChoiceField(queryset=Citations.objects.all(), required=False)
@@ -32,4 +32,4 @@ class MediaBulkUploadForm(forms.ModelForm):
 
     class Meta:
         model = MediaBulkUpload
-        fields = ['name', 'description', 'files', 'date', 'places', 'resources', 'citations', 'activities', 'placeresources']
+        fields = ['mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources']
