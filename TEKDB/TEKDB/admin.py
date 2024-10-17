@@ -448,7 +448,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
-    list_display = ('mediabulkname',)
+    list_display = ('mediabulkname','mediabulkdate','modifiedbydate','enteredbydate',)
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
