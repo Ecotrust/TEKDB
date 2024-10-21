@@ -9,7 +9,7 @@ from django.db import connection
 from django.db.models import Q
 from django.db.utils import OperationalError
 from django.http import HttpResponse, Http404, FileResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import io
 import os
 import shutil

@@ -512,10 +512,30 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         ]
 
     def __unicode__(self):
-        return unicode('%s (%s)' % (self.indigenousplacename, self.englishplacename))
+        indigenous = self.indigenousplacename or ""
+        english = self.englishplacename or ""
+
+        if indigenous and english:
+            return u'%s (%s)' % (indigenous, english)
+        elif indigenous:
+            return unicode(indigenous)
+        elif english:
+            return unicode(english)
+        else:
+            return u'No Name Given'
 
     def __str__(self):
-        return "%s (%s)" % (self.indigenousplacename, self.englishplacename) or ''
+        indigenous = self.indigenousplacename or ""
+        english = self.englishplacename or ""
+
+        if indigenous and english:
+            return "%s (%s)" % (indigenous, english)
+        elif indigenous:
+            return indigenous
+        elif english:
+            return english
+        else:
+            return "No Name Given"
 
 class LookupResourceGroup(DefaultModeratedModel, ModeratedModel):
     id = models.AutoField(db_column='id', primary_key=True)
@@ -1830,6 +1850,20 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.username or ''
 
+
+#   * Bulk Media Upload 
+#   formerly known as Media Collection
+class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
+    mediabulkname = models.CharField(max_length=255, blank=True, null=True)
+    mediabulkdescription = models.TextField(blank=True, null=True)
+    mediabulkdate = models.DateField(blank=True, null=True, default=None)
+    
+    # @property
+    # def count(self):
+        # number of media items uploaded
+
+    # Ability to edit Media
+
 class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
     mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
@@ -1838,6 +1872,9 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
     mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
+
+    #   * Media Bulk Upload Event
+    mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         managed = MANAGED

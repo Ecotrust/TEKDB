@@ -1,0 +1,6 @@
+{% if widget.value %}
+    <div class="thumbnail">
+        {{ widget.value }}
+    </div>
+{% endif %}
+<input type="file" multiple name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>

@@ -60,3 +60,15 @@ class OpenLayers6PolygonWidget(OpenLayers6Widget):
             'assets/openlayers6/ol.js',
             'gis/js/OL6MapPolygonWidget.js',
         )
+
+
+from django.forms.widgets import ClearableFileInput
+from django.utils.safestring import mark_safe
+
+class ThumbnailFileInput(ClearableFileInput):
+    template_name = 'widgets/thumbnail_file_input.html'
+
+    def format_value(self, value):
+        if value and hasattr(value, 'url'):
+            return mark_safe(f'<img src="{value.url}" width="100" height="100" />')
+        return super().format_value(value)
