@@ -2,7 +2,6 @@ nav.navbar {
   align-items: stretch;
   background-color: var(--default_background);
   border-bottom: 1px solid var(--black);
-  /* margin: 0 3vw; */
   height: var(--header_height);
 }
 
@@ -23,15 +22,12 @@ nav.navbar {
   font-family: var(--font-sans-serif-extrabold);
   font-size: 1.06375em;
   letter-spacing: 0.025em;
-  /* letter-spacing: 0.075em; */
   flex-wrap: wrap;
   height: 100%;
   line-height: normal;
   padding: 0;
-  /* padding: 0 20px 0 0; */
   text-align: center;
   min-width: 120px;
-  /* width: 200px; */
 }
 
 /*
