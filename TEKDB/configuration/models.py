@@ -19,9 +19,9 @@ class Configuration(models.Model):
     )
 
     preferredInitialismPlacementChoices = [
-        ('default', 'Default'),
-        ('before', 'Before'),
-        ('after', 'After'),
+        ('default', 'Align Center'),
+        ('before', 'Align Left'),
+        ('after', 'Align Right'),
     ]
 
     preferredInitialismPlacement = models.CharField(
