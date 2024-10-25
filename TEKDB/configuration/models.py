@@ -124,10 +124,10 @@ class Configuration(models.Model):
     #   * Making search settings customizable by admin
 
     SEARCH_RANK_CHOICES = [
-        (0.01, 'All Results'),
-        (0.1, 'Most Results'),
-        (0.5, 'Top Results'),
-        (0.9, 'Only Best Results'),
+        (0.01, 'Lowest'),
+        (0.1, 'Default'),
+        (0.6, 'Moderate'),
+        (0.9, 'Highest'),
     ]
 
     min_search_rank = models.FloatField(
@@ -141,10 +141,11 @@ class Configuration(models.Model):
     )
 
     SEARCH_SIMILARITY_CHOICES = [
-        (0.1, 'Loose'),
-        (0.4, 'Moderate'),
-        (0.6, 'Pretty Strict'),
-        (0.9, 'Strict'),
+        (0.01, 'Permissive'),
+        (0.1, 'Default'),
+        (0.3, 'Similar'),
+        (0.4, 'Has Match'),
+        (0.9, 'Exact Match'),
     ]
 
     min_search_similarity = models.FloatField(

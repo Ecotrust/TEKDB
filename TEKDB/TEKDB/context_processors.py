@@ -33,8 +33,8 @@ def search_settings(request=None):
     if configs:
         try:
             search_config = {
-                'MIN_SEARCH_RANK': configs.min_search_rank,
-                'MIN_SEARCH_SIMILARITY': configs.min_search_similarity,
+                'MIN_SEARCH_RANK': configs.min_search_rank if configs.min_search_rank else search_config['MIN_SEARCH_RANK'],
+                'MIN_SEARCH_SIMILARITY': configs.min_search_similarity if configs.min_search_similarity else search_config['MIN_SEARCH_SIMILARITY'],
             }
         except Exception as e:
             print('No min_search_rank or min_search_similarity in Configuration')
