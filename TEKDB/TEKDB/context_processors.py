@@ -1,4 +1,4 @@
-def search_settings(request):
+def search_settings(request=None):
     try:
         from django.conf import settings
     except Exception as e:
@@ -22,13 +22,12 @@ def search_settings(request):
 
     if settings:
         try:
-            if len(settings.MIN_SEARCH_RANK) > 0 and len(settings.MIN_SEARCH_SIMILARITY) > 0:
-                search_config = {
-                    'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,
-                    'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,
-                }
+            search_config = {
+                'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,
+                'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,
+            }
         except Exception as e:
-            print(e)
+            print('No MIN_SEARCH_RANK or MIN_SEARCH_SIMILARITY in settings')
             pass
 
     if configs:
@@ -38,7 +37,7 @@ def search_settings(request):
                 'MIN_SEARCH_SIMILARITY': configs.min_search_similarity,
             }
         except Exception as e:
-            print(e)
+            print('No min_search_rank or min_search_similarity in Configuration')
             pass
 
     return search_config

@@ -55,14 +55,14 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     # Last resort default values
     # These should be set in the settings.py file, but if they're not, we'll use these.
     # These can be overridden in the admin configuration page.
-    min_search_rank = '0.01'
-    min_search_similarity = '0.1'
+    min_search_rank = 0.01
+    min_search_similarity = 0.1
 
     try:
         from TEKDB.context_processors import search_settings
-        if search_settings:
-            min_search_rank = search_settings.min_search_rank
-            min_search_similarity = search_settings.min_search_similarity
+        search_settings = search_settings()
+        min_search_rank = search_settings['MIN_SEARCH_RANK']
+        min_search_similarity = search_settings['MIN_SEARCH_SIMILARITY']
     except Exception as e:
         print(e)
         pass    
