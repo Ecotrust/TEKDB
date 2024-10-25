@@ -1,23 +1,47 @@
 def search_settings(request):
-    from django.conf import settings
-    from .models import SearchSettings
-
     try:
-        # Get the search settings from the database
-        search_settings = SearchSettings.objects.first()
-        if search_settings:
-            return {
-                'MIN_SEARCH_RANK': search_settings.min_search_rank,
-                'MIN_SEARCH_SIMILARITY': search_settings.min_search_similarity,
-            }
+        from django.conf import settings
     except Exception as e:
-        print(e)
-        pass
+        try:
+            from TEKDB import settings
+        except Exception as e:
+            print('Could not import settings from TEKDB')
+            print(e)
+            settings = False
+    
+    try:
+        from configuration.models import Configuration
+        configs = Configuration.objects.all()[0]
+    except Exception as e:
+        configs = False
 
-    return {
-        'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,  # Default value
-        'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,  # Default value
+    search_config = {
+        'MIN_SEARCH_RANK': 0.01,  # Default value
+        'MIN_SEARCH_SIMILARITY': 0.1,  # Default
     }
+
+    if settings:
+        try:
+            if len(settings.MIN_SEARCH_RANK) > 0 and len(settings.MIN_SEARCH_SIMILARITY) > 0:
+                search_config = {
+                    'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,
+                    'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,
+                }
+        except Exception as e:
+            print(e)
+            pass
+
+    if configs:
+        try:
+            search_config = {
+                'MIN_SEARCH_RANK': configs.min_search_rank,
+                'MIN_SEARCH_SIMILARITY': configs.min_search_similarity,
+            }
+        except Exception as e:
+            print(e)
+            pass
+
+    return search_config
 
 
 def add_map_default_context(request):

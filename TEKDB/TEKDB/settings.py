@@ -101,6 +101,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'explore.context_processors.explore_context',
+                'TEKDB.context_processors.search_settings',
                 # 'TEKDB.context_processors.add_map_default_context'
             ],
         },

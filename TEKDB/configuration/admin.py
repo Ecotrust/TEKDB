@@ -34,6 +34,8 @@ class ConfigurationAdmin(VersionAdmin):
         ('Search Results', {
             'fields': (
                 'max_results_returned',
+                'min_search_rank',
+                'min_search_similarity',
             )
         }),
         ('Map Defaults', {
