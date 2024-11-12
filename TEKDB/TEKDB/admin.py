@@ -189,6 +189,7 @@ class ResourcesCitationEventsForm(forms.ModelForm):
         }
         fields = '__all__'
 
+
 class ResourcesMediaEventsForm(forms.ModelForm):
     class Meta:
         model = ResourcesMediaEvents
@@ -198,6 +199,7 @@ class ResourcesMediaEventsForm(forms.ModelForm):
             'relationshipdescription': CKEditorWidget
         }
         fields = '__all__'
+    
 
 class PlaceAltIndigenousNameForm(forms.ModelForm):
     class Meta:
@@ -539,7 +541,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     'enteredbyname','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription','media_collection',)
+            'fields': (('medianame','mediatype','limitedaccess'),'mediafile','medialink','mediadescription','mediabulkupload',)
         }),
         ('Review', {
             'fields': (
@@ -791,7 +793,7 @@ class PlacesMediaEventsAdmin(RecordAdminProxy):
         })
     )
     form = PlacesMediaEventsForm
-
+    
 class PlaceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
@@ -844,7 +846,7 @@ class ResourceActivityCitationEventsAdmin(RecordAdminProxy):
         })
     )
     form = ResourceActivityCitationEventsForm
-
+        
 class ResourceActivityMediaEventsAdmin(RecordAdminProxy):
     list_display = ('resourceactivityid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (

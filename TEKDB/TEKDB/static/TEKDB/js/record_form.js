@@ -72,21 +72,27 @@ loadFormModal = function(module, model, id, action, base_model, base_id, fk_fiel
   }
   html +='/?_popup=1"></iframe>';
   $('#form-modal-body').html(html);
-  $('#popup-iframe-form').load(function(){
+  $('#popup-iframe-form').on('load', function() {
       if (action != 'delete') {
-        if (action == 'add') {
-          $('#popup-iframe-form').contents().find('#id_' + fk_field_id).parent().replaceWith('<input name="' + fk_field_id + '" id="id_' + fk_field_id + '" value="' + base_id + '"></input>');
-        }
-        // If below only shown for 'add', users could move relationships to new records
-        // For now I'm not sure this feature is intuitive or desired.
-        $('#popup-iframe-form').contents().find('#id_' + fk_field_id).hide();
-        $('#popup-iframe-form').contents().find('.field-box.field-' + fk_field_id).hide();
-        all_buttons = $('#popup-iframe-form').contents().find('.submit-row input');
+          if (action == 'add') {
+              $('#popup-iframe-form').contents().find('#id_' + fk_field_id).parent().replaceWith('<input name="' + fk_field_id + '" id="id_' + fk_field_id + '" value="' + base_id + '"></input>');
+          }
+          $('#popup-iframe-form').contents().find('#id_' + fk_field_id).hide();
+          $('#popup-iframe-form').contents().find('.field-box.field-' + fk_field_id).hide();
+          $('#popup-iframe-form').contents().find('label[for="id_' + fk_field_id + '"]').hide();
+          all_buttons = $('#popup-iframe-form').contents().find('.submit-row input');
       } else {
-        all_buttons = $('#popup-iframe-form').contents().find('form div').children(':not([type="hidden"])');
+          all_buttons = $('#popup-iframe-form').contents().find('form div').children(':not([type="hidden"])');
       }
       all_buttons.attr('data-toggle', 'modal');
       all_buttons.attr('data-target', '#inlineFormModal');
-      all_buttons.on('click', function(){iframeButtonClicked(base_model, base_id);});
+      all_buttons.on('click', function() { iframeButtonClicked(base_model, base_id); });
   });
 }
+
+window.addEventListener('message', function(event) {
+  // Check for the specific action you expect
+  if (event.data.action === 'closeAndRefresh') {
+      window.location.reload(); // Refresh the parent page
+  }
+});
