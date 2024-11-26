@@ -21,22 +21,6 @@ from ckeditor.fields import RichTextField
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 MANAGED = True
 
-#   * Making search settings a model allows for admin customization of search settings
-class SearchSettings(models.Model):
-    min_search_rank = models.FloatField(
-        default=settings.MIN_SEARCH_RANK, 
-        verbose_name='Minimum Search Rank', 
-        help_text='Weight 0-1 representing the minimum search rank threshold for search results.',
-    )
-    min_search_similarity = models.FloatField(
-        default=settings.MIN_SEARCH_SIMILARITY,
-        verbose_name='Minimum Search Similarity',
-        help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.',
-    )
-
-    def __str__(self):
-        return "Search Settings"
-
 def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_field):
     # model -> the model calling this function
     # keyword -> [str] your search string -- can be multiple words
@@ -68,14 +52,20 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
     query = SearchQuery(keyword)
 
+    # Last resort default values
+    # These should be set in the settings.py file, but if they're not, we'll use these.
+    # These can be overridden in the admin configuration page.
+    min_search_rank = 0.01
+    min_search_similarity = 0.1
+
     try:
-        search_settings = SearchSettings.objects.first()
-        if search_settings:
-            min_search_rank = search_settings.min_search_rank
-            min_search_similarity = search_settings.min_search_similarity
+        from TEKDB.context_processors import search_settings
+        search_settings = search_settings()
+        min_search_rank = search_settings['MIN_SEARCH_RANK']
+        min_search_similarity = search_settings['MIN_SEARCH_SIMILARITY']
     except Exception as e:
-        min_search_rank = settings.MIN_SEARCH_RANK
-        min_search_similarity = settings.MIN_SEARCH_SIMILARITY
+        print(e)
+        pass    
 
     if len(similarities) > 1:
         similarity = Greatest(*similarities)
@@ -1851,65 +1841,18 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
         return self.username or ''
 
 
-#   * Media Collection
-#   * 
-
-# Through tables or one to many relationship, reference Anna's work on MidA
-#   * PlacesMediaEvents
-#   * ResourcesMediaEvents
-#   * MediaCitationEvents
-#   * ResourceActivityMediaEvents
-#   * PlacesResourceMediaEvents
-
-# Change name to reflect that this is a bulk media upload event
-# Sorting 
-class MediaBulkUpload(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True, default=None)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    user = models.ForeignKey(LookupUserInfo, db_column='user', blank=True, null=True, verbose_name='user', default=None, on_delete=models.SET_DEFAULT)
+#   * Bulk Media Upload 
+#   formerly known as Media Collection
+class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
+    mediabulkname = models.CharField(max_length=255, blank=True, null=True, verbose_name='name')
+    mediabulkdescription = models.TextField(blank=True, null=True, verbose_name='description')
+    mediabulkdate = models.DateField(blank=True, null=True, default=None, verbose_name='date')
     
     # @property
     # def count(self):
         # number of media items uploaded
 
-    # Suggested Additions
-    # Multi upload
-    # Visual displayed of uploads
-        # Example in blue pages
-        # Gallery of Media 
-        # Ability to edit Media
-
-    # Media Fields + Relationships
-    # mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
-    # medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
-    # mediadescription = RichTextField(db_column='mediadescription', blank=True, null=True, verbose_name='description', config_name="custom") #CKEditor Rich Text Editor Field
-    # medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
-    # mediafile = models.FileField(db_column='mediafile', max_length=255, blank=True, null=True, verbose_name='file')
-    
-    # PlaceMedia relationship
-    # other 5 relationships ...
-    # def relationships(self):
-    # relationship_list = []
-    # places = [x.get_relationship_json(type(self)) for x in self.placesmediaevents_set.all()]
-    # if len(places) > 0:
-    #     relationship_list.append({'key': 'Places', 'value': places})
-    # resources = [x.get_relationship_json(type(self)) for x in self.resourcesmediaevents_set.all()]
-    # if len(resources) > 0:
-    #     relationship_list.append({'key': 'Resources', 'value': resources})
-    # citations = [x.get_relationship_json(type(self)) for x in self.mediacitationevents_set.all()]
-    # if len(citations) > 0:
-    #     relationship_list.append({'key': 'Bibliographic Sources', 'value': citations})
-    # activities = [x.get_relationship_json(type(self)) for x in self.resourceactivitymediaevents_set.all()]
-    # if len(activities) > 0:
-    #     relationship_list.append({'key': 'Activities', 'value': activities})
-    # placeresources = [x.get_relationship_json(type(self)) for x in self.placesresourcemediaevents_set.all()]
-    # if len(placeresources) > 0:
-    #     relationship_list.append({'key': 'Place-Resources', 'value': placeresources})
-    # return relationship_list
-
+    # Ability to edit Media
 
 class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
@@ -1922,7 +1865,6 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
 
     #   * Media Bulk Upload Event
     mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.SET_NULL)
-    # media_collection = models.ForeignKey(MediaBulkUpload, related_name='mediauploadevent', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         managed = MANAGED

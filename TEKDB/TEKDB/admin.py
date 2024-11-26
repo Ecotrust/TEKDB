@@ -13,6 +13,7 @@ import nested_admin
 from ckeditor.widgets import CKEditorWidget
 from reversion.admin import VersionAdmin
 
+from .forms import MediaBulkUploadForm
 from .models import *
 
 from TEKDB.settings import ADMIN_SITE_HEADER
@@ -21,11 +22,6 @@ admin.site.site_header = ADMIN_SITE_HEADER
 from TEKDB.settings import BASE_DIR
 from TEKDB.widgets import OpenLayers6Widget
 
-################
-#### SEARCH ####
-################
-class SearchSettingsAdmin(admin.ModelAdmin):
-    list_display = ('min_search_rank', 'min_search_similarity')
 
 #############
 ### FORMS ###
@@ -444,25 +440,47 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     )
     form = CitationsForm
 
-#   * Media COllection Admin
-from django.utils.html import format_html
-from django.contrib import admin
-from .models import MediaBulkUpload, Media
-from .forms import MediaBulkUploadForm
 
+#   * Bulk Media Upload Admin
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
+    list_display = ('mediabulkname','mediabulkdate','modifiedbydate','enteredbydate',)
+
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
+        places = form.cleaned_data.get('places')
+        resources = form.cleaned_data.get('resources')
+        citations = form.cleaned_data.get('citations')
+        activities = form.cleaned_data.get('activities')
+        placeresources = form.cleaned_data.get('placeresources')
+
         for file in request.FILES.getlist('files'):
             media_instance = Media(
-                medianame=obj.name,
-                mediadescription=obj.description,
+                medianame=obj.mediabulkname,
+                mediadescription=obj.mediabulkdescription,
                 mediafile=file,
             )
             media_instance.save()
             obj.mediabulkupload.add(media_instance)
+
+            # Add relationships
+            if places:
+                for place in places:
+                    PlacesMediaEvents.objects.create(placeid=place, mediaid=media_instance)
+            if resources:
+                for resource in resources:
+                    ResourcesMediaEvents.objects.create(resourceid=resource, mediaid=media_instance)
+            if citations:
+                for citation in citations:
+                    MediaCitationEvents.objects.create(citationid=citation, mediaid=media_instance)
+            if activities:
+                for activity in activities:
+                    ResourceActivityMediaEvents.objects.create(resourceactivityid=activity, mediaid=media_instance)
+            if placeresources:
+                for placeresource in placeresources:
+                    PlaceResourceMediaEvents.objects.create(placeresourceid=placeresource, mediaid=media_instance)
+
 
     def thumbnail_gallery(self, obj):
         thumbnails = []
@@ -522,16 +540,15 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         return format_html(''.join(thumbnails))
 
     thumbnail_gallery.short_description = 'Thumbnails'
-
     readonly_fields = ('thumbnail_gallery',)
-
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'files', 'date', 'thumbnail_gallery')
+            'fields': ('mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
         }),
     )
 
 admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
+
 
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
@@ -988,9 +1005,6 @@ admin.site.register(ResourcesCitationEvents, ResourcesCitationEventsAdmin)
 admin.site.register(ResourcesMediaEvents, ResourcesMediaEventsAdmin)
 admin.site.register(Users, UsersAdmin)
 admin.site.register(UserAccess)
-
-### SEARCH
-admin.site.register(SearchSettings)
 
 ###Cruft
 admin.site.register(LookupAuthorType)
