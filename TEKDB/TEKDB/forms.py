@@ -7,7 +7,7 @@ class MultipleFileInput(forms.ClearableFileInput):
 
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", MultipleFileInput())
+        kwargs.setdefault("widget", ThumbnailFileInput)
         super().__init__(*args, **kwargs)
 
     def clean(self, data, initial=None):
@@ -17,9 +17,6 @@ class MultipleFileField(forms.FileField):
         else:
             result = [single_file_clean(data, initial)]
         return result
-
-# class MultipleFileField(forms.FileField):
-#     widget = ThumbnailFileInput
 
 class MediaBulkUploadForm(forms.ModelForm):
     files = MultipleFileField()
