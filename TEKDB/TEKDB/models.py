@@ -21,22 +21,6 @@ from ckeditor.fields import RichTextField
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 MANAGED = True
 
-#   * Making search settings a model allows for admin customization of search settings
-class SearchSettings(models.Model):
-    min_search_rank = models.FloatField(
-        default=settings.MIN_SEARCH_RANK, 
-        verbose_name='Minimum Search Rank', 
-        help_text='Weight 0-1 representing the minimum search rank threshold for search results.',
-    )
-    min_search_similarity = models.FloatField(
-        default=settings.MIN_SEARCH_SIMILARITY,
-        verbose_name='Minimum Search Similarity',
-        help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.',
-    )
-
-    def __str__(self):
-        return "Search Settings"
-
 def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_field):
     # model -> the model calling this function
     # keyword -> [str] your search string -- can be multiple words
@@ -68,14 +52,20 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
     query = SearchQuery(keyword)
 
+    # Last resort default values
+    # These should be set in the settings.py file, but if they're not, we'll use these.
+    # These can be overridden in the admin configuration page.
+    min_search_rank = 0.01
+    min_search_similarity = 0.1
+
     try:
-        search_settings = SearchSettings.objects.first()
-        if search_settings:
-            min_search_rank = search_settings.min_search_rank
-            min_search_similarity = search_settings.min_search_similarity
+        from TEKDB.context_processors import search_settings
+        search_settings = search_settings()
+        min_search_rank = search_settings['MIN_SEARCH_RANK']
+        min_search_similarity = search_settings['MIN_SEARCH_SIMILARITY']
     except Exception as e:
-        min_search_rank = settings.MIN_SEARCH_RANK
-        min_search_similarity = settings.MIN_SEARCH_SIMILARITY
+        print(e)
+        pass    
 
     if len(similarities) > 1:
         similarity = Greatest(*similarities)

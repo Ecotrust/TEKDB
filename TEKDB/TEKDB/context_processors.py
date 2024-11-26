@@ -1,23 +1,46 @@
-def search_settings(request):
-    from django.conf import settings
-    from .models import SearchSettings
-
+def search_settings(request=None):
     try:
-        # Get the search settings from the database
-        search_settings = SearchSettings.objects.first()
-        if search_settings:
-            return {
-                'MIN_SEARCH_RANK': search_settings.min_search_rank,
-                'MIN_SEARCH_SIMILARITY': search_settings.min_search_similarity,
-            }
+        from django.conf import settings
     except Exception as e:
-        print(e)
-        pass
+        try:
+            from TEKDB import settings
+        except Exception as e:
+            print('Could not import settings from TEKDB')
+            print(e)
+            settings = False
+    
+    try:
+        from configuration.models import Configuration
+        configs = Configuration.objects.all()[0]
+    except Exception as e:
+        configs = False
 
-    return {
-        'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,  # Default value
-        'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,  # Default value
+    search_config = {
+        'MIN_SEARCH_RANK': 0.01,  # Default value
+        'MIN_SEARCH_SIMILARITY': 0.1,  # Default
     }
+
+    if settings:
+        try:
+            search_config = {
+                'MIN_SEARCH_RANK': settings.MIN_SEARCH_RANK,
+                'MIN_SEARCH_SIMILARITY': settings.MIN_SEARCH_SIMILARITY,
+            }
+        except Exception as e:
+            print('No MIN_SEARCH_RANK or MIN_SEARCH_SIMILARITY in settings')
+            pass
+
+    if configs:
+        try:
+            search_config = {
+                'MIN_SEARCH_RANK': configs.min_search_rank if configs.min_search_rank else search_config['MIN_SEARCH_RANK'],
+                'MIN_SEARCH_SIMILARITY': configs.min_search_similarity if configs.min_search_similarity else search_config['MIN_SEARCH_SIMILARITY'],
+            }
+        except Exception as e:
+            print('No min_search_rank or min_search_similarity in Configuration')
+            pass
+
+    return search_config
 
 
 def add_map_default_context(request):

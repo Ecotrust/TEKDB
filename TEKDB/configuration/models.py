@@ -121,6 +121,44 @@ class Configuration(models.Model):
         help_text='500 is recommended. Allowing more may result in poor website performance or strain on the server.'
     )
 
+    #   * Making search settings customizable by admin
+
+    SEARCH_RANK_CHOICES = [
+        (0.01, 'Lowest'),
+        (0.1, 'Default'),
+        (0.6, 'Moderate'),
+        (0.9, 'Highest'),
+    ]
+
+    min_search_rank = models.FloatField(
+        default=None,
+        choices=SEARCH_RANK_CHOICES,
+        max_length=255,
+        verbose_name='Minimum Search Rank', 
+        help_text='Weight 0-1 representing the minimum search rank threshold for search results.',
+        null=True,
+        blank=True,
+    )
+
+    SEARCH_SIMILARITY_CHOICES = [
+        (0.01, 'Permissive'),
+        (0.1, 'Default'),
+        (0.3, 'Similar'),
+        (0.4, 'Has Match'),
+        (0.9, 'Exact Match'),
+    ]
+
+    min_search_similarity = models.FloatField(
+        default=None,
+        choices=SEARCH_SIMILARITY_CHOICES,
+        max_length=255,
+        verbose_name='Minimum Search Similarity',
+        help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.',
+        null=True,
+        blank=True,
+    )
+
+
     # TODO: Allow users to:
     #   * Override default theme colors (x8)
     # Look into Django-Colorfield: https://stackoverflow.com/a/57080102/706797 

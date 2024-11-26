@@ -101,6 +101,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'explore.context_processors.explore_context',
+                'TEKDB.context_processors.search_settings',
                 # 'TEKDB.context_processors.add_map_default_context'
             ],
         },
@@ -201,7 +202,7 @@ SEARCH_CATEGORIES = [
 ]
 #Locality? People?
 
-MIN_SEARCH_RANK = 0.01
+MIN_SEARCH_RANK = 0.1
 MIN_SEARCH_SIMILARITY = 0.1
 
 AUTH_USER_MODEL = 'Accounts.Users'
