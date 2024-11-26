@@ -1854,9 +1854,9 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
 #   * Bulk Media Upload 
 #   formerly known as Media Collection
 class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
-    mediabulkname = models.CharField(max_length=255, blank=True, null=True)
-    mediabulkdescription = models.TextField(blank=True, null=True)
-    mediabulkdate = models.DateField(blank=True, null=True, default=None)
+    mediabulkname = models.CharField(max_length=255, blank=True, null=True, verbose_name='name')
+    mediabulkdescription = models.TextField(blank=True, null=True, verbose_name='description')
+    mediabulkdate = models.DateField(blank=True, null=True, default=None, verbose_name='date')
     
     # @property
     # def count(self):
