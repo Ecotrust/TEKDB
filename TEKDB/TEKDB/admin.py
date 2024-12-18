@@ -459,7 +459,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
             filename = file.name.split('.')[0]
             media_instance = Media(
                 medianame=filename,
-                mediadescription=obj.mediabulkdescription,
+                mediadescription=f'Part of the "{obj.mediabulkname}" Media Bulk Upload that was uploaded on {obj.mediabulkdate}',
                 mediafile=file,
             )
             media_instance.save()
