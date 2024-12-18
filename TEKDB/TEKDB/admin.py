@@ -553,7 +553,8 @@ admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
-    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
+    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate',
+    'mediabulkupload',)
     list_display = ('medianame','mediatype','needs_Review','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
