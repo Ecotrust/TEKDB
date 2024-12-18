@@ -456,8 +456,9 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         placeresources = form.cleaned_data.get('placeresources')
 
         for file in request.FILES.getlist('files'):
+            filename = file.name.split('.')[0]
             media_instance = Media(
-                medianame=obj.mediabulkname,
+                medianame=filename,
                 mediadescription=obj.mediabulkdescription,
                 mediafile=file,
             )
