@@ -1848,6 +1848,14 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
     mediabulkdescription = models.TextField(blank=True, null=True, verbose_name='description')
     mediabulkdate = models.DateField(blank=True, null=True, default=None, verbose_name='date')
     
+    class Meta:
+        managed = MANAGED
+        verbose_name = 'Media Bulk Upload'
+        verbose_name_plural = 'Media Bulk Uploads'
+
+    def __str__(self):
+        return self.mediabulkname or ''
+
     # @property
     # def count(self):
         # number of media items uploaded
