@@ -1864,7 +1864,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
     #   * Media Bulk Upload Event
-    mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.SET_NULL)
+    mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         managed = MANAGED
