@@ -454,12 +454,26 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         citations = form.cleaned_data.get('citations')
         activities = form.cleaned_data.get('activities')
         placeresources = form.cleaned_data.get('placeresources')
-
+        
         for file in request.FILES.getlist('files'):
+            mime_type, _ = guess_type(file.name)
+            # if mime_type:
+            file_mime_type = mime_type.split('/')[0]
+            media_type_instance = LookupMediaType.objects.filter(mediatype__startswith=file_mime_type).first()
+            if media_type_instance:
+                mediatype = media_type_instance
+            else:
+                media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
+                mediatype = media_type_instance
+            # else:
+            #     media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
+            #     mediatype = media_type_instance
+
             media_instance = Media(
                 medianame=obj.mediabulkname,
                 mediadescription=obj.mediabulkdescription,
                 mediafile=file,
+                mediatype=mediatype,
             )
             media_instance.save()
             obj.mediabulkupload.add(media_instance)
