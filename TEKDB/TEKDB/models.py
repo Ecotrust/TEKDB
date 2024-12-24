@@ -9,6 +9,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q, Manager as GeoManager
 from django.db.models.functions import Greatest
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.utils.translation import gettext_lazy as _
@@ -17,6 +19,7 @@ from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
 from ckeditor.fields import RichTextField
 # from moderation.db import ModeratedModel
+import os
 
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 MANAGED = True
@@ -1844,10 +1847,20 @@ class LookupUserInfo(DefaultModeratedModel, ModeratedModel):
 #   * Bulk Media Upload 
 #   formerly known as Media Collection
 class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
+    from datetime import date
     mediabulkname = models.CharField(max_length=255, blank=True, null=True, verbose_name='name')
+    mediabulkdate = models.DateField(blank=True, null=True, default=date.today, verbose_name='date')
     mediabulkdescription = models.TextField(blank=True, null=True, verbose_name='description')
-    mediabulkdate = models.DateField(blank=True, null=True, default=None, verbose_name='date')
+
     
+    class Meta:
+        managed = MANAGED
+        verbose_name = 'Media Bulk Upload'
+        verbose_name_plural = 'Media Bulk Uploads'
+
+    def __str__(self):
+        return self.mediabulkname or ''
+
     # @property
     # def count(self):
         # number of media items uploaded
@@ -1864,7 +1877,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     limitedaccess = models.BooleanField(db_column='limitedaccess', null=True, default=False, verbose_name='limited access?')
 
     #   * Media Bulk Upload Event
-    mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.SET_NULL)
+    mediabulkupload = models.ForeignKey(MediaBulkUpload, related_name='mediabulkupload', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         managed = MANAGED
@@ -2023,6 +2036,12 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
                 self.medialink = None
         super(Media, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        if self.mediafile:
+            if os.path.isfile(self.mediafile.path):
+                os.remove(self.mediafile.path)
+        super().delete(*args, **kwargs)
+
     def get_related_objects(self, object_id):
         place_events = self.placesmediaevents_set.all()
         citation_events = self.mediacitationevents_set.all()
@@ -2036,6 +2055,12 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
             {'title': 'Place-Resource Relationships', 'data': self.format_data(place_res_events, 'mediaid', ['media'])},
             {'title': 'Activity Relationships', 'data': self.format_data(activity_events, 'mediaid', ['media'])},
         ]
+
+# Signal handler to delete the associated media file when a Media instance is deleted
+@receiver(post_delete, sender=Media)
+def delete_mediafile(sender, instance, **kwargs):
+    if instance.mediafile and os.path.isfile(instance.mediafile.path):
+        os.remove(instance.mediafile.path)
 
 class MediaCitationEvents(SimpleRelationship):
     mediaid = models.ForeignKey(Media, db_column='mediaid', primary_key=False, verbose_name='media', on_delete=models.PROTECT)

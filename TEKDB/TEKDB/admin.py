@@ -447,7 +447,8 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
-    list_display = ('mediabulkname','mediabulkdate','modifiedbydate','enteredbydate',)
+    list_display = ('mediabulkname','mediabulkdate',
+    'enteredbyname','enteredbydate')
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
@@ -456,12 +457,26 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         citations = form.cleaned_data.get('citations')
         activities = form.cleaned_data.get('activities')
         placeresources = form.cleaned_data.get('placeresources')
-
+        
         for file in request.FILES.getlist('files'):
+            mime_type, _ = guess_type(file.name)
+            # if mime_type:
+            file_mime_type = mime_type.split('/')[0]
+            media_type_instance = LookupMediaType.objects.filter(mediatype__startswith=file_mime_type).first()
+            if media_type_instance:
+                mediatype = media_type_instance
+            else:
+                media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
+                mediatype = media_type_instance
+            # else:
+            #     media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
+            #     mediatype = media_type_instance
+
             media_instance = Media(
-                medianame=obj.mediabulkname,
-                mediadescription=obj.mediabulkdescription,
+                medianame=filename,
+                mediadescription=f'Part of the "{obj.mediabulkname}" Media Bulk Upload that was uploaded on {obj.mediabulkdate}',
                 mediafile=file,
+                mediatype=mediatype,
             )
             media_instance.save()
             obj.mediabulkupload.add(media_instance)
@@ -544,10 +559,34 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
         return format_html(''.join(thumbnails))
 
-    readonly_fields = ('thumbnail_gallery',)
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # If the object already exists
+            return [field.name for field in self.model._meta.fields]
+        else:
+            return self.readonly_fields
+
+    def has_change_permission(self, request, obj=None):
+        if obj:  # If the object already exists
+            return False
+        return super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return True
+
+    def has_add_permission(self, request):
+        return True
+
+    thumbnail_gallery.short_description = 'Thumbnails'
+    readonly_fields = ('thumbnail_gallery',
+    'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate')
     fieldsets = (
         (None, {
             'fields': ('mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
+        }),
+        ('History', {
+            'fields': (
+                ('enteredbyname','enteredbytitle','enteredbytribe','enteredbydate')
+            )
         }),
     )
 
@@ -557,7 +596,8 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
-    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
+    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate',
+    'mediabulkupload',)
     list_display = ('medianame','mediatype','needs_Review','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
