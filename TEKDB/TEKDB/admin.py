@@ -468,10 +468,9 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
             else:
                 media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
                 mediatype = media_type_instance
-            # else:
-            #     media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
-            #     mediatype = media_type_instance
-
+            
+            filename = file.name.split('.')[0]
+            
             media_instance = Media(
                 medianame=filename,
                 mediadescription=f'Part of the "{obj.mediabulkname}" Media Bulk Upload that was uploaded on {obj.mediabulkdate}',
