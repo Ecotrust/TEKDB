@@ -24,7 +24,7 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.conf import settings
 
-from django.conf.urls import include, url
+from django.urls import include, path, re_path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from login import views as login_views
@@ -35,22 +35,22 @@ from . import models
 
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
-    url(r'^login/$', login_views.login, name='login'),
-    url(r'^login_async/$', login_views.login_async, name='login_async'),
-    url(r'^logout/$', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
-    url(r'^accounts/', include('django_registration.backends.one_step.urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^nested_admin/', include('nested_admin.urls')),
-    url(r'^tekdb/(?P<model_name>\w+)/(?P<id>\w+)/get_related$', views.get_related),
-    url('citation_autocomplete/$', views.CitationAutocompleteView.as_view(), name='select2_fk_citation',),
-    url('export_database/$', views.ExportDatabase, name='export_database'),
-    url('import_database/$', views.ImportDatabase, name='import_database'),
-    url('medium_autocomplete/$', views.MediaAutocompleteView.as_view(), name='select2_fk_media',),
-    url('place_autocomplete/$', views.PlaceAutocompleteView.as_view(), name='select2_fk_place',),
-    url('place_resource_autocomplete/$', views.PlaceResourceAutocompleteView.as_view(), name='select2_fk_placeresource',),
-    url('resource_autocomplete/$', views.ResourceAutocompleteView.as_view(), name='select2_fk_resource',),
-    url('resource_activity_autocomplete/$', views.ResourceActivityAutocompleteView.as_view(), name='select2_fk_resourceactivity',),
-    url(r'', include('explore.urls')),
+    path('login/', login_views.login, name='login'),
+    path('login_async/', login_views.login_async, name='login_async'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('accounts/', include('django_registration.backends.one_step.urls')),
+    re_path(r'^admin/', admin.site.urls),
+    path('nested_admin/', include('nested_admin.urls')),
+    re_path(r'^tekdb/(?P<model_name>\w+)/(?P<id>\w+)/get_related$', views.get_related),
+    path('citation_autocomplete/', views.CitationAutocompleteView.as_view(), name='select2_fk_citation',),
+    path('export_database/', views.ExportDatabase, name='export_database'),
+    path('import_database/', views.ImportDatabase, name='import_database'),
+    path('medium_autocomplete/', views.MediaAutocompleteView.as_view(), name='select2_fk_media',),
+    path('place_autocomplete/', views.PlaceAutocompleteView.as_view(), name='select2_fk_place',),
+    path('place_resource_autocomplete/', views.PlaceResourceAutocompleteView.as_view(), name='select2_fk_placeresource',),
+    path('resource_autocomplete/', views.ResourceAutocompleteView.as_view(), name='select2_fk_resource',),
+    path('resource_activity_autocomplete/', views.ResourceActivityAutocompleteView.as_view(), name='select2_fk_resourceactivity',),
+    path('', include('explore.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

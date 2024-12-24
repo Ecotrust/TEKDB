@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.html import format_html
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from dal import autocomplete
 from mimetypes import guess_type
 from django.templatetags.static import static
@@ -380,6 +380,7 @@ class RecordModelAdmin(VersionAdmin):
         extra_context['related_objects'] = object_instance.get_related_objects(object_id)
         return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
+@admin.register(Citations)
 class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('referencetype','title_text','description_text', 'needs_Review',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
@@ -442,6 +443,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
 
 
 #   * Bulk Media Upload Admin
+@admin.register(MediaBulkUpload)
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
@@ -482,6 +484,9 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
                     PlaceResourceMediaEvents.objects.create(placeresourceid=placeresource, mediaid=media_instance)
 
 
+    @admin.display(
+        description='Thumbnails'
+    )
     def thumbnail_gallery(self, obj):
         thumbnails = []
         for media in obj.mediabulkupload.all():
@@ -539,7 +544,6 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
         return format_html(''.join(thumbnails))
 
-    thumbnail_gallery.short_description = 'Thumbnails'
     readonly_fields = ('thumbnail_gallery',)
     fieldsets = (
         (None, {
@@ -547,9 +551,9 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         }),
     )
 
-admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
 
 
+@admin.register(Media)
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
@@ -585,6 +589,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     form = MediaForm
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
+@admin.register(Places)
 class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('indigenousplacename','englishplacename','needs_Review','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
@@ -631,6 +636,7 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
         extra_context['results_geojson'] = getPlacesGeoJSON(request)
         return super(PlacesAdmin, self).changelist_view(request, extra_context=extra_context)
 
+@admin.register(Resources)
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('commonname','indigenousname', 'needs_Review', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')
@@ -664,6 +670,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     ordering = ('commonname',)
     form = ResourcesForm
 
+@admin.register(ResourcesActivityEvents)
 class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('placeresourceid', 'excerpt_text', 'needs_Review',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
@@ -732,6 +739,7 @@ class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
     ]
 
 #### RELATIONSHIP MODELS ####
+@admin.register(PlacesResourceEvents)
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
     list_display = ('placeid', 'resourceid', 'needs_Review','partused', 'season',
                     'enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
@@ -766,6 +774,7 @@ class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
         NestedPlacesresourceactivityeventInline,
     ]
 
+@admin.register(MediaCitationEvents)
 class MediaCitationEventsAdmin(RecordAdminProxy):
     list_display = ('mediaid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -781,6 +790,7 @@ class MediaCitationEventsAdmin(RecordAdminProxy):
     )
     form = MediaCitationEventsForm
 
+@admin.register(PlacesCitationEvents)
 class PlacesCitationEventsAdmin(RecordAdminProxy):
     list_display = ('placeid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -796,6 +806,7 @@ class PlacesCitationEventsAdmin(RecordAdminProxy):
     )
     form = PlacesCitationEventsForm
 
+@admin.register(PlacesMediaEvents)
 class PlacesMediaEventsAdmin(RecordAdminProxy):
     list_display = ('placeid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -811,6 +822,7 @@ class PlacesMediaEventsAdmin(RecordAdminProxy):
     )
     form = PlacesMediaEventsForm
     
+@admin.register(PlaceAltIndigenousName)
 class PlaceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
@@ -819,6 +831,7 @@ class PlaceAltIndigenousNameAdmin(VersionAdmin):
     )
     form = PlaceAltIndigenousNameForm
 
+@admin.register(PlacesResourceCitationEvents)
 class PlacesResourceCitationEventsAdmin(RecordAdminProxy):
     list_display = ('placeresourceid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -834,6 +847,7 @@ class PlacesResourceCitationEventsAdmin(RecordAdminProxy):
     )
     form = PlacesResourceCitationEventsForm
 
+@admin.register(PlacesResourceMediaEvents)
 class PlacesResourceMediaEventsAdmin(RecordAdminProxy):
     list_display = ('placeresourceid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -849,6 +863,7 @@ class PlacesResourceMediaEventsAdmin(RecordAdminProxy):
     )
     form = PlacesResourceMediaEventsForm
 
+@admin.register(ResourceActivityCitationEvents)
 class ResourceActivityCitationEventsAdmin(RecordAdminProxy):
     list_display = ('resourceactivityid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -864,6 +879,7 @@ class ResourceActivityCitationEventsAdmin(RecordAdminProxy):
     )
     form = ResourceActivityCitationEventsForm
         
+@admin.register(ResourceActivityMediaEvents)
 class ResourceActivityMediaEventsAdmin(RecordAdminProxy):
     list_display = ('resourceactivityid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -879,6 +895,7 @@ class ResourceActivityMediaEventsAdmin(RecordAdminProxy):
     )
     form = ResourceActivityMediaEventsForm
 
+@admin.register(ResourceResourceEvents)
 class ResourceResourceEventsAdmin(RecordAdminProxy):
     list_display = ('resourceid','altresourceid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -894,6 +911,7 @@ class ResourceResourceEventsAdmin(RecordAdminProxy):
     )
     form = ResourceResourceEventsForm
 
+@admin.register(ResourcesCitationEvents)
 class ResourcesCitationEventsAdmin(RecordAdminProxy):
     list_display = ('resourceid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -909,6 +927,7 @@ class ResourcesCitationEventsAdmin(RecordAdminProxy):
     )
     form = ResourcesCitationEventsForm
 
+@admin.register(ResourcesMediaEvents)
 class ResourcesMediaEventsAdmin(RecordAdminProxy):
     list_display = ('resourceid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -924,6 +943,7 @@ class ResourcesMediaEventsAdmin(RecordAdminProxy):
     )
     form = ResourcesMediaEventsForm
 
+@admin.register(ResourceAltIndigenousName)
 class ResourceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
@@ -949,6 +969,7 @@ class LocalityPlaceResourceEventAdmin(RecordAdminProxy):
 #####################
 #### AUTH MODELS ####
 #####################
+@admin.register(Users)
 class UsersAdmin(UserAdmin):
     list_display = (
         'username', 'first_name', 'last_name', 'affiliation',
@@ -966,7 +987,6 @@ class UsersAdmin(UserAdmin):
         'title', 'accesslevel__accesslevel'
     )
 
-admin.site.register(Citations, CitationsAdmin)
 # admin.site.register(Locality, LocalityAdmin)
 # admin.site.register(LocalityGISSelections)
 # admin.site.register(LocalityPlaceResourceEvent, LocalityPlaceResourceEventAdmin)
@@ -984,26 +1004,8 @@ admin.site.register(LookupSeason)
 admin.site.register(LookupTechniques)
 admin.site.register(LookupTiming)
 admin.site.register(LookupTribe)
-admin.site.register(Media, MediaAdmin)
-admin.site.register(MediaCitationEvents, MediaCitationEventsAdmin)
 admin.site.register(People)
-admin.site.register(PlaceAltIndigenousName, PlaceAltIndigenousNameAdmin)
 # admin.site.register(PlaceGISSelections)
-admin.site.register(Places, PlacesAdmin)
-admin.site.register(PlacesCitationEvents, PlacesCitationEventsAdmin)
-admin.site.register(PlacesMediaEvents,PlacesMediaEventsAdmin)
-admin.site.register(PlacesResourceCitationEvents, PlacesResourceCitationEventsAdmin)
-admin.site.register(PlacesResourceEvents, PlacesResourceEventsAdmin)
-admin.site.register(PlacesResourceMediaEvents, PlacesResourceMediaEventsAdmin)
-admin.site.register(ResourceActivityCitationEvents, ResourceActivityCitationEventsAdmin)
-admin.site.register(ResourceActivityMediaEvents, ResourceActivityMediaEventsAdmin)
-admin.site.register(ResourceAltIndigenousName, ResourceAltIndigenousNameAdmin)
-admin.site.register(ResourceResourceEvents, ResourceResourceEventsAdmin)
-admin.site.register(Resources, ResourcesAdmin)
-admin.site.register(ResourcesActivityEvents, ResourcesActivityEventsAdmin)
-admin.site.register(ResourcesCitationEvents, ResourcesCitationEventsAdmin)
-admin.site.register(ResourcesMediaEvents, ResourcesMediaEventsAdmin)
-admin.site.register(Users, UsersAdmin)
 admin.site.register(UserAccess)
 
 ###Cruft

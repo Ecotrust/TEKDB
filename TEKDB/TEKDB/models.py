@@ -11,7 +11,7 @@ from django.db.models import Q, Manager as GeoManager
 from django.db.models.functions import Greatest
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
