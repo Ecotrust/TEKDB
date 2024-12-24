@@ -553,6 +553,23 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
         return format_html(''.join(thumbnails))
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # If the object already exists
+            return [field.name for field in self.model._meta.fields]
+        else:
+            return self.readonly_fields
+
+    def has_change_permission(self, request, obj=None):
+        if obj:  # If the object already exists
+            return False
+        return super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return True
+
+    def has_add_permission(self, request):
+        return True
+
     thumbnail_gallery.short_description = 'Thumbnails'
     readonly_fields = ('thumbnail_gallery',)
     fieldsets = (
