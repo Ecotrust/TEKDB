@@ -1869,7 +1869,7 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
 
 class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column='mediaid', primary_key=True)
-    mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', max_length=255, blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
+    mediatype = models.ForeignKey(LookupMediaType, db_column='mediatype', blank=True, null=True, verbose_name='type', default=None, on_delete=models.SET_DEFAULT)
     medianame = models.CharField(db_column='medianame', max_length=255, blank=True, null=True, verbose_name='name')
     mediadescription = RichTextField(db_column='mediadescription', blank=True, null=True, verbose_name='description', config_name="custom") #CKEditor Rich Text Editor Field
     medialink = models.CharField(db_column='medialink', max_length=255, blank=True, null=True, verbose_name='historic location')
