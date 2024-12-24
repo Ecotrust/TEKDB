@@ -2,6 +2,7 @@
 confusable-homoglyphs
 coverage
 django >=3.2.14,<3.3
+django >=4.2.16,<4.3
 django-autocomplete-light
 django-ckeditor
 django-colorfield
