@@ -576,7 +576,6 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return True
 
-    thumbnail_gallery.short_description = 'Thumbnails'
     readonly_fields = ('thumbnail_gallery',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate')
     fieldsets = (
