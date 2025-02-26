@@ -135,7 +135,7 @@ class Configuration(models.Model):
         choices=SEARCH_RANK_CHOICES,
         max_length=255,
         verbose_name='Minimum Search Rank', 
-        help_text='Weight 0-1 representing the minimum search rank threshold for search results.',
+        help_text='The lowest acceptable ranking score assigned to search results.',
         null=True,
         blank=True,
     )
@@ -153,7 +153,7 @@ class Configuration(models.Model):
         choices=SEARCH_SIMILARITY_CHOICES,
         max_length=255,
         verbose_name='Minimum Search Similarity',
-        help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.',
+        help_text='Th lowest threshold for similar search results to be included in results.',
         null=True,
         blank=True,
     )
