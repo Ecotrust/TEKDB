@@ -153,7 +153,7 @@ class Configuration(models.Model):
         choices=SEARCH_SIMILARITY_CHOICES,
         max_length=255,
         verbose_name='Minimum Search Similarity',
-        help_text='Th lowest threshold for similar search results to be included in results.',
+        help_text='The lowest threshold for similar search results to be included in results.',
         null=True,
         blank=True,
     )
