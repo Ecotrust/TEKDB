@@ -2,8 +2,6 @@ from django import forms
 from .models import MediaBulkUpload, Media, Places, Resources, Citations, ResourcesActivityEvents, PlacesResourceMediaEvents
 from .widgets import ThumbnailFileInput
 
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
 
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
