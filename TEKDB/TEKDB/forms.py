@@ -48,3 +48,4 @@ class MediaBulkUploadForm(forms.ModelForm):
     class Meta:
         model = MediaBulkUpload
         fields = ['mediabulkname', 'mediabulkdescription', 'mediabulkdate', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources']
+    
