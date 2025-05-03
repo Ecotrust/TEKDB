@@ -224,7 +224,8 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin')
+VERSION = '2.2.0'
+ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin v{}'.format(VERSION))
 
 TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
 REGISTRATION_OPEN = os.environ.get("REGISTRATION_OPEN", default=False)
