@@ -1,5 +1,5 @@
-from django.contrib import admin
 from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from .models import MediaBulkUpload, Media, Places, Resources, Citations, ResourcesActivityEvents, PlacesResourceMediaEvents
 from .widgets import ThumbnailFileInput
 
@@ -22,27 +22,27 @@ class MediaBulkUploadForm(forms.ModelForm):
     places = forms.ModelMultipleChoiceField(
         queryset=Places.objects.all(), 
         required=False,
-        widget=admin.widgets.FilteredSelectMultiple("Places", is_stacked=False)
+        widget=FilteredSelectMultiple("Places", is_stacked=False)
     )
     resources = forms.ModelMultipleChoiceField(
         queryset=Resources.objects.all(), 
         required=False,
-        widget=admin.widgets.FilteredSelectMultiple("Resources", is_stacked=False)
+        widget=FilteredSelectMultiple("Resources", is_stacked=False)
     )
     citations = forms.ModelMultipleChoiceField(
         queryset=Citations.objects.all(), 
         required=False,
-        widget=admin.widgets.FilteredSelectMultiple("Citations", is_stacked=False)
+        widget=FilteredSelectMultiple("Citations", is_stacked=False)
     )
     activities = forms.ModelMultipleChoiceField(
         queryset=ResourcesActivityEvents.objects.all(), 
         required=False,
-        widget=admin.widgets.FilteredSelectMultiple("Activities", is_stacked=False)
+        widget=FilteredSelectMultiple("Activities", is_stacked=False)
     )
     placeresources = forms.ModelMultipleChoiceField(
         queryset=PlacesResourceMediaEvents.objects.all(), 
         required=False,
-        widget=admin.widgets.FilteredSelectMultiple("Place Resources", is_stacked=False)
+        widget=FilteredSelectMultiple("Place Resources", is_stacked=False)
     )
 
     class Meta:
