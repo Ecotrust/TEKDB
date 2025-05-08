@@ -224,8 +224,14 @@ CKEDITOR_CONFIGS = {
     }
 }
 
+# Add Version to the admin site header
 VERSION = '2.2.0'
 ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin v{}'.format(VERSION))
+
+# X Frame Options 
+# The Django Default is 'DENY'
+# SAMEORIGIN allows the page to be displayed in a frame on the same origin as the page itself
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
 REGISTRATION_OPEN = os.environ.get("REGISTRATION_OPEN", default=False)
