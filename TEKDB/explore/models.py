@@ -1,5 +1,6 @@
 from django.db import models
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField
+from tinymce.models import HTMLField
 
 PAGE_CONTENT_CHOICES = (
     ('Welcome', 'Welcome'),
@@ -9,7 +10,8 @@ PAGE_CONTENT_CHOICES = (
 
 class PageContent(models.Model):
     page = models.CharField(max_length=255, choices=PAGE_CONTENT_CHOICES, primary_key=True)
-    content = RichTextField(blank=True, null=True, config_name="custom") #CKEditor Rich Text Editor Field
+    content = HTMLField(blank=True, null=True) # use TinyMCE HTMLField
+    # content = RichTextField(blank=True, null=True, config_name="custom") # use CKEditor
     is_html = models.BooleanField(default=False, help_text='Select this if you want to use raw HTML instead. For this option, use the "HTML content" window below.')
     html_content = models.TextField(blank=True, null=True, help_text='raw html if html == True')
 

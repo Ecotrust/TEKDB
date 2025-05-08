@@ -58,12 +58,14 @@ INSTALLED_APPS = [
     # 'registration',
     'leaflet',
     'nested_admin',
-    'ckeditor',
+    # 'ckeditor',
     'coverage',
     'configuration',
     'explore',
+    'filebrowser', # file browser for tinymce
     'login',
     'TEKDB',
+    'tinymce',
     'Lookup',
     'Accounts',
     'Relationships',
@@ -205,24 +207,51 @@ MIN_SEARCH_SIMILARITY = 0.1
 
 AUTH_USER_MODEL = 'Accounts.Users'
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Full',
-    },
-    'custom': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Format'],
-            ['Bold', 'Italic', 'Underline','Strike','Subscript','Superscript'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['Image','Table','HorizontalRule','SpecialChar'],
-            [ 'TextColor','BGColor' ],
-            ['Undo','Redo'],
-            ['RemoveFormat', 'Source']
-        ]
-    }
+###########################################
+##      TINYMCE                         ###
+###########################################
+TINYMCE_JS_URL = os.path.join(STATIC_URL, '/static/tinymce/tinymce.min.js')
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": "50vh",
+    # "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist,autolink,lists,link,image,charmap,preview,anchor,"
+    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,"
+    "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | "
+    "bold italic backcolor | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | "
+    "removeformat | help",
 }
+TINYMCE_SPELLCHECKER = False
+TINYMCE_COMPRESSOR = False
+TINYMCE_EXTRA_MEDIA = False
+TINYMCE_FILEBROWSER = True
+
+from filebrowser.sites import site as filebrowsersite
+filebrowsersite.directory = MEDIA_ROOT
+
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'toolbar': 'Full',
+#     },
+#     'custom': {
+#         'toolbar': 'Custom',
+#         'toolbar_Custom': [
+#             ['Format'],
+#             ['Bold', 'Italic', 'Underline','Strike','Subscript','Superscript'],
+#             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+#             ['Link', 'Unlink'],
+#             ['Image','Table','HorizontalRule','SpecialChar'],
+#             [ 'TextColor','BGColor' ],
+#             ['Undo','Redo'],
+#             ['RemoveFormat', 'Source']
+#         ]
+#     }
+# }
+
+TINYMCE_CONFIGS = {}
 
 # Add Version to the admin site header
 VERSION = '2.2.0'

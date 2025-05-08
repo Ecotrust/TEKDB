@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.gis.db.models import GeometryField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField
+from tinymce.models import HTMLField
 from colorfield.fields import ColorField
 from django.conf import settings
 from TEKDB.widgets import OpenLayers6Widget
@@ -75,14 +76,22 @@ class Configuration(models.Model):
         help_text="If you have a preferred image for the landing page, put it here. If blank, users will see a default image."
     )
 
-    homepage_image_attribution = RichTextField(
-        blank=True, 
+    # homepage_image_attribution = RichTextField(
+    #     blank=True, 
+    #     null=True,
+    #     default = None, 
+    #     config_name="custom",
+    #     verbose_name = 'Homepage Image attribution',
+    #     help_text = "If using a custom image that requires attribution for use, please provide that here."
+    # ) #CKEditor Rich Text Editor Field
+
+    homepage_image_attribution = HTMLField(
+        blank=True,
         null=True,
-        default = None, 
-        config_name="custom",
-        verbose_name = 'Homepage Image attribution',
-        help_text = "If using a custom image that requires attribution for use, please provide that here."
-    ) #CKEditor Rich Text Editor Field
+        default=None,
+        verbose_name='Homepage Image attribution',
+        help_text="If using a custom image that requires attribution for use, please provide that here."
+    ) #TinyMCE HTML Field
 
     COLOR_PALETTE = []
 

@@ -29,6 +29,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from login import views as login_views
 from dal import autocomplete
+from filebrowser.sites import site as filebrowser_site
 
 from . import views
 from . import models
@@ -38,6 +39,8 @@ urlpatterns = [
     path('login/', login_views.login, name='login'),
     path('login_async/', login_views.login_async, name='login_async'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('tinymce/', include('tinymce.urls')),
+    path('admin/filebrowser/', filebrowser_site.urls),
     path('accounts/', include('django_registration.backends.one_step.urls')),
     re_path(r'^admin/', admin.site.urls),
     path('nested_admin/', include('nested_admin.urls')),
