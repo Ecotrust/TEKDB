@@ -210,7 +210,7 @@ AUTH_USER_MODEL = 'Accounts.Users'
 ###########################################
 ##      TINYMCE                         ###
 ###########################################
-TINYMCE_JS_URL = f"{STATIC_URL}static/tinymce/tinymce.min.js"
+TINYMCE_JS_URL = f"{STATIC_URL}tinymce/tinymce.min.js"
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
     "height": "50vh",
