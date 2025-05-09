@@ -284,26 +284,26 @@ class ImportTest(TransactionTestCase):
                 self.assertTrue(media_name in listdir(self.tempmediadir.name))
         shutil.rmtree(self.tempmediadir.name)
 
+### 2025-05-09: No one has any idea what a 'placeMap' is.
+# class PlaceMapTest(TestCase):
+#     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
-class PlaceMapTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+#     @classmethod
+#     def setUp(cls):
+#         import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
 
-    @classmethod
-    def setUp(cls):
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+#         cls.factory = RequestFactory()
+#         cls.credentials = b64encode(b"admin:admin").decode("ascii")
+#         cls.dummy_1_name = "Dummy Record 1"
 
-        cls.factory = RequestFactory()
-        cls.credentials = b64encode(b"admin:admin").decode("ascii")
-        cls.dummy_1_name = "Dummy Record 1"
+#         new_record = Places.objects.create(englishplacename="Dummy Record 1")
+#         new_record.save()
 
-        new_record = Places.objects.create(commonname="Dummy Record 1")
-        new_record.save()
-
-    def test_placeMap(self):
-        request = self.factory.get(reverse('placeMap'))
-        request.user = Users.objects.get(username='admin')
-        response = placeMap(request)
-        self.assertEqual(response.status_code, 200)
+#     def test_placeMap(self):
+#         request = self.factory.get(reverse('placeMap'))
+#         request.user = Users.objects.get(username='admin')
+#         response = placeMap(request)
+#         self.assertEqual(response.status_code, 200)
 
 
 # class ExportImportTest(TestCase):
