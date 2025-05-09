@@ -279,8 +279,6 @@ DATABASE_GEOGRAPHY = {
     'min_zoom': 2,
     'max_zoom': 19,
 }
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 MODERATE_STAFF = False
 
