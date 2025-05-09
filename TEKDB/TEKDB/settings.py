@@ -227,10 +227,7 @@ TINYMCE_DEFAULT_CONFIG = {
 TINYMCE_SPELLCHECKER = False
 TINYMCE_COMPRESSOR = False
 TINYMCE_EXTRA_MEDIA = False
-TINYMCE_FILEBROWSER = True
-
-from filebrowser.sites import site as filebrowsersite
-filebrowsersite.directory = MEDIA_ROOT
+TINYMCE_FILEBROWSER = False
 
 # CKEDITOR_CONFIGS = {
 #     'default': {
