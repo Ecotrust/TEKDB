@@ -5,6 +5,8 @@ from django.urls import reverse
 # from .forms import *
 from django.conf import settings
 from django.db import connection
+from os.path import join
+from TEKDB.tests.test_views import import_fixture_file
 
 #########################################################################
 # Run with:
@@ -16,11 +18,14 @@ from django.db import connection
 ###
 
 class MiscSearchTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
@@ -65,11 +70,12 @@ class MiscSearchTest(TestCase):
 
 # Places
 class PlacesTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
@@ -138,12 +144,13 @@ class PlacesTest(TestCase):
 
 # Resources
 class ResourcesTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
@@ -231,11 +238,12 @@ class ResourcesTest(TestCase):
 
 # ResourcesActivityEvents
 class ResourcesActivityEventsTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
@@ -270,11 +278,12 @@ class ResourcesActivityEventsTest(TestCase):
 
 # Citations
 class CitationsTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
@@ -353,11 +362,12 @@ class CitationsTest(TestCase):
 
 # Media
 class MediaTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpClass(self):
         super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
