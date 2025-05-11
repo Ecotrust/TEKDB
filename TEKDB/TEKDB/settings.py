@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     # 'registration',
     'leaflet',
     'nested_admin',
-    # 'ckeditor',
     'coverage',
     'configuration',
     'explore',
@@ -228,27 +227,6 @@ TINYMCE_SPELLCHECKER = False
 TINYMCE_COMPRESSOR = False
 TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
-
-# CKEDITOR_CONFIGS = {
-#     'default': {
-#         'toolbar': 'Full',
-#     },
-#     'custom': {
-#         'toolbar': 'Custom',
-#         'toolbar_Custom': [
-#             ['Format'],
-#             ['Bold', 'Italic', 'Underline','Strike','Subscript','Superscript'],
-#             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-#             ['Link', 'Unlink'],
-#             ['Image','Table','HorizontalRule','SpecialChar'],
-#             [ 'TextColor','BGColor' ],
-#             ['Undo','Redo'],
-#             ['RemoveFormat', 'Source']
-#         ]
-#     }
-# }
-
-TINYMCE_CONFIGS = {}
 
 # Add Version to the admin site header
 VERSION = '2.2.0'
