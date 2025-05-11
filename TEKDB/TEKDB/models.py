@@ -17,7 +17,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
-# from ckeditor.fields import RichTextField
 from tinymce.models import HTMLField
 # from moderation.db import ModeratedModel
 import os
