@@ -767,8 +767,8 @@ class LookupTiming(DefaultModeratedModel, ModeratedModel):
 
 class PlacesResourceEvents(Reviewable, Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
-    placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place', on_delete=models.CASCADE))
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource', on_delete=models.CASCADE))
+    placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place', on_delete=models.CASCADE)
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource', on_delete=models.CASCADE)
     relationshipdescription = HTMLField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt')
     partused = models.ForeignKey(LookupPartUsed, db_column='partused', max_length=255, blank=True, null=True, verbose_name='part used', default=None, on_delete=models.SET_DEFAULT)
     customaryuse = models.ForeignKey(LookupCustomaryUse, db_column='customaryuse', max_length=255, blank=True, null=True, verbose_name='customary use', default=None, on_delete=models.SET_DEFAULT)
@@ -1499,8 +1499,8 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         return unicode('%s' % (str(self)))
 
 class PlacesCitationEvents(SimpleRelationship):
-    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place', on_delete=models.CASCADE))
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.CASCADE))
+    placeid = models.ForeignKey(Places, db_column='placeid', primary_key=False, verbose_name='place', on_delete=models.CASCADE)
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.CASCADE)
     relationshipdescription = HTMLField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -2703,7 +2703,7 @@ class ResourceResourceEvents(SimpleRelationship):
 
 class ResourcesCitationEvents(SimpleRelationship):
     resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource', on_delete=models.CASCADE)
-    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.CASCADE))
+    citationid = models.ForeignKey(Citations, db_column='citationid', verbose_name='citation', on_delete=models.CASCADE)
     relationshipdescription = HTMLField(db_column='relationshipdescription', blank=True, null=True, verbose_name='excerpt/description')
     pages = models.CharField(db_column='pages', max_length=255, blank=True, null=True)
 
@@ -2777,8 +2777,8 @@ class ResourcesCitationEvents(SimpleRelationship):
             return self.resourceid
 
 class ResourcesMediaEvents(SimpleRelationship):
-    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource', on_delete=models.CASCADE))
-    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media', on_delete=models.CASCADE))
+    resourceid = models.ForeignKey(Resources, db_column='resourceid', primary_key=False, verbose_name='resource', on_delete=models.CASCADE)
+    mediaid = models.ForeignKey(Media, db_column='mediaid', verbose_name='media', on_delete=models.CASCADE)
     relationshipdescription = HTMLField(db_column='relationshipdescription', blank=True, null=True, verbose_name='relationship description')
     pages = models.CharField(db_column='pages', max_length=50, blank=True, null=True)
 
