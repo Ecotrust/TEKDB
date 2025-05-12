@@ -7,7 +7,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('TEKDB', '0026_alter_mediabulkupload_mediabulkname'),
         ('Relationships', '0012_alter_placesmediaevents_mediaid_and_more'),
     ]
 
