@@ -787,7 +787,8 @@ class LookupTiming(DefaultModeratedModel, ModeratedModel):
     def __str__(self):
         return self.timing or ''
 
-class PlacesResourceEvents(Reviewable, Queryable):
+#Unsure why this is not a 'SimpleRelationship'
+class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
     placeresourceid = models.AutoField(db_column='placeresourceid', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='placeid', verbose_name='place', on_delete=models.PROTECT)
     resourceid = models.ForeignKey(Resources, db_column='resourceid', verbose_name='resource', on_delete=models.PROTECT)
@@ -2143,7 +2144,8 @@ class MediaCitationEvents(SimpleRelationship):
         else:
             return self.mediaid
 
-class PlaceAltIndigenousName(DefaultModeratedModel, ModeratedModel):
+#Unsure why this is not a 'SimpleRelationship'
+class PlaceAltIndigenousName(DefaultModel, DefaultModeratedModel, ModeratedModel):
     altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
     placeid = models.ForeignKey(Places, db_column='placeid', blank=True, null=True, verbose_name='place', default=None, on_delete=models.SET_DEFAULT)
     altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alternate name')
@@ -2566,7 +2568,8 @@ class ResourceActivityMediaEvents(SimpleRelationship):
         else:
             return self.resourceactivityid
 
-class ResourceAltIndigenousName(DefaultModeratedModel, ModeratedModel):
+#Unsure why this is not a 'SimpleRelationship'
+class ResourceAltIndigenousName(DefaultModel, DefaultModeratedModel, ModeratedModel):
     altindigenousnameid = models.AutoField(db_column='altindigenousnameid', primary_key=True)
     resourceid = models.ForeignKey(Resources, db_column='resourceid', blank=True, null=True, verbose_name='resource', default=None, on_delete=models.SET_DEFAULT)
     altindigenousname = models.CharField(db_column='altindigenousname', max_length=255, blank=True, null=True, verbose_name='alt name')
