@@ -106,12 +106,6 @@ class DefaultModeratedModel(models.Model):
     class Meta:
         abstract = True
 
-def update_model_sequence(model, unique_key, manager):
-    max_theme_pk = manager.all().order_by('pk').last().pk
-    sequence_name = '{}_{}_seq'.format(model.__name__.lower(), unique_key)
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT setval('{}', {}, true);".format(sequence_name, max_theme_pk))
-
 class DefaultModel(models.Model):
     class Meta:
         abstract = True
@@ -122,9 +116,16 @@ class DefaultModel(models.Model):
                 super(DefaultModel, self).save(*args, **kwargs)
         except IntegrityError as e:
             if 'duplicate key value violates unique constraint' in str(e):
+                # print("Duplicate key error: {}".format(e))
                 model = type(self)
-                unique_key = str(e).split('Key (')[-1].split(')=(')[0]
-                update_model_sequence(model, unique_key, manager=model.objects)
+                manager = model.objects
+                # Formerly separate function 'update_model_sequence'
+                MAX_MODEL_PK = manager.all().order_by('pk').last().pk
+                DB_TABLE = model._meta.db_table
+                PK_FIELD = model._meta.pk.name
+                SEQUENCE_NAME = '"{}_{}_seq"'.format(DB_TABLE, PK_FIELD)
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT setval('{}', {}, true);".format(SEQUENCE_NAME, MAX_MODEL_PK))
                 with transaction.atomic():
                     super(DefaultModel, self).save(*args, **kwargs)
             else:
