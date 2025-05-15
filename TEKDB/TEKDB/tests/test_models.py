@@ -49,6 +49,7 @@ class ITKTestCase(TestCase):
     """
     Base class for all ITK tests.
     """
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUpClass(self):
@@ -58,21 +59,25 @@ class ITKTestCase(TestCase):
         super().setUpClass()
         import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
         
+class ITKSearchTest(ITKTestCase):
+    """
+    Base class for all ITK search tests.
+    """
+
+    @classmethod
+    def setUpClass(self):
+        """
+        Set up the test case.
+        """
+        super().setUpClass()
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
 ####################################################
 #   Search Tests
 ####################################################
 
-class MiscSearchTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class MiscSearchTest(ITKSearchTest):
 
     def test_empty_string_search(self):
         """
@@ -117,15 +122,7 @@ class MiscSearchTest(TestCase):
 ####################################################
 
 # Places
-class PlacesTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class PlacesTest(ITKSearchTest):
 
     def test_placess(self):
         # print("Testing Places Model")
@@ -200,16 +197,7 @@ class PlacesTest(TestCase):
         self.assertTrue(collision_result)
 
 # Resources
-class ResourcesTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class ResourcesTest(ITKSearchTest):
 
     def test_resources(self):
         # print("Testing Resources Model")
@@ -298,19 +286,9 @@ class ResourcesTest(TestCase):
         }
         collision_result = test_model_id_collision(Resources, insertion_object, self)
         self.assertTrue(collision_result)
-# PlacesResourceEvents
-
 
 # ResourcesActivityEvents ('Activities')
-class ResourcesActivityEventsTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class ResourcesActivityEventsTest(ITKSearchTest):
 
     def test_activity(self):
         # print("Testing ResourcesActivityEvents Model")
@@ -346,17 +324,8 @@ class ResourcesActivityEventsTest(TestCase):
         collision_result = test_model_id_collision(ResourcesActivityEvents, insertion_object, self)
         self.assertTrue(collision_result)
 
-
 # Citations (Bibliographic 'Sources')
-class CitationsTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class CitationsTest(ITKSearchTest):
 
     def test_citations(self):
         # print("Testing Places Model")
@@ -428,17 +397,8 @@ class CitationsTest(TestCase):
         collision_result = test_model_id_collision(Citations, insertion_object, self)
         self.assertTrue(collision_result)
 
-
 # Media
-class MediaTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class MediaTest(ITKSearchTest):
 
     def test_media(self):
         # print("Testing Media Model")
@@ -474,15 +434,7 @@ class MediaTest(TestCase):
         self.assertTrue(collision_result)
 
 # MediaBulkUpload
-class MediaBulkUploadTest(TestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
-        cur = connection.cursor()
-        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+class MediaBulkUploadTest(ITKSearchTest):
 
     def test_media_bulk_upload_id_collision(self):
         """
@@ -497,7 +449,6 @@ class MediaBulkUploadTest(TestCase):
         self.assertTrue(existing_bulk_record.pk > 0)
         collision_result = test_model_id_collision(MediaBulkUpload, insertion_object, self)
         self.assertTrue(collision_result)
-
 
 ####################################################
 #   Relationship Tests
