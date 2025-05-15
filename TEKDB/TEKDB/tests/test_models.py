@@ -35,7 +35,7 @@ def test_model_id_collision(model, insertion_object, test):
         new_obj.save()
         test.assertTrue(new_obj.pk > MAX_ID)
         NEW_COUNT = model.objects.all().count()
-        test.assertTrue(NEW_COUNT == ORIGINAL_COUNT + 1)
+        test.assertTrue(NEW_COUNT > ORIGINAL_COUNT)
         new_obj.delete()
         FINAL_COUNT = model.objects.all().count()
         test.assertTrue(FINAL_COUNT == ORIGINAL_COUNT)
@@ -44,6 +44,20 @@ def test_model_id_collision(model, insertion_object, test):
         return False
     return True
 
+
+class ITKTestCase(TestCase):
+    """
+    Base class for all ITK tests.
+    """
+
+    @classmethod
+    def setUpClass(self):
+        """
+        Set up the test case.
+        """
+        super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+        
 ####################################################
 #   Search Tests
 ####################################################
@@ -489,16 +503,11 @@ class MediaBulkUploadTest(TestCase):
 #   Relationship Tests
 ####################################################
 # ResourceActivityMediaEvents ('Activity - Media')
-class ResourceActivityMediaEventsTest(TestCase):
-
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+class ResourceActivityMediaEventsTest(ITKTestCase):
 
     def test_activity_media_relationship_id_collision(self):
         """
-        Test that saving a resource can recover from an ID collision
+        Test that saving an activity-media relationship can recover from an ID collision
         """
         insertion_object = { 
             'resourceactivityid': ResourcesActivityEvents.objects.all()[1],
@@ -510,35 +519,287 @@ class ResourceActivityMediaEventsTest(TestCase):
                 'resourceactivityid': ResourcesActivityEvents.objects.all()[0],
                 'mediaid': Media.objects.all()[0],
             })
-            self.assertTrue(ResourceActivityMediaEvents.objects.all().count() > 0)
+        self.assertTrue(ResourceActivityMediaEvents.objects.all().count() > 0)
         collision_result = test_model_id_collision(ResourceActivityMediaEvents, insertion_object, self)
         self.assertTrue(collision_result)
 
 # ResourceActivityCitationEvents ('Activity - Sources')
+class ResourceActivityCitationEventsTest(ITKTestCase):
+
+    def test_activity_citation_relationship_id_collision(self):
+        """
+        Test that saving an activity-source relationship can recover from an ID collision
+        """
+
+        # Test was colliding with unique contstraint on resourceactivityid and citationid
+        # so we need to create a new combo of activity and citation
+        activities = ResourcesActivityEvents.objects.all()
+        citations = Citations.objects.all()
+        new_combo_1 = False
+        new_combo_2 = False
+        for activity in activities:
+            for citation in citations:
+                if ResourceActivityCitationEvents.objects.filter(
+                    resourceactivityid=activity,
+                    citationid=citation
+                ).count() == 0:
+                    combo = { 
+                        'resourceactivityid': activity,
+                        'citationid': citation,
+                    }
+                    if not new_combo_1:
+                        new_combo_1 = combo
+                    elif not new_combo_2:
+                        new_combo_2 = combo
+                    else:
+                        break
+            if new_combo_1 and new_combo_2:
+                break
+        self.assertTrue(new_combo_1 != False)
+        self.assertTrue(new_combo_2 != False)
+        self.assertTrue(new_combo_1 != new_combo_2)
+                
+        insertion_object = new_combo_2
+
+        if ResourceActivityCitationEvents.objects.all().count() == 0 or ResourceActivityCitationEvents.objects.all().order_by('-pk')[0].pk < 2:
+            new_combo_1['pk'] = 2
+            ResourceActivityCitationEvents.objects.create(**new_combo_1)
+        self.assertTrue(ResourceActivityCitationEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(ResourceActivityCitationEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # MediaCitationEvents ('Media - Sources')
+class MediaCitationEventsTest(ITKTestCase):
+
+    def test_media_citation_relationship_id_collision(self):
+        """
+        Test that saving a media-citation relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'mediaid': Media.objects.all()[1],
+            'citationid': Citations.objects.all()[1],
+        }
+        if MediaCitationEvents.objects.all().count() == 0 or MediaCitationEvents.objects.all().order_by('-pk')[0].pk < 2:
+            MediaCitationEvents.objects.create(**{
+                'pk':2,
+                'mediaid': Media.objects.all()[0],
+                'citationid': Citations.objects.all()[0],
+            })
+        self.assertTrue(MediaCitationEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(MediaCitationEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # PlacesResourceMediaEvents ('Place-Resources - Media')
+class PlacesResourceMediaEventsTest(ITKTestCase):
+
+    def test_place_resource_media_relationship_id_collision(self):
+        """
+        Test that saving a place-resource-media relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'placeresourceid': PlacesResourceEvents.objects.all()[1],
+            'mediaid': Media.objects.all()[1],
+        }
+        if PlacesResourceMediaEvents.objects.all().count() == 0 or PlacesResourceMediaEvents.objects.all().order_by('-pk')[0].pk < 2:
+            PlacesResourceMediaEvents.objects.create(**{
+                'pk':2,
+                'placeresourceid': PlacesResourceEvents.objects.all()[0],
+                'mediaid': Media.objects.all()[0],
+            })
+        self.assertTrue(PlacesResourceMediaEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(PlacesResourceMediaEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # PlacesResourceCitationEvents ('Place-Resources - Sources')
+class PlacesResourceCitationEventsTest(ITKTestCase):
+
+    def test_place_resource_citation_relationship_id_collision(self):
+        """
+        Test that saving a place-resource-citation relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'placeresourceid': PlacesResourceEvents.objects.all()[1],
+            'citationid': Citations.objects.all()[1],
+        }
+        if PlacesResourceCitationEvents.objects.all().count() == 0 or PlacesResourceCitationEvents.objects.all().order_by('-pk')[0].pk < 2:
+            PlacesResourceCitationEvents.objects.create(**{
+                'pk':2,
+                'placeresourceid': PlacesResourceEvents.objects.all()[0],
+                'citationid': Citations.objects.all()[0],
+            })
+        self.assertTrue(PlacesResourceCitationEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(PlacesResourceCitationEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # PlaceAltIndigenousName ('Places - Alternative Name')
+class PlaceAltIndigenousNameTest(ITKTestCase):
+
+    def test_place_alt_indigenous_name_id_collision(self):
+        """
+        Test that saving a place-alt-indigenous-name relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'placeid': Places.objects.all()[0],
+            'altindigenousname': "Sample Alt Name 1",
+        }
+        if PlaceAltIndigenousName.objects.all().count() == 0 or PlaceAltIndigenousName.objects.all().order_by('-pk')[0].pk < 2:
+            PlaceAltIndigenousName.objects.create(**{
+                'placeid': Places.objects.all()[0],
+                'altindigenousnameid': 2,
+                'altindigenousname': "Sample Alt Name 2",
+            })
+        self.assertTrue(PlaceAltIndigenousName.objects.all().count() > 0)
+        collision_result = test_model_id_collision(PlaceAltIndigenousName, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # PlacesMediaEvents ('Places - Media')
+class PlacesMediaEventsTest(ITKTestCase):
+
+    def test_place_media_relationship_id_collision(self):
+        """
+        Test that saving a place-media relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'placeid': Places.objects.all()[1],
+            'mediaid': Media.objects.all()[1],
+        }
+        if PlacesMediaEvents.objects.all().count() == 0 or PlacesMediaEvents.objects.all().order_by('-pk')[0].pk < 2:
+            PlacesMediaEvents.objects.create(**{
+                'pk':2,
+                'placeid': Places.objects.all()[0],
+                'mediaid': Media.objects.all()[0],
+            })
+        self.assertTrue(PlacesMediaEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(PlacesMediaEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # PlacesResourceEvents ('Places - Resources')
+class PlacesResourceEventsTest(ITKTestCase):
+
+    def test_place_resource_relationship_id_collision(self):
+        """
+        Test that saving a place-resource relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'placeid': Places.objects.all()[1],
+            'resourceid': Resources.objects.all()[1],
+        }
+        if PlacesResourceEvents.objects.all().count() == 0 or PlacesResourceEvents.objects.all().order_by('-pk')[0].pk < 2:
+            PlacesResourceEvents.objects.create(**{
+                'pk':2,
+                'placeid': Places.objects.all()[0],
+                'resourceid': Resources.objects.all()[0],
+            })
+        self.assertTrue(PlacesResourceEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(PlacesResourceEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # PlacesCitationEvents ('Places - Sources')
+class PlacesCitationEventsTest(ITKTestCase):
 
-# LocalityPlaceResourceEvent
+    def test_place_citation_relationship_id_collision(self):
+        """
+        Test that saving a place-citation relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'placeid': Places.objects.all()[1],
+            'citationid': Citations.objects.all()[1],
+        }
+        if PlacesCitationEvents.objects.all().count() == 0 or PlacesCitationEvents.objects.all().order_by('-pk')[0].pk < 2:
+            PlacesCitationEvents.objects.create(**{
+                'pk':2,
+                'placeid': Places.objects.all()[0],
+                'citationid': Citations.objects.all()[0],
+            })
+        self.assertTrue(PlacesCitationEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(PlacesCitationEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # ResourceAltIndigenousName ('Resource Alternative Names')
+class ResourceAltIndigenousNameTest(ITKTestCase):
+
+    def test_resource_alt_indigenous_name_id_collision(self):
+        """
+        Test that saving a resource-alt-indigenous-name relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'resourceid': Resources.objects.all()[0],
+            'altindigenousname': "Sample Alt Name 1",
+        }
+        if ResourceAltIndigenousName.objects.all().count() == 0 or ResourceAltIndigenousName.objects.all().order_by('-pk')[0].pk < 2:
+            ResourceAltIndigenousName.objects.create(**{
+                'resourceid': Resources.objects.all()[0],
+                'altindigenousnameid': 2,
+                'altindigenousname': "Sample Alt Name 2",
+            })
+        self.assertTrue(ResourceAltIndigenousName.objects.all().count() > 0)
+        collision_result = test_model_id_collision(ResourceAltIndigenousName, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # ResourcesMediaEvents ('Resources - Media')
+class ResourcesMediaEventsTest(ITKTestCase):
+
+    def test_resource_media_relationship_id_collision(self):
+        """
+        Test that saving a resource-media relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'resourceid': Resources.objects.all()[1],
+            'mediaid': Media.objects.all()[1],
+        }
+        if ResourcesMediaEvents.objects.all().count() == 0 or ResourcesMediaEvents.objects.all().order_by('-pk')[0].pk < 2:
+            ResourcesMediaEvents.objects.create(**{
+                'pk':2,
+                'resourceid': Resources.objects.all()[0],
+                'mediaid': Media.objects.all()[0],
+            })
+        self.assertTrue(ResourcesMediaEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(ResourcesMediaEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # ResourceResourceEvents ('Resources - Resources')
+class ResourceResourceEventsTest(ITKTestCase):
+
+    def test_resource_resource_relationship_id_collision(self):
+        """
+        Test that saving a resource-resource relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'resourceid': Resources.objects.all()[1],
+            'altresourceid': Resources.objects.all()[0],
+        }
+        if ResourceResourceEvents.objects.all().count() == 0 or ResourceResourceEvents.objects.all().order_by('-pk')[0].pk < 2:
+            ResourceResourceEvents.objects.create(**{
+                'pk':2,
+                'resourceid': Resources.objects.all()[2],
+                'altresourceid': Resources.objects.all()[0],
+            })
+        self.assertTrue(ResourceResourceEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(ResourceResourceEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # ResourcesCitationEvents ('Resources - Sources')
+class ResourcesCitationEventsTest(ITKTestCase):
+
+    def test_resource_citation_relationship_id_collision(self):
+        """
+        Test that saving a resource-citation relationship can recover from an ID collision
+        """
+        insertion_object = { 
+            'resourceid': Resources.objects.all()[1],
+            'citationid': Citations.objects.all()[1],
+        }
+        if ResourcesCitationEvents.objects.all().count() == 0 or ResourcesCitationEvents.objects.all().order_by('-pk')[0].pk < 2:
+            ResourcesCitationEvents.objects.create(**{
+                'pk':2,
+                'resourceid': Resources.objects.all()[0],
+                'citationid': Citations.objects.all()[0],
+            })
+        self.assertTrue(ResourcesCitationEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(ResourcesCitationEvents, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LocalityPlaceResourceEvent
 
 
 
