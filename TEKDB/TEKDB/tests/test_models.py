@@ -25,7 +25,7 @@ def test_model_id_collision(model, insertion_object, test):
         test.assertTrue(model.objects.all().count() > 0)
         DB_TABLE = model._meta.db_table
         PK_FIELD = model._meta.pk.name
-        SEQUENCE_NAME = '{}_{}_seq'.format(DB_TABLE, PK_FIELD)
+        SEQUENCE_NAME = '"{}_{}_seq"'.format(DB_TABLE, PK_FIELD)
         ORIGINAL_COUNT = model.objects.all().count()
         MAX_ID = model.objects.all().order_by('-pk')[0].pk
 
@@ -461,7 +461,29 @@ class MediaTest(TestCase):
         collision_result = test_model_id_collision(Media, insertion_object, self)
         self.assertTrue(collision_result)
 
+class MediaBulkUploadTest(TestCase):
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+        cur = connection.cursor()
+        cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
+
+    def test_media_bulk_upload_id_collision(self):
+        """
+        Test that saving a bulk upload record can recover from an ID collision
+        """
+        insertion_object = {
+        }
+        if MediaBulkUpload.objects.all().count() == 0:
+            MediaBulkUpload.objects.create(**{'pk':7})
+            self.assertTrue(MediaBulkUpload.objects.all().count() > 0)
+        existing_bulk_record = MediaBulkUpload.objects.all()[0]
+        self.assertTrue(existing_bulk_record.pk > 0)
+        collision_result = test_model_id_collision(MediaBulkUpload, insertion_object, self)
+        self.assertTrue(collision_result)
 
 
 ####################################################
