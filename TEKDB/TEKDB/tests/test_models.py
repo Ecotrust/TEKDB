@@ -48,8 +48,6 @@ def test_model_id_collision(model, insertion_object, test):
 #   Search Tests
 ####################################################
 
-
-
 class MiscSearchTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
@@ -461,6 +459,7 @@ class MediaTest(TestCase):
         collision_result = test_model_id_collision(Media, insertion_object, self)
         self.assertTrue(collision_result)
 
+# MediaBulkUpload
 class MediaBulkUploadTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
@@ -489,35 +488,58 @@ class MediaBulkUploadTest(TestCase):
 ####################################################
 #   Relationship Tests
 ####################################################
-# PlacesCitationEvents
+# ResourceActivityMediaEvents ('Activity - Media')
+class ResourceActivityMediaEventsTest(TestCase):
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+
+    def test_activity_media_relationship_id_collision(self):
+        """
+        Test that saving a resource can recover from an ID collision
+        """
+        insertion_object = { 
+            'resourceactivityid': ResourcesActivityEvents.objects.all()[1],
+            'mediaid': Media.objects.all()[1],
+        }
+        if ResourceActivityMediaEvents.objects.all().count() == 0 or ResourceActivityMediaEvents.objects.all().order_by('-pk')[0].pk < 2:
+            ResourceActivityMediaEvents.objects.create(**{
+                'pk':2,
+                'resourceactivityid': ResourcesActivityEvents.objects.all()[0],
+                'mediaid': Media.objects.all()[0],
+            })
+            self.assertTrue(ResourceActivityMediaEvents.objects.all().count() > 0)
+        collision_result = test_model_id_collision(ResourceActivityMediaEvents, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# ResourceActivityCitationEvents ('Activity - Sources')
+
+# MediaCitationEvents ('Media - Sources')
+
+# PlacesResourceMediaEvents ('Place-Resources - Media')
+
+# PlacesResourceCitationEvents ('Place-Resources - Sources')
+
+# PlaceAltIndigenousName ('Places - Alternative Name')
+
+# PlacesMediaEvents ('Places - Media')
+
+# PlacesResourceEvents ('Places - Resources')
+
+# PlacesCitationEvents ('Places - Sources')
 
 # LocalityPlaceResourceEvent
 
-# MediaCitationEvents
+# ResourceAltIndigenousName ('Resource Alternative Names')
 
+# ResourcesMediaEvents ('Resources - Media')
 
-# PlacesMediaEvents
+# ResourceResourceEvents ('Resources - Resources')
 
+# ResourcesCitationEvents ('Resources - Sources')
 
-# PlacesResourceCitationEvents
-
-
-# PlacesResourceMediaEvents
-
-
-# ResourceActivityCitationEvents
-
-
-# ResourceActivityMediaEvents
-
-
-# ResourceResourceEvents
-
-
-# ResourcesCitationEvents
-
-
-# ResourcesMediaEvents
 
 
 ####################################################
