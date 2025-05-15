@@ -164,6 +164,15 @@ class PlacesTest(TestCase):
         self.assertEqual(flurpie_results.count(), 3)
         self.assertEqual(flurpie_results[0].indigenousplacename, 'Test')
 
+    def test_place_id_collision(self):
+        """
+        Test that saving an activity can recover from an ID collision
+        """
+        insertion_object = {
+        }
+        collision_result = test_model_id_collision(Places, insertion_object, self)
+        self.assertTrue(collision_result)
+
 # Resources
 class ResourcesTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
