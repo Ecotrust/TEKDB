@@ -26,6 +26,7 @@ def test_model_id_collision(model, insertion_object, test):
         DB_TABLE = model._meta.db_table
         PK_FIELD = model._meta.pk.name
         SEQUENCE_NAME = '{}_{}_seq'.format(DB_TABLE, PK_FIELD)
+        ORIGINAL_COUNT = model.objects.all().count()
         MAX_ID = model.objects.all().order_by('-pk')[0].pk
 
         cur = connection.cursor()
@@ -33,11 +34,21 @@ def test_model_id_collision(model, insertion_object, test):
         new_obj = model.objects.create(**insertion_object)
         new_obj.save()
         test.assertTrue(new_obj.pk > MAX_ID)
+        NEW_COUNT = model.objects.all().count()
+        test.assertTrue(NEW_COUNT == ORIGINAL_COUNT + 1)
         new_obj.delete()
+        FINAL_COUNT = model.objects.all().count()
+        test.assertTrue(FINAL_COUNT == ORIGINAL_COUNT)
     except Exception as e:
         print("Error in test_model_id_collision: {}".format(e))
         return False
     return True
+
+####################################################
+#   Search Tests
+####################################################
+
+
 
 class MiscSearchTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
@@ -89,6 +100,9 @@ class MiscSearchTest(TestCase):
 
 # LookupTribe
 
+####################################################
+#   Record Tests
+####################################################
 
 # Places
 class PlacesTest(TestCase):
@@ -185,8 +199,6 @@ class ResourcesTest(TestCase):
         cur = connection.cursor()
         cur.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm;')
 
-
-
     def test_resources(self):
         # print("Testing Resources Model")
         # print("Total resources: {}".format(Resources.objects.all().count()))
@@ -264,6 +276,16 @@ class ResourcesTest(TestCase):
         self.assertEqual(flurpie_results.count(), 2)
         self.assertEqual(flurpie_results[0].commonname, 'Test')
 
+
+    def test_resource_id_collision(self):
+        """
+        Test that saving a resource can recover from an ID collision
+        """
+        insertion_object = {
+            # 'resourceclassificationgroup': ResourceClassificationGroup.objects.all()[0],
+        }
+        collision_result = test_model_id_collision(Resources, insertion_object, self)
+        self.assertTrue(collision_result)
 # PlacesResourceEvents
 
 
@@ -313,11 +335,7 @@ class ResourcesActivityEventsTest(TestCase):
         self.assertTrue(collision_result)
 
 
-
-# People
-
-
-# Citations
+# Citations (Bibliographic 'Sources')
 class CitationsTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
@@ -388,17 +406,15 @@ class CitationsTest(TestCase):
         #
         #   *
 
-
-# PlacesCitationEvents
-
-
-# Locality
-
-
-# LocalityPlaceResourceEvent
-
-
-# LookupMediaType
+    def test_citation_id_collision(self):
+        """
+        Test that saving a citation can recover from an ID collision
+        """
+        insertion_object = {
+            'referencetype': LookupReferenceType.objects.all()[0],
+        }
+        collision_result = test_model_id_collision(Citations, insertion_object, self)
+        self.assertTrue(collision_result)
 
 
 # Media
@@ -437,6 +453,15 @@ class MediaTest(TestCase):
             )
 
 
+
+
+####################################################
+#   Relationship Tests
+####################################################
+# PlacesCitationEvents
+
+# LocalityPlaceResourceEvent
+
 # MediaCitationEvents
 
 
@@ -462,3 +487,25 @@ class MediaTest(TestCase):
 
 
 # ResourcesMediaEvents
+
+
+####################################################
+#   Lookup Tests
+####################################################
+
+# LookupMediaType
+
+# People
+
+
+
+
+####################################################
+#   Other Tests
+####################################################
+
+# Locality
+
+
+
+
