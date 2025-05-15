@@ -1,6 +1,131 @@
-{% if widget.value %}
-    <div class="thumbnail">
-        {{ widget.value }}
-    </div>
-{% endif %}
-<input type="file" multiple name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+{% comment %} <div class="custom-file-input" id="drag-drop-area"> {% endcomment %}
+<div class="custom-file-input">
+    <input 
+        type="{{ widget.type }}" 
+        name="{{ widget.name }}" 
+        {% include "django/forms/widgets/attrs.html" %} 
+        multiple
+    >
+    {% comment %} <p>Drag and drop files here, or click to select files.</p> {% endcomment %}
+    <div id="file-preview" aria-live="polite"></div>
+</div>
+
+<style>
+    #drag-drop-area {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+    #drag-drop-area.drag-over {
+        border-color: #000;
+        background-color: #f0f0f0;
+    }
+    #file-preview img {
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
+
+<script>
+    
+document.addEventListener('DOMContentLoaded', () => {
+    const preview = document.getElementById('file-preview');
+    const fileInput = document.querySelector('input[type="file"]');
+
+    // Function to add a file to the preview
+    function addFilePreview(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = file.name;
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearFilePreview() {
+        preview.innerHTML = ''; // Clear existing previews
+    }
+
+    fileInput.addEventListener('change', event => {
+        clearFilePreview(); // Clear previous previews
+        const files = Array.from(event.target.files);
+        files.forEach(file => {
+            addFilePreview(file);
+        });
+    });
+});
+
+    /** 
+     * This script handles the drag-and-drop functionality for file input.
+     * It allows users to drag files into a designated area or click to select files.
+     * The selected files are displayed as thumbnails in the preview area.
+     * Commenting out for now, as it is beyond the scope of v2.2 
+     * @pollardld
+     */
+/*
+    const dropArea = document.getElementById('drag-drop-area');
+    const fileInput = dropArea.querySelector('input[type="file"]');
+    const addedFiles = new Set(); // Track added file names to prevent duplicates
+
+    // Handle click to trigger file input
+    dropArea.addEventListener('click', () => fileInput.click());
+
+    // Highlight drop area on dragover
+    dropArea.addEventListener('dragover', event => {
+        event.preventDefault();
+        dropArea.classList.add('drag-over');
+    });
+
+    // Remove highlight on dragleave
+    dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
+
+    // Handle file drop
+    dropArea.addEventListener('drop', event => {
+        event.preventDefault();
+        dropArea.classList.remove('drag-over');
+        const newFiles = Array.from(event.dataTransfer.files);
+        const existingFiles = Array.from(fileInput.files);
+        handleFiles(newFiles, existingFiles);
+    });
+
+    // Handle file selection via input
+    fileInput.addEventListener('change', event => {
+        // Prevent duplicates from the input
+        const newFiles = Array.from(event.target.files);
+        const existingFiles = Array.from(fileInput.files);
+        handleFiles(newFiles, existingFiles);
+    });
+
+    // Unified function to handle files (both dropped and selected)
+    function handleFiles(newFiles, existingFiles) {
+        const dataTransfer = new DataTransfer();
+
+        // Add existing files from the input
+        existingFiles.forEach(file => dataTransfer.items.add(file));
+
+        // Add new files if not already added
+        newFiles.forEach(file => {
+            // Check if the file is already added
+            const fileIdentifier = file.name + file.size + file.type; // Unique identifier for the file
+
+            if (!addedFiles.has(fileIdentifier)) {
+                dataTransfer.items.add(file);
+                addedFiles.add(fileIdentifier); // Track the file name
+                addFilePreview(file); // Add file to preview
+            }
+        });
+
+        // Update the input's files
+        fileInput.files = dataTransfer.files;
+    }
+*/
+
+</script>

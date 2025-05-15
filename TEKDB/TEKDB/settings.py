@@ -58,12 +58,13 @@ INSTALLED_APPS = [
     # 'registration',
     'leaflet',
     'nested_admin',
-    'ckeditor',
     'coverage',
     'configuration',
     'explore',
+    'filebrowser', # file browser for tinymce
     'login',
     'TEKDB',
+    'tinymce',
     'Lookup',
     'Accounts',
     'Relationships',
@@ -162,8 +163,6 @@ TIME_ZONE = 'America/Los_Angeles'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 STATICFILES_FINDERS = [
@@ -207,26 +206,36 @@ MIN_SEARCH_SIMILARITY = 0.1
 
 AUTH_USER_MODEL = 'Accounts.Users'
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Full',
-    },
-    'custom': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Format'],
-            ['Bold', 'Italic', 'Underline','Strike','Subscript','Superscript'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['Image','Table','HorizontalRule','SpecialChar'],
-            [ 'TextColor','BGColor' ],
-            ['Undo','Redo'],
-            ['RemoveFormat', 'Source']
-        ]
-    }
+###########################################
+##      TINYMCE                         ###
+###########################################
+TINYMCE_JS_URL = f"{STATIC_URL}tinymce/tinymce.min.js"
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": "50vh",
+    # "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist,autolink,lists,link,image,charmap,preview,anchor,"
+    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,"
+    "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | "
+    "bold italic backcolor | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | "
+    "removeformat | help",
 }
+TINYMCE_SPELLCHECKER = False
+TINYMCE_COMPRESSOR = False
+TINYMCE_EXTRA_MEDIA = False
+TINYMCE_FILEBROWSER = False
 
-ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin')
+# Add Version to the admin site header
+VERSION = '2.2.0'
+ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin v{}'.format(VERSION))
+
+# X Frame Options 
+# The Django Default is 'DENY'
+# SAMEORIGIN allows the page to be displayed in a frame on the same origin as the page itself
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
 REGISTRATION_OPEN = os.environ.get("REGISTRATION_OPEN", default=False)
@@ -248,8 +257,6 @@ DATABASE_GEOGRAPHY = {
     'min_zoom': 2,
     'max_zoom': 19,
 }
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 MODERATE_STAFF = False
 

@@ -15,6 +15,7 @@ class ConfigurationForm(ModelForm):
         }
         fields = '__all__'
 
+@admin.register(Configuration)
 class ConfigurationAdmin(VersionAdmin):
     list_display = ('preferred_initialism_or_pk','max_results_returned')
     fieldsets = (
@@ -55,4 +56,3 @@ class ConfigurationAdmin(VersionAdmin):
         return obj.pk if not obj.preferredInitialism else obj.preferredInitialism
 
 
-admin.site.register(Configuration, ConfigurationAdmin)

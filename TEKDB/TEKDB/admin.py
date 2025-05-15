@@ -4,13 +4,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
 from django.utils.html import format_html
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from dal import autocomplete
 from mimetypes import guess_type
 from django.templatetags.static import static
 # from moderation.admin import ModerationAdmin
 import nested_admin
-from ckeditor.widgets import CKEditorWidget
+from tinymce.widgets import TinyMCE
 from reversion.admin import VersionAdmin
 
 from .forms import MediaBulkUploadForm
@@ -85,7 +85,7 @@ class PlacesResourceEventForm(forms.ModelForm):
         widgets = {
             'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -101,7 +101,7 @@ class MediaCitationEventsForm(forms.ModelForm):
         widgets = {
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -111,7 +111,7 @@ class PlacesCitationEventsForm(forms.ModelForm):
         widgets = {
             'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -121,7 +121,7 @@ class PlacesMediaEventsForm(forms.ModelForm):
         widgets = {
             'placeid': autocomplete.ModelSelect2(url='select2_fk_place'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -131,7 +131,7 @@ class PlacesResourceCitationEventsForm(forms.ModelForm):
         widgets = {
             'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': CKEditorWidget()
+            'relationshipdescription': TinyMCE(),
         }
         fields = '__all__'
 
@@ -141,7 +141,7 @@ class PlacesResourceMediaEventsForm(forms.ModelForm):
         widgets = {
             'placeresourceid': autocomplete.ModelSelect2(url='select2_fk_placeresource'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -151,7 +151,7 @@ class ResourceActivityMediaEventsForm(forms.ModelForm):
         widgets = {
             'resourceactivityid': autocomplete.ModelSelect2(url='select2_fk_resourceactivity'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': CKEditorWidget,
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -161,7 +161,7 @@ class ResourceActivityCitationEventsForm(forms.ModelForm):
         widgets = {
             'resourceactivityid': autocomplete.ModelSelect2(url='select2_fk_resourceactivity'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -171,7 +171,7 @@ class ResourceResourceEventsForm(forms.ModelForm):
         widgets = {
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'altresourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -181,7 +181,7 @@ class ResourcesCitationEventsForm(forms.ModelForm):
         widgets = {
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'citationid': autocomplete.ModelSelect2(url='select2_fk_citation'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
 
@@ -192,7 +192,7 @@ class ResourcesMediaEventsForm(forms.ModelForm):
         widgets = {
             'resourceid':  autocomplete.ModelSelect2(url='select2_fk_resource'),
             'mediaid': autocomplete.ModelSelect2(url='select2_fk_media'),
-            'relationshipdescription': CKEditorWidget
+            'relationshipdescription': TinyMCE,
         }
         fields = '__all__'
     
@@ -380,6 +380,7 @@ class RecordModelAdmin(VersionAdmin):
         extra_context['related_objects'] = object_instance.get_related_objects(object_id)
         return super(RecordModelAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
+@admin.register(Citations)
 class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('referencetype','title_text','description_text', 'needs_Review',
     'modifiedbyname','modifiedbydate','enteredbyname','enteredbydate')
@@ -442,10 +443,12 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
 
 
 #   * Bulk Media Upload Admin
+@admin.register(MediaBulkUpload)
 class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
-    list_display = ('mediabulkname','mediabulkdate','modifiedbydate','enteredbydate',)
+    list_display = ('mediabulkname','mediabulkdate',
+    'enteredbyname','enteredbydate')
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
@@ -454,12 +457,25 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         citations = form.cleaned_data.get('citations')
         activities = form.cleaned_data.get('activities')
         placeresources = form.cleaned_data.get('placeresources')
-
+        
         for file in request.FILES.getlist('files'):
+            mime_type, _ = guess_type(file.name)
+            # if mime_type:
+            file_mime_type = mime_type.split('/')[0]
+            media_type_instance = LookupMediaType.objects.filter(mediatype__startswith=file_mime_type).first()
+            if media_type_instance:
+                mediatype = media_type_instance
+            else:
+                media_type_instance = LookupMediaType.objects.filter(mediatype__startswith='other').first()
+                mediatype = media_type_instance
+            
+            filename = file.name.split('.')[0]
+            
             media_instance = Media(
-                medianame=obj.mediabulkname,
-                mediadescription=obj.mediabulkdescription,
+                medianame=filename,
+                mediadescription=f'Part of the "{obj.mediabulkname}" Media Bulk Upload that was uploaded on {obj.mediabulkdate}',
                 mediafile=file,
+                mediatype=mediatype,
             )
             media_instance.save()
             obj.mediabulkupload.add(media_instance)
@@ -482,6 +498,9 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
                     PlaceResourceMediaEvents.objects.create(placeresourceid=placeresource, mediaid=media_instance)
 
 
+    @admin.display(
+        description='Thumbnails'
+    )
     def thumbnail_gallery(self, obj):
         thumbnails = []
         for media in obj.mediabulkupload.all():
@@ -539,21 +558,44 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
         return format_html(''.join(thumbnails))
 
-    thumbnail_gallery.short_description = 'Thumbnails'
-    readonly_fields = ('thumbnail_gallery',)
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # If the object already exists
+            return [field.name for field in self.model._meta.fields]
+        else:
+            return self.readonly_fields
+
+    def has_change_permission(self, request, obj=None):
+        if obj:  # If the object already exists
+            return False
+        return super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return True
+
+    def has_add_permission(self, request):
+        return True
+
+    readonly_fields = ('thumbnail_gallery',
+    'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate')
     fieldsets = (
         (None, {
             'fields': ('mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
         }),
+        ('History', {
+            'fields': (
+                ('enteredbyname','enteredbytitle','enteredbytribe','enteredbydate')
+            )
+        }),
     )
 
-admin.site.register(MediaBulkUpload, MediaBulkUploadAdmin)
 
 
+@admin.register(Media)
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = ('medialink',
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate',
-    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate')
+    'modifiedbyname','modifiedbytribe','modifiedbytitle','modifiedbydate',
+    'mediabulkupload',)
     list_display = ('medianame','mediatype','needs_Review','modifiedbyname','modifiedbydate',
     'enteredbyname','enteredbydate')
     fieldsets = (
@@ -585,6 +627,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     form = MediaForm
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
+@admin.register(Places)
 class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('indigenousplacename','englishplacename','needs_Review','modifiedbyname',
     'modifiedbydate','enteredbyname','enteredbydate')
@@ -631,6 +674,7 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
         extra_context['results_geojson'] = getPlacesGeoJSON(request)
         return super(PlacesAdmin, self).changelist_view(request, extra_context=extra_context)
 
+@admin.register(Resources)
 class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     list_display = ('commonname','indigenousname', 'needs_Review', 'modifiedbyname',
         'modifiedbydate','enteredbyname','enteredbydate')
@@ -664,6 +708,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     ordering = ('commonname',)
     form = ResourcesForm
 
+@admin.register(ResourcesActivityEvents)
 class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
     list_display = ('placeresourceid', 'excerpt_text', 'needs_Review',
     'modifiedbyname','modifiedbydate', 'enteredbyname','enteredbydate')
@@ -732,6 +777,7 @@ class LocalityAdmin(RecordAdminProxy, OSMGeoAdmin):
     ]
 
 #### RELATIONSHIP MODELS ####
+@admin.register(PlacesResourceEvents)
 class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
     list_display = ('placeid', 'resourceid', 'needs_Review','partused', 'season',
                     'enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
@@ -766,6 +812,7 @@ class PlacesResourceEventsAdmin(NestedRecordAdminProxy):
         NestedPlacesresourceactivityeventInline,
     ]
 
+@admin.register(MediaCitationEvents)
 class MediaCitationEventsAdmin(RecordAdminProxy):
     list_display = ('mediaid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -781,6 +828,7 @@ class MediaCitationEventsAdmin(RecordAdminProxy):
     )
     form = MediaCitationEventsForm
 
+@admin.register(PlacesCitationEvents)
 class PlacesCitationEventsAdmin(RecordAdminProxy):
     list_display = ('placeid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -796,6 +844,7 @@ class PlacesCitationEventsAdmin(RecordAdminProxy):
     )
     form = PlacesCitationEventsForm
 
+@admin.register(PlacesMediaEvents)
 class PlacesMediaEventsAdmin(RecordAdminProxy):
     list_display = ('placeid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -811,6 +860,7 @@ class PlacesMediaEventsAdmin(RecordAdminProxy):
     )
     form = PlacesMediaEventsForm
     
+@admin.register(PlaceAltIndigenousName)
 class PlaceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
@@ -819,6 +869,7 @@ class PlaceAltIndigenousNameAdmin(VersionAdmin):
     )
     form = PlaceAltIndigenousNameForm
 
+@admin.register(PlacesResourceCitationEvents)
 class PlacesResourceCitationEventsAdmin(RecordAdminProxy):
     list_display = ('placeresourceid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -834,6 +885,7 @@ class PlacesResourceCitationEventsAdmin(RecordAdminProxy):
     )
     form = PlacesResourceCitationEventsForm
 
+@admin.register(PlacesResourceMediaEvents)
 class PlacesResourceMediaEventsAdmin(RecordAdminProxy):
     list_display = ('placeresourceid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -849,6 +901,7 @@ class PlacesResourceMediaEventsAdmin(RecordAdminProxy):
     )
     form = PlacesResourceMediaEventsForm
 
+@admin.register(ResourceActivityCitationEvents)
 class ResourceActivityCitationEventsAdmin(RecordAdminProxy):
     list_display = ('resourceactivityid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -864,6 +917,7 @@ class ResourceActivityCitationEventsAdmin(RecordAdminProxy):
     )
     form = ResourceActivityCitationEventsForm
         
+@admin.register(ResourceActivityMediaEvents)
 class ResourceActivityMediaEventsAdmin(RecordAdminProxy):
     list_display = ('resourceactivityid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -879,6 +933,7 @@ class ResourceActivityMediaEventsAdmin(RecordAdminProxy):
     )
     form = ResourceActivityMediaEventsForm
 
+@admin.register(ResourceResourceEvents)
 class ResourceResourceEventsAdmin(RecordAdminProxy):
     list_display = ('resourceid','altresourceid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -894,6 +949,7 @@ class ResourceResourceEventsAdmin(RecordAdminProxy):
     )
     form = ResourceResourceEventsForm
 
+@admin.register(ResourcesCitationEvents)
 class ResourcesCitationEventsAdmin(RecordAdminProxy):
     list_display = ('resourceid','citationid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -909,6 +965,7 @@ class ResourcesCitationEventsAdmin(RecordAdminProxy):
     )
     form = ResourcesCitationEventsForm
 
+@admin.register(ResourcesMediaEvents)
 class ResourcesMediaEventsAdmin(RecordAdminProxy):
     list_display = ('resourceid','mediaid','enteredbyname','enteredbydate','modifiedbyname','modifiedbydate')
     fieldsets = (
@@ -924,6 +981,7 @@ class ResourcesMediaEventsAdmin(RecordAdminProxy):
     )
     form = ResourcesMediaEventsForm
 
+@admin.register(ResourceAltIndigenousName)
 class ResourceAltIndigenousNameAdmin(VersionAdmin):
     fieldsets = (
         ('', {
@@ -949,6 +1007,7 @@ class LocalityPlaceResourceEventAdmin(RecordAdminProxy):
 #####################
 #### AUTH MODELS ####
 #####################
+@admin.register(Users)
 class UsersAdmin(UserAdmin):
     list_display = (
         'username', 'first_name', 'last_name', 'affiliation',
@@ -966,7 +1025,6 @@ class UsersAdmin(UserAdmin):
         'title', 'accesslevel__accesslevel'
     )
 
-admin.site.register(Citations, CitationsAdmin)
 # admin.site.register(Locality, LocalityAdmin)
 # admin.site.register(LocalityGISSelections)
 # admin.site.register(LocalityPlaceResourceEvent, LocalityPlaceResourceEventAdmin)
@@ -984,26 +1042,8 @@ admin.site.register(LookupSeason)
 admin.site.register(LookupTechniques)
 admin.site.register(LookupTiming)
 admin.site.register(LookupTribe)
-admin.site.register(Media, MediaAdmin)
-admin.site.register(MediaCitationEvents, MediaCitationEventsAdmin)
 admin.site.register(People)
-admin.site.register(PlaceAltIndigenousName, PlaceAltIndigenousNameAdmin)
 # admin.site.register(PlaceGISSelections)
-admin.site.register(Places, PlacesAdmin)
-admin.site.register(PlacesCitationEvents, PlacesCitationEventsAdmin)
-admin.site.register(PlacesMediaEvents,PlacesMediaEventsAdmin)
-admin.site.register(PlacesResourceCitationEvents, PlacesResourceCitationEventsAdmin)
-admin.site.register(PlacesResourceEvents, PlacesResourceEventsAdmin)
-admin.site.register(PlacesResourceMediaEvents, PlacesResourceMediaEventsAdmin)
-admin.site.register(ResourceActivityCitationEvents, ResourceActivityCitationEventsAdmin)
-admin.site.register(ResourceActivityMediaEvents, ResourceActivityMediaEventsAdmin)
-admin.site.register(ResourceAltIndigenousName, ResourceAltIndigenousNameAdmin)
-admin.site.register(ResourceResourceEvents, ResourceResourceEventsAdmin)
-admin.site.register(Resources, ResourcesAdmin)
-admin.site.register(ResourcesActivityEvents, ResourcesActivityEventsAdmin)
-admin.site.register(ResourcesCitationEvents, ResourcesCitationEventsAdmin)
-admin.site.register(ResourcesMediaEvents, ResourcesMediaEventsAdmin)
-admin.site.register(Users, UsersAdmin)
 admin.site.register(UserAccess)
 
 ###Cruft

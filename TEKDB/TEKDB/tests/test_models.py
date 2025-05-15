@@ -227,7 +227,57 @@ class ResourcesTest(TestCase):
         self.assertEqual(flurpie_results[0].commonname, 'Test')
 
 # PlacesResourceEvents
+class PlacesResourceEventsCascadeTest(TestCase):
+    fixtures = ['/usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json',]
 
+    def setUp(self):
+        self.place = Places.objects.create(
+            indigenousplacename="Cascade Place",
+            englishplacename="Cascade Place English",
+        )
+        self.resource = Resources.objects.create(
+            commonname="Cascade Resource",
+            indigenousname="Cascade Indigenous Resource"
+        )
+        self.event = PlacesResourceEvents.objects.create(
+            placeid=self.place,
+            resourceid=self.resource,
+            relationshipdescription="Cascade Relationship"
+        )
+
+    def test_cascade_delete_place(self):
+        event_pks = list(
+            PlacesResourceEvents.objects
+            .filter(placeid=self.place)
+            .values_list('pk', flat=True)
+        )
+        self.assertIn(self.event.pk, event_pks)
+        total_before = PlacesResourceEvents.objects.count()
+        self.place.delete()
+        for pk in event_pks:
+            self.assertFalse(
+                PlacesResourceEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = PlacesResourceEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
+
+    def test_cascade_delete_resource(self):
+        event_pks = list(
+            PlacesResourceEvents.objects
+            .filter(resourceid=self.resource)
+            .values_list('pk', flat=True)
+        )
+        self.assertIn(self.event.pk, event_pks)
+        total_before = PlacesResourceEvents.objects.count()
+        self.resource.delete()
+        for pk in event_pks:
+            self.assertFalse(
+                PlacesResourceEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = PlacesResourceEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
 
 # ResourcesActivityEvents
 class ResourcesActivityEventsTest(TestCase):
@@ -340,6 +390,57 @@ class CitationsTest(TestCase):
 
 
 # PlacesCitationEvents
+class PlacesCitationEventsCascadeTest(TestCase):
+    fixtures = ['/usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json',]
+
+    def setUp(self):
+        self.place = Places.objects.create(
+            indigenousplacename="Cascade Place",
+            englishplacename="Cascade Place English",
+        )
+        self.citation = Citations.objects.create(
+            referencetext="Cascade Citation",
+            referencetype=LookupReferenceType.objects.create(documenttype="Book")
+        )
+        self.event = PlacesCitationEvents.objects.create(
+            placeid=self.place,
+            citationid=self.citation,
+            relationshipdescription="Cascade Relationship"
+        )
+
+    def test_cascade_delete_place(self):
+        event_pks = list(
+            PlacesCitationEvents.objects
+            .filter(placeid=self.place)
+            .values_list('pk', flat=True)
+        )
+        self.assertIn(self.event.pk, event_pks)
+        total_before = PlacesCitationEvents.objects.count()
+        self.place.delete()
+        for pk in event_pks:
+            self.assertFalse(
+                PlacesCitationEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = PlacesCitationEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
+
+    def test_cascade_delete_citation(self):
+        event_pks = list(
+            PlacesCitationEvents.objects
+            .filter(citationid=self.citation)
+            .values_list('pk', flat=True)
+        )
+        self.assertIn(self.event.pk, event_pks)
+        total_before = PlacesCitationEvents.objects.count()
+        self.citation.delete()
+        for pk in event_pks:
+            self.assertFalse(
+                PlacesCitationEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = PlacesCitationEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
 
 
 # Locality
@@ -387,9 +488,131 @@ class MediaTest(TestCase):
 
 
 # MediaCitationEvents
+class MediaCitationEventsCascadeTest(TestCase):
+    fixtures = ['/usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json',]
+
+    def setUp(self):
+        self.media = Media.objects.create(
+            medianame="Cascade Media",
+            mediadescription="Cascade Media Description"
+        )
+        self.citation = Citations.objects.create(
+            referencetype=LookupReferenceType.objects.get(pk=1),
+            referencetext="Cascade Citation"
+        )
+        self.event = MediaCitationEvents.objects.create(
+            mediaid=self.media,
+            citationid=self.citation,
+            relationshipdescription="Cascade Relationship"
+        )
+
+    def test_cascade_delete_media(self):
+        event_pks = list(
+            MediaCitationEvents.objects
+            .filter(mediaid=self.media)
+            .values_list('pk', flat=True)
+        )
+        self.assertIn(self.event.pk, event_pks)
+        total_before = MediaCitationEvents.objects.count()
+        self.media.delete()
+        for pk in event_pks:
+            self.assertFalse(
+                MediaCitationEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = MediaCitationEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
+
+    def test_cascade_delete_citation(self):
+        event_pks = list(
+            MediaCitationEvents.objects
+            .filter(citationid=self.citation)
+            .values_list('pk', flat=True)
+        )
+        self.assertIn(self.event.pk, event_pks)
+        total_before = MediaCitationEvents.objects.count()
+        self.citation.delete()
+        for pk in event_pks:
+            self.assertFalse(
+                MediaCitationEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = MediaCitationEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
 
 
 # PlacesMediaEvents
+class PlacesMediaEventsCascadeTest(TestCase):
+    fixtures = ['/usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json',]
+
+    def setUp(self):
+        # Create a Places instance
+        self.place = Places.objects.create(
+            indigenousplacename="Test Place",
+            englishplacename="Test Place English",
+        )
+        # Create a Media instance
+        self.media = Media.objects.create(
+            medianame="Test Media",
+            mediadescription="Test Media Description"
+        )
+
+        # Create a PlacesMediaEvents instance
+        self.places_media_event = PlacesMediaEvents.objects.create(
+            placeid=self.place,
+            mediaid=self.media,
+            relationshipdescription="Test Relationship"
+        )
+
+    def test_cascade_delete_place(self):    
+        # grab the PKs of all events for our test place
+        event_pks = list(
+            PlacesMediaEvents.objects
+            .filter(placeid=self.place)
+            .values_list('pk', flat=True)
+        )
+
+        self.assertIn(self.places_media_event.pk, event_pks)
+
+        # Get total
+        total_before = PlacesMediaEvents.objects.count()
+
+        # Delete the Places instance
+        self.place.delete()
+
+        # those specific events must be gone
+        for pk in event_pks:
+            self.assertFalse(
+                PlacesMediaEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+
+        # and total should have dropped by exactly len(event_pks)
+        total_after = PlacesMediaEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(event_pks))
+
+    def test_cascade_delete_media(self):
+        media_pks = list(
+            PlacesMediaEvents.objects
+            .filter(mediaid=self.media)
+            .values_list('pk', flat=True)
+        )
+
+        self.assertIn(self.places_media_event.pk, media_pks)
+
+        total_before = PlacesMediaEvents.objects.count()
+        
+        # Delete the Media instance
+        self.media.delete()
+
+        for pk in media_pks:
+            self.assertFalse(
+                PlacesMediaEvents.objects.filter(pk=pk).exists(),
+                f"event {pk} should have been cascade‐deleted"
+            )
+        total_after = PlacesMediaEvents.objects.count()
+        self.assertEqual(total_before - total_after, len(media_pks))
+
 
 
 # PlacesResourceCitationEvents
