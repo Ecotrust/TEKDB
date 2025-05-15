@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'coverage',
     'configuration',
     'explore',
-    'filebrowser', # file browser for tinymce
     'login',
     'TEKDB',
     'tinymce',
