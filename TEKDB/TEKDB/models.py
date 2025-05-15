@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
-from django.db import models
+from django.db import models, transaction, IntegrityError, connection
 from django.db.models import Q, Manager as GeoManager
 from django.db.models.functions import Greatest
 from django.contrib.auth.models import AbstractUser
@@ -106,8 +106,32 @@ class DefaultModeratedModel(models.Model):
     class Meta:
         abstract = True
 
+def update_model_sequence(model, unique_key, manager):
+    max_theme_pk = manager.all().order_by('pk').last().pk
+    sequence_name = '{}_{}_seq'.format(model.__name__.lower(), unique_key)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT setval('{}', {}, true);".format(sequence_name, max_theme_pk))
 
-class Record(DefaultModeratedModel):
+class DefaultModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                super(DefaultModel, self).save(*args, **kwargs)
+        except IntegrityError as e:
+            if 'duplicate key value violates unique constraint' in str(e):
+                model = type(self)
+                unique_key = str(e).split('Key (')[-1].split(')=(')[0]
+                update_model_sequence(model, unique_key, manager=model.objects)
+                with transaction.atomic():
+                    super(DefaultModel, self).save(*args, **kwargs)
+            else:
+                raise IntegrityError(e)
+
+
+class Record(DefaultModel, DefaultModeratedModel):
     def format_data(self, data_set, fk_field_id, ignore_columns=[]):
         columns = ['id']
         rows = []
