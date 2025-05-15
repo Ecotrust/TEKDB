@@ -452,6 +452,15 @@ class MediaTest(TestCase):
                 )
             )
 
+    def test_media_id_collision(self):
+        """
+        Test that saving a media can recover from an ID collision
+        """
+        insertion_object = {
+        }
+        collision_result = test_model_id_collision(Media, insertion_object, self)
+        self.assertTrue(collision_result)
+
 
 
 
