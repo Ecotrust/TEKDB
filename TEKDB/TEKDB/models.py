@@ -264,7 +264,7 @@ class Queryable(models.Model):
     def get_relationship_json(self, req_model):
         return self.get_query_json()
 
-class SimpleRelationship(Queryable):
+class SimpleRelationship(DefaultModel, Queryable):
 
     class Meta:
         abstract = True
