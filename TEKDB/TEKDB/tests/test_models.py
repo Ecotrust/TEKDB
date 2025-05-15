@@ -17,6 +17,28 @@ from TEKDB.tests.test_views import import_fixture_file
 #   MODELS W/ keyword_search
 ###
 
+def test_model_id_collision(model, insertion_object, test):
+    """
+    Test that saving an object can recover from an ID collision
+    """
+    try:
+        test.assertTrue(model.objects.all().count() > 0)
+        DB_TABLE = model._meta.db_table
+        PK_FIELD = model._meta.pk.name
+        SEQUENCE_NAME = '{}_{}_seq'.format(DB_TABLE, PK_FIELD)
+        MAX_ID = model.objects.all().order_by('-pk')[0].pk
+
+        cur = connection.cursor()
+        cur.execute('SELECT setval(%s, %s)', (SEQUENCE_NAME, MAX_ID - 1))
+        new_obj = model.objects.create(**insertion_object)
+        new_obj.save()
+        test.assertTrue(new_obj.pk > MAX_ID)
+        new_obj.delete()
+    except Exception as e:
+        print("Error in test_model_id_collision: {}".format(e))
+        return False
+    return True
+
 class MiscSearchTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
@@ -236,7 +258,7 @@ class ResourcesTest(TestCase):
 # PlacesResourceEvents
 
 
-# ResourcesActivityEvents
+# ResourcesActivityEvents ('Activities')
 class ResourcesActivityEventsTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
@@ -270,6 +292,16 @@ class ResourcesActivityEventsTest(TestCase):
                     result.similarity > settings.MIN_SEARCH_SIMILARITY
                 )
             )
+
+    def test_activity_id_collision(self):
+        """
+        Test that saving an activity can recover from an ID collision
+        """
+        insertion_object = {
+            'placeresourceid': PlacesResourceEvents.objects.all()[0],
+        }
+        collision_result = test_model_id_collision(ResourcesActivityEvents, insertion_object, self)
+        self.assertTrue(collision_result)
 
 
 
