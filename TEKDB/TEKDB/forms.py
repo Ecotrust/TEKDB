@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from .models import MediaBulkUpload, Media, Places, Resources, Citations, ResourcesActivityEvents, PlacesResourceMediaEvents
+from .models import MediaBulkUpload, Media, Places, Resources, Citations, ResourcesActivityEvents, PlacesResourceEvents
 from .widgets import ThumbnailFileInput
 
 
@@ -39,13 +39,13 @@ class MediaBulkUploadForm(forms.ModelForm):
         required=False,
         widget=FilteredSelectMultiple("Activities", is_stacked=False)
     )
-    placeresources = forms.ModelMultipleChoiceField(
-        queryset=PlacesResourceMediaEvents.objects.all(), 
+    placesresources = forms.ModelMultipleChoiceField(
+        queryset=PlacesResourceEvents.objects.all(), 
         required=False,
-        widget=FilteredSelectMultiple("Place Resources", is_stacked=False)
+        widget=FilteredSelectMultiple("Places Resources", is_stacked=False)
     )
 
     class Meta:
         model = MediaBulkUpload
-        fields = ['mediabulkname', 'mediabulkdescription', 'mediabulkdate', 'files', 'places', 'resources', 'citations', 'activities', 'placeresources']
+        fields = ['mediabulkname', 'mediabulkdescription', 'mediabulkdate', 'files', 'places', 'resources', 'citations', 'activities', 'placesresources']
     
