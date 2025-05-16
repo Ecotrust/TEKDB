@@ -1161,7 +1161,7 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             {'title': 'Media Relationships', 'data': self.format_data(media_events, 'resourceactivityid', ['resource activity'])},
         ]
 
-class People(DefaultModeratedModel, ModeratedModel):
+class People(Lookup):
     personid = models.AutoField(db_column='personid', primary_key=True)
     firstname = models.CharField(db_column='firstname', max_length=255, blank=True, null=True, verbose_name='first name')
     lastname = models.CharField(db_column='lastname', max_length=255, blank=True, null=True, verbose_name='last name')
