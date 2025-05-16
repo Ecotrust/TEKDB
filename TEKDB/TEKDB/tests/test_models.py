@@ -771,19 +771,279 @@ class LookupActivityTest(ITKTestCase):
         collision_result = test_model_id_collision(LookupActivity, insertion_object, self)
         self.assertTrue(collision_result)
 
-# LookupMediaType
+# LookupAuthorType
+class LookupAuthorTypeTest(ITKTestCase):
+    def test_lookup_author_type_id_collision(self):
+        """
+        Test that saving a lookup author type can recover from an ID collision
+        """
+        insertion_object = {
+            'authortype': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupAuthorType, insertion_object, self)
+        self.assertTrue(collision_result)
 
-# Lookup
-# Lookup
-# Lookup
-# Lookup
-# Lookup
-# Lookup
-# Lookup
+# LookupCustomaryUse
+class LookupCustomaryUseTest(ITKTestCase):
+    def test_lookup_customary_use_id_collision(self):
+        """
+        Test that saving a lookup customary use can recover from an ID collision
+        """
+        insertion_object = {
+            'usedfor': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupCustomaryUse, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupHabitat
+class LookupHabitatTest(ITKTestCase):
+    def test_lookup_habitat_id_collision(self):
+        """
+        Test that saving a lookup habitat can recover from an ID collision
+        """
+        insertion_object = {
+            'habitat': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupHabitat, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupMediaType
+class LookupMediaTypeTest(ITKTestCase):
+    def test_lookup_media_type_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # search 'Aud'
+        # char fields:
+        #   * mediatype
+        #   * mediacategory
+        keyword = 'Aud'
+        search_results = LookupMediaType.keyword_search(keyword)
+        # do we get 1 result? also checks that we do not return all results in Place category
+        self.assertEqual(search_results.count(), 1)
+        # checkout results belong to one of the search fields
+        for result in search_results:
+            if hasattr(result, 'similarity'):
+                self.assertTrue(
+                    (
+                        result.similarity and
+                        result.similarity > settings.MIN_SEARCH_SIMILARITY
+                    )
+                )
+
+    def test_lookup_media_type_id_collision(self):
+        """
+        Test that saving a lookup media type can recover from an ID collision
+        """
+        insertion_object = {
+            'mediatype': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupMediaType, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupParticipants
+class LookupParticipantsTest(ITKTestCase):
+    def test_lookup_participants_id_collision(self):
+        """
+        Test that saving a lookup participants can recover from an ID collision
+        """
+        insertion_object = {
+            'participants': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupParticipants, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupPartUsed
+class LookupPartUsedTest(ITKTestCase):
+    def test_lookup_part_used_id_collision(self):
+        """
+        Test that saving a lookup part used can recover from an ID collision
+        """
+        insertion_object = {
+            'partused': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupPartUsed, insertion_object, self)
+        self.assertTrue(collision_result)
 
 # People
+class PeopleTest(ITKSearchTest):
+    def test_people_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # search 'Mana'
+        # char fields:
+        #   * firstname
+        #   * lastname
+        #   * village
+        #   * relationshiptootherpeople
+        keyword = 'Mana'
+        search_results = People.keyword_search(keyword)
+        # do we get 1 result? also checks that we do not return all results in Place category
+        self.assertEqual(search_results.count(), 1)
+        # checkout results belong to one of the search fields
+        for result in search_results:
+            if hasattr(result, 'similarity'):
+                self.assertTrue(
+                    (
+                        result.similarity and
+                        result.similarity > settings.MIN_SEARCH_SIMILARITY
+                    )
+                )
+
+    def test_people_id_collision(self):
+        """
+        Test that saving a people can recover from an ID collision
+        """
+        insertion_object = {
+            'firstname': 'Testing',
+            'lastname': 'Person',
+        }
+        collision_result = test_model_id_collision(People, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupPlanningUnit
+class LookupPlanningUnitTest(ITKTestCase):
+
+    def test_planning_unit_id_collision(self):
+        """
+        Test that saving a planning unit can recover from an ID collision
+        """
+        insertion_object = {
+            'planningunitname': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupPlanningUnit, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupReferenceType
+class LookupReferenceTypeTest(ITKTestCase):
+    def test_lokup_reference_type_id_collision(self):
+        """
+        Test that saving a reference type lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'documenttype': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupReferenceType, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupResourceGroup
+class LookupResourceGroupTest(ITKTestCase):
+    def test_lookup_resource_group_id_collision(self):
+        """
+        Test that saving a resource group lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'resourceclassificationgroup': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupResourceGroup, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupSeason
+class LookupSeasonTest(ITKTestCase):
+    def test_lookup_season_id_collision(self):
+        """
+        Test that saving a season lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'season': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupSeason, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupTechniques
+class LookupTechniquesTest(ITKTestCase):
+    def test_lookup_technique_id_collision(self):
+        """
+        Test that saving a technique lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'techniques': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupTechniques, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupTiming
+class LookupTimingTest(ITKTestCase):
+    def test_lookup_timing_id_collision(self):
+        """
+        Test that saving a timing lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'timing': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupTiming, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupTribe
+class LookupTribeTest(ITKTestCase):
+    def test_people_search(self):
+        #####################################
+        ### TEST TEXT & CHAR FIELD SEARCH ###
+        #####################################
+        # search 'Rancheria'
+        # char fields:
+        #   * tribeunit
+        #   * tribe
+        #   * federaltribe
+        keyword = 'Rancheria'
+        search_results = LookupTribe.keyword_search(keyword)
+        # do we get 1 result? also checks that we do not return all results in Place category
+        self.assertEqual(search_results.count(), 1)
+        # checkout results belong to one of the search fields
+        for result in search_results:
+            if hasattr(result, 'similarity'):
+                self.assertTrue(
+                    (
+                        result.similarity and
+                        result.similarity > settings.MIN_SEARCH_SIMILARITY
+                    )
+                )
+
+    def test_lookup_tribe_id_collision(self):
+        """
+        Test that saving a tribe lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'tribeunit': 'Subunit',
+            'tribe' : 'Tribe',
+            'federaltribe': 'Government'
+        }
+        if LookupTribe.objects.all().count() == 0 or LookupTribe.objects.all().order_by('-pk')[0].pk < 2:
+            LookupTribe.objects.create(**{
+                'pk':2,
+                'tribeunit': 'Subunit1',
+                'tribe' : 'Tribe1',
+                'federaltribe': 'Government1'
+            })
+        self.assertTrue(LookupTribe.objects.all().count() > 0)
+        collision_result = test_model_id_collision(LookupTribe, insertion_object, self)
+        self.assertTrue(collision_result)
+
+# LookupUserInfo
+class LookupUserInfoTest(ITKTestCase):
+    def test_lookup_user_inf_id_collision(self):
+        """
+        Test that saving a user info lookup can recover from an ID collision
+        """
+        insertion_object = {
+            'username': 'Name',
+            'usertitle' : 'Title',
+            'useraffiliation': 'Affiliation'
+        }
+        if LookupUserInfo.objects.all().count() == 0 or LookupUserInfo.objects.all().order_by('-pk')[0].pk < 2:
+            LookupUserInfo.objects.create(**{
+                'pk':2,
+                'username': 'Name1',
+                'usertitle' : 'Title1',
+                'useraffiliation': 'Affiliation1'
+            })
+        self.assertTrue(LookupUserInfo.objects.all().count() > 0)
+        collision_result = test_model_id_collision(LookupUserInfo, insertion_object, self)
+        self.assertTrue(collision_result)
 
 
+# LookupLocalityType
 
 
 ####################################################
