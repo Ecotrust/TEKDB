@@ -758,7 +758,28 @@ class ResourcesCitationEventsTest(ITKTestCase):
 #   Lookup Tests
 ####################################################
 
+# LookupActivity
+class LookupActivityTest(ITKTestCase):
+
+    def test_lookup_activity_id_collision(self):
+        """
+        Test that saving a lookup activity can recover from an ID collision
+        """
+        insertion_object = {
+            'activity': 'Testing',
+        }
+        collision_result = test_model_id_collision(LookupActivity, insertion_object, self)
+        self.assertTrue(collision_result)
+
 # LookupMediaType
+
+# Lookup
+# Lookup
+# Lookup
+# Lookup
+# Lookup
+# Lookup
+# Lookup
 
 # People
 
