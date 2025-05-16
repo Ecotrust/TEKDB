@@ -1847,8 +1847,8 @@ class LookupMediaType(Lookup):
 
     def keyword_search(keyword):
         return LookupMediaType.objects.filter(
-            Q(mediatype__icontains=keyword),
-            Q(mediacategory__icontains=keyword),
+            Q(mediatype__icontains=keyword) |
+            Q(mediacategory__icontains=keyword)
         )
 
 class LookupUserInfo(Lookup):
