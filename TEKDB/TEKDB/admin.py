@@ -456,7 +456,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         resources = form.cleaned_data.get('resources')
         citations = form.cleaned_data.get('citations')
         activities = form.cleaned_data.get('activities')
-        placeresources = form.cleaned_data.get('placeresources')
+        placesresources = form.cleaned_data.get('placesresources')
         
         for file in request.FILES.getlist('files'):
             mime_type, _ = guess_type(file.name)
@@ -493,9 +493,9 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
             if activities:
                 for activity in activities:
                     ResourceActivityMediaEvents.objects.create(resourceactivityid=activity, mediaid=media_instance)
-            if placeresources:
-                for placeresource in placeresources:
-                    PlaceResourceMediaEvents.objects.create(placeresourceid=placeresource, mediaid=media_instance)
+            if placesresources:
+                for placeresource in placesresources:
+                    PlacesResourceMediaEvents.objects.create(placeresourceid=placeresource, mediaid=media_instance)
 
 
     @admin.display(
@@ -579,7 +579,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
     'enteredbyname', 'enteredbytribe','enteredbytitle','enteredbydate')
     fieldsets = (
         (None, {
-            'fields': ('mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placeresources', 'thumbnail_gallery')
+            'fields': ('mediabulkname', 'mediabulkdescription', 'files', 'mediabulkdate', 'places', 'resources', 'citations', 'activities', 'placesresources', 'thumbnail_gallery')
         }),
         ('History', {
             'fields': (
