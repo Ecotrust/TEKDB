@@ -228,7 +228,7 @@ TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
 
 # Add Version to the admin site header
-VERSION = '2.2.0'
+VERSION = '2.2.2'
 ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin v{}'.format(VERSION))
 
 # X Frame Options 

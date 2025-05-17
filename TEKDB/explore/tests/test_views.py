@@ -5,6 +5,8 @@ from django.db import connection
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
+from os.path import join
+from TEKDB.tests.test_views import import_fixture_file
 
 #########################################################################
 # Run with:
@@ -12,9 +14,11 @@ from django.urls import reverse
 #########################################################################
 
 class SearchTest(TestCase):
-    fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     def setUp(self):
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+
         self.factory = RequestFactory()
         self.credentials = b64encode(b"admin:admin").decode("ascii")
 
