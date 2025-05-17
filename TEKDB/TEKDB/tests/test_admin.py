@@ -22,7 +22,7 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         url = reverse('admin:TEKDB_mediabulkupload_add')
         test_image = SimpleUploadedFile("./test_image.jpg", b"\x00\x00\x00\x00", content_type="image")
 
-        # TODO: Associate the images with 1+ Pleaces, Resources, Citations, Activities, and PlacesResources
+        # TODO: Associate the images with 1+ Places, Resources, Citations, Activities, and PlacesResources
 
         request = self.factory.post(url, {
             # 'mediabulkname': 'Test Bulk Upload',
