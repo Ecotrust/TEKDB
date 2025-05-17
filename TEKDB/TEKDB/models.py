@@ -110,6 +110,17 @@ class DefaultModeratedModel(models.Model):
         abstract = True
 
 class DefaultModel(models.Model):
+    """
+    An abstract base model that provides custom behavior for saving instances.
+    
+    This class overrides the `save` method to handle `IntegrityError` exceptions
+    caused by duplicate key violations. If such an error occurs, it updates the
+    database sequence for the primary key to ensure consistency and retries the save.
+    
+    Usage:
+        - Inherit from this class to add the custom save behavior to your model.
+        - Ensure that your model has a primary key field and a corresponding database sequence.
+    """
     class Meta:
         abstract = True
 
