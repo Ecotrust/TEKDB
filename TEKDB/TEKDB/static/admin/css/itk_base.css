@@ -80,3 +80,7 @@ button.btn-info#import-info {
   margin: -0.5rem 0 1rem 1rem;
   float: right;
 }
+
+a.btn-primary#export-button {
+  color: var(--bs-white);
+}
