@@ -44,17 +44,17 @@ jobs:
       - name: List files in workspace for debugging
         run: |
           echo "Listing files in workspace"
-          ls
+          ls -al
+      
+      # TODO: which of these packages are actually needed?
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc make uwsgi uwsgi-plugin-python3 gdal-bin python3-gdal python3-dev build-essential -y
 
-      # - name: Install system dependencies
-      #   run: |
-      #     sudo apt-get update
-      #     # TODO: which of these are actually needed?
-      #     sudo apt-get install gcc make uwsgi uwsgi-plugin-python3 gdal-bin python3-gdal python3-dev build-essential -y
-
-      # - name: Install Python dependencies
-      #   run: |
-      #     python -m pip install -r TEKDB/requirements.txt
+      - name: Install Python dependencies
+        run: |
+          python -m pip install -r TEKDB/requirements.txt
 
       # - name: Run migrations
       #   run: |
