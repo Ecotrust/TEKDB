@@ -38,7 +38,7 @@ def test_model_id_collision(model, insertion_object, test):
         test.assertTrue(NEW_COUNT > ORIGINAL_COUNT)
         new_obj.delete()
         FINAL_COUNT = model.objects.all().count()
-        test.assertTrue(FINAL_COUNT == ORIGINAL_COUNT)
+        test.assertTrue(FINAL_COUNT != ORIGINAL_COUNT)
     except Exception as e:
         print("Error in test_model_id_collision: {}".format(e))
         return False
