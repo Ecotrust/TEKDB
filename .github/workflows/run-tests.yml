@@ -23,7 +23,7 @@ jobs:
       SQL_HOST: localhost
       SQL_PORT: 5432
       DEBUG: 1
-      SECRET_KEY: testsecretkey
+      SECRET_KEY: ${{ secrets.POSTGRES_SECRET_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
