@@ -60,6 +60,6 @@ jobs:
       #   run: |
       #     /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py migrate
 
-      # - name: Run tests
-      #   run: |
-      #     /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py test TEKDB.tests
+      - name: Run tests
+        run: |
+          /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py test TEKDB.tests
