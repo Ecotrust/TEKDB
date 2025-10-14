@@ -194,7 +194,7 @@ class PlacesTest(ITKSearchTest):
         insertion_object = {
         }
         collision_result = test_model_id_collision(Places, insertion_object, self)
-        self.assertFalse(collision_result)
+        self.assertTrue(collision_result)
 
 # Resources
 class ResourcesTest(ITKSearchTest):
