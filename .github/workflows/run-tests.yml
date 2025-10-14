@@ -41,11 +41,6 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
       
-      - name: List files in workspace for debugging
-        run: |
-          echo "Listing files in workspace"
-          ls -al
-      
       # TODO: which of these packages are actually needed?
       - name: Install system dependencies
         run: |
@@ -60,6 +55,12 @@ jobs:
       #   run: |
       #     /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py migrate
 
+      - name: List files in workspace for debugging
+        run: |
+          echo "Listing files in workspace"
+          cd TEKDB 
+          ls -al
+
       - name: Run tests
         run: |
-          python /TEKDB/manage.py test TEKDB.tests
+          cd TEKDB && python manage.py test TEKDB.tests
