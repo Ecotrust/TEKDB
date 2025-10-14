@@ -15,11 +15,6 @@ jobs:
           POSTGRES_DB: tekdb
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     env:
       SQL_ENGINE: django.contrib.gis.db.backends.postgis
       SQL_DATABASE: tekdb
@@ -37,15 +32,6 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.10'
-      
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-      
-      # TODO: which of these packages are actually needed?
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install gcc make uwsgi uwsgi-plugin-python3 gdal-bin python3-gdal python3-dev build-essential -y
 
       - name: Install Python dependencies
         run: |
@@ -54,11 +40,6 @@ jobs:
       - name: Run migrations
         run: |
           cd TEKDB && python manage.py migrate
-
-      - name: List files in workspace for debugging
-        run: |
-          echo "Listing files in workspace"
-          cd TEKDB && ls -al
 
       - name: Run tests
         run: |
