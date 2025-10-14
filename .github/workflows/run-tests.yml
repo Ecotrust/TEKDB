@@ -51,9 +51,9 @@ jobs:
         run: |
           python -m pip install -r TEKDB/requirements.txt
 
-      # - name: Run migrations
-      #   run: |
-      #     /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py migrate
+      - name: Run migrations
+        run: |
+          cd TEKDB && python manage.py migrate
 
       - name: List files in workspace for debugging
         run: |
