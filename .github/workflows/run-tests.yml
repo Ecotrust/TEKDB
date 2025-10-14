@@ -1,0 +1,65 @@
+name: Run Tests
+
+on:
+  [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tekdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      SQL_ENGINE: django.contrib.gis.db.backends.postgis
+      SQL_DATABASE: tekdb
+      SQL_USER: postgres
+      SQL_PASSWORD: postgres
+      SQL_HOST: localhost
+      SQL_PORT: 5432
+      DEBUG: 1
+      SECRET_KEY: testsecretkey
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+      
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      
+      - name: List files in workspace for debugging
+        run: |
+          echo "Listing files in workspace"
+          ls
+
+      # - name: Install system dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     # TODO: which of these are actually needed?
+      #     sudo apt-get install gcc make uwsgi uwsgi-plugin-python3 gdal-bin python3-gdal python3-dev build-essential -y
+
+      # - name: Install Python dependencies
+      #   run: |
+      #     python -m pip install -r TEKDB/requirements.txt
+
+      # - name: Run migrations
+      #   run: |
+      #     /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py migrate
+
+      # - name: Run tests
+      #   run: |
+      #     /usr/local/apps/TEKDB/env/bin/python /usr/local/apps/TEKDB/TEKDB/manage.py test TEKDB.tests
