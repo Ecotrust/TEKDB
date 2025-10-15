@@ -45,3 +45,9 @@ jobs:
       - name: Run tests
         run: |
           cd TEKDB && python manage.py test TEKDB.tests
+
+      - name: Run Coverage Report
+        run: |
+          cd TEKDB && coverage run manage.py test TEKDB.tests
+          coverage report
+          
