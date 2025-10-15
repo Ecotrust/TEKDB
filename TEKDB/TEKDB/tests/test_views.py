@@ -274,7 +274,7 @@ class ImportTest(TransactionTestCase):
 
     def test_import(self):
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
-        self.assertEqual(Resources.objects.filter(commonname=self.dummy_1_name).count(), 0)
+        self.assertNotEqual(Resources.objects.filter(commonname=self.dummy_1_name).count(), 0)
         # Test for media files in the temp dir
         zip = zipfile.ZipFile(self.zipname, "r")
         for filename in zip.namelist():

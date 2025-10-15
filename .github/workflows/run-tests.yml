@@ -42,9 +42,9 @@ jobs:
         run: |
           python -m pip install -r TEKDB/requirements.txt
 
-      - name: Run tests
-        run: |
-          cd TEKDB && python manage.py test TEKDB.tests
+      # - name: Run tests
+      #   run: |
+      #     cd TEKDB && python manage.py test TEKDB.tests
 
       - name: Run Coverage Report
         run: |
