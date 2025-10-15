@@ -5,6 +5,7 @@ on:
 
 jobs:
   test:
+    name: Run Tests and Update Coverage Badge
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -42,12 +43,26 @@ jobs:
         run: |
           python -m pip install -r TEKDB/requirements.txt
 
-      # - name: Run tests
-      #   run: |
-      #     cd TEKDB && python manage.py test TEKDB.tests
-
       - name: Run Coverage Report
         run: |
           cd TEKDB && coverage run manage.py test TEKDB.tests
-          coverage report
+          coverage json
+      
+      - name: Access Coverage Stat
+        run: |
+          export TOTAL=$(python -c "import json;print(json.load(open('TEKDB/coverage.json'))['totals']['percent_covered_display'])")
+          echo "total=$TOTAL" >> $GITHUB_ENV
+          echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
+
+      - name: Make Coverage Badge
+        uses: Schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: ${{ secrets.GIST_ID }}
+          filename: coverage-badge.json
+          label: Coverage
+          message: ${{ env.total }}%
+          minColorRange: 50
+          maxColorRange: 90
+          valColorRange: ${{ env.total }}
           
