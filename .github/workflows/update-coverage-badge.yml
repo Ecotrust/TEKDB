@@ -1,4 +1,4 @@
-name: Run Tests
+name: Update Coverage Badge
 
 on:
   push:
