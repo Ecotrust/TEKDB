@@ -3,7 +3,6 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
-from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import connection
 from django.test import TestCase, TransactionTestCase
@@ -43,6 +42,14 @@ def get_checksum(filename, hash_function):
 def create_export_request(self):
     return self.factory.get(
         reverse('export_database'),
+        headers = {
+            "Authorization": f"Basic {self.credentials}"
+        },
+    )
+
+def create_get_related_request(self, model, id):
+    return self.factory.get(
+        f'tekdb/{model}/{id}/get_related',
         headers = {
             "Authorization": f"Basic {self.credentials}"
         },
@@ -151,10 +158,156 @@ def import_fixture_file(filepath):
 
 
 class RelatedTest(TestCase):
-    def test_related(self):
+    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    @classmethod
+    def setUp(self):
+        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+        # add a resource to the db
+        new_resource_record = Resources.objects.create(commonname="Dummy Record 1",)
+        new_resource_record.save()
+        self.first_resource = new_resource_record
+
+        # add a place to the db
+        new_place_record = Places.objects.create(englishplacename="Dummy Place 1")
+        new_place_record.save()
+        self.first_place = new_place_record
+
+        # add a place-resource event to the db
+        new_place_resource_event = PlacesResourceEvents.objects.create(placeid=new_place_record, resourceid=new_resource_record, relationshipdescription="A Dummy Place-Resource Event")
+        new_place_resource_event.save()
+        self.first_place_resource_event = new_place_resource_event
+
+        # add a resource-activty event to the db
+        new_resources_activity_event = ResourcesActivityEvents.objects.create(placeresourceid=new_place_resource_event, relationshipdescription="A Dummy Resources Activity Event")
+        new_resources_activity_event.save()
+        self.first_resources_activity_event = new_resources_activity_event
+
+        # add a lookup reference type to the db
+        new_reference_type = LookupReferenceType.objects.create(documenttype="A Dummy Reference Type")
+        new_reference_type.save()
+        self.first_reference_type = new_reference_type
+
+        # add a new citaton to the db
+        new_citation = Citations.objects.create(referencetype=new_reference_type, authorprimary="Doe, John", year=2020, title="A Dummy Citation")
+        new_citation.save()
+        self.first_citation = new_citation
+
+        # add a new media to the db
+        new_media = Media.objects.create(mediadescription="A Dummy Media")
+        new_media.save()
+        self.first_media = new_media
+        
+    def test_get_related_wrong_permissions(self):
         from TEKDB.views import get_related
-        print("\n\tTODO: Write TEKDB/test_views.RelatedTest")
-        self.assertTrue(True)
+
+        related_request = create_get_related_request(self, 'resources', 1)
+        related_request.user = AnonymousUser()
+        response = get_related(related_request, 'resources', 1)
+        self.assertEqual(response.status_code, 401)
+    
+    def test_get_related_records(self):
+        from TEKDB.views import get_related
+        
+        related_request = create_get_related_request(self, 'record', 1)
+        related_request.user = Users.objects.get(username='admin')
+        response = get_related(related_request, 'record', 1)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(isinstance(data, list))
+        # assert that there are no related records because Record.get_related_objects() returns an empty list
+        self.assertTrue(len(data) == 0)
+
+    def test_get_related_places(self):
+        from TEKDB.views import get_related
+        
+        related_request = create_get_related_request(self, 'places', self.first_place.placeid)
+        related_request.user = Users.objects.get(username='admin')
+        response = get_related(related_request, 'places', self.first_place.placeid)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(isinstance(data, list))
+
+        # assert that there are 4 related records because Place.get_related_objects() returns 4 related objects:
+        #   * Alternate Names
+        #   * Resource Relationships
+        #   * Media Relationships
+        #   * Citation Relationships
+        self.assertTrue(len(data) == 4)
+    
+    def test_get_related_resources(self):
+        from TEKDB.views import get_related
+        
+        related_request = create_get_related_request(self, 'resources', self.first_resource.resourceid)
+        related_request.user = Users.objects.get(username='admin')
+        response = get_related(related_request, 'resources', self.first_resource.resourceid)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(isinstance(data, list))
+
+        # assert that there are 5 related records because Resource.get_related_objects() returns 5 related objects:
+        #   * Media Relationships
+        #   * Citation Relationships
+        #   * Place Relationships
+        #   * Resource Relationships
+        #   * Alternate Names
+        self.assertTrue(len(data) == 5)
+    
+    def test_get_related_resource_activity_events(self):
+        from TEKDB.views import get_related
+        
+        related_request = create_get_related_request(self, 'resourcesactivityevents', self.first_resources_activity_event.resourceactivityid)
+        related_request.user = Users.objects.get(username='admin')
+        response = get_related(related_request, 'resourcesactivityevents', self.first_resources_activity_event.resourceactivityid)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(isinstance(data, list))
+
+        # assert that there are 2 related records because ResourcesActivityEvents.get_related_objects() returns 2 related objects:
+        #   * Citation Relationships
+        #   * Media Relationships
+        self.assertTrue(len(data) == 2)
+    
+    def test_get_related_citations(self):
+        from TEKDB.views import get_related
+        
+        related_request = create_get_related_request(self, 'citations', self.first_citation.citationid)
+        related_request.user = Users.objects.get(username='admin')
+        response = get_related(related_request, 'citations', self.first_citation.citationid)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(isinstance(data, list))
+
+        # assert that there are 5 related records because Citations.get_related_objects() returns 5 related objects:
+        #   * Place Relationships
+        #   * Resource Relationships
+        #   * Media Relationships
+        #   * Place-Resource Relationships
+        #   * Activity Relationships
+        self.assertTrue(len(data) == 5)
+
+    def test_get_related_media(self):
+        from TEKDB.views import get_related
+        
+        related_request = create_get_related_request(self, 'media', self.first_media.mediaid)
+        related_request.user = Users.objects.get(username='admin')
+        response = get_related(related_request, 'media', self.first_media.mediaid)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(isinstance(data, list))
+
+        # assert that there are 5 related records because Media.get_related_objects() returns 5 related objects:
+        #   * Place Relationships
+        #   * Citation Relationships
+        #   * Resource Relationships
+        #   * Place-Resource Relationships
+        #   * Activity Relationships
+        self.assertTrue(len(data) == 5)
+    
+
 
 class ExportTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
