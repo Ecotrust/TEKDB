@@ -199,7 +199,6 @@ class RelatedTest(TestCase):
         new_media = Media.objects.create(mediadescription="A Dummy Media")
         new_media.save()
         self.first_media = new_media
-        
     def test_get_related_wrong_permissions(self):
         from TEKDB.views import get_related
 
@@ -305,9 +304,6 @@ class RelatedTest(TestCase):
         #   * Place-Resource Relationships
         #   * Activity Relationships
         self.assertTrue(len(data) == 5)
-    
-
-
 class ExportTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
