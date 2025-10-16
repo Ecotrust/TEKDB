@@ -42,7 +42,7 @@ def get_checksum(filename, hash_function):
 def create_export_request(self):
     return self.factory.get(
         reverse('export_database'),
-        headers = {
+        headers={
             "Authorization": f"Basic {self.credentials}"
         },
     )
@@ -50,7 +50,7 @@ def create_export_request(self):
 def create_get_related_request(self, model, id):
     return self.factory.get(
         f'tekdb/{model}/{id}/get_related',
-        headers = {
+        headers={
             "Authorization": f"Basic {self.credentials}"
         },
     )
@@ -159,7 +159,6 @@ def import_fixture_file(filepath):
 
 class RelatedTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-    @classmethod
     def setUp(self):
         import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
 
@@ -181,7 +180,7 @@ class RelatedTest(TestCase):
         new_place_resource_event.save()
         self.first_place_resource_event = new_place_resource_event
 
-        # add a resource-activty event to the db
+        # add a resource-activity event to the db
         new_resources_activity_event = ResourcesActivityEvents.objects.create(placeresourceid=new_place_resource_event, relationshipdescription="A Dummy Resources Activity Event")
         new_resources_activity_event.save()
         self.first_resources_activity_event = new_resources_activity_event
@@ -191,7 +190,7 @@ class RelatedTest(TestCase):
         new_reference_type.save()
         self.first_reference_type = new_reference_type
 
-        # add a new citaton to the db
+        # add a new citation to the db
         new_citation = Citations.objects.create(referencetype=new_reference_type, authorprimary="Doe, John", year=2020, title="A Dummy Citation")
         new_citation.save()
         self.first_citation = new_citation
