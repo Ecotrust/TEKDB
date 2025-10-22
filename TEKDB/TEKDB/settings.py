@@ -319,7 +319,7 @@ HOME_RIGHT_BACKGROUND = "#000000"
 DEFAULT_MAXIMUM_RESULTS = 500
 
 try:
-    from TEKDB.local_settings import *
+    from TEKDB.local_settings import *  # noqa: F403
 except Exception:
     print(
         "ERROR: Unable to load local_settings.py. This is expected for docker deployment"

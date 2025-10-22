@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
-from .models import *
+from .models import PageContent
 from configuration.models import Configuration
 
 

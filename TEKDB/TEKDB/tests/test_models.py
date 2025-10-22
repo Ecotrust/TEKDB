@@ -1,5 +1,41 @@
 from django.test import TestCase
-from TEKDB.models import *
+from TEKDB.models import (
+    Places,
+    Resources,
+    ResourcesActivityEvents,
+    Citations,
+    Media,
+    MediaBulkUpload,
+    ResourceActivityMediaEvents,
+    ResourceActivityCitationEvents,
+    MediaCitationEvents,
+    PlacesResourceMediaEvents,
+    PlacesResourceCitationEvents,
+    PlaceAltIndigenousName,
+    PlacesMediaEvents,
+    PlacesResourceEvents,
+    ResourcesCitationEvents,
+    PlacesCitationEvents,
+    ResourceAltIndigenousName,
+    ResourcesMediaEvents,
+    ResourceResourceEvents,
+    LookupActivity,
+    LookupAuthorType,
+    LookupCustomaryUse,
+    LookupHabitat,
+    LookupPlanningUnit,
+    LookupReferenceType,
+    LookupMediaType,
+    LookupParticipants,
+    LookupPartUsed,
+    People,
+    LookupResourceGroup,
+    LookupSeason,
+    LookupTechniques,
+    LookupTiming,
+    LookupTribe,
+    LookupUserInfo,
+)
 
 # from .forms import *
 from django.conf import settings

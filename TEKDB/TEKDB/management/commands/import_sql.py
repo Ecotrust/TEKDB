@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
-from TEKDB.models import *
 import os
-from TEKDB.settings import *
+from TEKDB.models import *  # noqa: F403
+from TEKDB.settings import *  # noqa: F403
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType

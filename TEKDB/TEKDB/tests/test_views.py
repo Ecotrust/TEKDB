@@ -16,7 +16,16 @@ from os.path import isfile, isdir, join, split, getsize
 import shutil
 
 # from TEKDB.forms import *
-from TEKDB.models import *
+from TEKDB.models import (
+    Citations,
+    LookupReferenceType,
+    Media,
+    Places,
+    PlacesResourceEvents,
+    Resources,
+    ResourcesActivityEvents,
+    Users,
+)
 from TEKDB.views import ExportDatabase, ImportDatabase
 import tempfile
 import zipfile

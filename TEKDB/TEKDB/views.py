@@ -10,7 +10,14 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 import io
 import os
 import shutil
-from TEKDB.models import *
+from TEKDB.models import (
+    Citations,
+    Media,
+    Places,
+    PlacesResourceEvents,
+    Resources,
+    ResourcesActivityEvents,
+)
 import tempfile
 import zipfile
 from configuration.models import Configuration
@@ -57,7 +64,6 @@ def get_all_file_paths(directory, cwd=False):
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request, test=False):
-
     datestamp = datetime.now().strftime("%Y%m%d")
     tmp_zip = tempfile.NamedTemporaryFile(
         delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
@@ -104,7 +110,6 @@ def getDBTruncateCommand():
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ImportDatabase(request):
-
     status_code = 500
     status_message = "An unknown error occurred."
     if not request.method == "POST":
@@ -373,7 +378,6 @@ class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
 
 class ResourceAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-
         if not self.request.user.is_authenticated:
             return Resources.objects.none()
         qs = Resources.objects.all()

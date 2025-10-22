@@ -15,14 +15,53 @@ from tinymce.widgets import TinyMCE
 from reversion.admin import VersionAdmin
 
 from .forms import MediaBulkUploadForm
-from .models import *
+from .models import (
+    ResourcesActivityEvents,
+    Media,
+    Citations,
+    Places,
+    LookupMediaType,
+    LookupParticipants,
+    LookupTechniques,
+    People,
+    LookupReferenceType,
+    LookupPlanningUnit,
+    LookupHabitat,
+    LookupTribe,
+    PlacesResourceEvents,
+    MediaCitationEvents,
+    PlacesCitationEvents,
+    PlacesMediaEvents,
+    PlacesResourceCitationEvents,
+    PlacesResourceMediaEvents,
+    ResourceActivityMediaEvents,
+    ResourceActivityCitationEvents,
+    ResourceResourceEvents,
+    ResourcesCitationEvents,
+    ResourcesMediaEvents,
+    PlaceAltIndigenousName,
+    ResourceAltIndigenousName,
+    LocalityPlaceResourceEvent,
+    LocalityGISSelections,
+    MediaBulkUpload,
+    LookupPartUsed,
+    LookupSeason,
+    LookupTiming,
+    LookupActivity,
+    LookupResourceGroup,
+    Resources,
+    LookupCustomaryUse,
+    LookupAuthorType,
+    UserAccess,
+    LookupUserInfo,
+    Users,
+)
 
 from TEKDB.settings import ADMIN_SITE_HEADER
-
-admin.site.site_header = ADMIN_SITE_HEADER
-
 from TEKDB.settings import BASE_DIR
 from TEKDB.widgets import OpenLayers6Widget
+
+admin.site.site_header = ADMIN_SITE_HEADER
 
 
 #############
