@@ -372,7 +372,7 @@ class RecordAdminProxy(VersionAdmin):
     def save_model(self, request, obj, form, change):
         instance = form.save(commit=False)
         if hasattr(instance, "enteredbyname"):
-            if instance.enteredbyname == None:
+            if instance.enteredbyname is None:
                 instance.enteredbyname = request.user.username
                 instance.enteredbytribe = request.user.affiliation
                 instance.enteredbytitle = request.user.title
@@ -386,7 +386,7 @@ class RecordAdminProxy(VersionAdmin):
         instances = formset.save(commit=False)
         for instance in instances:
             if hasattr(instance, "enteredbyname"):
-                if instance.enteredbyname == None:
+                if instance.enteredbyname is None:
                     instance.enteredbyname = request.user.username
                     instance.enteredbytribe = request.user.affiliation
                     instance.enteredbytitle = request.user.title
@@ -411,7 +411,7 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
     def save_model(self, request, obj, form, change):
         instance = form.save(commit=False)
         if hasattr(instance, "enteredbyname"):
-            if instance.enteredbyname == None:
+            if instance.enteredbyname is None:
                 instance.enteredbyname = request.user.username
                 instance.enteredbytribe = request.user.affiliation
                 instance.enteredbytitle = request.user.title
@@ -425,7 +425,7 @@ class NestedRecordAdminProxy(nested_admin.NestedModelAdmin):
         instances = formset.save(commit=False)
         for instance in instances:
             if hasattr(instance, "enteredbyname"):
-                if instance.enteredbyname == None:
+                if instance.enteredbyname is None:
                     instance.enteredbyname = request.user.username
                     instance.enteredbytribe = request.user.affiliation
                     instance.enteredbytitle = request.user.title

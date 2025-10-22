@@ -203,7 +203,7 @@ def get_by_model_id(request, model_type, id):
         "state": state,
     }
 
-    if "map" in record_dict.keys() and not record_dict["map"] == None:
+    if "map" in record_dict.keys() and record_dict["map"] is not None:
         DATABASE_GEOGRAPHY = get_project_geography()
         context["default_lon"] = DATABASE_GEOGRAPHY["default_lon"]
         context["default_lat"] = DATABASE_GEOGRAPHY["default_lat"]
@@ -491,11 +491,11 @@ def search(request):
         items_per_page = len(resultlist)
 
     page = request.GET.get("page")
-    if page == None:
+    if page is None:
         page = 1
 
     view = request.GET.get("view")
-    if view == None:
+    if view is None:
         view = "list"
 
     DATABASE_GEOGRAPHY = get_project_geography()
@@ -547,7 +547,7 @@ def search(request):
 
 def getResults(keyword_string, categories):
 
-    if keyword_string == None:
+    if keyword_string is None:
         keyword_string = ""
 
     resultlist = []

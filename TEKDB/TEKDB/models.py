@@ -1246,20 +1246,20 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
             }
         )
         if (
-            not self.relationshipdescription == None
+            self.relationshipdescription is not None
             and len(self.relationshipdescription) > 0
         ):
             data_list.append({"key": "excerpt", "value": self.relationshipdescription})
         if self.partused:
             data_list.append({"key": "part used", "value": str(self.partused)})
         data_list.append({"key": "used for barter", "value": barter})
-        if not self.season == None:
+        if self.season is not None:
             data_list.append({"key": "season", "value": str(self.season)})
-        if not self.timing == None:
+        if self.timing is not None:
             data_list.append({"key": "timing", "value": str(self.timing)})
         if not months == "None":
             data_list.append({"key": "months", "value": months})
-        if not self.year == None:
+        if self.year is not None:
             data_list.append({"key": "year", "value": str(self.year)})
 
         return data_list
@@ -1461,7 +1461,7 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
         )
 
     def __str__(self):
-        if not self.activityshortdescription == None:
+        if self.activityshortdescription is not None:
             activity_name = self.activityshortdescription
         else:
             activity_name = "Unspecified Activity"
@@ -1615,34 +1615,34 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             }
         )
         if (
-            not self.relationshipdescription == None
+            self.relationshipdescription is not None
             and len(self.relationshipdescription) > 0
         ):
             data_list.append({"key": "excerpt", "value": self.relationshipdescription})
-        if not self.partused == None:
+        if self.partused is not None:
             data_list.append({"key": "part used", "value": str(self.partused)})
-        if not self.activityshortdescription == None:
+        if self.activityshortdescription is not None:
             data_list.append(
                 {"key": "activity type", "value": str(self.activityshortdescription)}
             )
         if (
-            not self.activitylongdescription == None
+            self.activitylongdescription is not None
             and not self.activitylongdescription == ""
         ):
             data_list.append(
                 {"key": "full description", "value": self.activitylongdescription}
             )
-        if not self.participants == None:
+        if self.participants is not None:
             data_list.append({"key": "participants", "value": str(self.participants)})
-        if not self.technique == None:
+        if self.technique is not None:
             data_list.append({"key": "technique", "value": str(self.technique)})
-        if not self.gear == None:
+        if self.gear is not None:
             data_list.append({"key": "gear", "value": self.gear})
-        if not self.customaryuse == None:
+        if self.customaryuse is not None:
             data_list.append({"key": "customary use", "value": str(self.customaryuse)})
-        if not self.timing == None:
+        if self.timing is not None:
             data_list.append({"key": "timing", "value": str(self.timing)})
-        if not self.timingdescription == None:
+        if self.timingdescription is not None:
             data_list.append(
                 {"key": "timing description", "value": self.timingdescription}
             )
@@ -2041,9 +2041,9 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         relationship_list = []
         if self.referencetype.documenttype == "Interview":
             people = []
-            if not self.intervieweeid == None:
+            if self.intervieweeid is not None:
                 people.append(self.intervieweeid.get_query_json())
-            if not self.interviewerid == None:
+            if self.interviewerid is not None:
                 people.append(self.interviewerid.get_query_json())
             if len(people) > 0:
                 relationship_list.append({"key": "People", "value": people})
@@ -2935,7 +2935,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
             return False
 
     def limited_data(self):
-        if self.mediafile == None:
+        if self.mediafile is None:
             mediafile = "None"
         else:
             mediafile = "Please ask an administrator if you need access to this file."
@@ -2948,7 +2948,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
         ]
 
     def media(self):
-        if not self.medialink == None or not self.mediafile == None:
+        if self.medialink is not None or self.mediafile is not None:
             return {
                 "file": str(self.mediafile),
                 "type": str(self.mediatype),
@@ -2959,7 +2959,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     def data(self):
         from TEKDB.settings import MEDIA_URL
 
-        if self.mediafile == None:
+        if self.mediafile is None:
             mediafile = "None"
         else:
             mediafile = "<a class='record-link' href='%s%s' target='_blank'>%s</a>" % (

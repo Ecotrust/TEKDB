@@ -1,2 +1,5 @@
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.ruff.lint]
+extend-safe-fixes = ["E711"]
