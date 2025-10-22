@@ -565,8 +565,8 @@ class ResourceActivityCitationEventsTest(ITKTestCase):
                         break
             if new_combo_1 and new_combo_2:
                 break
-        self.assertTrue(new_combo_1 != False)
-        self.assertTrue(new_combo_2 != False)
+        self.assertTrue(new_combo_1 is not False)
+        self.assertTrue(new_combo_2 is not False)
         self.assertTrue(new_combo_1 != new_combo_2)
 
         insertion_object = new_combo_2

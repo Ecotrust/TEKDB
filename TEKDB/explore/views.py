@@ -424,7 +424,7 @@ def search(request):
             query_string = request.GET.get("query")
         elif "filter" in request.GET.urlencode():
             query_string = request.GET.get("filter")
-            if query_string == "" or query_string == True:
+            if query_string == "" or query_string is True:
                 query_string = None
 
         else:
