@@ -202,7 +202,6 @@ def ImportDatabase(request):
                                     target_fixture.write(
                                         contents.decode(source_encoding).encode("utf-8")
                                     )
-                                    reencoded = True
                                     fixture_file_path = target_fixture.name
 
                         management.call_command("loaddata", fixture_file_path)

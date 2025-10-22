@@ -153,7 +153,6 @@ def get_project_geography():
 
 @login_required
 def get_by_model_id(request, model_type, id):
-
     state = "?%s" % request.GET.urlencode()
     back_link = "%s%s" % ("/search/", state)
     models = get_model_by_type(model_type)
@@ -315,7 +314,7 @@ def export_record_xls(record_dict, filename):
     output = io.BytesIO()
     workbook = Workbook(output, {"in_membory": True})
     worksheet = workbook.add_worksheet()
-    bold = workbook.add_format({"bold": True})
+    workbook.add_format({"bold": True})
     row = 0
     for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
@@ -546,7 +545,6 @@ def search(request):
 
 
 def getResults(keyword_string, categories):
-
     if keyword_string is None:
         keyword_string = ""
 

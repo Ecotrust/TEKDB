@@ -17,9 +17,6 @@ class Command(BaseCommand):
 
         FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         MANAGE_DIR = os.path.join(FILE_DIR, "..", "..")
-        import_output = os.path.join(MANAGE_DIR, "scripts", "import_shp_output.txt")
-        import_error = os.path.join(MANAGE_DIR, "scripts", "import_shp_output.txt")
-        manage_py = os.path.join(MANAGE_DIR, "manage.py")
         infile = os.path.normpath(os.path.join(MANAGE_DIR, options["infile"][0]))
         if not os.path.exists(infile):
             print("File not found: %s" % infile)

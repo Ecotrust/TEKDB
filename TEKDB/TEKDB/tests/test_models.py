@@ -285,7 +285,10 @@ class ResourcesTest(ITKSearchTest):
         # sea cukes and skunk cabbage only have 'chiton' in their genus or species name. They should not be present.
         self.assertEqual(advanced_results.count(), 10)
         for resource in advanced_results:
-            self.assertTrue(resource.pk not in [skunk_cabbage_id, sea_cucumber_id])
+            self.assertTrue(
+                resource.pk
+                not in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id]
+            )
         fields = ["genus", "species"]
         advanced_results = Resources.keyword_search(keyword, fields, fk_fields)
         # 'chiton' only has chiton in it's commonname. It should not be present.

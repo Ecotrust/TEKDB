@@ -26,7 +26,7 @@ from TEKDB.models import (
     ResourcesActivityEvents,
     Users,
 )
-from TEKDB.views import ExportDatabase, ImportDatabase
+from TEKDB.views import ExportDatabase
 import tempfile
 import zipfile
 
@@ -71,7 +71,6 @@ def get_export_file_from_response(response, tempdir=False, datestamp=False):
     if not datestamp:
         datestamp = datetime.now().strftime("%Y%m%d")
     zipname = join(tempdir, "{}_backup.zip".format(datestamp))
-    fileresponse = bytes("test", "utf-8")
     stream = b"".join(response.streaming_content)
     with open(zipname, "wb") as f:
         f.write(stream)
@@ -128,7 +127,6 @@ def get_perm_map(import_perms):
 def update_json_content_types(json_dict):
     import_cts = []
     import_perms = []
-    len_json_dict = len(json_dict)
     for record in json_dict:
         if record["model"] == "contenttypes.contenttype":
             import_cts.append(record)
@@ -498,7 +496,6 @@ class ImportTest(TransactionTestCase):
             cls.import_request.FILES["import_file"] = import_file
 
             cls.import_request.user = Users.objects.get(username="admin")
-            response = ImportDatabase(cls.import_request)
 
     def test_import(self):
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
