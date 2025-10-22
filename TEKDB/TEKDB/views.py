@@ -38,7 +38,7 @@ def get_related(request, model_name, id):
         instance = model.objects.get(pk=id)
         if hasattr(instance, "get_related_objects"):
             data = json.dumps(instance.get_related_objects(id))
-    except:
+    except:  # noqa: E722
         pass
     return HttpResponse(data, content_type="application/json")
 
