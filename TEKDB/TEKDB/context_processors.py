@@ -1,7 +1,7 @@
 def search_settings(request=None):
     try:
         from django.conf import settings
-    except Exception as e:
+    except Exception:
         try:
             from TEKDB import settings
         except Exception as e:
@@ -13,7 +13,7 @@ def search_settings(request=None):
         from configuration.models import Configuration
 
         configs = Configuration.objects.all()[0]
-    except Exception as e:
+    except Exception:
         configs = False
 
     search_config = {
@@ -27,7 +27,7 @@ def search_settings(request=None):
                 "MIN_SEARCH_RANK": settings.MIN_SEARCH_RANK,
                 "MIN_SEARCH_SIMILARITY": settings.MIN_SEARCH_SIMILARITY,
             }
-        except Exception as e:
+        except Exception:
             print("No MIN_SEARCH_RANK or MIN_SEARCH_SIMILARITY in settings")
             pass
 
@@ -41,7 +41,7 @@ def search_settings(request=None):
                 if configs.min_search_similarity
                 else search_config["MIN_SEARCH_SIMILARITY"],
             }
-        except Exception as e:
+        except Exception:
             print("No min_search_rank or min_search_similarity in Configuration")
             pass
 
@@ -77,7 +77,7 @@ def add_map_default_context(request):
                     MAP_DEFAULTS["map_extent"] = [x for x in config.geometry.extent]
                     break
 
-    except Exception as e:
+    except Exception:
         pass
 
     return MAP_DEFAULTS

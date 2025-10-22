@@ -2,9 +2,9 @@ from django import forms
 from django.db.models.functions import Lower
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.gis.admin import GeoModelAdmin, OSMGeoAdmin
+from django.contrib.gis.admin import OSMGeoAdmin
 from django.utils.html import format_html
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from dal import autocomplete
 from mimetypes import guess_type
 from django.templatetags.static import static

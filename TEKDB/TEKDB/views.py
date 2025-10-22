@@ -4,12 +4,9 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.core import management
-from django.core.management.commands import loaddata, dumpdata
 from django.db import connection
 from django.db.models import Q
-from django.db.utils import OperationalError
-from django.http import HttpResponse, Http404, FileResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, FileResponse, JsonResponse
 import io
 import os
 import shutil
@@ -60,7 +57,6 @@ def get_all_file_paths(directory, cwd=False):
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request, test=False):
-    from django.conf import settings
 
     datestamp = datetime.now().strftime("%Y%m%d")
     tmp_zip = tempfile.NamedTemporaryFile(
@@ -108,7 +104,6 @@ def getDBTruncateCommand():
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ImportDatabase(request):
-    from django.conf import settings
 
     status_code = 500
     status_message = "An unknown error occurred."
@@ -266,7 +261,7 @@ def getPlacesGeoJSON(request):
     try:
         config = Configuration.objects.all()[0]
         max_results = config.max_results_returned
-    except Exception as e:
+    except Exception:
         from TEKDB.settings import DEFAULT_MAXIMUM_RESULTS
 
         max_results = DEFAULT_MAXIMUM_RESULTS
@@ -378,7 +373,6 @@ class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
 
 class ResourceAutocompleteView(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        from django.db.models.functions import Lower
 
         if not self.request.user.is_authenticated:
             return Resources.objects.none()

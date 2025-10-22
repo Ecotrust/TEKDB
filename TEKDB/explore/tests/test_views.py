@@ -1,7 +1,6 @@
 from base64 import b64encode
 
 from django.conf import settings
-from django.db import connection
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
@@ -27,7 +26,6 @@ class SearchTest(TestCase):
 
     def test_multi_word_search(self):
         # Test that the query string submitted matches the query string returned to the client/user
-        from explore.views import search
         from TEKDB.models import Users
 
         query_string = "A multi word search"

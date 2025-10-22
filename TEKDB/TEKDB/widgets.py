@@ -1,15 +1,10 @@
 import logging
 
-from django.conf import settings
-from django.contrib.gis import gdal
 from django.contrib.gis.geometry import json_regex
-from django.contrib.gis.geos import GEOSException, GEOSGeometry
-from django.forms.widgets import Widget
-from django.utils import translation
 
 logger = logging.getLogger("django.contrib.gis")
 
-from django.contrib.gis.forms.widgets import OpenLayersWidget, BaseGeometryWidget
+from django.contrib.gis.forms.widgets import BaseGeometryWidget
 
 
 # class OpenLayersWidget(BaseGeometryWidget):

@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from .models import (
     MediaBulkUpload,
-    Media,
     Places,
     Resources,
     Citations,

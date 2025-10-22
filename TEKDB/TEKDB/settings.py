@@ -16,7 +16,7 @@ from glob import glob
 try:
     GDAL_LIBRARY_PATH = glob("/usr/lib/libgdal.so.*")[0]
     GEOS_LIBRARY_PATH = glob("/usr/lib/libgeos_c.so.*")[0]
-except IndexError as e:
+except IndexError:
     pass
 
 
@@ -320,7 +320,7 @@ DEFAULT_MAXIMUM_RESULTS = 500
 
 try:
     from TEKDB.local_settings import *
-except Exception as e:
+except Exception:
     print(
         "ERROR: Unable to load local_settings.py. This is expected for docker deployment"
     )

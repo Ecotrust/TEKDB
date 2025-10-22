@@ -1,7 +1,5 @@
 from django.test import TestCase
 from TEKDB.models import *
-from django.utils import timezone
-from django.urls import reverse
 
 # from .forms import *
 from django.conf import settings

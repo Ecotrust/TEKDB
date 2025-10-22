@@ -685,7 +685,7 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         category_name = "Place"
         try:
             feature = self.geometry.json
-        except AttributeError as e:
+        except AttributeError:
             feature = None
         return {
             "id": self.pk,
@@ -2214,7 +2214,7 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         if str(self.referencetype) == "Interview":
             try:
                 interviewee = People.objects.get(pk=self.intervieweeid.pk)
-            except Exception as e:
+            except Exception:
                 interviewee = "Unknown Interviewee"
             # return '[%s] %s (%d) - %d' % (str(self.referencetype), interviewee, self.year, self.pk)
             return (
@@ -3873,7 +3873,7 @@ class ResourceResourceEvents(SimpleRelationship):
                 resourceid=self.altresourceid, altresourceid=self.resourceid
             )
             pair.delete()
-        except Exception as e:
+        except Exception:
             pass
 
     # This simple relationship is tricky due to both fields being FKs to the same model

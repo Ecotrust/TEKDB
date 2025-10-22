@@ -1,10 +1,8 @@
 # Create your views here.
-from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
-from django.contrib.auth import logout
 
 
 def index(request):

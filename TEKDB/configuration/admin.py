@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.forms import ModelForm
-from TEKDB.widgets import OpenLayers6Widget, OpenLayers6PolygonWidget
+from TEKDB.widgets import OpenLayers6PolygonWidget
 from reversion.admin import VersionAdmin
 
 from configuration.models import Configuration

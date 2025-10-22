@@ -1,5 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
-import os, sys
+from django.core.management.base import BaseCommand
+import os
 # from TEKDB.models import *
 # from TEKDB.settings import *
 
@@ -12,7 +12,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from django.contrib.gis.gdal import DataSource
-        import pytz
         from pytz import timezone
         from datetime import datetime
 
@@ -36,7 +35,7 @@ class Command(BaseCommand):
             print("SRID: %s" % layer.srs.srid)
             fields = layer.fields
 
-            if not "PlaceID" in fields:
+            if "PlaceID" not in fields:
                 print(
                     "This is not a valid shapefile - no PlaceID field found. Available given: %s"
                     % str(fields)
@@ -46,7 +45,6 @@ class Command(BaseCommand):
             from TEKDB.models import (
                 Places,
                 Locality,
-                LookupPlanningUnit,
                 LookupHabitat,
                 LookupLocalityType,
             )

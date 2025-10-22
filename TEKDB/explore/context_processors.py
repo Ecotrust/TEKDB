@@ -1,7 +1,7 @@
 def explore_context(request):
     try:
         from django.conf import settings
-    except Exception as e:
+    except Exception:
         try:
             from TEKDB import settings
         except Exception as e:
@@ -13,7 +13,7 @@ def explore_context(request):
         from configuration.models import Configuration
 
         configs = Configuration.objects.all()[0]
-    except Exception as e:
+    except Exception:
         configs = False
 
     ######################################
@@ -27,14 +27,14 @@ def explore_context(request):
         try:
             if len(settings.PROJ_LOGO_TEXT) > 0:
                 project_logo_text = settings.PROJ_LOGO_TEXT
-        except Exception as e:
+        except Exception:
             pass
 
     if configs:
         try:
             project_logo_text = configs.preferredInitialism
             project_text_placement = configs.preferredInitialismPlacement
-        except Exception as e:
+        except Exception:
             pass
 
     ######################################
@@ -60,7 +60,7 @@ def explore_context(request):
             try:
                 if key in settings.PROJ_CSS.keys():
                     proj_css[key] = settings.PROJ_CSS[key]
-            except Exception as e:
+            except Exception:
                 pass
 
     if configs:
@@ -69,7 +69,7 @@ def explore_context(request):
             try:
                 if hasattr(configs, key) and getattr(configs, key):
                     proj_css[key] = getattr(configs, key)
-            except Exception as e:
+            except Exception:
                 pass
 
     ######################################
@@ -90,7 +90,7 @@ def explore_context(request):
             try:
                 if key in settings.PROJ_ICONS.keys():
                     proj_icons[key] = settings.PROJ_ICONS[key]
-            except Exception as e:
+            except Exception:
                 pass
 
     if configs:
@@ -114,7 +114,7 @@ def explore_context(request):
                             proj_icons[key] = icon_override_select
                     else:
                         proj_icons[key] = getattr(configs, key)
-            except Exception as e:
+            except Exception:
                 pass
 
     ######################################
@@ -128,13 +128,13 @@ def explore_context(request):
         try:
             if settings.PROJ_IMAGE_SELECT and len(settings.PROJ_IMAGE_SELECT) > 0:
                 project_image_select = settings.PROJ_IMAGE_SELECT
-        except ImportError as e:
+        except ImportError:
             pass
 
         try:
             if settings.PROJ_IMAGE_ATTR and len(settings.PROJ_IMAGE_ATTR) > 0:
                 home_image_attribution = settings.PROJ_IMAGE_ATTR
-        except ImportError as e:
+        except ImportError:
             pass
 
     if configs:
@@ -148,7 +148,7 @@ def explore_context(request):
                 rel_filename = abs_project_image_filename.split(settings.MEDIA_ROOT)[-1]
                 project_image_select = "{}{}".format(settings.MEDIA_URL, rel_filename)
                 home_image_attribution = False
-        except Exception as e:
+        except Exception:
             pass
 
         try:
@@ -156,7 +156,7 @@ def explore_context(request):
                 configs, "homepage_image_attribution"
             ):
                 home_image_attribution = getattr(configs, "homepage_image_attribution")
-        except Exception as e:
+        except Exception:
             pass
 
     ######################################
@@ -170,15 +170,15 @@ def explore_context(request):
     if settings:
         try:
             home_font_color = settings.HOME_FONT_COLOR
-        except Exception as e:
+        except Exception:
             pass
         try:
             homepage_left_background = settings.HOME_LEFT_BACKGROUND
-        except Exception as e:
+        except Exception:
             pass
         try:
             homepage_right_background = settings.HOME_RIGHT_BACKGROUND
-        except Exception as e:
+        except Exception:
             pass
 
     if configs:
@@ -187,14 +187,14 @@ def explore_context(request):
                 configs, "homepage_font_color"
             ):
                 home_font_color = getattr(configs, "homepage_font_color")
-        except Exception as e:
+        except Exception:
             pass
         try:
             if hasattr(configs, "homepage_left_background") and getattr(
                 configs, "homepage_left_background"
             ):
                 homepage_left_background = getattr(configs, "homepage_left_background")
-        except Exception as e:
+        except Exception:
             pass
         try:
             if hasattr(configs, "homepage_right_background") and getattr(
@@ -203,7 +203,7 @@ def explore_context(request):
                 homepage_right_background = getattr(
                     configs, "homepage_right_background"
                 )
-        except Exception as e:
+        except Exception:
             pass
 
     from TEKDB.settings import RECORD_ICONS

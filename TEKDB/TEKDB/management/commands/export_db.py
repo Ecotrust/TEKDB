@@ -1,10 +1,8 @@
 from django.core import management
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 from datetime import datetime
-import io
-import os, sys
-import shutil
+import os
 from TEKDB.models import *
 import tempfile
 import zipfile

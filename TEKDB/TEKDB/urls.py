@@ -28,10 +28,8 @@ from django.urls import include, path, re_path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from login import views as login_views
-from dal import autocomplete
 
 from . import views
-from . import models
 
 urlpatterns = [
     # url(r'^login/', include('login.urls')),

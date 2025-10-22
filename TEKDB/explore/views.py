@@ -13,7 +13,7 @@ def home(request):
             page_content = page_content_obj.html_content
         else:
             page_content = page_content_obj.content
-    except Exception as e:
+    except Exception:
         page_content = "<h1>Welcome</h1><h3>Set Welcome Page Content In Admin</h3>"
 
     context = {
@@ -33,7 +33,7 @@ def about(request):
             page_content = page_content_obj.html_content
         else:
             page_content = page_content_obj.content
-    except Exception as e:
+    except Exception:
         page_content = "<h1>About</h1><h3>Set About Page Content In Admin</h3>"
     context = {
         "page": "about",
@@ -51,7 +51,7 @@ def help(request):
             page_content = page_content_obj.html_content
         else:
             page_content = page_content_obj.content
-    except Exception as e:
+    except Exception:
         page_content = "<h1>Help</h1><h3>Set Help Page Content In Admin</h3>"
     context = {
         "page": "help",
@@ -153,7 +153,6 @@ def get_project_geography():
 
 @login_required
 def get_by_model_id(request, model_type, id):
-    from TEKDB.settings import RECORD_ICONS
 
     state = "?%s" % request.GET.urlencode()
     back_link = "%s%s" % ("/search/", state)
@@ -163,7 +162,7 @@ def get_by_model_id(request, model_type, id):
             model = models[0]
             obj = model.objects.get(pk=int(id))
             record_dict = obj.get_record_dict(request.user, 3857)
-        except Exception as e:
+        except Exception:
             obj = None
             record_dict = {
                 "name": "Error retrieving %s record with ID %s" % (model_type, id)
@@ -225,7 +224,7 @@ def download_media_file(request, model_type, id):
         try:
             model = models[0]
             obj = model.objects.get(pk=id)
-        except Exception as e:
+        except Exception:
             obj = None
     else:
         obj = None
@@ -233,7 +232,6 @@ def download_media_file(request, model_type, id):
     media = obj.media()
     if media:
         import os
-        from django.utils.encoding import smart_str
         from TEKDB.settings import MEDIA_ROOT
 
         file_path = os.path.join(MEDIA_ROOT, media["file"])
@@ -311,7 +309,7 @@ def export_record_csv(record_dict, filename):
 
 
 def export_record_xls(record_dict, filename):
-    import xlsxwriter, io
+    import io
     from xlsxwriter.workbook import Workbook
 
     output = io.BytesIO()
@@ -395,8 +393,6 @@ def export_by_model_id(request, model_type, id, format):
 @login_required
 def search(request):
     import json
-    import TEKDB
-    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     from django.shortcuts import render
 
     all_categories = ["places", "resources", "activities", "sources", "media"]
@@ -405,7 +401,7 @@ def search(request):
         if "category" in request.POST.keys():
             try:
                 categories = request.POST["category"].split(",")
-            except Exception as e:
+            except Exception:
                 categories = all_categories
                 pass
 
@@ -507,7 +503,7 @@ def search(request):
     try:
         config = Configuration.objects.all()[0]
         max_results = config.max_results_returned
-    except Exception as e:
+    except Exception:
         from TEKDB.settings import DEFAULT_MAXIMUM_RESULTS
 
         max_results = DEFAULT_MAXIMUM_RESULTS
@@ -550,7 +546,6 @@ def search(request):
 
 
 def getResults(keyword_string, categories):
-    import TEKDB
 
     if keyword_string == None:
         keyword_string = ""
@@ -602,7 +597,7 @@ def download(request):
         rows.append(row_dict)
 
     if format_type == "xlsx":
-        import xlsxwriter, io
+        import io
         from xlsxwriter.workbook import Workbook
 
         output = io.BytesIO()

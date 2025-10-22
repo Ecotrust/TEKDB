@@ -1,6 +1,6 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from TEKDB.models import *
-import os, sys
+import os
 from TEKDB.settings import *
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
@@ -86,7 +86,6 @@ class Command(BaseCommand):
         ]
 
     def create_sql_dict(self, infile):
-        import string
         import re
         import shlex
 
@@ -237,7 +236,7 @@ class Command(BaseCommand):
 
                                 ipdb.set_trace()
                             pk_value = values[pk_index]
-                            if not pk_value in lookup_values[model].keys():
+                            if pk_value not in lookup_values[model].keys():
                                 lookup_values[model][pk_value] = str(record_id)
                                 lookup_indices[model] = record_id + 1
 
@@ -295,7 +294,7 @@ class Command(BaseCommand):
                     # get model of lookup fk
                     lookup_model = lookup_dependencies[model][lookup]
                     # Check to be sure lookup_value exists and has an associated ID
-                    if not char_pk_value in lookup_values[lookup_model].keys():
+                    if char_pk_value not in lookup_values[lookup_model].keys():
                         lookup_record_id = lookup_indices[lookup_model]
                         lookup_values[lookup_model][char_pk_value] = str(
                             lookup_record_id
@@ -367,7 +366,7 @@ class Command(BaseCommand):
                 try:
                     os.remove(str(migration_file))
                     print("%s deleted" % migration_file.name)
-                except OSError as e:
+                except OSError:
                     pass
 
     def rebuild_db(self, dbname, manage_py):
