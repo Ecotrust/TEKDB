@@ -5,15 +5,19 @@ import tinymce.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Lookup', '0005_alter_lookupuserinfo_id'),
+        ("Lookup", "0005_alter_lookupuserinfo_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='people',
-            name='relationshiptootherpeople',
-            field=tinymce.models.HTMLField(blank=True, db_column='relationshiptootherpeople', null=True, verbose_name='relationship to other people'),
+            model_name="people",
+            name="relationshiptootherpeople",
+            field=tinymce.models.HTMLField(
+                blank=True,
+                db_column="relationshiptootherpeople",
+                null=True,
+                verbose_name="relationship to other people",
+            ),
         ),
     ]

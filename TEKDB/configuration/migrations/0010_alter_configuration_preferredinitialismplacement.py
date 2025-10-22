@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('configuration', '0009_configuration_preferredinitialismplacement'),
+        ("configuration", "0009_configuration_preferredinitialismplacement"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='configuration',
-            name='preferredInitialismPlacement',
-            field=models.CharField(choices=[('default', 'Default'), ('before', 'Before'), ('after', 'After')], default=('default', 'Default'), help_text='Select the position of the preferred initialism in relative to the logo.', max_length=255),
+            model_name="configuration",
+            name="preferredInitialismPlacement",
+            field=models.CharField(
+                choices=[
+                    ("default", "Default"),
+                    ("before", "Before"),
+                    ("after", "After"),
+                ],
+                default=("default", "Default"),
+                help_text="Select the position of the preferred initialism in relative to the logo.",
+                max_length=255,
+            ),
         ),
     ]

@@ -7,15 +7,19 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Lookup', '0003_auto_20191223_1604'),
+        ("Lookup", "0003_auto_20191223_1604"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='people',
-            name='relationshiptootherpeople',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshiptootherpeople', null=True, verbose_name='relationship to other people'),
+            model_name="people",
+            name="relationshiptootherpeople",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshiptootherpeople",
+                null=True,
+                verbose_name="relationship to other people",
+            ),
         ),
     ]

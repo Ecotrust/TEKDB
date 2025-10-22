@@ -4,20 +4,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Relationships', '0008_auto_20211021_1607'),
+        ("Relationships", "0008_auto_20211021_1607"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='placesresourceevents',
-            name='needsReview',
-            field=models.BooleanField(db_column='needsreview', default=False, verbose_name='Needs Review'),
+            model_name="placesresourceevents",
+            name="needsReview",
+            field=models.BooleanField(
+                db_column="needsreview", default=False, verbose_name="Needs Review"
+            ),
         ),
         migrations.AddField(
-            model_name='placesresourceevents',
-            name='researchComments',
-            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
+            model_name="placesresourceevents",
+            name="researchComments",
+            field=models.TextField(
+                blank=True,
+                db_column="researchcomments",
+                default=None,
+                null=True,
+                verbose_name="Research Comments",
+            ),
         ),
     ]

@@ -1,13 +1,10 @@
 from django.contrib.postgres.operations import TrigramExtension, UnaccentExtension
 from django.db import migrations, models
 
+
 class Migration(migrations.Migration):
+    dependencies = [
+        ("TEKDB", "0005_auto_20211021_1607"),
+    ]
 
-  dependencies = [
-      ('TEKDB', '0005_auto_20211021_1607'),
-  ]
-
-  operations = [
-    TrigramExtension(),
-    UnaccentExtension()
-  ]
+    operations = [TrigramExtension(), UnaccentExtension()]

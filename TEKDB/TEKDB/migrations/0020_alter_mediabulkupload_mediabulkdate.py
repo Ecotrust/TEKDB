@@ -5,15 +5,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('TEKDB', '0019_merge_20241126_1351'),
+        ("TEKDB", "0019_merge_20241126_1351"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mediabulkupload',
-            name='mediabulkdate',
-            field=models.DateField(blank=True, default=datetime.date.today, null=True, verbose_name='date'),
+            model_name="mediabulkupload",
+            name="mediabulkdate",
+            field=models.DateField(
+                blank=True, default=datetime.date.today, null=True, verbose_name="date"
+            ),
         ),
     ]

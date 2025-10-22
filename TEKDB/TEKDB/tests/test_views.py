@@ -8,12 +8,14 @@ from django.db import connection
 from django.test import TestCase, TransactionTestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
+
 # from django.utils import timezone
 import hashlib
 import json
 from os import listdir, remove, sep
 from os.path import isfile, isdir, join, split, getsize
 import shutil
+
 # from TEKDB.forms import *
 from TEKDB.models import *
 from TEKDB.views import ExportDatabase, ImportDatabase
@@ -24,6 +26,7 @@ import zipfile
 # Run with:
 #       coverage run manage.py test TEKDB -v 2
 #########################################################################
+
 
 # Courtesy of DelftStack: https://www.delftstack.com/howto/python/python-checksum/#use-the-os-module-to-generate-and-check-the-checksum-of-an-md5-file-in-python
 def get_checksum(filename, hash_function):
@@ -39,30 +42,29 @@ def get_checksum(filename, hash_function):
 
     return readable_hash
 
+
 def create_export_request(self):
     return self.factory.get(
-        reverse('export_database'),
-        headers={
-            "Authorization": f"Basic {self.credentials}"
-        },
+        reverse("export_database"),
+        headers={"Authorization": f"Basic {self.credentials}"},
     )
+
 
 def create_get_related_request(self, model, id):
     return self.factory.get(
-        f'tekdb/{model}/{id}/get_related',
-        headers={
-            "Authorization": f"Basic {self.credentials}"
-        },
+        f"tekdb/{model}/{id}/get_related",
+        headers={"Authorization": f"Basic {self.credentials}"},
     )
+
 
 def get_export_file_from_response(response, tempdir=False, datestamp=False):
     if not tempdir:
         tempdir = tempfile.gettempdir()
     if not datestamp:
-        datestamp = datetime.now().strftime('%Y%m%d')
+        datestamp = datetime.now().strftime("%Y%m%d")
     zipname = join(tempdir, "{}_backup.zip".format(datestamp))
-    fileresponse = bytes('test', 'utf-8')
-    stream = b''.join(response.streaming_content)
+    fileresponse = bytes("test", "utf-8")
+    stream = b"".join(response.streaming_content)
     with open(zipname, "wb") as f:
         f.write(stream)
 
@@ -71,73 +73,94 @@ def get_export_file_from_response(response, tempdir=False, datestamp=False):
 
     return zipname
 
+
 def get_content_type_map(import_cts):
     ct_map = {}
     model_map = {}
     for ct in import_cts:
-        ct_map[ct['pk']] = {
-            'import': {
-                'model': ct['fields']['model'],
-                'app_label': ct['fields']['app_label']
+        ct_map[ct["pk"]] = {
+            "import": {
+                "model": ct["fields"]["model"],
+                "app_label": ct["fields"]["app_label"],
             }
         }
-        model_map["{}__{}".format(ct['fields']['app_label'],ct['fields']['model'])] = ct['pk']
+        model_map["{}__{}".format(ct["fields"]["app_label"], ct["fields"]["model"])] = (
+            ct["pk"]
+        )
 
     for ct in ContentType.objects.all():
         key = "{}__{}".format(ct.app_label, ct.model)
         if key in model_map.keys():
-            ct_map[model_map[key]]['existing_pk'] = ct.pk
-    
+            ct_map[model_map[key]]["existing_pk"] = ct.pk
+
     return ct_map
+
 
 def get_perm_map(import_perms):
     from django.contrib.auth.models import Permission
+
     perm_map = {}
     for perm in import_perms:
-        new_perm = Permission.objects.get(content_type_id=perm['fields']['content_type'], codename=perm['fields']['codename'])
-        perm_map[perm['pk']] = {
-            'import': {
-                'codename': perm['fields']['codename'],
-                'content_type': perm['fields']['content_type'],
-                'name': perm['fields']['name']
+        new_perm = Permission.objects.get(
+            content_type_id=perm["fields"]["content_type"],
+            codename=perm["fields"]["codename"],
+        )
+        perm_map[perm["pk"]] = {
+            "import": {
+                "codename": perm["fields"]["codename"],
+                "content_type": perm["fields"]["content_type"],
+                "name": perm["fields"]["name"],
             },
-            'existing_pk': new_perm.pk
+            "existing_pk": new_perm.pk,
         }
-        
+
     return perm_map
+
 
 def update_json_content_types(json_dict):
     import_cts = []
     import_perms = []
     len_json_dict = len(json_dict)
     for record in json_dict:
-        if record['model'] == 'contenttypes.contenttype':
+        if record["model"] == "contenttypes.contenttype":
             import_cts.append(record)
-        if record['model'] == 'auth.permission':
+        if record["model"] == "auth.permission":
             import_perms.append(record)
     for record in import_cts:
         json_dict.remove(record)
     for record in import_perms:
         json_dict.remove(record)
-    
+
     ct_map = get_content_type_map(import_cts)
 
-    for (index, record) in enumerate(import_perms):
-        if 'fields' in import_perms[index].keys() and 'content_type' in import_perms[index]['fields'].keys():
-            import_perms[index]['fields']['content_type'] = ct_map[record['fields']['content_type']]['existing_pk']
+    for index, record in enumerate(import_perms):
+        if (
+            "fields" in import_perms[index].keys()
+            and "content_type" in import_perms[index]["fields"].keys()
+        ):
+            import_perms[index]["fields"]["content_type"] = ct_map[
+                record["fields"]["content_type"]
+            ]["existing_pk"]
 
     perm_map = get_perm_map(import_perms)
 
-    for (index, record) in enumerate(json_dict):
-        if 'fields' in json_dict[index].keys():
-            if 'content_type' in json_dict[index]['fields'].keys():
-                json_dict[index]['fields']['content_type'] = ct_map[record['fields']['content_type']]['existing_pk']
-            if 'permissions' in json_dict[index]['fields'].keys():
-                for (perm_index, perm) in enumerate(json_dict[index]['fields']['permissions']):
+    for index, record in enumerate(json_dict):
+        if "fields" in json_dict[index].keys():
+            if "content_type" in json_dict[index]["fields"].keys():
+                json_dict[index]["fields"]["content_type"] = ct_map[
+                    record["fields"]["content_type"]
+                ]["existing_pk"]
+            if "permissions" in json_dict[index]["fields"].keys():
+                for perm_index, perm in enumerate(
+                    json_dict[index]["fields"]["permissions"]
+                ):
                     if perm in perm_map.keys():
-                        json_dict[index]['fields']['permissions'][perm_index] = perm_map[perm]['existing_pk']
+                        json_dict[index]["fields"]["permissions"][perm_index] = (
+                            perm_map[perm]["existing_pk"]
+                        )
 
     return json_dict
+
 
 def import_fixture_file(filepath):
     # Even test databases seem to pre-populate themselves with permissions and content types
@@ -146,27 +169,32 @@ def import_fixture_file(filepath):
     #     functions attempt to fix this.
     from django.core.management import call_command
     from tempfile import NamedTemporaryFile
+
     with open(filepath) as json_in:
         json_dict = json.load(json_in)
     json_dict = update_json_content_types(json_dict)
 
-    tempfile = NamedTemporaryFile(suffix='.json', delete=False)
-    with open(tempfile.name, 'w') as json_out:
+    tempfile = NamedTemporaryFile(suffix=".json", delete=False)
+    with open(tempfile.name, "w") as json_out:
         json.dump(json_dict, json_out)
-    call_command('loaddata', tempfile.name)
+    call_command("loaddata", tempfile.name)
     remove(tempfile.name)
 
 
 class RelatedTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
     def setUp(self):
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
 
         self.factory = RequestFactory()
         self.credentials = b64encode(b"admin:admin").decode("ascii")
 
         # add a resource to the db
-        new_resource_record = Resources.objects.create(commonname="Dummy Record 1",)
+        new_resource_record = Resources.objects.create(
+            commonname="Dummy Record 1",
+        )
         new_resource_record.save()
         self.first_resource = new_resource_record
 
@@ -176,22 +204,36 @@ class RelatedTest(TestCase):
         self.first_place = new_place_record
 
         # add a place-resource event to the db
-        new_place_resource_event = PlacesResourceEvents.objects.create(placeid=new_place_record, resourceid=new_resource_record, relationshipdescription="A Dummy Place-Resource Event")
+        new_place_resource_event = PlacesResourceEvents.objects.create(
+            placeid=new_place_record,
+            resourceid=new_resource_record,
+            relationshipdescription="A Dummy Place-Resource Event",
+        )
         new_place_resource_event.save()
         self.first_place_resource_event = new_place_resource_event
 
         # add a resource-activity event to the db
-        new_resources_activity_event = ResourcesActivityEvents.objects.create(placeresourceid=new_place_resource_event, relationshipdescription="A Dummy Resources Activity Event")
+        new_resources_activity_event = ResourcesActivityEvents.objects.create(
+            placeresourceid=new_place_resource_event,
+            relationshipdescription="A Dummy Resources Activity Event",
+        )
         new_resources_activity_event.save()
         self.first_resources_activity_event = new_resources_activity_event
 
         # add a lookup reference type to the db
-        new_reference_type = LookupReferenceType.objects.create(documenttype="A Dummy Reference Type")
+        new_reference_type = LookupReferenceType.objects.create(
+            documenttype="A Dummy Reference Type"
+        )
         new_reference_type.save()
         self.first_reference_type = new_reference_type
 
         # add a new citation to the db
-        new_citation = Citations.objects.create(referencetype=new_reference_type, authorprimary="Doe, John", year=2020, title="A Dummy Citation")
+        new_citation = Citations.objects.create(
+            referencetype=new_reference_type,
+            authorprimary="Doe, John",
+            year=2020,
+            title="A Dummy Citation",
+        )
         new_citation.save()
         self.first_citation = new_citation
 
@@ -199,20 +241,21 @@ class RelatedTest(TestCase):
         new_media = Media.objects.create(mediadescription="A Dummy Media")
         new_media.save()
         self.first_media = new_media
+
     def test_get_related_wrong_permissions(self):
         from TEKDB.views import get_related
 
-        related_request = create_get_related_request(self, 'resources', 1)
+        related_request = create_get_related_request(self, "resources", 1)
         related_request.user = AnonymousUser()
-        response = get_related(related_request, 'resources', 1)
+        response = get_related(related_request, "resources", 1)
         self.assertEqual(response.status_code, 401)
-    
+
     def test_get_related_records(self):
         from TEKDB.views import get_related
-        
-        related_request = create_get_related_request(self, 'record', 1)
-        related_request.user = Users.objects.get(username='admin')
-        response = get_related(related_request, 'record', 1)
+
+        related_request = create_get_related_request(self, "record", 1)
+        related_request.user = Users.objects.get(username="admin")
+        response = get_related(related_request, "record", 1)
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
@@ -221,10 +264,12 @@ class RelatedTest(TestCase):
 
     def test_get_related_places(self):
         from TEKDB.views import get_related
-        
-        related_request = create_get_related_request(self, 'places', self.first_place.placeid)
-        related_request.user = Users.objects.get(username='admin')
-        response = get_related(related_request, 'places', self.first_place.placeid)
+
+        related_request = create_get_related_request(
+            self, "places", self.first_place.placeid
+        )
+        related_request.user = Users.objects.get(username="admin")
+        response = get_related(related_request, "places", self.first_place.placeid)
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
@@ -235,13 +280,17 @@ class RelatedTest(TestCase):
         #   * Media Relationships
         #   * Citation Relationships
         self.assertTrue(len(data) == 4)
-    
+
     def test_get_related_resources(self):
         from TEKDB.views import get_related
-        
-        related_request = create_get_related_request(self, 'resources', self.first_resource.resourceid)
-        related_request.user = Users.objects.get(username='admin')
-        response = get_related(related_request, 'resources', self.first_resource.resourceid)
+
+        related_request = create_get_related_request(
+            self, "resources", self.first_resource.resourceid
+        )
+        related_request.user = Users.objects.get(username="admin")
+        response = get_related(
+            related_request, "resources", self.first_resource.resourceid
+        )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
@@ -253,13 +302,21 @@ class RelatedTest(TestCase):
         #   * Resource Relationships
         #   * Alternate Names
         self.assertTrue(len(data) == 5)
-    
+
     def test_get_related_resource_activity_events(self):
         from TEKDB.views import get_related
-        
-        related_request = create_get_related_request(self, 'resourcesactivityevents', self.first_resources_activity_event.resourceactivityid)
-        related_request.user = Users.objects.get(username='admin')
-        response = get_related(related_request, 'resourcesactivityevents', self.first_resources_activity_event.resourceactivityid)
+
+        related_request = create_get_related_request(
+            self,
+            "resourcesactivityevents",
+            self.first_resources_activity_event.resourceactivityid,
+        )
+        related_request.user = Users.objects.get(username="admin")
+        response = get_related(
+            related_request,
+            "resourcesactivityevents",
+            self.first_resources_activity_event.resourceactivityid,
+        )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
@@ -268,13 +325,17 @@ class RelatedTest(TestCase):
         #   * Citation Relationships
         #   * Media Relationships
         self.assertTrue(len(data) == 2)
-    
+
     def test_get_related_citations(self):
         from TEKDB.views import get_related
-        
-        related_request = create_get_related_request(self, 'citations', self.first_citation.citationid)
-        related_request.user = Users.objects.get(username='admin')
-        response = get_related(related_request, 'citations', self.first_citation.citationid)
+
+        related_request = create_get_related_request(
+            self, "citations", self.first_citation.citationid
+        )
+        related_request.user = Users.objects.get(username="admin")
+        response = get_related(
+            related_request, "citations", self.first_citation.citationid
+        )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
@@ -289,10 +350,12 @@ class RelatedTest(TestCase):
 
     def test_get_related_media(self):
         from TEKDB.views import get_related
-        
-        related_request = create_get_related_request(self, 'media', self.first_media.mediaid)
-        related_request.user = Users.objects.get(username='admin')
-        response = get_related(related_request, 'media', self.first_media.mediaid)
+
+        related_request = create_get_related_request(
+            self, "media", self.first_media.mediaid
+        )
+        related_request.user = Users.objects.get(username="admin")
+        response = get_related(related_request, "media", self.first_media.mediaid)
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
@@ -304,11 +367,15 @@ class RelatedTest(TestCase):
         #   * Place-Resource Relationships
         #   * Activity Relationships
         self.assertTrue(len(data) == 5)
+
+
 class ExportTest(TestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     def setUp(self):
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
 
         self.factory = RequestFactory()
         self.credentials = b64encode(b"admin:admin").decode("ascii")
@@ -326,16 +393,16 @@ class ExportTest(TestCase):
         anon_response = ExportDatabase(export_request)
         self.assertEqual(anon_response.status_code, 302)
 
-        export_request.user = Users.objects.get(username='readonly')
+        export_request.user = Users.objects.get(username="readonly")
         bad_response = ExportDatabase(export_request)
         self.assertEqual(bad_response.status_code, 302)
 
-        export_request.user = Users.objects.get(username='admin')
+        export_request.user = Users.objects.get(username="admin")
         response = ExportDatabase(export_request, test=True)
         self.assertEqual(response.status_code, 200)
 
         with tempfile.TemporaryDirectory() as tempdir:
-            datestamp = datetime.now().strftime('%Y%m%d')
+            datestamp = datetime.now().strftime("%Y%m%d")
             zipname = get_export_file_from_response(response, tempdir, datestamp)
 
             # test for dump files
@@ -354,12 +421,14 @@ class ExportTest(TestCase):
             zip.close()
             for mediafile in listdir(settings.MEDIA_ROOT):
                 source_file_location = join(settings.MEDIA_ROOT, mediafile)
-                source_file_relative_name = join('media', mediafile)
+                source_file_relative_name = join("media", mediafile)
                 temp_file_location = join(tempdir, source_file_relative_name)
                 # if a directory exists in media, then the folder name won't be the whole match
                 if not isdir(source_file_relative_name):
                     self.assertTrue(source_file_relative_name in zip.namelist())
-                    self.assertTrue(isfile(temp_file_location) or isdir(temp_file_location))
+                    self.assertTrue(
+                        isfile(temp_file_location) or isdir(temp_file_location)
+                    )
                     source_checksum = get_checksum(source_file_location, "md5")
                     temp_checksum = get_checksum(temp_file_location, "md5")
                     self.assertEqual(source_checksum, temp_checksum)
@@ -376,12 +445,15 @@ class ExportTest(TestCase):
                     break
             self.assertTrue(new_record_found)
 
+
 class ImportTest(TransactionTestCase):
     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
 
     @classmethod
     def setUp(cls):
-        import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
 
         cls.factory = RequestFactory()
 
@@ -393,44 +465,47 @@ class ImportTest(TransactionTestCase):
         new_record.save()
         # Resources.moderated_object.fget(new_record).approve()
 
-        cls.zipname = join(settings.BASE_DIR, 'TEKDB', 'tests', 'test_files', 'exported_db.zip')
+        cls.zipname = join(
+            settings.BASE_DIR, "TEKDB", "tests", "test_files", "exported_db.zip"
+        )
         cls.tempmediadir = tempfile.TemporaryDirectory()
         cls.import_request = cls.factory.post(
-            reverse('import_database'),
+            reverse("import_database"),
             {
-                'MEDIA_DIR': cls.tempmediadir.name,
-                'content_type':'application/zip',
-                'content_disposition':"attachment; filename=uploaded.dump"
+                "MEDIA_DIR": cls.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
             },
-            headers = {
-                "Authorization": f"Basic {cls.credentials}"
-            },
+            headers={"Authorization": f"Basic {cls.credentials}"},
         )
-        with open(cls.zipname, 'rb') as z:
+        with open(cls.zipname, "rb") as z:
             import_file = InMemoryUploadedFile(
                 z,
-                'import_file',
-                'exported_db.zip',
-                'application/zip',
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
                 getsize(cls.zipname),
-                None
+                None,
             )
-            cls.import_request.FILES['import_file'] = import_file
+            cls.import_request.FILES["import_file"] = import_file
 
-            cls.import_request.user = Users.objects.get(username='admin')
+            cls.import_request.user = Users.objects.get(username="admin")
             response = ImportDatabase(cls.import_request)
 
     def test_import(self):
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
-        self.assertEqual(Resources.objects.filter(commonname=self.dummy_1_name).count(), 0)
+        self.assertEqual(
+            Resources.objects.filter(commonname=self.dummy_1_name).count(), 0
+        )
         # Test for media files in the temp dir
         zip = zipfile.ZipFile(self.zipname, "r")
         for filename in zip.namelist():
-            if 'media' in filename and filename.index('media') == 0:
+            if "media" in filename and filename.index("media") == 0:
                 # NOTE: zipfiles always use "/" as a separator.
                 media_name = sep.join(filename.split("/")[1:])
                 self.assertTrue(media_name in listdir(self.tempmediadir.name))
         shutil.rmtree(self.tempmediadir.name)
+
 
 ### 2025-05-09: No one has any idea what a 'placeMap' is.
 # class PlaceMapTest(TestCase):

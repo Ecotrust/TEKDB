@@ -4,15 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('configuration', '0014_auto_20241025_1603'),
+        ("configuration", "0014_auto_20241025_1603"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='configuration',
-            name='min_search_similarity',
-            field=models.FloatField(blank=True, choices=[(0.01, 'Permissive'), (0.1, 'Default'), (0.3, 'Similar'), (0.4, 'Has Match'), (0.9, 'Exact Match')], default=None, help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.', max_length=255, null=True, verbose_name='Minimum Search Similarity'),
+            model_name="configuration",
+            name="min_search_similarity",
+            field=models.FloatField(
+                blank=True,
+                choices=[
+                    (0.01, "Permissive"),
+                    (0.1, "Default"),
+                    (0.3, "Similar"),
+                    (0.4, "Has Match"),
+                    (0.9, "Exact Match"),
+                ],
+                default=None,
+                help_text="Weight 0-1 representing the minimum threshold for similar search results to be included in results.",
+                max_length=255,
+                null=True,
+                verbose_name="Minimum Search Similarity",
+            ),
         ),
     ]

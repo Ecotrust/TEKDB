@@ -5,19 +5,24 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('TEKDB', '0014_alter_media_mediauploadevent'),
+        ("TEKDB", "0014_alter_media_mediauploadevent"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='media',
-            name='mediauploadevent',
+            model_name="media",
+            name="mediauploadevent",
         ),
         migrations.AddField(
-            model_name='media',
-            name='mediabulkupload',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='mediabulkupload', to='TEKDB.mediabulkupload'),
+            model_name="media",
+            name="mediabulkupload",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="mediabulkupload",
+                to="TEKDB.mediabulkupload",
+            ),
         ),
     ]

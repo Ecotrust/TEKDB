@@ -7,65 +7,119 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Relationships', '0006_auto_20191223_1604'),
+        ("Relationships", "0006_auto_20191223_1604"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mediacitationevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt/description'),
+            model_name="mediacitationevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt/description",
+            ),
         ),
         migrations.AlterField(
-            model_name='placescitationevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt/description'),
+            model_name="placescitationevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt/description",
+            ),
         ),
         migrations.AlterField(
-            model_name='placesmediaevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='relationship description'),
+            model_name="placesmediaevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="relationship description",
+            ),
         ),
         migrations.AlterField(
-            model_name='placesresourcecitationevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt/description'),
+            model_name="placesresourcecitationevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt/description",
+            ),
         ),
         migrations.AlterField(
-            model_name='placesresourceevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt'),
+            model_name="placesresourceevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt",
+            ),
         ),
         migrations.AlterField(
-            model_name='placesresourcemediaevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='relationship description'),
+            model_name="placesresourcemediaevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="relationship description",
+            ),
         ),
         migrations.AlterField(
-            model_name='resourceactivitycitationevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt/description'),
+            model_name="resourceactivitycitationevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt/description",
+            ),
         ),
         migrations.AlterField(
-            model_name='resourceactivitymediaevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='relationship description'),
+            model_name="resourceactivitymediaevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="relationship description",
+            ),
         ),
         migrations.AlterField(
-            model_name='resourceresourceevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='relationship description'),
+            model_name="resourceresourceevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="relationship description",
+            ),
         ),
         migrations.AlterField(
-            model_name='resourcescitationevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt/description'),
+            model_name="resourcescitationevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt/description",
+            ),
         ),
         migrations.AlterField(
-            model_name='resourcesmediaevents',
-            name='relationshipdescription',
-            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='relationship description'),
+            model_name="resourcesmediaevents",
+            name="relationshipdescription",
+            field=ckeditor.fields.RichTextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="relationship description",
+            ),
         ),
     ]

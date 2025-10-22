@@ -6,20 +6,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Lookup', '0002_auto_20191223_1538'),
+        ("Lookup", "0002_auto_20191223_1538"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='lookuptribe',
-            name='federaltribe',
-            field=models.CharField(blank=True, db_column='federaltribe', max_length=255, null=True, verbose_name='tribal government'),
+            model_name="lookuptribe",
+            name="federaltribe",
+            field=models.CharField(
+                blank=True,
+                db_column="federaltribe",
+                max_length=255,
+                null=True,
+                verbose_name="tribal government",
+            ),
         ),
         migrations.AlterField(
-            model_name='lookuptribe',
-            name='tribe',
-            field=models.CharField(blank=True, db_column='tribe', max_length=255, null=True, verbose_name='tribe'),
+            model_name="lookuptribe",
+            name="tribe",
+            field=models.CharField(
+                blank=True,
+                db_column="tribe",
+                max_length=255,
+                null=True,
+                verbose_name="tribe",
+            ),
         ),
     ]

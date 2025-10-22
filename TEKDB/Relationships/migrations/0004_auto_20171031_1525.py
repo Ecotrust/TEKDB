@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Relationships', '0003_auto_20171031_1434'),
+        ("Relationships", "0003_auto_20171031_1434"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='placesresourceevents',
-            name='relationshipdescription',
-            field=models.TextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt'),
+            model_name="placesresourceevents",
+            name="relationshipdescription",
+            field=models.TextField(
+                blank=True,
+                db_column="relationshipdescription",
+                null=True,
+                verbose_name="excerpt",
+            ),
         ),
     ]

@@ -4,13 +4,12 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('TEKDB', '0017_auto_20241016_1552'),
+        ("TEKDB", "0017_auto_20241016_1552"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='SearchSettings',
+            name="SearchSettings",
         ),
     ]

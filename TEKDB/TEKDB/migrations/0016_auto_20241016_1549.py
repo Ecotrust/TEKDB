@@ -4,68 +4,121 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('TEKDB', '0015_auto_20241004_1559'),
+        ("TEKDB", "0015_auto_20241004_1559"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='mediabulkupload',
-            name='created_at',
+            model_name="mediabulkupload",
+            name="created_at",
         ),
         migrations.RemoveField(
-            model_name='mediabulkupload',
-            name='updated_at',
+            model_name="mediabulkupload",
+            name="updated_at",
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='enteredbydate',
-            field=models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date'),
+            model_name="mediabulkupload",
+            name="enteredbydate",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                db_column="enteredbydate",
+                null=True,
+                verbose_name="entered by date",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='enteredbyname',
-            field=models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name'),
+            model_name="mediabulkupload",
+            name="enteredbyname",
+            field=models.CharField(
+                blank=True,
+                db_column="enteredbyname",
+                max_length=25,
+                null=True,
+                verbose_name="entered by name",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='enteredbytitle',
-            field=models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title'),
+            model_name="mediabulkupload",
+            name="enteredbytitle",
+            field=models.CharField(
+                blank=True,
+                db_column="enteredbytitle",
+                max_length=100,
+                null=True,
+                verbose_name="entered by title",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='enteredbytribe',
-            field=models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe'),
+            model_name="mediabulkupload",
+            name="enteredbytribe",
+            field=models.CharField(
+                blank=True,
+                db_column="enteredbytribe",
+                max_length=100,
+                null=True,
+                verbose_name="entered by tribe",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='modifiedbydate',
-            field=models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date'),
+            model_name="mediabulkupload",
+            name="modifiedbydate",
+            field=models.DateTimeField(
+                auto_now=True,
+                db_column="modifiedbydate",
+                null=True,
+                verbose_name="modified by date",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='modifiedbyname',
-            field=models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name'),
+            model_name="mediabulkupload",
+            name="modifiedbyname",
+            field=models.CharField(
+                blank=True,
+                db_column="modifiedbyname",
+                max_length=25,
+                null=True,
+                verbose_name="modified by name",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='modifiedbytitle',
-            field=models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title'),
+            model_name="mediabulkupload",
+            name="modifiedbytitle",
+            field=models.CharField(
+                blank=True,
+                db_column="modifiedbytitle",
+                max_length=100,
+                null=True,
+                verbose_name="modified by title",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='modifiedbytribe',
-            field=models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe'),
+            model_name="mediabulkupload",
+            name="modifiedbytribe",
+            field=models.CharField(
+                blank=True,
+                db_column="modifiedbytribe",
+                max_length=100,
+                null=True,
+                verbose_name="modified by tribe",
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='needsReview',
-            field=models.BooleanField(db_column='needsreview', default=True, verbose_name='Needs Review'),
+            model_name="mediabulkupload",
+            name="needsReview",
+            field=models.BooleanField(
+                db_column="needsreview", default=True, verbose_name="Needs Review"
+            ),
         ),
         migrations.AddField(
-            model_name='mediabulkupload',
-            name='researchComments',
-            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
+            model_name="mediabulkupload",
+            name="researchComments",
+            field=models.TextField(
+                blank=True,
+                db_column="researchcomments",
+                default=None,
+                null=True,
+                verbose_name="Research Comments",
+            ),
         ),
     ]
