@@ -178,7 +178,7 @@ class Configuration(models.Model):
     # media_name_override
 
     def __unicode__(self):
-        return unicode(
+        return unicode(  # noqa: F821
             "Site Configuration: '{}' ({})".format(self.preferredInitialism, self.pk)
         )
 

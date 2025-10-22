@@ -25,7 +25,7 @@ class PageContent(models.Model):
         verbose_name_plural = "Page Contents"
 
     def __unicode__(self):
-        return unicode("%s" % (self.page))
+        return unicode("%s" % (self.page))  # noqa: F821
 
     def __str__(self):
         return self.page

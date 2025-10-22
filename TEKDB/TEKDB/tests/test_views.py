@@ -46,7 +46,7 @@ def get_checksum(filename, hash_function):
             readable_hash = hashlib.md5(bytes).hexdigest()
 
         else:
-            Raise("{} is an invalid hash function. Please Enter MD5 value")
+            raise ValueError("{} is an invalid hash function. Please Enter MD5 value")
 
     return readable_hash
 

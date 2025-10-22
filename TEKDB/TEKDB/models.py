@@ -405,7 +405,7 @@ class LookupPlanningUnit(Lookup):
         verbose_name_plural = "planning units"
 
     def __unicode__(self):
-        return unicode("%s" % (self.planningunitname))
+        return unicode("%s" % (self.planningunitname))  # noqa: F821
 
     def __str__(self):
         return self.planningunitname or ""
@@ -447,7 +447,7 @@ class LookupTribe(Lookup):
         )
 
     def __unicode__(self):
-        return unicode("%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe))
+        return unicode("%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe))  # noqa: F821
 
     def __str__(self):
         return "%s: %s, %s" % (self.tribe, self.tribeunit, self.federaltribe) or ""
@@ -486,7 +486,7 @@ class LookupHabitat(Lookup):
         verbose_name_plural = "habitats"
 
     def __unicode__(self):
-        return unicode("%s" % (self.habitat))
+        return unicode("%s" % (self.habitat))  # noqa: F821
 
     def __str__(self):
         return self.habitat or ""
@@ -738,9 +738,9 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         if indigenous and english:
             return "%s (%s)" % (indigenous, english)
         elif indigenous:
-            return unicode(indigenous)
+            return unicode(indigenous)  # noqa: F821
         elif english:
-            return unicode(english)
+            return unicode(english)  # noqa: F821
         else:
             return "No Name Given"
 
@@ -775,7 +775,7 @@ class LookupResourceGroup(Lookup):
         verbose_name_plural = "resource groups"
 
     def __unicode__(self):
-        return unicode("%s" % (self.resourceclassificationgroup))
+        return unicode("%s" % (self.resourceclassificationgroup))  # noqa: F821
 
     def __str__(self):
         return self.resourceclassificationgroup or ""
@@ -826,7 +826,7 @@ class Resources(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name_plural = "Resources"
 
     def __unicode__(self):
-        return unicode("%s" % (self.commonname))
+        return unicode("%s" % (self.commonname))  # noqa: F821
 
     def __str__(self):
         return self.commonname or ""
@@ -1012,7 +1012,7 @@ class LookupPartUsed(Lookup):
         verbose_name_plural = "parts used"
 
     def __unicode__(self):
-        return unicode("%s" % (self.partused))
+        return unicode("%s" % (self.partused))  # noqa: F821
 
     def __str__(self):
         return self.partused or ""
@@ -1033,7 +1033,7 @@ class LookupCustomaryUse(Lookup):
         verbose_name_plural = "customary uses"
 
     def __unicode__(self):
-        return unicode("%s" % (self.usedfor))
+        return unicode("%s" % (self.usedfor))  # noqa: F821
 
     def __str__(self):
         return self.usedfor or ""
@@ -1052,7 +1052,7 @@ class LookupSeason(Lookup):
         verbose_name_plural = "seasons"
 
     def __unicode__(self):
-        return unicode("%s" % (self.season))
+        return unicode("%s" % (self.season))  # noqa: F821
 
     def __str__(self):
         return self.season or ""
@@ -1071,7 +1071,7 @@ class LookupTiming(Lookup):
         verbose_name_plural = "timings"
 
     def __unicode__(self):
-        return unicode("%s" % (self.timing))
+        return unicode("%s" % (self.timing))  # noqa: F821
 
     def __str__(self):
         return self.timing or ""
@@ -1190,7 +1190,7 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
         )
 
     def __unicode__(self):
-        return unicode("%s at %s" % (str(self.resourceid), str(self.placeid)))
+        return unicode("%s at %s" % (str(self.resourceid), str(self.placeid)))  # noqa: F821
 
     def __str__(self):
         return "%s at %s" % (str(self.resourceid), str(self.placeid)) or ""
@@ -1317,7 +1317,7 @@ class LookupParticipants(Lookup):
         verbose_name_plural = "participants"
 
     def __unicode__(self):
-        return unicode("%s" % (self.participants))
+        return unicode("%s" % (self.participants))  # noqa: F821
 
     def __str__(self):
         return self.participants or ""
@@ -1336,7 +1336,7 @@ class LookupTechniques(Lookup):
         verbose_name_plural = "techniques"
 
     def __unicode__(self):
-        return unicode("%s" % (self.techniques))
+        return unicode("%s" % (self.techniques))  # noqa: F821
 
     def __str__(self):
         return self.techniques or ""
@@ -1355,7 +1355,7 @@ class LookupActivity(Lookup):
         verbose_name_plural = "activities"
 
     def __unicode__(self):
-        return unicode("%s" % (self.activity))
+        return unicode("%s" % (self.activity))  # noqa: F821
 
     def __str__(self):
         return self.activity or ""
@@ -1456,7 +1456,7 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name_plural = "Activities"
 
     def __unicode__(self):
-        return unicode(
+        return unicode(  # noqa: F821
             "%s: %s" % (str(self.placeresourceid), self.activityshortdescription)
         )
 
@@ -1726,7 +1726,7 @@ class People(Lookup):
         )
 
     def __unicode__(self):
-        return unicode("%s %s" % (self.firstname, self.lastname))
+        return unicode("%s %s" % (self.firstname, self.lastname))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (self.firstname, self.lastname) or ""
@@ -1799,7 +1799,7 @@ class LookupReferenceType(Lookup):
         verbose_name_plural = "reference types"
 
     def __unicode__(self):
-        return unicode("%s" % (self.documenttype))
+        return unicode("%s" % (self.documenttype))  # noqa: F821
 
     def __str__(self):
         return self.documenttype or ""
@@ -1820,7 +1820,7 @@ class LookupAuthorType(Lookup):
         verbose_name_plural = "author types"
 
     def __unicode__(self):
-        return unicode("%s" % (self.authortype))
+        return unicode("%s" % (self.authortype))  # noqa: F821
 
     def __str__(self):
         return self.authortype or ""
@@ -2230,7 +2230,7 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
             )
 
     def __unicode__(self):
-        return unicode("%s" % (str(self)))
+        return unicode("%s" % (str(self)))  # noqa: F821
 
 
 class PlacesCitationEvents(SimpleRelationship):
@@ -2264,7 +2264,7 @@ class PlacesCitationEvents(SimpleRelationship):
         unique_together = (("placeid", "citationid"),)
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.placeid), str(self.citationid)))
+        return unicode("%s %s" % (str(self.placeid), str(self.citationid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.placeid), str(self.citationid)) or ""
@@ -2360,7 +2360,7 @@ class CurrentVersion(models.Model):
         verbose_name_plural = "current versions"
 
     def __unicode__(self):
-        return unicode(
+        return unicode(  # noqa: F821
             "Back: %d, Front:%d" % (self.backendversion, self.frontendversion)
         )
 
@@ -2383,7 +2383,7 @@ class LookupLocalityType(Lookup):
         verbose_name_plural = "locality types"
 
     def __unicode__(self):
-        return unicode("%s" % (self.localitytype))
+        return unicode("%s" % (self.localitytype))  # noqa: F821
 
     def __str__(self):
         return self.localitytype or ""
@@ -2462,9 +2462,9 @@ class Locality(Queryable):
 
     def __unicode__(self):
         if self.englishname:
-            return unicode("%s" % (self.englishname))
+            return unicode("%s" % (self.englishname))  # noqa: F821
         else:
-            return unicode("Locality in %s" % (self.placeid.englishplacename))
+            return unicode("Locality in %s" % (self.placeid.englishplacename))  # noqa: F821
 
     def __str__(self):
         if self.englishname:
@@ -2576,7 +2576,7 @@ class LocalityGISSelections(models.Model):
         verbose_name_plural = "Locality GIS Selections"
 
     def __unicode__(self):
-        return unicode("%s" % (self.localitylabel))
+        return unicode("%s" % (self.localitylabel))  # noqa: F821
 
     def __str__(self):
         return self.localitylabel or ""
@@ -2605,7 +2605,7 @@ class LocalityPlaceResourceEvent(Queryable):
         verbose_name_plural = "Localities - Place-Resources"
 
     def __unicode__(self):
-        return unicode("%s - %s" % (str(self.localityid), str(self.placeresourceid)))
+        return unicode("%s - %s" % (str(self.localityid), str(self.placeresourceid)))  # noqa: F821
 
     def __str__(self):
         return "%s - %s" % (str(self.localityid), str(self.placeresourceid)) or ""
@@ -2683,7 +2683,7 @@ class LookupMediaType(Lookup):
         verbose_name_plural = "media types"
 
     def __unicode__(self):
-        return unicode("%s" % (self.mediatype))
+        return unicode("%s" % (self.mediatype))  # noqa: F821
 
     def __str__(self):
         return self.mediatype or ""
@@ -2731,7 +2731,7 @@ class LookupUserInfo(Lookup):
         verbose_name_plural = "user info"
 
     def __unicode__(self):
-        return unicode("%s" % (self.username))
+        return unicode("%s" % (self.username))  # noqa: F821
 
     def __str__(self):
         return self.username or ""
@@ -2832,7 +2832,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name_plural = "Media"
 
     def __unicode__(self):
-        return unicode("%s" % (self.medianame))
+        return unicode("%s" % (self.medianame))  # noqa: F821
 
     def __str__(self):
         return "%s [ %s ]" % (self.medianame, self.mediatype) or ""
@@ -3089,7 +3089,7 @@ class MediaCitationEvents(SimpleRelationship):
         unique_together = (("mediaid", "citationid"),)
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.mediaid), str(self.citationid)))
+        return unicode("%s %s" % (str(self.mediaid), str(self.citationid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.mediaid), str(self.citationid)) or ""
@@ -3194,7 +3194,7 @@ class PlaceAltIndigenousName(DefaultModel, DefaultModeratedModel, ModeratedModel
         return {"name": str(self), "link": False}
 
     def __unicode__(self):
-        return unicode("%s" % (self.altindigenousname))
+        return unicode("%s" % (self.altindigenousname))  # noqa: F821
 
     def __str__(self):
         return self.altindigenousname or ""
@@ -3238,7 +3238,7 @@ class PlaceGISSelections(models.Model):
         verbose_name_plural = "Place GIS Selections"
 
     def __unicode__(self):
-        return unicode("%s" % (self.placelabel))
+        return unicode("%s" % (self.placelabel))  # noqa: F821
 
     def __str__(self):
         return self.placelabel or ""
@@ -3272,7 +3272,7 @@ class PlacesMediaEvents(SimpleRelationship):
         unique_together = (("placeid", "mediaid"),)
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.placeid), str(self.mediaid)))
+        return unicode("%s %s" % (str(self.placeid), str(self.mediaid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.placeid), str(self.mediaid)) or ""
@@ -3367,7 +3367,7 @@ class PlacesResourceCitationEvents(SimpleRelationship):
         verbose_name_plural = "Place-Resources - Sources"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.placeresourceid), str(self.citationid)))
+        return unicode("%s %s" % (str(self.placeresourceid), str(self.citationid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.placeresourceid), str(self.citationid)) or ""
@@ -3460,7 +3460,7 @@ class PlacesResourceMediaEvents(SimpleRelationship):
         verbose_name_plural = "Place-Resources - Media"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.placeresourceid), str(self.mediaid)))
+        return unicode("%s %s" % (str(self.placeresourceid), str(self.mediaid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.placeresourceid), str(self.mediaid)) or ""
@@ -3555,7 +3555,7 @@ class ResourceActivityCitationEvents(SimpleRelationship):
         verbose_name_plural = "Activity - Sources"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.resourceactivityid), str(self.citationid)))
+        return unicode("%s %s" % (str(self.resourceactivityid), str(self.citationid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.resourceactivityid), str(self.citationid)) or ""
@@ -3649,7 +3649,7 @@ class ResourceActivityMediaEvents(SimpleRelationship):
         verbose_name_plural = "Activity - Media"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.resourceactivityid), str(self.mediaid)))
+        return unicode("%s %s" % (str(self.resourceactivityid), str(self.mediaid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.resourceactivityid), str(self.mediaid)) or ""
@@ -3758,7 +3758,7 @@ class ResourceAltIndigenousName(DefaultModel, DefaultModeratedModel, ModeratedMo
         ]
 
     def __unicode__(self):
-        return unicode("%s" % (self.altindigenousname))
+        return unicode("%s" % (self.altindigenousname))  # noqa: F821
 
     def __str__(self):
         return self.altindigenousname or ""
@@ -3793,7 +3793,7 @@ class ResourceResourceEvents(SimpleRelationship):
         verbose_name_plural = "Resources - Resources"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.resourceid), str(self.altresourceid)))
+        return unicode("%s %s" % (str(self.resourceid), str(self.altresourceid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.resourceid), str(self.altresourceid)) or ""
@@ -3928,7 +3928,7 @@ class ResourcesCitationEvents(SimpleRelationship):
         app_label = "Relationships"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.resourceid), str(self.citationid)))
+        return unicode("%s %s" % (str(self.resourceid), str(self.citationid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.resourceid), str(self.citationid)) or ""
@@ -4021,7 +4021,7 @@ class ResourcesMediaEvents(SimpleRelationship):
         app_label = "Relationships"
 
     def __unicode__(self):
-        return unicode("%s %s" % (str(self.resourceid), str(self.mediaid)))
+        return unicode("%s %s" % (str(self.resourceid), str(self.mediaid)))  # noqa: F821
 
     def __str__(self):
         return "%s %s" % (str(self.resourceid), str(self.mediaid)) or ""
@@ -4105,7 +4105,7 @@ class UserAccess(DefaultModeratedModel, ModeratedModel):
         verbose_name_plural = "user access"
 
     def __unicode__(self):
-        return unicode("%s" % (self.accesslevel))
+        return unicode("%s" % (self.accesslevel))  # noqa: F821
 
     def __str__(self):
         return self.accesslevel or ""
@@ -4173,7 +4173,7 @@ class Users(AbstractUser):
         verbose_name_plural = "Users"
 
     def __unicode__(self):
-        return unicode("%s" % (self.username))
+        return unicode("%s" % (self.username))  # noqa: F821
 
     def __str__(self):
         return self.username or ""
