@@ -447,7 +447,7 @@ class Command(BaseCommand):
         #
         # Running this will delete your database. If you are okay with this, press 'c' and enter. If not, press 'q' and enter
         try:
-            revert = os.path.join(MANAGE_DIR, options["revert"][0])
+            revert = os.path.join(MANAGE_DIR, options["revert"][0])  # noqa: F405
         except Exception:
             revert = False
         FILE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
