@@ -1,10 +1,11 @@
 import logging
 
 from django.contrib.gis.geometry import json_regex
+from django.contrib.gis.forms.widgets import BaseGeometryWidget
+from django.forms.widgets import ClearableFileInput
+from django.utils.safestring import mark_safe
 
 logger = logging.getLogger("django.contrib.gis")
-
-from django.contrib.gis.forms.widgets import BaseGeometryWidget
 
 
 # class OpenLayersWidget(BaseGeometryWidget):
@@ -60,10 +61,6 @@ class OpenLayers6PolygonWidget(OpenLayers6Widget):
             "assets/openlayers6/ol.js",
             "gis/js/OL6MapPolygonWidget.js",
         )
-
-
-from django.forms.widgets import ClearableFileInput
-from django.utils.safestring import mark_safe
 
 
 class ThumbnailFileInput(ClearableFileInput):

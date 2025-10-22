@@ -11,7 +11,7 @@ from django.db.models import Q, Manager as GeoManager
 from django.db.models.functions import Greatest
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.postgres.search import (
     SearchQuery,
     SearchRank,
@@ -4084,9 +4084,6 @@ class ResourcesMediaEvents(SimpleRelationship):
             return self.mediaid
         else:
             return self.resourceid
-
-
-from django.contrib.auth.models import Group
 
 
 class UserAccess(DefaultModeratedModel, ModeratedModel):
