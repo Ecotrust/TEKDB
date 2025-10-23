@@ -495,7 +495,7 @@ class ImportTest(TransactionTestCase):
             )
             cls.import_request.FILES["import_file"] = import_file
             cls.import_request.user = Users.objects.get(username="admin")
-            response = ImportDatabase(cls.import_request)
+            response = ImportDatabase(cls.import_request)  # noqa: F841
 
     def test_import(self):
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
