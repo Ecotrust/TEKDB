@@ -14,9 +14,9 @@ import os
 from glob import glob
 
 try:
-    GDAL_LIBRARY_PATH=glob('/usr/lib/libgdal.so.*')[0]
-    GEOS_LIBRARY_PATH=glob('/usr/lib/libgeos_c.so.*')[0]
-except IndexError as e:
+    GDAL_LIBRARY_PATH = glob("/usr/lib/libgdal.so.*")[0]
+    GEOS_LIBRARY_PATH = glob("/usr/lib/libgeos_c.so.*")[0]
+except IndexError:
     pass
 
 
@@ -35,7 +35,7 @@ DEBUG = bool(int(os.environ.get("DEBUG", default=0)))
 
 # ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default='*').split(" ")
 ALLOWED_HOSTS = []
-ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+ALLOWED_HOSTS_ENV = os.environ.get("ALLOWED_HOSTS")
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(","))
 
@@ -45,108 +45,110 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
-    'dal',
-    'dal_select2',
-    'django.contrib.contenttypes',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.gis',
-    'colorfield',
+    "dal",
+    "dal_select2",
+    "django.contrib.contenttypes",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.gis",
+    "colorfield",
     # 'registration',
-    'leaflet',
-    'nested_admin',
-    'coverage',
-    'configuration',
-    'explore',
-    'login',
-    'TEKDB',
-    'tinymce',
-    'Lookup',
-    'Accounts',
-    'Relationships',
-    'reversion',
-    'django.contrib.sites',
+    "leaflet",
+    "nested_admin",
+    "coverage",
+    "configuration",
+    "explore",
+    "login",
+    "TEKDB",
+    "tinymce",
+    "Lookup",
+    "Accounts",
+    "Relationships",
+    "reversion",
+    "django.contrib.sites",
     # 'moderation.apps.SimpleModerationConfig',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'TEKDB.urls'
+ROOT_URLCONF = "TEKDB.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'TEKDB/templates'),
-            os.path.join(BASE_DIR, 'login/templates'),
-            os.path.join(BASE_DIR, 'explore/templates'),
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(BASE_DIR, "TEKDB/templates"),
+            os.path.join(BASE_DIR, "login/templates"),
+            os.path.join(BASE_DIR, "explore/templates"),
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.template.context_processors.media',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'explore.context_processors.explore_context',
-                'TEKDB.context_processors.search_settings',
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.template.context_processors.media",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "explore.context_processors.explore_context",
+                "TEKDB.context_processors.search_settings",
                 # 'TEKDB.context_processors.add_map_default_context'
             ],
         },
     },
 ]
 
-LOGIN_URL = '/'
+LOGIN_URL = "/"
 
-WSGI_APPLICATION = 'TEKDB.wsgi.application'
+WSGI_APPLICATION = "TEKDB.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 DATABASES = {
-    'default': {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.contrib.gis.db.backends.postgis"),
+    "default": {
+        "ENGINE": os.environ.get(
+            "SQL_ENGINE", "django.contrib.gis.db.backends.postgis"
+        ),
         "NAME": os.environ.get("SQL_DATABASE", "tekdb"),
         "USER": os.environ.get("SQL_USER", "postgres"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", None),
-        "HOST": os.environ.get("SQL_HOST", 'db'),
+        "HOST": os.environ.get("SQL_HOST", "db"),
         "PORT": os.environ.get("SQL_PORT", None),
     }
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
-#Registration
+# Registration
 
 ACCOUNT_ACTIVATION_DAYS = 14
 
@@ -156,27 +158,27 @@ REGISTRATION_OPEN = False
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = "America/Los_Angeles"
 
 USE_I18N = True
 
 USE_TZ = True
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
@@ -191,19 +193,19 @@ REGISTRATION_OPEN = True
 
 ### Search Settings
 SEARCH_CATEGORIES = [
-    'all',
-    'places',
-    'resources',
-    'activities',
-    'citations',
-    'media',
+    "all",
+    "places",
+    "resources",
+    "activities",
+    "citations",
+    "media",
 ]
-#Locality? People?
+# Locality? People?
 
 MIN_SEARCH_RANK = 0.1
 MIN_SEARCH_SIMILARITY = 0.1
 
-AUTH_USER_MODEL = 'Accounts.Users'
+AUTH_USER_MODEL = "Accounts.Users"
 
 ###########################################
 ##      TINYMCE                         ###
@@ -228,93 +230,97 @@ TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
 
 # Add Version to the admin site header
-VERSION = '2.2.2'
-ADMIN_SITE_HEADER = os.environ.get("ADMIN_SITE_HEADER", default='ITK DB Admin v{}'.format(VERSION))
+VERSION = "2.2.2"
+ADMIN_SITE_HEADER = os.environ.get(
+    "ADMIN_SITE_HEADER", default="ITK DB Admin v{}".format(VERSION)
+)
 
-# X Frame Options 
+# X Frame Options
 # The Django Default is 'DENY'
 # SAMEORIGIN allows the page to be displayed in a frame on the same origin as the page itself
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
-TIME_ZONE = os.environ.get("TIME_ZONE", default='America/Los_Angeles')
+TIME_ZONE = os.environ.get("TIME_ZONE", default="America/Los_Angeles")
 REGISTRATION_OPEN = os.environ.get("REGISTRATION_OPEN", default=False)
 DATABASE_GEOGRAPHY = {
     ###EPSG:4326###
     # 'default_lon': -124.325,
     # 'default_lat': 42.065,
     ###EPSG:3857###
-    'default_lon': os.environ.get("DEFAULT_LON", default=-13839795.69),
-    'default_lat': os.environ.get("DEFAULT_LAT", default=5171448.926),
-    'default_zoom': os.environ.get("DEFAULT_ZOOM", default=8),
-    'map_template': 'gis/admin/ol2osm.html',
-    'map_extent': [
+    "default_lon": os.environ.get("DEFAULT_LON", default=-13839795.69),
+    "default_lat": os.environ.get("DEFAULT_LAT", default=5171448.926),
+    "default_zoom": os.environ.get("DEFAULT_ZOOM", default=8),
+    "map_template": "gis/admin/ol2osm.html",
+    "map_extent": [
         os.environ.get("MAP_EXTENT_WEST", default=-24000000),
         os.environ.get("MAP_EXTENT_SOUTH", default=1450000),
         os.environ.get("MAP_EXTENT_EAST", default=-6200000),
-        os.environ.get("MAP_EXTENT_NORTH", default=13000000)
-    ], #US Territories
-    'min_zoom': 2,
-    'max_zoom': 19,
+        os.environ.get("MAP_EXTENT_NORTH", default=13000000),
+    ],  # US Territories
+    "min_zoom": 2,
+    "max_zoom": 19,
 }
 
 MODERATE_STAFF = False
 
 PROJ_CSS = {
-    'primary_a': '#8f371c', #red
-    'primary_b': '#f7f3eb', #off white
-    'primary_c': '#0e1522', #very dark blue
-    'primary_d': '#ced2da', #light gray
-    'secondary_a': '#51723b', #fern green
-    'secondary_b': '#839230', #old moss green
-    'secondary_c': '#6ea32e', #green
-    'secondary_d': '#b44ba3' #rose quartz pink
+    "primary_a": "#8f371c",  # red
+    "primary_b": "#f7f3eb",  # off white
+    "primary_c": "#0e1522",  # very dark blue
+    "primary_d": "#ced2da",  # light gray
+    "secondary_a": "#51723b",  # fern green
+    "secondary_b": "#839230",  # old moss green
+    "secondary_c": "#6ea32e",  # green
+    "secondary_d": "#b44ba3",  # rose quartz pink
 }
 
-PROJ_LOGO_TEXT = 'ITK'
-PROJ_COLOR_SELECT = 'light'
-PROJ_IMAGE_SELECT = '/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg'
+PROJ_LOGO_TEXT = "ITK"
+PROJ_COLOR_SELECT = "light"
+PROJ_IMAGE_SELECT = "/static/explore/img/homepage/5050508427_ec55eed5f4_o.jpg"
 PROJ_IMAGE_ATTR = 'Image courtesy of <a href="https://www.flickr.com/photos/monteregina/5050508427" target="_blank">Monteregina</a> and used under <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">the CC BY-NC-SA 2.0 Licence</a>. No changes were made.'
 
 PROJ_ICONS = {
-    'logo': '/static/explore/img/logos/logo_weave.svg',
-    'place_icon': 'explore/img/icons/i_place.svg',
-    'resource_icon': 'explore/img/icons/i_resource.svg',
-    'activity_icon': 'explore/img/icons/i_activity.svg',
-    'source_icon': 'explore/img/icons/i_source.svg',
-    'media_icon': 'explore/img/icons/i_media.svg',
-    'map_pin_icon': 'explore/img/icons/explore_map_pin.svg',
-    'map_pin_selected_icon': 'explore/img/icons/explore_map_pin_selected.svg',
+    "logo": "/static/explore/img/logos/logo_weave.svg",
+    "place_icon": "explore/img/icons/i_place.svg",
+    "resource_icon": "explore/img/icons/i_resource.svg",
+    "activity_icon": "explore/img/icons/i_activity.svg",
+    "source_icon": "explore/img/icons/i_source.svg",
+    "media_icon": "explore/img/icons/i_media.svg",
+    "map_pin_icon": "explore/img/icons/explore_map_pin.svg",
+    "map_pin_selected_icon": "explore/img/icons/explore_map_pin_selected.svg",
 }
 
 RECORD_ICONS = {
-    'person': '/static/explore/img/icons/i_activity.png',
-    'activity': '/static/{}'.format(PROJ_ICONS['activity_icon']),
-    'citation': '/static/{}'.format(PROJ_ICONS['source_icon']),
-    'place': '/static/{}'.format(PROJ_ICONS['place_icon']),
-    'media': '/static/{}'.format(PROJ_ICONS['media_icon']),
-    'event': '/static/{}'.format(PROJ_ICONS['activity_icon']),
-    'resource': '/static/{}'.format(PROJ_ICONS['resource_icon']),
-    'map_pin': '/static/{}'.format(PROJ_ICONS['map_pin_icon']),
-    'map_pin_selected': '/static/{}'.format(PROJ_ICONS['map_pin_selected_icon']),
+    "person": "/static/explore/img/icons/i_activity.png",
+    "activity": "/static/{}".format(PROJ_ICONS["activity_icon"]),
+    "citation": "/static/{}".format(PROJ_ICONS["source_icon"]),
+    "place": "/static/{}".format(PROJ_ICONS["place_icon"]),
+    "media": "/static/{}".format(PROJ_ICONS["media_icon"]),
+    "event": "/static/{}".format(PROJ_ICONS["activity_icon"]),
+    "resource": "/static/{}".format(PROJ_ICONS["resource_icon"]),
+    "map_pin": "/static/{}".format(PROJ_ICONS["map_pin_icon"]),
+    "map_pin_selected": "/static/{}".format(PROJ_ICONS["map_pin_selected_icon"]),
 }
 
-# Not sure if this is the best way to implement fonts. 
+# Not sure if this is the best way to implement fonts.
 # It gets tricky bc there will likely be multiple formats for each font.
 # For example: .ttf, .otf, .woff, .woff2, .svg
-# We'll need to figure out how to handle this better. 
+# We'll need to figure out how to handle this better.
 # TODO: Plan to revisit this later.
 PROJ_FONTS = {
-    'font_face_primary': '/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css',
-    'font_face_primary_bold': '/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css',
+    "font_face_primary": "/static/explore/fonts/Open_Sans/static/OpenSans-Regular-export/OpenSans-Regular.css",
+    "font_face_primary_bold": "/static/explore/fonts/Open_Sans/static/OpenSans-Bold-export/OpenSans-Bold.css",
 }
 
-HOME_FONT_COLOR = '#FFFFFF'
-HOME_LEFT_BACKGROUND = '#000000'
-HOME_RIGHT_BACKGROUND = '#000000'
+HOME_FONT_COLOR = "#FFFFFF"
+HOME_LEFT_BACKGROUND = "#000000"
+HOME_RIGHT_BACKGROUND = "#000000"
 
 DEFAULT_MAXIMUM_RESULTS = 500
 
 try:
-    from TEKDB.local_settings import *
-except Exception as e:
-    print("ERROR: Unable to load local_settings.py. This is expected for docker deployment")
+    from TEKDB.local_settings import *  # noqa: F403
+except Exception:
+    print(
+        "ERROR: Unable to load local_settings.py. This is expected for docker deployment"
+    )

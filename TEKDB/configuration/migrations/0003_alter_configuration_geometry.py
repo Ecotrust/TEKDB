@@ -5,15 +5,21 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('configuration', '0002_auto_20220503_1757'),
+        ("configuration", "0002_auto_20220503_1757"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='configuration',
-            name='geometry',
-            field=django.contrib.gis.db.models.fields.GeometryField(blank=True, default=None, help_text="Indicate the region in which most of your 'place' records are likely to exist. This serves to set the map conveniently for staff entering records. Records are allowed to exist outside of the area you indicate, and this can be changed at any time.", null=True, srid=3857, verbose_name='Area of Interest'),
+            model_name="configuration",
+            name="geometry",
+            field=django.contrib.gis.db.models.fields.GeometryField(
+                blank=True,
+                default=None,
+                help_text="Indicate the region in which most of your 'place' records are likely to exist. This serves to set the map conveniently for staff entering records. Records are allowed to exist outside of the area you indicate, and this can be changed at any time.",
+                null=True,
+                srid=3857,
+                verbose_name="Area of Interest",
+            ),
         ),
     ]

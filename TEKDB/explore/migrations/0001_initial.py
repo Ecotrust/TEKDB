@@ -7,23 +7,44 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='PageContent',
+            name="PageContent",
             fields=[
-                ('page', models.CharField(choices=[('Welcome', 'Welcome'), ('About', 'About'), ('Help', 'Help')], max_length=255, primary_key=True, serialize=False)),
-                ('content', ckeditor.fields.RichTextField(blank=True, null=True)),
-                ('is_html', models.BooleanField(default=False, help_text='Select this if you want to use raw HTML instead. For this option, use the "HTML content" window below.')),
-                ('html_content', models.TextField(blank=True, help_text='raw html if html == True', null=True)),
+                (
+                    "page",
+                    models.CharField(
+                        choices=[
+                            ("Welcome", "Welcome"),
+                            ("About", "About"),
+                            ("Help", "Help"),
+                        ],
+                        max_length=255,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("content", ckeditor.fields.RichTextField(blank=True, null=True)),
+                (
+                    "is_html",
+                    models.BooleanField(
+                        default=False,
+                        help_text='Select this if you want to use raw HTML instead. For this option, use the "HTML content" window below.',
+                    ),
+                ),
+                (
+                    "html_content",
+                    models.TextField(
+                        blank=True, help_text="raw html if html == True", null=True
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Page Contents',
+                "verbose_name_plural": "Page Contents",
             },
         ),
     ]

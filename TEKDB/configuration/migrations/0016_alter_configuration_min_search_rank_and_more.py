@@ -4,20 +4,46 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('configuration', '0015_alter_configuration_min_search_similarity'),
+        ("configuration", "0015_alter_configuration_min_search_similarity"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='configuration',
-            name='min_search_rank',
-            field=models.FloatField(blank=True, choices=[(0.01, 'Lowest'), (0.1, 'Default'), (0.6, 'Moderate'), (0.9, 'Highest')], default=None, help_text='The lowest acceptable ranking score assigned to search results.', max_length=255, null=True, verbose_name='Minimum Search Rank'),
+            model_name="configuration",
+            name="min_search_rank",
+            field=models.FloatField(
+                blank=True,
+                choices=[
+                    (0.01, "Lowest"),
+                    (0.1, "Default"),
+                    (0.6, "Moderate"),
+                    (0.9, "Highest"),
+                ],
+                default=None,
+                help_text="The lowest acceptable ranking score assigned to search results.",
+                max_length=255,
+                null=True,
+                verbose_name="Minimum Search Rank",
+            ),
         ),
         migrations.AlterField(
-            model_name='configuration',
-            name='min_search_similarity',
-            field=models.FloatField(blank=True, choices=[(0.01, 'Permissive'), (0.1, 'Default'), (0.3, 'Similar'), (0.4, 'Has Match'), (0.9, 'Exact Match')], default=None, help_text='The lowest threshold for similar search results to be included in results.', max_length=255, null=True, verbose_name='Minimum Search Similarity'),
+            model_name="configuration",
+            name="min_search_similarity",
+            field=models.FloatField(
+                blank=True,
+                choices=[
+                    (0.01, "Permissive"),
+                    (0.1, "Default"),
+                    (0.3, "Similar"),
+                    (0.4, "Has Match"),
+                    (0.9, "Exact Match"),
+                ],
+                default=None,
+                help_text="The lowest threshold for similar search results to be included in results.",
+                max_length=255,
+                null=True,
+                verbose_name="Minimum Search Similarity",
+            ),
         ),
     ]

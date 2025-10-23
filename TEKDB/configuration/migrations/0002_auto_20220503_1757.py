@@ -4,20 +4,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('configuration', '0001_initial'),
+        ("configuration", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='configuration',
-            name='homepageImage',
-            field=models.ImageField(blank=True, default=None, help_text='If you have a preferred image for the landing page, put it here. If blank, users will see a default image.', upload_to='', verbose_name='Homepage Image'),
+            model_name="configuration",
+            name="homepageImage",
+            field=models.ImageField(
+                blank=True,
+                default=None,
+                help_text="If you have a preferred image for the landing page, put it here. If blank, users will see a default image.",
+                upload_to="",
+                verbose_name="Homepage Image",
+            ),
         ),
         migrations.AlterField(
-            model_name='configuration',
-            name='preferredInitialism',
-            field=models.CharField(default='ITK', help_text="Suggestions: 'ITK', 'TEK', etc...", max_length=15, verbose_name='Preferred sharthand for traditional knowledge'),
+            model_name="configuration",
+            name="preferredInitialism",
+            field=models.CharField(
+                default="ITK",
+                help_text="Suggestions: 'ITK', 'TEK', etc...",
+                max_length=15,
+                verbose_name="Preferred sharthand for traditional knowledge",
+            ),
         ),
     ]

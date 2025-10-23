@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('TEKDB', '0018_auto_20241022_1653'),
-        ('TEKDB', '0018_delete_searchsettings'),
+        ("TEKDB", "0018_auto_20241022_1653"),
+        ("TEKDB", "0018_delete_searchsettings"),
     ]
 
-    operations = [
-    ]
+    operations = []

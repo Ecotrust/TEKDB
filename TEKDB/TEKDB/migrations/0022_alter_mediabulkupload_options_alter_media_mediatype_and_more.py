@@ -5,25 +5,42 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('Lookup', '0005_alter_lookupuserinfo_id'),
-        ('TEKDB', '0021_merge_20241224_1132'),
+        ("Lookup", "0005_alter_lookupuserinfo_id"),
+        ("TEKDB", "0021_merge_20241224_1132"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='mediabulkupload',
-            options={'managed': True, 'verbose_name': 'Media Bulk Upload', 'verbose_name_plural': 'Media Bulk Uploads'},
+            name="mediabulkupload",
+            options={
+                "managed": True,
+                "verbose_name": "Media Bulk Upload",
+                "verbose_name_plural": "Media Bulk Uploads",
+            },
         ),
         migrations.AlterField(
-            model_name='media',
-            name='mediatype',
-            field=models.ForeignKey(blank=True, db_column='mediatype', default=None, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='Lookup.lookupmediatype', verbose_name='type'),
+            model_name="media",
+            name="mediatype",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="mediatype",
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.SET_DEFAULT,
+                to="Lookup.lookupmediatype",
+                verbose_name="type",
+            ),
         ),
         migrations.AlterField(
-            model_name='mediabulkupload',
-            name='mediabulkname',
-            field=models.CharField(blank=True, default='Bulk Upload on 2025-05-02', max_length=255, null=True, verbose_name='name'),
+            model_name="mediabulkupload",
+            name="mediabulkname",
+            field=models.CharField(
+                blank=True,
+                default="Bulk Upload on 2025-05-02",
+                max_length=255,
+                null=True,
+                verbose_name="name",
+            ),
         ),
     ]

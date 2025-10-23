@@ -1,5 +1,5 @@
 # from django.conf import settings
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 from django.contrib.admin.sites import AdminSite
@@ -12,35 +12,46 @@ from TEKDB.tests.test_models import ITKTestCase
 
 User = get_user_model()
 
-class MediaBulkUploadAdminTest(ITKTestCase):
 
+class MediaBulkUploadAdminTest(ITKTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.user = User.objects.create_superuser(username='admin2', password='password', email='admin@example.com')
+        self.user = User.objects.create_superuser(
+            username="admin2", password="password", email="admin@example.com"
+        )
 
     def test_media_bulk_upload_admin_add(self):
-        url = reverse('admin:TEKDB_mediabulkupload_add')
-        test_image = SimpleUploadedFile("./test_image.jpg", b"\x00\x00\x00\x00", content_type="image")
+        url = reverse("admin:TEKDB_mediabulkupload_add")
+        test_image = SimpleUploadedFile(
+            "./test_image.jpg", b"\x00\x00\x00\x00", content_type="image"
+        )
 
         # TODO: Associate the images with 1+ Places, Resources, Citations, Activities, and PlacesResources
 
-        request = self.factory.post(url, {
-            # 'mediabulkname': 'Test Bulk Upload',
-            # 'mediabulkdate': '2024-12-12',
-            'files': [test_image, test_image],
-        })
+        request = self.factory.post(
+            url,
+            {
+                # 'mediabulkname': 'Test Bulk Upload',
+                # 'mediabulkdate': '2024-12-12',
+                "files": [test_image, test_image],
+            },
+        )
         request.user = self.user
         bulk_admin = MediaBulkUploadAdmin(model=MediaBulkUpload, admin_site=AdminSite())
         bulk_form = MediaBulkUploadForm(request.POST)
         bulk_form.is_valid()
-        bulk_admin.save_model(obj=MediaBulkUpload(), request=request, form=bulk_form, change=None)
+        bulk_admin.save_model(
+            obj=MediaBulkUpload(), request=request, form=bulk_form, change=None
+        )
 
-        self.assertTrue(Media.objects.filter(medianame='test_image').exists())
-        self.assertTrue(Media.objects.filter(medianame='test_image').count() == 2)
+        self.assertTrue(Media.objects.filter(medianame="test_image").exists())
+        self.assertTrue(Media.objects.filter(medianame="test_image").count() == 2)
 
-        for media in Media.objects.filter(medianame='test_image'):
+        for media in Media.objects.filter(medianame="test_image"):
             self.assertTrue(os.path.exists(media.mediafile.path))
-            os.remove(media.mediafile.path)  # Clean up the uploaded files after the test
+            os.remove(
+                media.mediafile.path
+            )  # Clean up the uploaded files after the test
             self.assertFalse(os.path.exists(media.mediafile.path))
             media.delete()
 
