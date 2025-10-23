@@ -1,4 +1,4 @@
 from django.contrib import admin
-from TEKDB.models import PageContent
+from .models import PageContent
 
 admin.site.register(PageContent)
