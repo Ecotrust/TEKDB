@@ -280,16 +280,16 @@ def export_record_csv(record_dict, filename):
     writer = csv.writer(csv_response)
     for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
-        if type(field) == list and len(field) > 0 and type(field[0]) == dict:
+        if isinstance(field, list) and len(field) > 0 and isinstance(field[0], dict):
             for item in field:
                 if (
                     "key" in item.keys()
                     and "value" in item.keys()
                     and len(item.keys()) == 2
                 ):
-                    if type(item["value"]) == list and len(item["value"]) > 0:
+                    if isinstance(item["value"], list) and len(item["value"]) > 0:
                         for sub_item in item["value"]:
-                            if type(sub_item) == dict and "name" in sub_item.keys():
+                            if isinstance(sub_item, dict) and "name" in sub_item.keys():
                                 writer.writerow(
                                     ["%s - %s" % (key, item["key"]), sub_item["name"]]
                                 )
@@ -318,16 +318,16 @@ def export_record_xls(record_dict, filename):
     row = 0
     for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
-        if type(field) == list and len(field) > 0 and type(field[0]) == dict:
+        if isinstance(field, list) and len(field) > 0 and isinstance(field[0], dict):
             for item in field:
                 if (
                     "key" in item.keys()
                     and "value" in item.keys()
                     and len(item.keys()) == 2
                 ):
-                    if type(item["value"]) == list and len(item["value"]) > 0:
+                    if isinstance(item["value"], list) and len(item["value"]) > 0:
                         for sub_item in item["value"]:
-                            if type(sub_item) == dict and "name" in sub_item.keys():
+                            if isinstance(sub_item, dict) and "name" in sub_item.keys():
                                 worksheet.write(row, 0, "%s - %s" % (key, item["key"]))
                                 worksheet.write(row, 1, sub_item["name"])
                                 row += 1
