@@ -1,35 +1,44 @@
-version: '3.7'
-
 services:
-  app:
-    build: /usr/local/apps/TEKDB/TEKDB
-    command: dockerize -wait tcp://db:5432 sh -c "python manage.py runserver 0.0.0.0:8000"
+  db:
+    image: postgis/postgis:15-3.4
+    restart: always
+    environment:
+      POSTGRES_DB: tekdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespw
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - ./:/usr/local/apps/TEKDB/TEKDB/
-      - media_volume:/vol/web/media
-      - static_volume:/vol/web/static
+      - tekdb_db_data:/var/lib/postgresql/data
     ports:
-      - "8000:8000"
-    env_file:
-      - ./.env.dev
-    links:
-      - db
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tekdb -h localhost -p 5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
     depends_on:
       - db
+    env_file:
+      - .env.dev
     environment:
-      - DEBUG=1
-  db:
-    image: postgis/postgis:14-3.1-alpine
-    volumes:
-      - postgis-data:/var/lib/postgresql
-    environment:
-      - POSTGRES_USER=tekdb_user
-      - POSTGRES_PASSWORD=tekdb_password
-      - POSTGRES_DB=tekdb
+      SQL_ENGINE: django.contrib.gis.db.backends.postgis
+      SQL_HOST: db
+      SQL_PORT: 5432
+      SQL_DATABASE: tekdb
+      SQL_USER: postgres
+      SQL_PASSWORD: postgrespw
+      SECRET_KEY: 'change-me'
+      DEBUG: '0'
     ports:
-      - 5432:5432
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/app
 
 volumes:
-  postgis-data:
-  static_volume:
-  media_volume:
+  tekdb_db_data:
