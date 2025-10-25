@@ -18,7 +18,8 @@ fi
 
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
-# python manage.py loaddata /usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json
+python manage.py loaddata TEKDB/fixtures/default_users_fixture.json
+python manage.py loaddata TEKDB/fixtures/default_lookups_fixture.json
 echo "Starting uWSGI (HTTP) on :8000"
 # Use HTTP socket so direct HTTP clients (browsers) can connect to the container port.
 # If you proxy with nginx using the uwsgi protocol, switch back to --socket and use
