@@ -38,7 +38,7 @@ COPY requirements.txt /usr/src/app/
 COPY requirements.txt requirements_linux.txt /usr/src/app/
 
 # Upgrade pip and install Python dependencies
-RUN pip install --upgrade pip setuptools wheel \
+RUN pip install --upgrade pip \
     && pip install -r requirements.txt -r requirements_linux.txt || pip install -r requirements.txt
 
 # Copy the rest of the application code
