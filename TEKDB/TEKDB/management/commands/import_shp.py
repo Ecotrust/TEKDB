@@ -145,8 +145,11 @@ class Command(BaseCommand):
                     record.DigitizedDate = record_date
                     record.save()
 
-                except:  # noqa: E722
-                    print("Error editing %s record with ID: %s" % (model, str(pk)))
+                except Exception as e:
+                    print(
+                        "Error editing %s record with ID: %s; error msg: %s"
+                        % (model, str(pk), e)
+                    )
 
         except Exception:
             print(
