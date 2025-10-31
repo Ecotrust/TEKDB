@@ -8,1163 +8,198 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
     dependencies = [
-        ("Lookup", "0001_initial"),
-        ("Relationships", "0001_initial"),
+        ('Lookup', '0001_initial'),
+        ('Relationships', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="Citations",
+            name='Citations',
             fields=[
-                (
-                    "enteredbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="entered by name",
-                    ),
-                ),
-                (
-                    "enteredbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by tribe",
-                    ),
-                ),
-                (
-                    "enteredbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by title",
-                    ),
-                ),
-                (
-                    "enteredbydate",
-                    models.DateTimeField(
-                        auto_now_add=True,
-                        db_column="enteredbydate",
-                        null=True,
-                        verbose_name="entered by date",
-                    ),
-                ),
-                (
-                    "modifiedbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="modified by name",
-                    ),
-                ),
-                (
-                    "modifiedbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by title",
-                    ),
-                ),
-                (
-                    "modifiedbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by tribe",
-                    ),
-                ),
-                (
-                    "modifiedbydate",
-                    models.DateTimeField(
-                        auto_now=True,
-                        db_column="modifiedbydate",
-                        null=True,
-                        verbose_name="modified by date",
-                    ),
-                ),
-                (
-                    "citationid",
-                    models.AutoField(
-                        db_column="citationid", primary_key=True, serialize=False
-                    ),
-                ),
-                (
-                    "referencetext",
-                    models.CharField(
-                        blank=True,
-                        db_column="referencetext",
-                        max_length=50,
-                        null=True,
-                        verbose_name="description",
-                    ),
-                ),
-                (
-                    "authorprimary",
-                    models.CharField(
-                        blank=True,
-                        db_column="authorprimary",
-                        max_length=255,
-                        null=True,
-                        verbose_name="primary author",
-                    ),
-                ),
-                (
-                    "authorsecondary",
-                    models.CharField(
-                        blank=True,
-                        db_column="authorsecondary",
-                        max_length=255,
-                        null=True,
-                        verbose_name="secondary author",
-                    ),
-                ),
-                (
-                    "placeofinterview",
-                    models.CharField(
-                        blank=True,
-                        db_column="placeofinterview",
-                        max_length=255,
-                        null=True,
-                        verbose_name="place of interview",
-                    ),
-                ),
-                ("year", models.IntegerField(blank=True, db_column="year", null=True)),
-                ("title", models.TextField(blank=True, db_column="title", null=True)),
-                (
-                    "seriestitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="seriestitle",
-                        max_length=255,
-                        null=True,
-                        verbose_name="series title",
-                    ),
-                ),
-                (
-                    "seriesvolume",
-                    models.CharField(
-                        blank=True,
-                        db_column="seriesvolume",
-                        max_length=50,
-                        null=True,
-                        verbose_name="series volume",
-                    ),
-                ),
-                (
-                    "serieseditor",
-                    models.CharField(
-                        blank=True,
-                        db_column="serieseditor",
-                        max_length=255,
-                        null=True,
-                        verbose_name="series editor",
-                    ),
-                ),
-                (
-                    "publisher",
-                    models.CharField(
-                        blank=True, db_column="publisher", max_length=100, null=True
-                    ),
-                ),
-                (
-                    "publishercity",
-                    models.CharField(
-                        blank=True,
-                        db_column="publishercity",
-                        max_length=255,
-                        null=True,
-                        verbose_name="city",
-                    ),
-                ),
-                (
-                    "preparedfor",
-                    models.CharField(
-                        blank=True,
-                        db_column="preparedfor",
-                        max_length=100,
-                        null=True,
-                        verbose_name="prepared_for",
-                    ),
-                ),
-                (
-                    "comments",
-                    models.TextField(blank=True, db_column="comments", null=True),
-                ),
-                (
-                    "authortype",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="authortype",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupAuthorType",
-                        verbose_name="author type",
-                    ),
-                ),
-                (
-                    "intervieweeid",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="intervieweeid",
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="interviewee",
-                        to="Lookup.People",
-                        verbose_name="interviewee",
-                    ),
-                ),
-                (
-                    "interviewerid",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="interviewerid",
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="interviewer",
-                        to="Lookup.People",
-                        verbose_name="interviewer",
-                    ),
-                ),
-                (
-                    "referencetype",
-                    models.ForeignKey(
-                        db_column="referencetype",
-                        help_text="Select a reference type to continue",
-                        max_length=255,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupReferenceType",
-                        verbose_name="reference type",
-                    ),
-                ),
+                ('enteredbyname', models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name')),
+                ('enteredbytribe', models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe')),
+                ('enteredbytitle', models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title')),
+                ('enteredbydate', models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date')),
+                ('modifiedbyname', models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name')),
+                ('modifiedbytitle', models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title')),
+                ('modifiedbytribe', models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe')),
+                ('modifiedbydate', models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date')),
+                ('citationid', models.AutoField(db_column='citationid', primary_key=True, serialize=False)),
+                ('referencetext', models.CharField(blank=True, db_column='referencetext', max_length=50, null=True, verbose_name='description')),
+                ('authorprimary', models.CharField(blank=True, db_column='authorprimary', max_length=255, null=True, verbose_name='primary author')),
+                ('authorsecondary', models.CharField(blank=True, db_column='authorsecondary', max_length=255, null=True, verbose_name='secondary author')),
+                ('placeofinterview', models.CharField(blank=True, db_column='placeofinterview', max_length=255, null=True, verbose_name='place of interview')),
+                ('year', models.IntegerField(blank=True, db_column='year', null=True)),
+                ('title', models.TextField(blank=True, db_column='title', null=True)),
+                ('seriestitle', models.CharField(blank=True, db_column='seriestitle', max_length=255, null=True, verbose_name='series title')),
+                ('seriesvolume', models.CharField(blank=True, db_column='seriesvolume', max_length=50, null=True, verbose_name='series volume')),
+                ('serieseditor', models.CharField(blank=True, db_column='serieseditor', max_length=255, null=True, verbose_name='series editor')),
+                ('publisher', models.CharField(blank=True, db_column='publisher', max_length=100, null=True)),
+                ('publishercity', models.CharField(blank=True, db_column='publishercity', max_length=255, null=True, verbose_name='city')),
+                ('preparedfor', models.CharField(blank=True, db_column='preparedfor', max_length=100, null=True, verbose_name='prepared_for')),
+                ('comments', models.TextField(blank=True, db_column='comments', null=True)),
+                ('authortype', models.ForeignKey(blank=True, db_column='authortype', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupAuthorType', verbose_name='author type')),
+                ('intervieweeid', models.ForeignKey(blank=True, db_column='intervieweeid', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='interviewee', to='Lookup.People', verbose_name='interviewee')),
+                ('interviewerid', models.ForeignKey(blank=True, db_column='interviewerid', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='interviewer', to='Lookup.People', verbose_name='interviewer')),
+                ('referencetype', models.ForeignKey(db_column='referencetype', help_text='Select a reference type to continue', max_length=255, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupReferenceType', verbose_name='reference type')),
             ],
             options={
-                "db_table": "citations",
-                "verbose_name": "Bibliographic Source",
-                "managed": True,
-                "verbose_name_plural": "Bibliographic Sources",
+                'db_table': 'citations',
+                'verbose_name': 'Bibliographic Source',
+                'managed': True,
+                'verbose_name_plural': 'Bibliographic Sources',
             },
         ),
         migrations.CreateModel(
-            name="Locality",
+            name='Locality',
             fields=[
-                (
-                    "enteredbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="entered by name",
-                    ),
-                ),
-                (
-                    "enteredbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by tribe",
-                    ),
-                ),
-                (
-                    "enteredbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by title",
-                    ),
-                ),
-                (
-                    "enteredbydate",
-                    models.DateTimeField(
-                        auto_now_add=True,
-                        db_column="enteredbydate",
-                        null=True,
-                        verbose_name="entered by date",
-                    ),
-                ),
-                (
-                    "modifiedbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="modified by name",
-                    ),
-                ),
-                (
-                    "modifiedbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by title",
-                    ),
-                ),
-                (
-                    "modifiedbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by tribe",
-                    ),
-                ),
-                (
-                    "modifiedbydate",
-                    models.DateTimeField(
-                        auto_now=True,
-                        db_column="modifiedbydate",
-                        null=True,
-                        verbose_name="modified by date",
-                    ),
-                ),
-                (
-                    "localityid",
-                    models.AutoField(
-                        db_column="localityid", primary_key=True, serialize=False
-                    ),
-                ),
-                (
-                    "englishname",
-                    models.CharField(
-                        blank=True,
-                        db_column="englishname",
-                        max_length=255,
-                        null=True,
-                        verbose_name="english name",
-                    ),
-                ),
-                (
-                    "indigenousname",
-                    models.CharField(
-                        blank=True,
-                        db_column="indigenousname",
-                        max_length=255,
-                        null=True,
-                        verbose_name="indigenous name",
-                    ),
-                ),
-                (
-                    "geometry",
-                    django.contrib.gis.db.models.fields.GeometryField(
-                        blank=True,
-                        default=None,
-                        null=True,
-                        srid=3857,
-                        verbose_name="Place Geometry",
-                    ),
-                ),
-                (
-                    "Source",
-                    models.CharField(
-                        blank=True,
-                        db_column="source",
-                        default=None,
-                        max_length=255,
-                        null=True,
-                        verbose_name="source",
-                    ),
-                ),
-                (
-                    "DigitizedBy",
-                    models.CharField(
-                        blank=True,
-                        db_column="digitizedby",
-                        default=None,
-                        max_length=255,
-                        null=True,
-                        verbose_name="digitized by",
-                    ),
-                ),
-                (
-                    "DigitizedDate",
-                    models.DateTimeField(
-                        blank=True,
-                        db_column="digitizeddate",
-                        default=None,
-                        null=True,
-                        verbose_name="digitized date",
-                    ),
-                ),
-                (
-                    "localitytype",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="localitytype",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupLocalityType",
-                        verbose_name="type",
-                    ),
-                ),
+                ('enteredbyname', models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name')),
+                ('enteredbytribe', models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe')),
+                ('enteredbytitle', models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title')),
+                ('enteredbydate', models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date')),
+                ('modifiedbyname', models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name')),
+                ('modifiedbytitle', models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title')),
+                ('modifiedbytribe', models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe')),
+                ('modifiedbydate', models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date')),
+                ('localityid', models.AutoField(db_column='localityid', primary_key=True, serialize=False)),
+                ('englishname', models.CharField(blank=True, db_column='englishname', max_length=255, null=True, verbose_name='english name')),
+                ('indigenousname', models.CharField(blank=True, db_column='indigenousname', max_length=255, null=True, verbose_name='indigenous name')),
+                ('geometry', django.contrib.gis.db.models.fields.GeometryField(blank=True, default=None, null=True, srid=3857, verbose_name='Place Geometry')),
+                ('Source', models.CharField(blank=True, db_column='source', default=None, max_length=255, null=True, verbose_name='source')),
+                ('DigitizedBy', models.CharField(blank=True, db_column='digitizedby', default=None, max_length=255, null=True, verbose_name='digitized by')),
+                ('DigitizedDate', models.DateTimeField(blank=True, db_column='digitizeddate', default=None, null=True, verbose_name='digitized date')),
+                ('localitytype', models.ForeignKey(blank=True, db_column='localitytype', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupLocalityType', verbose_name='type')),
             ],
             options={
-                "db_table": "locality",
-                "verbose_name": "Locality",
-                "managed": True,
-                "verbose_name_plural": "Localities",
+                'db_table': 'locality',
+                'verbose_name': 'Locality',
+                'managed': True,
+                'verbose_name_plural': 'Localities',
             },
         ),
         migrations.CreateModel(
-            name="Media",
+            name='Media',
             fields=[
-                (
-                    "enteredbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="entered by name",
-                    ),
-                ),
-                (
-                    "enteredbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by tribe",
-                    ),
-                ),
-                (
-                    "enteredbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by title",
-                    ),
-                ),
-                (
-                    "enteredbydate",
-                    models.DateTimeField(
-                        auto_now_add=True,
-                        db_column="enteredbydate",
-                        null=True,
-                        verbose_name="entered by date",
-                    ),
-                ),
-                (
-                    "modifiedbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="modified by name",
-                    ),
-                ),
-                (
-                    "modifiedbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by title",
-                    ),
-                ),
-                (
-                    "modifiedbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by tribe",
-                    ),
-                ),
-                (
-                    "modifiedbydate",
-                    models.DateTimeField(
-                        auto_now=True,
-                        db_column="modifiedbydate",
-                        null=True,
-                        verbose_name="modified by date",
-                    ),
-                ),
-                (
-                    "mediaid",
-                    models.AutoField(
-                        db_column="mediaid", primary_key=True, serialize=False
-                    ),
-                ),
-                (
-                    "medianame",
-                    models.CharField(
-                        blank=True,
-                        db_column="medianame",
-                        max_length=255,
-                        null=True,
-                        verbose_name="name",
-                    ),
-                ),
-                (
-                    "mediadescription",
-                    models.TextField(
-                        blank=True,
-                        db_column="mediadescription",
-                        null=True,
-                        verbose_name="description",
-                    ),
-                ),
-                (
-                    "medialink",
-                    models.CharField(
-                        blank=True,
-                        db_column="medialink",
-                        max_length=255,
-                        null=True,
-                        verbose_name="historic location",
-                    ),
-                ),
-                (
-                    "mediafile",
-                    models.FileField(
-                        blank=True,
-                        db_column="mediafile",
-                        max_length=255,
-                        null=True,
-                        upload_to="",
-                        verbose_name="file",
-                    ),
-                ),
-                (
-                    "limitedaccess",
-                    models.NullBooleanField(
-                        db_column="limitedaccess",
-                        default=False,
-                        verbose_name="limited access?",
-                    ),
-                ),
-                (
-                    "mediatype",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="mediatype",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupMediaType",
-                        verbose_name="type",
-                    ),
-                ),
+                ('enteredbyname', models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name')),
+                ('enteredbytribe', models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe')),
+                ('enteredbytitle', models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title')),
+                ('enteredbydate', models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date')),
+                ('modifiedbyname', models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name')),
+                ('modifiedbytitle', models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title')),
+                ('modifiedbytribe', models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe')),
+                ('modifiedbydate', models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date')),
+                ('mediaid', models.AutoField(db_column='mediaid', primary_key=True, serialize=False)),
+                ('medianame', models.CharField(blank=True, db_column='medianame', max_length=255, null=True, verbose_name='name')),
+                ('mediadescription', models.TextField(blank=True, db_column='mediadescription', null=True, verbose_name='description')),
+                ('medialink', models.CharField(blank=True, db_column='medialink', max_length=255, null=True, verbose_name='historic location')),
+                ('mediafile', models.FileField(blank=True, db_column='mediafile', max_length=255, null=True, upload_to='', verbose_name='file')),
+                ('limitedaccess', models.NullBooleanField(db_column='limitedaccess', default=False, verbose_name='limited access?')),
+                ('mediatype', models.ForeignKey(blank=True, db_column='mediatype', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupMediaType', verbose_name='type')),
             ],
             options={
-                "db_table": "media",
-                "verbose_name": "Medium",
-                "managed": True,
-                "verbose_name_plural": "Media",
+                'db_table': 'media',
+                'verbose_name': 'Medium',
+                'managed': True,
+                'verbose_name_plural': 'Media',
             },
         ),
         migrations.CreateModel(
-            name="Places",
+            name='Places',
             fields=[
-                (
-                    "enteredbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="entered by name",
-                    ),
-                ),
-                (
-                    "enteredbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by tribe",
-                    ),
-                ),
-                (
-                    "enteredbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by title",
-                    ),
-                ),
-                (
-                    "enteredbydate",
-                    models.DateTimeField(
-                        auto_now_add=True,
-                        db_column="enteredbydate",
-                        null=True,
-                        verbose_name="entered by date",
-                    ),
-                ),
-                (
-                    "modifiedbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="modified by name",
-                    ),
-                ),
-                (
-                    "modifiedbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by title",
-                    ),
-                ),
-                (
-                    "modifiedbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by tribe",
-                    ),
-                ),
-                (
-                    "modifiedbydate",
-                    models.DateTimeField(
-                        auto_now=True,
-                        db_column="modifiedbydate",
-                        null=True,
-                        verbose_name="modified by date",
-                    ),
-                ),
-                (
-                    "placeid",
-                    models.AutoField(
-                        db_column="placeid", primary_key=True, serialize=False
-                    ),
-                ),
-                (
-                    "indigenousplacename",
-                    models.CharField(
-                        blank=True,
-                        db_column="indigenousplacename",
-                        max_length=255,
-                        null=True,
-                        verbose_name="indigenous name",
-                    ),
-                ),
-                (
-                    "indigenousplacenamemeaning",
-                    models.CharField(
-                        blank=True,
-                        db_column="indigenousplacenamemeaning",
-                        max_length=255,
-                        null=True,
-                        verbose_name="english translation",
-                    ),
-                ),
-                (
-                    "englishplacename",
-                    models.CharField(
-                        blank=True,
-                        db_column="englishplacename",
-                        max_length=255,
-                        null=True,
-                        verbose_name="english name",
-                    ),
-                ),
-                (
-                    "islocked",
-                    models.BooleanField(
-                        db_column="islocked", default=False, verbose_name="locked?"
-                    ),
-                ),
-                (
-                    "geometry",
-                    django.contrib.gis.db.models.fields.GeometryField(
-                        blank=True,
-                        default=None,
-                        null=True,
-                        srid=3857,
-                        verbose_name="Place Geometry",
-                    ),
-                ),
-                (
-                    "Source",
-                    models.CharField(
-                        blank=True,
-                        db_column="source",
-                        default=None,
-                        max_length=255,
-                        null=True,
-                        verbose_name="source",
-                    ),
-                ),
-                (
-                    "DigitizedBy",
-                    models.CharField(
-                        blank=True,
-                        db_column="digitizedby",
-                        default=None,
-                        max_length=255,
-                        null=True,
-                        verbose_name="digitized by",
-                    ),
-                ),
-                (
-                    "DigitizedDate",
-                    models.DateTimeField(
-                        blank=True,
-                        db_column="digitizeddate",
-                        default=None,
-                        null=True,
-                        verbose_name="digitized date",
-                    ),
-                ),
-                (
-                    "planningunitid",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="planningunitid",
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupPlanningUnit",
-                        verbose_name="planning unit",
-                    ),
-                ),
-                (
-                    "primaryhabitat",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="primaryhabitat",
-                        max_length=100,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupHabitat",
-                        verbose_name="primary habitat",
-                    ),
-                ),
-                (
-                    "tribeid",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="tribeid",
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupTribe",
-                        verbose_name="tribe",
-                    ),
-                ),
+                ('enteredbyname', models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name')),
+                ('enteredbytribe', models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe')),
+                ('enteredbytitle', models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title')),
+                ('enteredbydate', models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date')),
+                ('modifiedbyname', models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name')),
+                ('modifiedbytitle', models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title')),
+                ('modifiedbytribe', models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe')),
+                ('modifiedbydate', models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date')),
+                ('placeid', models.AutoField(db_column='placeid', primary_key=True, serialize=False)),
+                ('indigenousplacename', models.CharField(blank=True, db_column='indigenousplacename', max_length=255, null=True, verbose_name='indigenous name')),
+                ('indigenousplacenamemeaning', models.CharField(blank=True, db_column='indigenousplacenamemeaning', max_length=255, null=True, verbose_name='english translation')),
+                ('englishplacename', models.CharField(blank=True, db_column='englishplacename', max_length=255, null=True, verbose_name='english name')),
+                ('islocked', models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')),
+                ('geometry', django.contrib.gis.db.models.fields.GeometryField(blank=True, default=None, null=True, srid=3857, verbose_name='Place Geometry')),
+                ('Source', models.CharField(blank=True, db_column='source', default=None, max_length=255, null=True, verbose_name='source')),
+                ('DigitizedBy', models.CharField(blank=True, db_column='digitizedby', default=None, max_length=255, null=True, verbose_name='digitized by')),
+                ('DigitizedDate', models.DateTimeField(blank=True, db_column='digitizeddate', default=None, null=True, verbose_name='digitized date')),
+                ('planningunitid', models.ForeignKey(blank=True, db_column='planningunitid', null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupPlanningUnit', verbose_name='planning unit')),
+                ('primaryhabitat', models.ForeignKey(blank=True, db_column='primaryhabitat', max_length=100, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupHabitat', verbose_name='primary habitat')),
+                ('tribeid', models.ForeignKey(blank=True, db_column='tribeid', null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupTribe', verbose_name='tribe')),
             ],
             options={
-                "db_table": "places",
-                "verbose_name": "Place",
-                "managed": True,
-                "verbose_name_plural": "Places",
+                'db_table': 'places',
+                'verbose_name': 'Place',
+                'managed': True,
+                'verbose_name_plural': 'Places',
             },
         ),
         migrations.CreateModel(
-            name="Resources",
+            name='Resources',
             fields=[
-                (
-                    "enteredbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="entered by name",
-                    ),
-                ),
-                (
-                    "enteredbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by tribe",
-                    ),
-                ),
-                (
-                    "enteredbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by title",
-                    ),
-                ),
-                (
-                    "enteredbydate",
-                    models.DateTimeField(
-                        auto_now_add=True,
-                        db_column="enteredbydate",
-                        null=True,
-                        verbose_name="entered by date",
-                    ),
-                ),
-                (
-                    "modifiedbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="modified by name",
-                    ),
-                ),
-                (
-                    "modifiedbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by title",
-                    ),
-                ),
-                (
-                    "modifiedbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by tribe",
-                    ),
-                ),
-                (
-                    "modifiedbydate",
-                    models.DateTimeField(
-                        auto_now=True,
-                        db_column="modifiedbydate",
-                        null=True,
-                        verbose_name="modified by date",
-                    ),
-                ),
-                (
-                    "resourceid",
-                    models.AutoField(
-                        db_column="resourceid", primary_key=True, serialize=False
-                    ),
-                ),
-                (
-                    "commonname",
-                    models.CharField(
-                        blank=True,
-                        db_column="commonname",
-                        max_length=255,
-                        null=True,
-                        unique=True,
-                        verbose_name="common name",
-                    ),
-                ),
-                (
-                    "indigenousname",
-                    models.CharField(
-                        blank=True,
-                        db_column="indigenousname",
-                        max_length=255,
-                        null=True,
-                        verbose_name="indigenous name",
-                    ),
-                ),
-                (
-                    "genus",
-                    models.CharField(
-                        blank=True,
-                        db_column="genus",
-                        max_length=255,
-                        null=True,
-                        verbose_name="genus",
-                    ),
-                ),
-                (
-                    "species",
-                    models.CharField(
-                        blank=True, db_column="species", max_length=255, null=True
-                    ),
-                ),
-                ("specific", models.BooleanField(db_column="specific", default=False)),
-                (
-                    "islocked",
-                    models.BooleanField(
-                        db_column="islocked", default=False, verbose_name="locked?"
-                    ),
-                ),
-                (
-                    "resourceclassificationgroup",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="resourceclassificationgroup",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupResourceGroup",
-                        verbose_name="broad species group",
-                    ),
-                ),
+                ('enteredbyname', models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name')),
+                ('enteredbytribe', models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe')),
+                ('enteredbytitle', models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title')),
+                ('enteredbydate', models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date')),
+                ('modifiedbyname', models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name')),
+                ('modifiedbytitle', models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title')),
+                ('modifiedbytribe', models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe')),
+                ('modifiedbydate', models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date')),
+                ('resourceid', models.AutoField(db_column='resourceid', primary_key=True, serialize=False)),
+                ('commonname', models.CharField(blank=True, db_column='commonname', max_length=255, null=True, unique=True, verbose_name='common name')),
+                ('indigenousname', models.CharField(blank=True, db_column='indigenousname', max_length=255, null=True, verbose_name='indigenous name')),
+                ('genus', models.CharField(blank=True, db_column='genus', max_length=255, null=True, verbose_name='genus')),
+                ('species', models.CharField(blank=True, db_column='species', max_length=255, null=True)),
+                ('specific', models.BooleanField(db_column='specific', default=False)),
+                ('islocked', models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')),
+                ('resourceclassificationgroup', models.ForeignKey(blank=True, db_column='resourceclassificationgroup', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupResourceGroup', verbose_name='broad species group')),
             ],
             options={
-                "db_table": "resources",
-                "verbose_name": "Resource",
-                "managed": True,
-                "verbose_name_plural": "Resources",
+                'db_table': 'resources',
+                'verbose_name': 'Resource',
+                'managed': True,
+                'verbose_name_plural': 'Resources',
             },
         ),
         migrations.CreateModel(
-            name="ResourcesActivityEvents",
+            name='ResourcesActivityEvents',
             fields=[
-                (
-                    "enteredbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="entered by name",
-                    ),
-                ),
-                (
-                    "enteredbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by tribe",
-                    ),
-                ),
-                (
-                    "enteredbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="enteredbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="entered by title",
-                    ),
-                ),
-                (
-                    "enteredbydate",
-                    models.DateTimeField(
-                        auto_now_add=True,
-                        db_column="enteredbydate",
-                        null=True,
-                        verbose_name="entered by date",
-                    ),
-                ),
-                (
-                    "modifiedbyname",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbyname",
-                        max_length=25,
-                        null=True,
-                        verbose_name="modified by name",
-                    ),
-                ),
-                (
-                    "modifiedbytitle",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytitle",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by title",
-                    ),
-                ),
-                (
-                    "modifiedbytribe",
-                    models.CharField(
-                        blank=True,
-                        db_column="modifiedbytribe",
-                        max_length=100,
-                        null=True,
-                        verbose_name="modified by tribe",
-                    ),
-                ),
-                (
-                    "modifiedbydate",
-                    models.DateTimeField(
-                        auto_now=True,
-                        db_column="modifiedbydate",
-                        null=True,
-                        verbose_name="modified by date",
-                    ),
-                ),
-                (
-                    "resourceactivityid",
-                    models.AutoField(
-                        db_column="resourceactivityid",
-                        primary_key=True,
-                        serialize=False,
-                    ),
-                ),
-                (
-                    "relationshipdescription",
-                    models.TextField(
-                        blank=True,
-                        db_column="relationshipdescription",
-                        null=True,
-                        verbose_name="excerpt",
-                    ),
-                ),
-                (
-                    "activitylongdescription",
-                    models.TextField(
-                        blank=True,
-                        db_column="activitylongdescription",
-                        null=True,
-                        verbose_name="full activity description",
-                    ),
-                ),
-                (
-                    "gear",
-                    models.CharField(
-                        blank=True, db_column="gear", max_length=255, null=True
-                    ),
-                ),
-                (
-                    "customaryuse",
-                    models.CharField(
-                        blank=True,
-                        db_column="customaryuse",
-                        max_length=255,
-                        null=True,
-                        verbose_name="customary use",
-                    ),
-                ),
-                (
-                    "timingdescription",
-                    models.CharField(
-                        blank=True,
-                        db_column="timingdescription",
-                        max_length=255,
-                        null=True,
-                        verbose_name="timing description",
-                    ),
-                ),
-                (
-                    "islocked",
-                    models.BooleanField(
-                        db_column="islocked", default=False, verbose_name="locked?"
-                    ),
-                ),
-                (
-                    "activityshortdescription",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="activityshortdescription",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupActivity",
-                        verbose_name="activity type",
-                    ),
-                ),
-                (
-                    "participants",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="participants",
-                        max_length=50,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupParticipants",
-                    ),
-                ),
-                (
-                    "partused",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="partused",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupPartUsed",
-                        verbose_name="part used",
-                    ),
-                ),
-                (
-                    "placeresourceid",
-                    models.ForeignKey(
-                        db_column="placeresourceid",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Relationships.PlacesResourceEvents",
-                        verbose_name="place resource",
-                    ),
-                ),
-                (
-                    "technique",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="technique",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupTechniques",
-                    ),
-                ),
-                (
-                    "timing",
-                    models.ForeignKey(
-                        blank=True,
-                        db_column="timing",
-                        max_length=255,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="Lookup.LookupTiming",
-                    ),
-                ),
+                ('enteredbyname', models.CharField(blank=True, db_column='enteredbyname', max_length=25, null=True, verbose_name='entered by name')),
+                ('enteredbytribe', models.CharField(blank=True, db_column='enteredbytribe', max_length=100, null=True, verbose_name='entered by tribe')),
+                ('enteredbytitle', models.CharField(blank=True, db_column='enteredbytitle', max_length=100, null=True, verbose_name='entered by title')),
+                ('enteredbydate', models.DateTimeField(auto_now_add=True, db_column='enteredbydate', null=True, verbose_name='entered by date')),
+                ('modifiedbyname', models.CharField(blank=True, db_column='modifiedbyname', max_length=25, null=True, verbose_name='modified by name')),
+                ('modifiedbytitle', models.CharField(blank=True, db_column='modifiedbytitle', max_length=100, null=True, verbose_name='modified by title')),
+                ('modifiedbytribe', models.CharField(blank=True, db_column='modifiedbytribe', max_length=100, null=True, verbose_name='modified by tribe')),
+                ('modifiedbydate', models.DateTimeField(auto_now=True, db_column='modifiedbydate', null=True, verbose_name='modified by date')),
+                ('resourceactivityid', models.AutoField(db_column='resourceactivityid', primary_key=True, serialize=False)),
+                ('relationshipdescription', models.TextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt')),
+                ('activitylongdescription', models.TextField(blank=True, db_column='activitylongdescription', null=True, verbose_name='full activity description')),
+                ('gear', models.CharField(blank=True, db_column='gear', max_length=255, null=True)),
+                ('customaryuse', models.CharField(blank=True, db_column='customaryuse', max_length=255, null=True, verbose_name='customary use')),
+                ('timingdescription', models.CharField(blank=True, db_column='timingdescription', max_length=255, null=True, verbose_name='timing description')),
+                ('islocked', models.BooleanField(db_column='islocked', default=False, verbose_name='locked?')),
+                ('activityshortdescription', models.ForeignKey(blank=True, db_column='activityshortdescription', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupActivity', verbose_name='activity type')),
+                ('participants', models.ForeignKey(blank=True, db_column='participants', max_length=50, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupParticipants')),
+                ('partused', models.ForeignKey(blank=True, db_column='partused', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupPartUsed', verbose_name='part used')),
+                ('placeresourceid', models.ForeignKey(db_column='placeresourceid', on_delete=django.db.models.deletion.CASCADE, to='Relationships.PlacesResourceEvents', verbose_name='place resource')),
+                ('technique', models.ForeignKey(blank=True, db_column='technique', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupTechniques')),
+                ('timing', models.ForeignKey(blank=True, db_column='timing', max_length=255, null=True, on_delete=django.db.models.deletion.CASCADE, to='Lookup.LookupTiming')),
             ],
             options={
-                "db_table": "resourcesactivityevents",
-                "verbose_name": "Activity",
-                "managed": True,
-                "verbose_name_plural": "Activities",
+                'db_table': 'resourcesactivityevents',
+                'verbose_name': 'Activity',
+                'managed': True,
+                'verbose_name_plural': 'Activities',
             },
         ),
         migrations.AddField(
-            model_name="locality",
-            name="placeid",
-            field=models.ForeignKey(
-                blank=True,
-                db_column="placeid",
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to="TEKDB.Places",
-                verbose_name="place",
-            ),
+            model_name='locality',
+            name='placeid',
+            field=models.ForeignKey(blank=True, db_column='placeid', null=True, on_delete=django.db.models.deletion.CASCADE, to='TEKDB.Places', verbose_name='place'),
         ),
     ]

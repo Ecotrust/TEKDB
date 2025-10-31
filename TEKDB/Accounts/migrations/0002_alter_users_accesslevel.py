@@ -5,22 +5,15 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("Accounts", "0001_initial"),
+        ('Accounts', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="users",
-            name="accesslevel",
-            field=models.ForeignKey(
-                blank=True,
-                db_column="accesslevel",
-                default=None,
-                null=True,
-                on_delete=django.db.models.deletion.SET_DEFAULT,
-                to="Accounts.useraccess",
-                verbose_name="access level",
-            ),
+            model_name='users',
+            name='accesslevel',
+            field=models.ForeignKey(blank=True, db_column='accesslevel', default=None, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='Accounts.useraccess', verbose_name='access level'),
         ),
     ]

@@ -6,19 +6,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0002_auto_20171031_1421"),
+        ('TEKDB', '0002_auto_20171031_1421'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="places",
-            name="indigenousplacenamemeaning",
-            field=models.TextField(
-                blank=True,
-                db_column="indigenousplacenamemeaning",
-                null=True,
-                verbose_name="english translation",
-            ),
+            model_name='places',
+            name='indigenousplacenamemeaning',
+            field=models.TextField(blank=True, db_column='indigenousplacenamemeaning', null=True, verbose_name='english translation'),
         ),
     ]

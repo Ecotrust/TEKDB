@@ -5,20 +5,15 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0006_trigram_unaccent_extensions"),
+        ('TEKDB', '0006_trigram_unaccent_extensions'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="citations",
-            name="rawcitation",
-            field=ckeditor.fields.RichTextField(
-                blank=True,
-                db_column="rawcitation",
-                help_text="If you have the text for a bibliographic citation already formatted as you'd like it, please share it here.",
-                null=True,
-                verbose_name="Raw, formatted bibliographic citation",
-            ),
+            model_name='citations',
+            name='rawcitation',
+            field=ckeditor.fields.RichTextField(blank=True, db_column='rawcitation', help_text="If you have the text for a bibliographic citation already formatted as you'd like it, please share it here.", null=True, verbose_name='Raw, formatted bibliographic citation'),
         ),
     ]

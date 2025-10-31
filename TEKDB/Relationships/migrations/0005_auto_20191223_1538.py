@@ -6,27 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("Relationships", "0004_auto_20171031_1525"),
+        ('Relationships', '0004_auto_20171031_1525'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="resourcealtindigenousname",
-            options={
-                "managed": True,
-                "verbose_name": "Resource Alternative Name",
-                "verbose_name_plural": "Resource Alternative Names",
-            },
+            name='resourcealtindigenousname',
+            options={'managed': True, 'verbose_name': 'Resource Alternative Name', 'verbose_name_plural': 'Resource Alternative Names'},
         ),
         migrations.AlterField(
-            model_name="resourceactivitycitationevents",
-            name="relationshipdescription",
-            field=models.TextField(
-                blank=True,
-                db_column="relationshipdescription",
-                null=True,
-                verbose_name="excerpt/description",
-            ),
+            model_name='resourceactivitycitationevents',
+            name='relationshipdescription',
+            field=models.TextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt/description'),
         ),
     ]

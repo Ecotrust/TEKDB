@@ -4,46 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("configuration", "0013_auto_20241025_1406"),
+        ('configuration', '0013_auto_20241025_1406'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="configuration",
-            name="min_search_rank",
-            field=models.FloatField(
-                blank=True,
-                choices=[
-                    (0.01, "Lowest"),
-                    (0.1, "Default"),
-                    (0.6, "Moderate"),
-                    (0.9, "Highest"),
-                ],
-                default=None,
-                help_text="Weight 0-1 representing the minimum search rank threshold for search results.",
-                max_length=255,
-                null=True,
-                verbose_name="Minimum Search Rank",
-            ),
+            model_name='configuration',
+            name='min_search_rank',
+            field=models.FloatField(blank=True, choices=[(0.01, 'Lowest'), (0.1, 'Default'), (0.6, 'Moderate'), (0.9, 'Highest')], default=None, help_text='Weight 0-1 representing the minimum search rank threshold for search results.', max_length=255, null=True, verbose_name='Minimum Search Rank'),
         ),
         migrations.AlterField(
-            model_name="configuration",
-            name="min_search_similarity",
-            field=models.FloatField(
-                blank=True,
-                choices=[
-                    (0.1, "Permissive"),
-                    (0.2, "Default"),
-                    (0.3, "Similar"),
-                    (0.4, "Has Match"),
-                    (0.9, "Exact Match"),
-                ],
-                default=None,
-                help_text="Weight 0-1 representing the minimum threshold for similar search results to be included in results.",
-                max_length=255,
-                null=True,
-                verbose_name="Minimum Search Similarity",
-            ),
+            model_name='configuration',
+            name='min_search_similarity',
+            field=models.FloatField(blank=True, choices=[(0.1, 'Permissive'), (0.2, 'Default'), (0.3, 'Similar'), (0.4, 'Has Match'), (0.9, 'Exact Match')], default=None, help_text='Weight 0-1 representing the minimum threshold for similar search results to be included in results.', max_length=255, null=True, verbose_name='Minimum Search Similarity'),
         ),
     ]

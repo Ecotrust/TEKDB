@@ -6,87 +6,45 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("configuration", "0003_alter_configuration_geometry"),
+        ('configuration', '0003_alter_configuration_geometry'),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name="configuration",
-            old_name="homepageImage",
-            new_name="homepage_image",
+            model_name='configuration',
+            old_name='homepageImage',
+            new_name='homepage_image',
         ),
         migrations.AddField(
-            model_name="configuration",
-            name="homepage_font_color",
-            field=colorfield.fields.ColorField(
-                default="#FFFFFF",
-                help_text="Text color on homepage. Recommended: White (#FFFFFF).",
-                image_field=None,
-                max_length=18,
-                samples=None,
-                verbose_name="Homepage Text Color",
-            ),
+            model_name='configuration',
+            name='homepage_font_color',
+            field=colorfield.fields.ColorField(default='#FFFFFF', help_text='Text color on homepage. Recommended: White (#FFFFFF).', image_field=None, max_length=18, samples=None, verbose_name='Homepage Text Color'),
         ),
         migrations.AddField(
-            model_name="configuration",
-            name="homepage_image_attribution",
-            field=ckeditor.fields.RichTextField(
-                blank=True,
-                default=None,
-                help_text="If using a custom image that requires attribution for use, please provide that here.",
-                null=True,
-                verbose_name="Homepage Image attribution",
-            ),
+            model_name='configuration',
+            name='homepage_image_attribution',
+            field=ckeditor.fields.RichTextField(blank=True, default=None, help_text='If using a custom image that requires attribution for use, please provide that here.', null=True, verbose_name='Homepage Image attribution'),
         ),
         migrations.AddField(
-            model_name="configuration",
-            name="homepage_left_background",
-            field=colorfield.fields.ColorField(
-                default="#000000",
-                help_text="Background color behind Text on homepage. Recommended: Black (#000000).",
-                image_field=None,
-                max_length=18,
-                samples=None,
-                verbose_name="Left Homepage Background Color",
-            ),
+            model_name='configuration',
+            name='homepage_left_background',
+            field=colorfield.fields.ColorField(default='#000000', help_text='Background color behind Text on homepage. Recommended: Black (#000000).', image_field=None, max_length=18, samples=None, verbose_name='Left Homepage Background Color'),
         ),
         migrations.AddField(
-            model_name="configuration",
-            name="homepage_right_background",
-            field=colorfield.fields.ColorField(
-                default="#000000",
-                help_text="Background color behind image on homepage. Recommended: Black (#000000).",
-                image_field=None,
-                max_length=18,
-                samples=None,
-                verbose_name="Right Homepage Background Color",
-            ),
+            model_name='configuration',
+            name='homepage_right_background',
+            field=colorfield.fields.ColorField(default='#000000', help_text='Background color behind image on homepage. Recommended: Black (#000000).', image_field=None, max_length=18, samples=None, verbose_name='Right Homepage Background Color'),
         ),
         migrations.AddField(
-            model_name="configuration",
-            name="logo",
-            field=models.CharField(
-                choices=[
-                    ("/static/explore/img/logos/logo_weave.svg", "Weave"),
-                    ("/static/explore/img/logos/logo_drop.svg", "Droplet"),
-                    ("Other", "Custom"),
-                ],
-                default=("/static/explore/img/logos/logo_weave.svg", "Weave"),
-                help_text='Choose your logo for the site header. You can choose between: <ul><li style="padding-left: 1rem">\'Weave\' <img src="/static/explore/img/logos/logo_weave.svg" style="max-width: 70px; padding:0.5rem; background-color:white"></li><li style="padding-left: 1rem">\'Droplet\' <img src="/static/explore/img/logos/logo_drop.svg" style="max-width: 70px; padding:0.5rem; background-color:white"></li><li>Or choose \'Custom\' and add your own using the Override field below.</li></ul>',
-                max_length=255,
-            ),
+            model_name='configuration',
+            name='logo',
+            field=models.CharField(choices=[('/static/explore/img/logos/logo_weave.svg', 'Weave'), ('/static/explore/img/logos/logo_drop.svg', 'Droplet'), ('Other', 'Custom')], default=('/static/explore/img/logos/logo_weave.svg', 'Weave'), help_text='Choose your logo for the site header. You can choose between: <ul><li style="padding-left: 1rem">\'Weave\' <img src="/static/explore/img/logos/logo_weave.svg" style="max-width: 70px; padding:0.5rem; background-color:white"></li><li style="padding-left: 1rem">\'Droplet\' <img src="/static/explore/img/logos/logo_drop.svg" style="max-width: 70px; padding:0.5rem; background-color:white"></li><li>Or choose \'Custom\' and add your own using the Override field below.</li></ul>', max_length=255),
         ),
         migrations.AddField(
-            model_name="configuration",
-            name="logo_override",
-            field=models.ImageField(
-                blank=True,
-                default=None,
-                help_text="Use this to add your own logo to the site header",
-                null=True,
-                upload_to="",
-                verbose_name="Header Logo Override Image",
-            ),
+            model_name='configuration',
+            name='logo_override',
+            field=models.ImageField(blank=True, default=None, help_text='Use this to add your own logo to the site header', null=True, upload_to='', verbose_name='Header Logo Override Image'),
         ),
     ]

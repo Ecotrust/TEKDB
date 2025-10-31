@@ -6,26 +6,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0001_initial"),
+        ('TEKDB', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="citations",
-            name="journal",
-            field=models.TextField(
-                blank=True, db_column="journal", null=True, verbose_name="journal"
-            ),
+            model_name='citations',
+            name='journal',
+            field=models.TextField(blank=True, db_column='journal', null=True, verbose_name='journal'),
         ),
         migrations.AddField(
-            model_name="citations",
-            name="journalpages",
-            field=models.TextField(
-                blank=True,
-                db_column="journalpages",
-                null=True,
-                verbose_name="journal pages",
-            ),
+            model_name='citations',
+            name='journalpages',
+            field=models.TextField(blank=True, db_column='journalpages', null=True, verbose_name='journal pages'),
         ),
     ]

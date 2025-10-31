@@ -6,153 +6,74 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("Lookup", "0001_initial"),
+        ('Lookup', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="lookupactivity",
-            options={
-                "managed": True,
-                "ordering": ["activity"],
-                "verbose_name": "activity",
-                "verbose_name_plural": "activities",
-            },
+            name='lookupactivity',
+            options={'managed': True, 'ordering': ['activity'], 'verbose_name': 'activity', 'verbose_name_plural': 'activities'},
         ),
         migrations.AlterModelOptions(
-            name="lookupauthortype",
-            options={
-                "managed": True,
-                "ordering": ["authortype"],
-                "verbose_name": "author type",
-                "verbose_name_plural": "author types",
-            },
+            name='lookupauthortype',
+            options={'managed': True, 'ordering': ['authortype'], 'verbose_name': 'author type', 'verbose_name_plural': 'author types'},
         ),
         migrations.AlterModelOptions(
-            name="lookupcustomaryuse",
-            options={
-                "managed": True,
-                "ordering": ["usedfor"],
-                "verbose_name": "customary use",
-                "verbose_name_plural": "customary uses",
-            },
+            name='lookupcustomaryuse',
+            options={'managed': True, 'ordering': ['usedfor'], 'verbose_name': 'customary use', 'verbose_name_plural': 'customary uses'},
         ),
         migrations.AlterModelOptions(
-            name="lookuphabitat",
-            options={
-                "managed": True,
-                "ordering": ["habitat"],
-                "verbose_name": "habitat",
-                "verbose_name_plural": "habitats",
-            },
+            name='lookuphabitat',
+            options={'managed': True, 'ordering': ['habitat'], 'verbose_name': 'habitat', 'verbose_name_plural': 'habitats'},
         ),
         migrations.AlterModelOptions(
-            name="lookuplocalitytype",
-            options={
-                "managed": True,
-                "ordering": ["localitytype"],
-                "verbose_name": "locality type",
-                "verbose_name_plural": "locality types",
-            },
+            name='lookuplocalitytype',
+            options={'managed': True, 'ordering': ['localitytype'], 'verbose_name': 'locality type', 'verbose_name_plural': 'locality types'},
         ),
         migrations.AlterModelOptions(
-            name="lookupmediatype",
-            options={
-                "managed": True,
-                "ordering": ["mediatype"],
-                "verbose_name": "media type",
-                "verbose_name_plural": "media types",
-            },
+            name='lookupmediatype',
+            options={'managed': True, 'ordering': ['mediatype'], 'verbose_name': 'media type', 'verbose_name_plural': 'media types'},
         ),
         migrations.AlterModelOptions(
-            name="lookupparticipants",
-            options={
-                "managed": True,
-                "ordering": ["participants"],
-                "verbose_name": "participant",
-                "verbose_name_plural": "participants",
-            },
+            name='lookupparticipants',
+            options={'managed': True, 'ordering': ['participants'], 'verbose_name': 'participant', 'verbose_name_plural': 'participants'},
         ),
         migrations.AlterModelOptions(
-            name="lookuppartused",
-            options={
-                "managed": True,
-                "ordering": ["partused"],
-                "verbose_name": "part used",
-                "verbose_name_plural": "parts used",
-            },
+            name='lookuppartused',
+            options={'managed': True, 'ordering': ['partused'], 'verbose_name': 'part used', 'verbose_name_plural': 'parts used'},
         ),
         migrations.AlterModelOptions(
-            name="lookupplanningunit",
-            options={
-                "managed": True,
-                "ordering": ["planningunitname"],
-                "verbose_name": "planning unit",
-                "verbose_name_plural": "planning units",
-            },
+            name='lookupplanningunit',
+            options={'managed': True, 'ordering': ['planningunitname'], 'verbose_name': 'planning unit', 'verbose_name_plural': 'planning units'},
         ),
         migrations.AlterModelOptions(
-            name="lookupreferencetype",
-            options={
-                "managed": True,
-                "ordering": ["documenttype"],
-                "verbose_name": "reference type",
-                "verbose_name_plural": "reference types",
-            },
+            name='lookupreferencetype',
+            options={'managed': True, 'ordering': ['documenttype'], 'verbose_name': 'reference type', 'verbose_name_plural': 'reference types'},
         ),
         migrations.AlterModelOptions(
-            name="lookupresourcegroup",
-            options={
-                "managed": True,
-                "ordering": ["resourceclassificationgroup"],
-                "verbose_name": "resource group",
-                "verbose_name_plural": "resource groups",
-            },
+            name='lookupresourcegroup',
+            options={'managed': True, 'ordering': ['resourceclassificationgroup'], 'verbose_name': 'resource group', 'verbose_name_plural': 'resource groups'},
         ),
         migrations.AlterModelOptions(
-            name="lookupseason",
-            options={
-                "managed": True,
-                "ordering": ["season"],
-                "verbose_name": "season",
-                "verbose_name_plural": "seasons",
-            },
+            name='lookupseason',
+            options={'managed': True, 'ordering': ['season'], 'verbose_name': 'season', 'verbose_name_plural': 'seasons'},
         ),
         migrations.AlterModelOptions(
-            name="lookuptechniques",
-            options={
-                "managed": True,
-                "ordering": ["techniques"],
-                "verbose_name": "technique",
-                "verbose_name_plural": "techniques",
-            },
+            name='lookuptechniques',
+            options={'managed': True, 'ordering': ['techniques'], 'verbose_name': 'technique', 'verbose_name_plural': 'techniques'},
         ),
         migrations.AlterModelOptions(
-            name="lookuptiming",
-            options={
-                "managed": True,
-                "ordering": ["timing"],
-                "verbose_name": "timing",
-                "verbose_name_plural": "timings",
-            },
+            name='lookuptiming',
+            options={'managed': True, 'ordering': ['timing'], 'verbose_name': 'timing', 'verbose_name_plural': 'timings'},
         ),
         migrations.AlterModelOptions(
-            name="lookuptribe",
-            options={
-                "managed": True,
-                "ordering": ["tribe"],
-                "verbose_name": "tribe",
-                "verbose_name_plural": "tribes",
-            },
+            name='lookuptribe',
+            options={'managed': True, 'ordering': ['tribe'], 'verbose_name': 'tribe', 'verbose_name_plural': 'tribes'},
         ),
         migrations.AlterModelOptions(
-            name="lookupuserinfo",
-            options={
-                "managed": True,
-                "ordering": ["username"],
-                "verbose_name": "user info",
-                "verbose_name_plural": "user info",
-            },
+            name='lookupuserinfo',
+            options={'managed': True, 'ordering': ['username'], 'verbose_name': 'user info', 'verbose_name_plural': 'user info'},
         ),
     ]

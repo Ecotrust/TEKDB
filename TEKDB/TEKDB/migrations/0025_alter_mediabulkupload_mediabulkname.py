@@ -4,20 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0024_alter_citations_comments_alter_citations_rawcitation_and_more"),
+        ('TEKDB', '0024_alter_citations_comments_alter_citations_rawcitation_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="mediabulkupload",
-            name="mediabulkname",
-            field=models.CharField(
-                blank=True,
-                default="Bulk Upload on 2025-05-11",
-                max_length=255,
-                null=True,
-                verbose_name="name",
-            ),
+            model_name='mediabulkupload',
+            name='mediabulkname',
+            field=models.CharField(blank=True, default='Bulk Upload on 2025-05-11', max_length=255, null=True, verbose_name='name'),
         ),
     ]

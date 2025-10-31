@@ -4,9 +4,11 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0020_alter_media_mediabulkupload"),
-        ("TEKDB", "0020_alter_mediabulkupload_mediabulkdate"),
+        ('TEKDB', '0020_alter_media_mediabulkupload'),
+        ('TEKDB', '0020_alter_mediabulkupload_mediabulkdate'),
     ]
 
-    operations = []
+    operations = [
+    ]

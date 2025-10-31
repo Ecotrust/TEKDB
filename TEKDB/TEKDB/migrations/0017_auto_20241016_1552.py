@@ -4,28 +4,29 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0016_auto_20241016_1549"),
+        ('TEKDB', '0016_auto_20241016_1549'),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name="mediabulkupload",
-            old_name="date",
-            new_name="mediabulkdate",
+            model_name='mediabulkupload',
+            old_name='date',
+            new_name='mediabulkdate',
         ),
         migrations.RenameField(
-            model_name="mediabulkupload",
-            old_name="description",
-            new_name="mediabulkdescription",
+            model_name='mediabulkupload',
+            old_name='description',
+            new_name='mediabulkdescription',
         ),
         migrations.RenameField(
-            model_name="mediabulkupload",
-            old_name="name",
-            new_name="mediabulkname",
+            model_name='mediabulkupload',
+            old_name='name',
+            new_name='mediabulkname',
         ),
         migrations.RemoveField(
-            model_name="mediabulkupload",
-            name="user",
+            model_name='mediabulkupload',
+            name='user',
         ),
     ]

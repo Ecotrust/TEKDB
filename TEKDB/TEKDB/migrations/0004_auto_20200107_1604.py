@@ -7,56 +7,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0003_auto_20191223_1604"),
+        ('TEKDB', '0003_auto_20191223_1604'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="citations",
-            name="comments",
-            field=ckeditor.fields.RichTextField(
-                blank=True, db_column="comments", null=True
-            ),
+            model_name='citations',
+            name='comments',
+            field=ckeditor.fields.RichTextField(blank=True, db_column='comments', null=True),
         ),
         migrations.AlterField(
-            model_name="citations",
-            name="referencetext",
-            field=models.TextField(
-                blank=True,
-                db_column="referencetext",
-                null=True,
-                verbose_name="description",
-            ),
+            model_name='citations',
+            name='referencetext',
+            field=models.TextField(blank=True, db_column='referencetext', null=True, verbose_name='description'),
         ),
         migrations.AlterField(
-            model_name="media",
-            name="mediadescription",
-            field=ckeditor.fields.RichTextField(
-                blank=True,
-                db_column="mediadescription",
-                null=True,
-                verbose_name="description",
-            ),
+            model_name='media',
+            name='mediadescription',
+            field=ckeditor.fields.RichTextField(blank=True, db_column='mediadescription', null=True, verbose_name='description'),
         ),
         migrations.AlterField(
-            model_name="resourcesactivityevents",
-            name="activitylongdescription",
-            field=ckeditor.fields.RichTextField(
-                blank=True,
-                db_column="activitylongdescription",
-                null=True,
-                verbose_name="full activity description",
-            ),
+            model_name='resourcesactivityevents',
+            name='activitylongdescription',
+            field=ckeditor.fields.RichTextField(blank=True, db_column='activitylongdescription', null=True, verbose_name='full activity description'),
         ),
         migrations.AlterField(
-            model_name="resourcesactivityevents",
-            name="relationshipdescription",
-            field=ckeditor.fields.RichTextField(
-                blank=True,
-                db_column="relationshipdescription",
-                null=True,
-                verbose_name="excerpt",
-            ),
+            model_name='resourcesactivityevents',
+            name='relationshipdescription',
+            field=ckeditor.fields.RichTextField(blank=True, db_column='relationshipdescription', null=True, verbose_name='excerpt'),
         ),
     ]

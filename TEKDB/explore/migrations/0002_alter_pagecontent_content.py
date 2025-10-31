@@ -5,14 +5,15 @@ import tinymce.models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("explore", "0001_initial"),
+        ('explore', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="pagecontent",
-            name="content",
+            model_name='pagecontent',
+            name='content',
             field=tinymce.models.HTMLField(blank=True, null=True),
         ),
     ]

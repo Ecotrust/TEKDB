@@ -4,20 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("configuration", "0007_auto_20240913_1539"),
+        ('configuration', '0007_auto_20240913_1539'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="configuration",
-            name="preferredInitialism",
-            field=models.CharField(
-                blank=True,
-                default="ITK",
-                help_text="Suggestions: 'ITK', 'TEK', etc...",
-                max_length=15,
-                verbose_name="Preferred sharthand for traditional knowledge",
-            ),
+            model_name='configuration',
+            name='preferredInitialism',
+            field=models.CharField(blank=True, default='ITK', help_text="Suggestions: 'ITK', 'TEK', etc...", max_length=15, verbose_name='Preferred sharthand for traditional knowledge'),
         ),
     ]

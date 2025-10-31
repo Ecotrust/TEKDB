@@ -4,44 +4,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0009_auto_20230413_1555"),
+        ('TEKDB', '0009_auto_20230413_1555'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="citations",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=True, verbose_name="Needs Review"
-            ),
+            model_name='citations',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=True, verbose_name='Needs Review'),
         ),
         migrations.AlterField(
-            model_name="media",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=True, verbose_name="Needs Review"
-            ),
+            model_name='media',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=True, verbose_name='Needs Review'),
         ),
         migrations.AlterField(
-            model_name="places",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=True, verbose_name="Needs Review"
-            ),
+            model_name='places',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=True, verbose_name='Needs Review'),
         ),
         migrations.AlterField(
-            model_name="resources",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=True, verbose_name="Needs Review"
-            ),
+            model_name='resources',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=True, verbose_name='Needs Review'),
         ),
         migrations.AlterField(
-            model_name="resourcesactivityevents",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=True, verbose_name="Needs Review"
-            ),
+            model_name='resourcesactivityevents',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=True, verbose_name='Needs Review'),
         ),
     ]

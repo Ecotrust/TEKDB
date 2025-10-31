@@ -4,25 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0010_auto_20231106_1316"),
+        ('TEKDB', '0010_auto_20231106_1316'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="SearchSettings",
+            name='SearchSettings',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("min_search_rank", models.FloatField(default=0.01)),
-                ("min_search_similarity", models.FloatField(default=0.1)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('min_search_rank', models.FloatField(default=0.01)),
+                ('min_search_similarity', models.FloatField(default=0.1)),
             ],
         ),
     ]

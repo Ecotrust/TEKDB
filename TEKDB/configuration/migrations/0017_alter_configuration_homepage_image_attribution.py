@@ -5,20 +5,15 @@ import tinymce.models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("configuration", "0016_alter_configuration_min_search_rank_and_more"),
+        ('configuration', '0016_alter_configuration_min_search_rank_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="configuration",
-            name="homepage_image_attribution",
-            field=tinymce.models.HTMLField(
-                blank=True,
-                default=None,
-                help_text="If using a custom image that requires attribution for use, please provide that here.",
-                null=True,
-                verbose_name="Homepage Image attribution",
-            ),
+            model_name='configuration',
+            name='homepage_image_attribution',
+            field=tinymce.models.HTMLField(blank=True, default=None, help_text='If using a custom image that requires attribution for use, please provide that here.', null=True, verbose_name='Homepage Image attribution'),
         ),
     ]

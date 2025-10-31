@@ -4,99 +4,60 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("TEKDB", "0008_citations_date"),
+        ('TEKDB', '0008_citations_date'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="citations",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=False, verbose_name="Needs Review"
-            ),
+            model_name='citations',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=False, verbose_name='Needs Review'),
         ),
         migrations.AddField(
-            model_name="citations",
-            name="researchComments",
-            field=models.TextField(
-                blank=True,
-                db_column="researchcomments",
-                default=None,
-                null=True,
-                verbose_name="Research Comments",
-            ),
+            model_name='citations',
+            name='researchComments',
+            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
         ),
         migrations.AddField(
-            model_name="media",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=False, verbose_name="Needs Review"
-            ),
+            model_name='media',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=False, verbose_name='Needs Review'),
         ),
         migrations.AddField(
-            model_name="media",
-            name="researchComments",
-            field=models.TextField(
-                blank=True,
-                db_column="researchcomments",
-                default=None,
-                null=True,
-                verbose_name="Research Comments",
-            ),
+            model_name='media',
+            name='researchComments',
+            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
         ),
         migrations.AddField(
-            model_name="places",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=False, verbose_name="Needs Review"
-            ),
+            model_name='places',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=False, verbose_name='Needs Review'),
         ),
         migrations.AddField(
-            model_name="places",
-            name="researchComments",
-            field=models.TextField(
-                blank=True,
-                db_column="researchcomments",
-                default=None,
-                null=True,
-                verbose_name="Research Comments",
-            ),
+            model_name='places',
+            name='researchComments',
+            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
         ),
         migrations.AddField(
-            model_name="resources",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=False, verbose_name="Needs Review"
-            ),
+            model_name='resources',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=False, verbose_name='Needs Review'),
         ),
         migrations.AddField(
-            model_name="resources",
-            name="researchComments",
-            field=models.TextField(
-                blank=True,
-                db_column="researchcomments",
-                default=None,
-                null=True,
-                verbose_name="Research Comments",
-            ),
+            model_name='resources',
+            name='researchComments',
+            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
         ),
         migrations.AddField(
-            model_name="resourcesactivityevents",
-            name="needsReview",
-            field=models.BooleanField(
-                db_column="needsreview", default=False, verbose_name="Needs Review"
-            ),
+            model_name='resourcesactivityevents',
+            name='needsReview',
+            field=models.BooleanField(db_column='needsreview', default=False, verbose_name='Needs Review'),
         ),
         migrations.AddField(
-            model_name="resourcesactivityevents",
-            name="researchComments",
-            field=models.TextField(
-                blank=True,
-                db_column="researchcomments",
-                default=None,
-                null=True,
-                verbose_name="Research Comments",
-            ),
+            model_name='resourcesactivityevents',
+            name='researchComments',
+            field=models.TextField(blank=True, db_column='researchcomments', default=None, null=True, verbose_name='Research Comments'),
         ),
     ]
