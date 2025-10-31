@@ -81,6 +81,13 @@ $(function () {
         keyboard: false,
       });
 
+      // add spinner to the button
+      // change button text to "Importing..."
+      $("#continueImport").html(
+        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
+      );
+      $("#continueImport").prop("disabled", true);
+
       form = $("#import-database-form");
       $.ajax({
         url: "/import_database/",
@@ -94,12 +101,9 @@ $(function () {
             data.hasOwnProperty("status_message")
           ) {
             showNextStepsSection();
+            $("#continueImport").prop("disabled", false);
 
             if (data.status_code == 200) {
-              $("#exportImportModal").modal({
-                backdrop: "static",
-                keyboard: false,
-              });
               $("#modalNextSteps").html(
                 `<p class='text-success'>Import successful. You may now be logged out.</p>`
               );
