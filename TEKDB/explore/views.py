@@ -153,6 +153,8 @@ def get_project_geography():
 
 @login_required
 def get_by_model_id(request, model_type, id):
+    from TEKDB.settings import RECORD_ICONS
+
     state = "?%s" % request.GET.urlencode()
     back_link = "%s%s" % ("/search/", state)
     models = get_model_by_type(model_type)
@@ -202,7 +204,7 @@ def get_by_model_id(request, model_type, id):
         "state": state,
     }
 
-    if "map" in record_dict.keys() and record_dict["map"] is not None:
+    if "map" in record_dict.keys() and not record_dict["map"] == None:
         DATABASE_GEOGRAPHY = get_project_geography()
         context["default_lon"] = DATABASE_GEOGRAPHY["default_lon"]
         context["default_lat"] = DATABASE_GEOGRAPHY["default_lat"]
@@ -287,9 +289,9 @@ def export_record_csv(record_dict, filename):
                     and "value" in item.keys()
                     and len(item.keys()) == 2
                 ):
-                    if isinstance(item["value"], list) and len(item["value"]) > 0:
+                    if type(item["value"]) == list and len(item["value"]) > 0:
                         for sub_item in item["value"]:
-                            if isinstance(sub_item, dict) and "name" in sub_item.keys():
+                            if type(sub_item) == dict and "name" in sub_item.keys():
                                 writer.writerow(
                                     ["%s - %s" % (key, item["key"]), sub_item["name"]]
                                 )
@@ -314,7 +316,7 @@ def export_record_xls(record_dict, filename):
     output = io.BytesIO()
     workbook = Workbook(output, {"in_membory": True})
     worksheet = workbook.add_worksheet()
-    workbook.add_format({"bold": True})
+    bold = workbook.add_format({"bold": True})
     row = 0
     for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
@@ -325,9 +327,9 @@ def export_record_xls(record_dict, filename):
                     and "value" in item.keys()
                     and len(item.keys()) == 2
                 ):
-                    if isinstance(item["value"], list) and len(item["value"]) > 0:
+                    if type(item["value"]) == list and len(item["value"]) > 0:
                         for sub_item in item["value"]:
-                            if isinstance(sub_item, dict) and "name" in sub_item.keys():
+                            if type(sub_item) == dict and "name" in sub_item.keys():
                                 worksheet.write(row, 0, "%s - %s" % (key, item["key"]))
                                 worksheet.write(row, 1, sub_item["name"])
                                 row += 1
@@ -400,7 +402,7 @@ def search(request):
         if "category" in request.POST.keys():
             try:
                 categories = request.POST["category"].split(",")
-            except Exception:
+            except Exception as e:
                 categories = all_categories
                 pass
 
@@ -424,7 +426,7 @@ def search(request):
             query_string = request.GET.get("query")
         elif "filter" in request.GET.urlencode():
             query_string = request.GET.get("filter")
-            if query_string == "" or query_string is True:
+            if query_string == "" or query_string == True:
                 query_string = None
 
         else:
@@ -490,11 +492,11 @@ def search(request):
         items_per_page = len(resultlist)
 
     page = request.GET.get("page")
-    if page is None:
+    if page == None:
         page = 1
 
     view = request.GET.get("view")
-    if view is None:
+    if view == None:
         view = "list"
 
     DATABASE_GEOGRAPHY = get_project_geography()
@@ -545,7 +547,9 @@ def search(request):
 
 
 def getResults(keyword_string, categories):
-    if keyword_string is None:
+    import TEKDB
+
+    if keyword_string == None:
         keyword_string = ""
 
     resultlist = []
@@ -595,7 +599,7 @@ def download(request):
         rows.append(row_dict)
 
     if format_type == "xlsx":
-        import io
+        import xlsxwriter, io
         from xlsxwriter.workbook import Workbook
 
         output = io.BytesIO()
