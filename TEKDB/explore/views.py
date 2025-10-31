@@ -288,9 +288,9 @@ def export_record_csv(record_dict, filename):
                     and "value" in item.keys()
                     and len(item.keys()) == 2
                 ):
-                    if type(item["value"]) == list and len(item["value"]) > 0:
+                    if isinstance(item["value"], list) and len(item["value"]) > 0:
                         for sub_item in item["value"]:
-                            if type(sub_item) == dict and "name" in sub_item.keys():
+                            if isinstance(sub_item, dict) and "name" in sub_item.keys():
                                 writer.writerow(
                                     ["%s - %s" % (key, item["key"]), sub_item["name"]]
                                 )
@@ -315,7 +315,7 @@ def export_record_xls(record_dict, filename):
     output = io.BytesIO()
     workbook = Workbook(output, {"in_membory": True})
     worksheet = workbook.add_worksheet()
-    bold = workbook.add_format({"bold": True})
+    workbook.add_format({"bold": True})
     row = 0
     for key in get_sorted_keys(list(record_dict.keys())):
         field = record_dict[key]
@@ -326,9 +326,9 @@ def export_record_xls(record_dict, filename):
                     and "value" in item.keys()
                     and len(item.keys()) == 2
                 ):
-                    if type(item["value"]) == list and len(item["value"]) > 0:
+                    if isinstance(item["value"], list) and len(item["value"]) > 0:
                         for sub_item in item["value"]:
-                            if type(sub_item) == dict and "name" in sub_item.keys():
+                            if isinstance(sub_item, dict) and "name" in sub_item.keys():
                                 worksheet.write(row, 0, "%s - %s" % (key, item["key"]))
                                 worksheet.write(row, 1, sub_item["name"])
                                 row += 1
@@ -425,7 +425,7 @@ def search(request):
             query_string = request.GET.get("query")
         elif "filter" in request.GET.urlencode():
             query_string = request.GET.get("filter")
-            if query_string == "" or query_string == True:
+            if query_string == "" or query_string is True:
                 query_string = None
 
         else:
