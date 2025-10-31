@@ -1,6 +1,13 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from .models import MediaBulkUpload, Media, Places, Resources, Citations, ResourcesActivityEvents, PlacesResourceEvents
+from .models import (
+    MediaBulkUpload,
+    Places,
+    Resources,
+    Citations,
+    ResourcesActivityEvents,
+    PlacesResourceEvents,
+)
 from .widgets import ThumbnailFileInput
 
 
@@ -17,35 +24,45 @@ class MultipleFileField(forms.FileField):
             result = [single_file_clean(data, initial)]
         return result
 
+
 class MediaBulkUploadForm(forms.ModelForm):
     files = MultipleFileField()
     places = forms.ModelMultipleChoiceField(
-        queryset=Places.objects.all(), 
+        queryset=Places.objects.all(),
         required=False,
-        widget=FilteredSelectMultiple("Places", is_stacked=False)
+        widget=FilteredSelectMultiple("Places", is_stacked=False),
     )
     resources = forms.ModelMultipleChoiceField(
-        queryset=Resources.objects.all(), 
+        queryset=Resources.objects.all(),
         required=False,
-        widget=FilteredSelectMultiple("Resources", is_stacked=False)
+        widget=FilteredSelectMultiple("Resources", is_stacked=False),
     )
     citations = forms.ModelMultipleChoiceField(
-        queryset=Citations.objects.all(), 
+        queryset=Citations.objects.all(),
         required=False,
-        widget=FilteredSelectMultiple("Citations", is_stacked=False)
+        widget=FilteredSelectMultiple("Citations", is_stacked=False),
     )
     activities = forms.ModelMultipleChoiceField(
-        queryset=ResourcesActivityEvents.objects.all(), 
+        queryset=ResourcesActivityEvents.objects.all(),
         required=False,
-        widget=FilteredSelectMultiple("Activities", is_stacked=False)
+        widget=FilteredSelectMultiple("Activities", is_stacked=False),
     )
     placesresources = forms.ModelMultipleChoiceField(
-        queryset=PlacesResourceEvents.objects.all(), 
+        queryset=PlacesResourceEvents.objects.all(),
         required=False,
-        widget=FilteredSelectMultiple("Places Resources", is_stacked=False)
+        widget=FilteredSelectMultiple("Places Resources", is_stacked=False),
     )
 
     class Meta:
         model = MediaBulkUpload
-        fields = ['mediabulkname', 'mediabulkdescription', 'mediabulkdate', 'files', 'places', 'resources', 'citations', 'activities', 'placesresources']
-    
+        fields = [
+            "mediabulkname",
+            "mediabulkdescription",
+            "mediabulkdate",
+            "files",
+            "places",
+            "resources",
+            "citations",
+            "activities",
+            "placesresources",
+        ]
