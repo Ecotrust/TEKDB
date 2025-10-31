@@ -153,7 +153,6 @@ def get_project_geography():
 
 @login_required
 def get_by_model_id(request, model_type, id):
-
     state = "?%s" % request.GET.urlencode()
     back_link = "%s%s" % ("/search/", state)
     models = get_model_by_type(model_type)
@@ -546,7 +545,6 @@ def search(request):
 
 
 def getResults(keyword_string, categories):
-
     if keyword_string is None:
         keyword_string = ""
 

@@ -736,13 +736,13 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         english = self.englishplacename or ""
 
         if indigenous and english:
-            return "%s (%s)" % (indigenous, english)
+            return u"%s (%s)" % (indigenous, english)  # fmt: off
         elif indigenous:
             return unicode(indigenous)  # noqa: F821
         elif english:
             return unicode(english)  # noqa: F821
         else:
-            return "No Name Given"
+            return u"No Name Given"  # fmt: off
 
     def __str__(self):
         indigenous = self.indigenousplacename or ""
