@@ -185,7 +185,7 @@ class Record(DefaultModel, DefaultModeratedModel):
             for ignore_column in ignore_columns:
                 try:
                     columns.pop(columns.index(ignore_column))
-                except:  # noqa: E722
+                except Exception:
                     pass
         for item in data_set:
             row = [item.pk]
