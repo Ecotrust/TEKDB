@@ -38,7 +38,7 @@
     <form method="post" enctype="multipart/form-data" id='import-database-form'>
       {% csrf_token %}
       <input type="file" name="import_file" id='import_database_file_field'>
-      <button type="submit" id='import-button' class='btn btn-success'>Import</button>
+      <button data-bs-toggle="modal" data-bs-target="#exportImportModal" type="submit" id='import-button' class='btn btn-success'>Import</button>
     </form>
   </div>
 
@@ -84,10 +84,10 @@
       </div>
       <div id="modalBody" class="modal-body">
       </div>
-      {% comment %} <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> {% endcomment %}
+      <div id="modalNextSteps" class="pt-3 m-3 border rounded hidden"></div>
+      <div class="modal-footer">
+        <button type="button" id="continueImport" class="btn btn-primary">Continue</button>
+      </div> 
     </div>
   </div>
 </div>
