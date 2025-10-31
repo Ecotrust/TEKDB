@@ -11,7 +11,7 @@ const importText = `
   as defined by the new data: your current account will cease to 
   exist.</br><br>
   Are you sure you understand and are prepared to take this risk?
-`
+`;
 const importInfoText = `The Import Database Tool is designed to support restoring your Traditional Knowledge Database back to a prior state. This is best used in conjunction with the 'Export Database' tool above. </br><br>
       To use the Import Database tool is simple: select a properly formatted zip file to upload and then click 'Import'. All of your data will be reverted back to the state it was when that zipfile was created. </br><br>
       This is VERY DANGEROUS! For this to work, all of the data currently 
@@ -29,7 +29,7 @@ const importInfoText = `The Import Database Tool is designed to support restorin
       Note that a zipped backup file is easily created for your current 
       state with the 'Export to .zip' button above, but cannot be 
       created by hand. If you have not created any of these files, you 
-      should not use this tool.`
+      should not use this tool.`;
 
 const exportInfoText = `The Export Database Tool is designed to support saving the current 
         state of your Traditional Knowledge Database. This is best 
@@ -48,7 +48,7 @@ const exportInfoText = `The Export Database Tool is designed to support saving t
 
         Please work with IT professionals to design 
         a safe and secure practice for regular backups, which may or may 
-        not involve this tool.`
+        not involve this tool.`;
 
 $(function () {
   const unexpectedError = (statusCode, statusMessage) => {
@@ -57,24 +57,30 @@ $(function () {
 
   const showNextStepsSection = () => {
     $("#modalNextSteps").removeClass("hidden");
-  }
+  };
 
   const showModalFooter = () => {
     $(".modal-footer").show();
-  }
+  };
 
   const hideModalFooter = () => {
     $(".modal-footer").hide();
-  }
+  };
 
   $("button#import-button").click(function (e) {
     e.preventDefault();
     showModalFooter();
-    
-    $("#modalTitle").text("Export Database Tool");
+
+    $("#modalTitle").text("Import Database");
     $("#modalBody").html(importText);
 
     $("#continueImport").click(function () {
+      // prevent closing the modal after verifying import
+      $("#exportImportModal").modal({
+        backdrop: "static",
+        keyboard: false,
+      });
+
       form = $("#import-database-form");
       $.ajax({
         url: "/import_database/",
@@ -82,34 +88,52 @@ $(function () {
         type: "POST",
         processData: false,
         contentType: false,
-        success: function (data, status) {
+        success: function (data) {
           if (
             data.hasOwnProperty("status_code") &&
             data.hasOwnProperty("status_message")
           ) {
-            showNextStepsSection()
-            
+            showNextStepsSection();
+
             if (data.status_code == 200) {
+              $("#exportImportModal").modal({
+                backdrop: "static",
+                keyboard: false,
+              });
               $("#modalNextSteps").html(
                 `<p class='text-success'>Import successful. You may now be logged out.</p>`
               );
-
-              window.location.reload();
+              $("#continueImport").html("Log out");
+              $("#continueImport").click(function () {
+                window.location.reload();
+              });
             } else {
               $("#modalNextSteps").html(
                 `<p class='text-danger'>Import failed with error code ${data.status_code}.</p><p class='text-danger'>${data.status_message}</p>`
               );
+              $("#continueImport").html("Close");
+              $("#continueImport").click(function () {
+                $("#exportImportModal").modal("hide");
+              });
             }
           } else {
             $("#modalNextSteps").html(
               unexpectedError(xhr.status, xhr.statusText)
             );
+            $("#continueImport").html("Close");
+            $("#continueImport").click(function () {
+              $("#exportImportModal").modal("hide");
+            });
           }
         },
-        error: function (xhr, desc, err) {
+        error: function (xhr) {
           $("#modalNextSteps").html(
             unexpectedError(xhr.status, xhr.statusText)
           );
+          $("#continueImport").html("Close");
+          $("#continueImport").click(function () {
+            $("#exportImportModal").modal("hide");
+          });
         },
       });
     });
@@ -128,12 +152,13 @@ $(function () {
     $("#modalBody").html(exportInfoText);
   });
 
-  // Clear modal content on close
-  $('#exportImportModal').on('hidden.bs.modal', function () {
+  // Clear modal content on close; reset to default state
+  $("#exportImportModal").on("hidden.bs.modal", function () {
     $("#modalTitle").text("");
     $("#modalBody").html("");
     $("#modalNextSteps").html("");
     $("#modalNextSteps").addClass("hidden");
-});
-
+    $("#continueImport").html("Continue");
+    $("#continueImport").off("click");
+  });
 });
