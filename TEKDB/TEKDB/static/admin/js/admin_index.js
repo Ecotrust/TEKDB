@@ -12,6 +12,7 @@ const importText = `
   exist.</br><br>
   Are you sure you understand and are prepared to take this risk?
 `;
+
 const importInfoText = `The Import Database Tool is designed to support restoring your Traditional Knowledge Database back to a prior state. This is best used in conjunction with the 'Export Database' tool above. </br><br>
       To use the Import Database tool is simple: select a properly formatted zip file to upload and then click 'Import'. All of your data will be reverted back to the state it was when that zipfile was created. </br><br>
       This is VERY DANGEROUS! For this to work, all of the data currently 
@@ -67,6 +68,14 @@ $(function () {
     $(".modal-footer").hide();
   };
 
+  const resetModal = () => {
+    $("#continueImport").html("Close");
+    $("#closeModalButton").prop("disabled", false);
+    $("#continueImport").click(function () {
+      $("#exportImportModal").modal("hide");
+    });
+  };
+
   const resetExportButton = (iframe, clearInterval) => {
     $("#export-button").prop("disabled", false);
     $("#export-button").html("Export to .zip");
@@ -94,6 +103,7 @@ $(function () {
         `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
       );
       $("#continueImport").prop("disabled", true);
+      $("#closeModalButton").prop("disabled", true);
 
       form = $("#import-database-form");
       $.ajax({
@@ -122,29 +132,20 @@ $(function () {
               $("#modalNextSteps").html(
                 `<p class='text-danger'>Import failed with error code ${data.status_code}.</p><p class='text-danger'>${data.status_message}</p>`
               );
-              $("#continueImport").html("Close");
-              $("#continueImport").click(function () {
-                $("#exportImportModal").modal("hide");
-              });
+              resetModal();
             }
           } else {
             $("#modalNextSteps").html(
               unexpectedError(xhr.status, xhr.statusText)
             );
-            $("#continueImport").html("Close");
-            $("#continueImport").click(function () {
-              $("#exportImportModal").modal("hide");
-            });
+            resetModal();
           }
         },
         error: function (xhr) {
           $("#modalNextSteps").html(
             unexpectedError(xhr.status, xhr.statusText)
           );
-          $("#continueImport").html("Close");
-          $("#continueImport").click(function () {
-            $("#exportImportModal").modal("hide");
-          });
+          resetModal();
         },
       });
     });
