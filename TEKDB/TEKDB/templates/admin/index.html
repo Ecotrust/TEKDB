@@ -26,9 +26,10 @@
   {% if user.is_superuser %}
   <div class="module" id="export-module">
     <h2>{% translate 'Export database' %}<button class='btn btn-info' id='export-info' data-bs-toggle="modal" data-bs-target="#exportImportModal">Info</button></h2>
-    <a href="/export_database/" id='export-button' class="btn btn-primary">
+    <button id='export-button' class="mx-3 btn btn-primary">
       Export to .zip
-    </a>
+    </button>
+    <div id="exportStatus" class="text-danger m-3 hidden">There was an error during export. Please try again.</div>
   </div>
 
   <hr />
@@ -37,8 +38,8 @@
     <h2>{% translate 'Import database' %}<button class='btn btn-info' id='import-info' data-bs-toggle="modal" data-bs-target="#exportImportModal">Info</button></h2>
     <form method="post" enctype="multipart/form-data" id='import-database-form'>
       {% csrf_token %}
-      <input type="file" name="import_file" id='import_database_file_field'>
-      <button data-bs-toggle="modal" data-bs-target="#exportImportModal" type="submit" id='import-button' class='btn btn-success'>Import</button>
+      <input type="file" name="import_file" id='import_database_file_field' class="mx-3">
+      <button data-bs-toggle="modal" data-bs-target="#exportImportModal" type="submit" id='import-button' class='m-3 btn btn-success'>Import</button>
     </form>
   </div>
 

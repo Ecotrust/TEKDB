@@ -68,19 +68,8 @@ span.select2-results {
   background-color: var(--body-bg);
 }
 
-/* EXPORT/IMPORT MODULES */
-
-div#export-module a,
-button#import-button {
-  margin: 1rem;
-}
-
 button.btn-info#export-info,
 button.btn-info#import-info {
   margin: -0.5rem 0 1rem 1rem;
   float: right;
-}
-
-a.btn-primary#export-button {
-  color: var(--bs-white);
 }

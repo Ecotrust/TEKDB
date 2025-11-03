@@ -67,6 +67,13 @@ $(function () {
     $(".modal-footer").hide();
   };
 
+  const resetExportButton = (iframe, clearInterval) => {
+    $("#export-button").prop("disabled", false);
+    $("#export-button").html("Export to .zip");
+    iframe.remove();
+    clearInterval();
+  };
+
   $("button#import-button").click(function (e) {
     e.preventDefault();
     showModalFooter();
@@ -154,6 +161,44 @@ $(function () {
     hideModalFooter();
     $("#modalTitle").text("Export Database Tool");
     $("#modalBody").html(exportInfoText);
+  });
+
+  $("button#export-button").click(function (e) {
+    e.preventDefault();
+
+    // remove error message if present
+    $("#exportStatus").addClass("hidden");
+
+    // disable button and show spinner
+    $("#export-button").prop("disabled", true);
+    $("#export-button").html(
+      `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Exporting...`
+    );
+
+    // set cookie to pending
+    document.cookie = "export_status=pending";
+
+    // create hidden iframe to trigger download
+    const iframe = $("<iframe/>")
+      .hide()
+      .attr("src", "/export_database/")
+      .appendTo("body");
+
+    // poll cookie for export_status
+    const checkStatus = setInterval(function () {
+      const cookies = document.cookie.split(";").map((c) => c.trim());
+      const exportStatus = cookies.filter((c) =>
+        c.startsWith("export_status=")
+      );
+
+      if (exportStatus && exportStatus.includes("export_status=done")) {
+        resetExportButton(iframe, clearInterval(checkStatus));
+      } else if (exportStatus && exportStatus.includes("export_status=error")) {
+        console.log("error detected");
+        $("#exportStatus").removeClass("hidden");
+        resetExportButton(iframe, clearInterval(checkStatus));
+      }
+    }, 1000);
   });
 
   // Clear modal content on close; reset to default state
