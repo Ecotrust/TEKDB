@@ -93,9 +93,9 @@ def ExportDatabase(request, test=False):
             if not test:
                 os.remove(tmp_zip.name)
 
-            response.set_cookie('export_status', 'done')
+            response.set_cookie("export_status", "done")
         except (PermissionError, NotADirectoryError):
-            response.set_cookie('export_status', 'error')
+            response.set_cookie("export_status", "error")
             pass
 
     return HttpResponse()

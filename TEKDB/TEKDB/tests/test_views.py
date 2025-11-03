@@ -389,7 +389,7 @@ class ExportTest(TestCase):
         new_record = Resources.objects.create(commonname="Dummy Record 1")
         new_record.save()
         # Resources.moderated_object.fget(new_record).approve()
-    
+
     # Test anon user failure
     # Users w/out adequate permissions should be redirected (302)
     def test_anonymous_export(self):
@@ -397,7 +397,7 @@ class ExportTest(TestCase):
         export_request.user = AnonymousUser()
         response = ExportDatabase(export_request)
         self.assertEqual(response.status_code, 302)
-    
+
     # Test non-admin user failure
     # Users w/out adequate permissions should be redirected (302)
     def test_readonly_export(self):
@@ -406,7 +406,7 @@ class ExportTest(TestCase):
         response = ExportDatabase(export_request)
         self.assertEqual(response.status_code, 302)
 
-     # Test failure in export process
+    # Test failure in export process
     def test_invalid_admin_export(self):
         export_request = create_export_request(self)
         export_request.user = Users.objects.get(username="admin")
@@ -416,7 +416,7 @@ class ExportTest(TestCase):
         # Assert that the 'export_status=error' cookie is set
         self.assertIn("export_status", response.cookies)
         self.assertEqual(response.cookies["export_status"].value, "error")
-    
+
     # Test success in export process
     def test_valid_admin_export(self):
         # dump data
@@ -472,7 +472,6 @@ class ExportTest(TestCase):
             # Assert that the 'export_status=done' cookie is set
             self.assertIn("export_status", response.cookies)
             self.assertEqual(response.cookies["export_status"].value, "done")
-
 
 
 class ImportTest(TransactionTestCase):
