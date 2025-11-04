@@ -71,6 +71,7 @@ def ExportDatabase(request, test=False):
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
+    response = None
     try:
         with tempfile.TemporaryDirectory() as tmp_dir:
             # create filename
@@ -93,9 +94,11 @@ def ExportDatabase(request, test=False):
             if not test:
                 os.remove(tmp_zip.name)
 
-            response.set_cookie("export_status", "done")
+            if response:
+                response.set_cookie("export_status", "done")
         except (PermissionError, NotADirectoryError):
-            response.set_cookie("export_status", "error")
+            if response:
+                response.set_cookie("export_status", "error")
             pass
 
     return HttpResponse()
