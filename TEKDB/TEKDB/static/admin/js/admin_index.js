@@ -126,7 +126,7 @@ $(function () {
               );
               $("#continueImport").html("Log out");
               $("#continueImport").click(function () {
-                window.location.reload();
+                location.reload(true);
               });
             } else {
               $("#modalNextSteps").html(
