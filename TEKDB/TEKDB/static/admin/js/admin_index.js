@@ -105,7 +105,7 @@ $(function () {
       $("#continueImport").prop("disabled", true);
       $("#closeModalButton").prop("disabled", true);
 
-      form = $("#import-database-form");
+      const form = $("#import-database-form");
       $.ajax({
         url: "/import_database/",
         data: new FormData(form[0]),
@@ -149,13 +149,12 @@ $(function () {
         },
       });
     });
-    $;
   });
 
   $("button#import-info").click(function (e) {
     hideModalFooter();
     $("#modalTitle").text("Import Database Tool");
-    $("#modalBody").html(exportInfoText);
+    $("#modalBody").html(importInfoText);
   });
 
   $("button#export-info").click(function (e) {
