@@ -52,7 +52,7 @@ const exportInfoText = `The Export Database Tool is designed to support saving t
         not involve this tool.`;
 
 $(function () {
-  const unexpectedError = (statusCode, statusMessage) => {
+  const unexpectedError = (statusCode, statusMessage = "") => {
     return `<p class='text-danger'>Unexpected error occurred: ${statusCode}</p><p>${statusMessage}</p>`;
   };
 
@@ -112,7 +112,7 @@ $(function () {
         type: "POST",
         processData: false,
         contentType: false,
-        success: function (data) {
+        success: function (data, status) {
           if (
             data.hasOwnProperty("status_code") &&
             data.hasOwnProperty("status_message")
@@ -135,9 +135,7 @@ $(function () {
               resetModal();
             }
           } else {
-            $("#modalNextSteps").html(
-              unexpectedError(xhr.status, xhr.statusText)
-            );
+            $("#modalNextSteps").html(unexpectedError(status));
             resetModal();
           }
         },
