@@ -1,5 +1,6 @@
 from base64 import b64encode
 from datetime import datetime
+from unittest.mock import patch
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
@@ -389,19 +390,37 @@ class ExportTest(TestCase):
         new_record.save()
         # Resources.moderated_object.fget(new_record).approve()
 
-    def test_export(self):
+    # Test anon user failure
+    # Users w/out adequate permissions should be redirected (302)
+    def test_anonymous_export(self):
+        export_request = create_export_request(self)
+        export_request.user = AnonymousUser()
+        response = ExportDatabase(export_request)
+        self.assertEqual(response.status_code, 302)
+
+    # Test non-admin user failure
+    # Users w/out adequate permissions should be redirected (302)
+    def test_readonly_export(self):
+        export_request = create_export_request(self)
+        export_request.user = Users.objects.get(username="readonly")
+        response = ExportDatabase(export_request)
+        self.assertEqual(response.status_code, 302)
+
+    # Test failure in export process
+    def test_invalid_admin_export(self):
+        export_request = create_export_request(self)
+        export_request.user = Users.objects.get(username="admin")
+        with patch("os.remove", side_effect=NotADirectoryError):
+            response = ExportDatabase(export_request, test=False)
+        self.assertEqual(response.status_code, 200)
+        # Assert that the 'export_status=error' cookie is set
+        self.assertIn("export_status", response.cookies)
+        self.assertEqual(response.cookies["export_status"].value, "error")
+
+    # Test success in export process
+    def test_valid_admin_export(self):
         # dump data
         export_request = create_export_request(self)
-
-        # Test non-admin user failure
-        # Users w/out adequate permissions should be redirected (302)
-        export_request.user = AnonymousUser()
-        anon_response = ExportDatabase(export_request)
-        self.assertEqual(anon_response.status_code, 302)
-
-        export_request.user = Users.objects.get(username="readonly")
-        bad_response = ExportDatabase(export_request)
-        self.assertEqual(bad_response.status_code, 302)
 
         export_request.user = Users.objects.get(username="admin")
         response = ExportDatabase(export_request, test=True)
@@ -450,6 +469,9 @@ class ExportTest(TestCase):
                     new_record_found = True
                     break
             self.assertTrue(new_record_found)
+            # Assert that the 'export_status=done' cookie is set
+            self.assertIn("export_status", response.cookies)
+            self.assertEqual(response.cookies["export_status"].value, "done")
 
 
 class ImportTest(TransactionTestCase):
