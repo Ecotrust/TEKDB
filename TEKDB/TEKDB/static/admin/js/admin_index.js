@@ -195,7 +195,6 @@ $(function () {
       if (exportStatus && exportStatus.includes("export_status=done")) {
         resetExportButton(iframe, clearInterval(checkStatus));
       } else if (exportStatus && exportStatus.includes("export_status=error")) {
-        console.log("error detected");
         $("#exportStatus").removeClass("hidden");
         resetExportButton(iframe, clearInterval(checkStatus));
       }
