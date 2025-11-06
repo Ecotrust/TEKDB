@@ -482,7 +482,7 @@ def search(request):
         % query_value
     )
 
-    resultlist = getResults(query_string, categories)
+    resultlist = get_results(query_string, categories)
     items_per_page = request.GET.get("items_per_page")
     if not items_per_page:
         items_per_page = 25
@@ -544,7 +544,18 @@ def search(request):
     return render(request, "results.html", context)
 
 
-def getResults(keyword_string, categories):
+def find_match_attributes(obj):
+    match_attributes = [attr for attr in dir(obj) if "match" in attr]
+    return match_attributes
+
+
+def remove_match_prefix(string):
+    if string.startswith("match_"):
+        return string[6:]
+    return string
+
+
+def get_results(keyword_string, categories):
     if keyword_string is None:
         keyword_string = ""
 
@@ -556,14 +567,34 @@ def getResults(keyword_string, categories):
             # Find all results matching keyword in this model
             model_results = model.keyword_search(keyword_string)
             for result in model_results:
-                # Create JSON object to be resturned
+                greatest_similarity_attribute = None
+                actual_atribute = None
+                headline_value = None
+                # get headline and similarity results
+                match_attributes = find_match_attributes(result)
+
+                for match_attr in match_attributes:
+                    match_value = getattr(result, match_attr)
+                    if match_value is not None:
+                        if match_value == result.similarity:
+                            greatest_similarity_attribute = match_attr
+
+                actual_atribute = remove_match_prefix(greatest_similarity_attribute)
+
+                headline_key = f"headline_{actual_atribute}"
+                if hasattr(result, headline_key):
+                    headline_value = getattr(result, headline_key)
+
+                # Create JSON object to be returned
                 result_json = result.get_response_format()
                 if keyword_string != "":
                     result_json["rank"] = result.rank
                     result_json["similarity"] = result.similarity
+                    result_json["headline"] = headline_value
                 else:
                     result_json["rank"] = 0
                     result_json["similarity"] = 0
+                    result_json["headline"] = headline_value
 
                 resultlist.append(result_json)
     # Sort results from all models by rank, then similarity (descending)
@@ -583,7 +614,7 @@ def get_category_list(request):
 @login_required
 def download(request):
     categories = get_category_list(request)
-    results = getResults(request.GET.get("query"), categories)
+    results = get_results(request.GET.get("query"), categories)
     format_type = request.GET.get("format")
     filename = "TEK_RESULTS"
     fieldnames = ["id", "name", "description", "type"]

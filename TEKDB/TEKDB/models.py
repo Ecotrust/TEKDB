@@ -17,6 +17,7 @@ from django.contrib.postgres.search import (
     SearchRank,
     SearchVector,
     TrigramSimilarity,
+    SearchHeadline,
 )
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -42,11 +43,16 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     if keyword == "":
         return model.objects.all()
 
-    similarities = []
     vector = False
     similarity = False
+    annotations = {}
     for idx, val in enumerate(fields):
-        similarities.append(TrigramSimilarity(val, keyword, weight=weight_lookup[val]))
+        annotations[f"match_{val}"] = TrigramSimilarity(
+            val, keyword, weight=weight_lookup[val]
+        )
+        annotations[f"headline_{val}"] = SearchHeadline(
+            val, keyword, start_sel="<span>", stop_sel="</span>"
+        )
         if idx == 0:
             vector = SearchVector(val, weight=weight_lookup[val])
         else:
@@ -54,8 +60,11 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
     for val in fk_fields:
         relationship_name = "__".join(val)
-        similarities.append(
-            TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+        annotations[f"match_{relationship_name}"] = TrigramSimilarity(
+            relationship_name, keyword, weight=weight_lookup[val[0]]
+        )
+        annotations[f"headline_{relationship_name}"] = SearchHeadline(
+            relationship_name, keyword, start_sel="<span>", stop_sel="</span>"
         )
         if not vector:
             vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
@@ -80,6 +89,8 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
         print(e)
         pass
 
+    similarities = [value for key, value in annotations.items() if "match_" in key]
+
     if len(similarities) > 1:
         similarity = Greatest(*similarities)
     elif len(similarities) == 1:
@@ -92,6 +103,9 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
             # search=vector,
             rank=SearchRank(vector, query),
             similarity=similarity,
+            # adding annotation breaks the distinct() is that okay?
+            # breaks the test_search_foreign_key_field test
+            **annotations,
         )
         .filter(
             # Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities

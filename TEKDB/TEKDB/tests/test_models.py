@@ -1,4 +1,5 @@
 from django.test import TestCase
+from TEKDB.explore.views import get_results
 from TEKDB.models import (
     Places,
     Resources,
@@ -151,9 +152,9 @@ class MiscSearchTest(ITKSearchTest):
         """
         keyword = "salmon trout"
 
-        from explore.views import getResults
+        from explore.views import get_results
 
-        search_results = getResults(
+        search_results = get_results(
             keyword,
             categories=["places", "resources", "activities", "sources", "media"],
         )
@@ -161,6 +162,21 @@ class MiscSearchTest(ITKSearchTest):
         self.assertTrue(24 in [x["id"] for x in search_results])
         # 362 is cutthroat trout
         self.assertTrue(362 in [x["id"] for x in search_results])
+
+    def test_resource_search(self):
+        """
+        Test that a phrase search returns all objects that contain the phrase
+        """
+        keyword = "flurpie"
+
+        from explore.views import get_results
+
+        search_results = get_results(
+            keyword,
+            categories=["resources"],
+        )
+        # 387 is test with altindigenousname 'flurpie'
+        self.assertTrue(387 in [x["id"] for x in search_results])
 
 
 # LookupTribe
@@ -203,6 +219,7 @@ class PlacesTest(ITKSearchTest):
                 )
             )
 
+    def test_search_foreign_key_field(self):
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
@@ -222,9 +239,10 @@ class PlacesTest(ITKSearchTest):
 
         keyword = "Tolowa"
         tribe_fk_search = Places.keyword_search(keyword)
-        self.assertEqual(tribe_fk_search.count(), 13)
+        self.assertEqual(tribe_fk_search.count(), 15)
         self.assertTrue(25 in [x.pk for x in tribe_fk_search])
 
+    def test_search_model_set_reference(self):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
@@ -251,7 +269,7 @@ class ResourcesTest(ITKSearchTest):
         # print("Total resources: {}".format(Resources.objects.all().count()))
         self.assertTrue(True)
 
-    def test_resources_search(self):
+    def test_search_text_field(self):
         ##############################
         ### TEST TEXT FIELD SEARCH ###
         ##############################
@@ -293,6 +311,7 @@ class ResourcesTest(ITKSearchTest):
             # self.assertTrue(resource.pk in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id])
             self.assertTrue(resource.pk != chiton_id)
 
+    def test_search_foreign_key_field(self):
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
@@ -304,6 +323,7 @@ class ResourcesTest(ITKSearchTest):
         self.assertEqual(anadromous_results.count(), 16)
         self.assertTrue(347 in [x.pk for x in anadromous_results])
 
+    def test_search_model_set_reference(self):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
@@ -321,6 +341,12 @@ class ResourcesTest(ITKSearchTest):
         flurpie_results = Resources.keyword_search(keyword)
         self.assertEqual(flurpie_results.count(), 2)
         self.assertEqual(flurpie_results[0].commonname, "Test")
+        self.assertTrue(hasattr(flurpie_results[0], "match_commonname"))
+        self.assertTrue(
+            hasattr(
+                flurpie_results[0], "match_resourcealtindigenousname__altindigenousname"
+            )
+        )
 
     def test_resource_id_collision(self):
         """
