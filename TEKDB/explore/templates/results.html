@@ -94,7 +94,7 @@
                   <th id='name_col'>Name</th>
                   <!-- <th id='category_col'>Category</th> -->
                   <th id='description_col'>Description</th>
-                  <th id='headline_col'>Headline</th>
+                  <th id='headline_col'>Searched Result</th>
                 </tr>
               </thead>
               <tbody data-bind="foreach: app.resultViewModel.results">
@@ -146,6 +146,7 @@
   app.resultViewModel.state_items_per_page( {{ state.items_per_page }} );
   app.resultViewModel.state_view( "{{ view }}" );
 
+  // TODO: is this ever used
   var tileclick = function(record) {
     link = jQuery.parseHTML(record.result)[1].getAttribute('href');
     window.location = link+'?'+app.resultViewModel.get_state();

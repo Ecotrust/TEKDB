@@ -46,12 +46,17 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     vector = False
     similarity = False
     annotations = {}
+
+    query = SearchQuery(keyword)
     for idx, val in enumerate(fields):
         annotations[f"match_{val}"] = TrigramSimilarity(
             val, keyword, weight=weight_lookup[val]
         )
         annotations[f"headline_{val}"] = SearchHeadline(
-            val, keyword, start_sel="<span>", stop_sel="</span>"
+            val,
+            query,
+            start_sel="<b class='highlight'>",
+            stop_sel="</b>",
         )
         if idx == 0:
             vector = SearchVector(val, weight=weight_lookup[val])
@@ -64,14 +69,12 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
             relationship_name, keyword, weight=weight_lookup[val[0]]
         )
         annotations[f"headline_{relationship_name}"] = SearchHeadline(
-            relationship_name, keyword, start_sel="<span>", stop_sel="</span>"
+            relationship_name, query, start_sel="<b class='highlight'>", stop_sel="</b>"
         )
         if not vector:
             vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
         else:
             vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
-
-    query = SearchQuery(keyword)
 
     # Last resort default values
     # These should be set in the settings.py file, but if they're not, we'll use these.

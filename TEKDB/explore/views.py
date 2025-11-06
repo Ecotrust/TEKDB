@@ -555,6 +555,20 @@ def remove_match_prefix(string):
     return string
 
 
+def get_verbose_field_name(model, field_path):
+    parts = field_path.split("__")
+    field = None
+    current_model = model
+
+    for part in parts:
+        field = current_model._meta.get_field(part)
+
+        # If it's a related field, follow to the related model
+        if hasattr(field, "related_model") and field.related_model:
+            current_model = field.related_model
+
+    return field.verbose_name.title() if field else field_path.replace("_", " ").title()
+
 def get_results(keyword_string, categories):
     if keyword_string is None:
         keyword_string = ""
@@ -580,6 +594,7 @@ def get_results(keyword_string, categories):
                             greatest_similarity_attribute = match_attr
 
                 actual_atribute = remove_match_prefix(greatest_similarity_attribute)
+                verbose_name = get_verbose_field_name(model, actual_atribute)
 
                 headline_key = f"headline_{actual_atribute}"
                 if hasattr(result, headline_key):
@@ -590,11 +605,15 @@ def get_results(keyword_string, categories):
                 if keyword_string != "":
                     result_json["rank"] = result.rank
                     result_json["similarity"] = result.similarity
-                    result_json["headline"] = headline_value
+                    result_json["headline"] = (
+                        f"<span>{verbose_name}: {headline_value}</span>"
+                        if headline_value and verbose_name
+                        else None
+                    )
                 else:
                     result_json["rank"] = 0
                     result_json["similarity"] = 0
-                    result_json["headline"] = headline_value
+                    result_json["headline"] = None
 
                 resultlist.append(result_json)
     # Sort results from all models by rank, then similarity (descending)

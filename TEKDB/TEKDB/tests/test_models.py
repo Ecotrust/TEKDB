@@ -1,5 +1,7 @@
+from base64 import b64encode
+
 from django.test import TestCase
-from TEKDB.explore.views import get_results
+from django.test.client import RequestFactory
 from TEKDB.models import (
     Places,
     Resources,
@@ -177,6 +179,54 @@ class MiscSearchTest(ITKSearchTest):
         )
         # 387 is test with altindigenousname 'flurpie'
         self.assertTrue(387 in [x["id"] for x in search_results])
+
+
+class GetVerboseFieldNameTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_get_verbose_field_name_one_model_deep(self):
+        from TEKDB.models import Resources
+        from explore.views import get_verbose_field_name
+
+        model = Resources
+        field_name = "commonname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Common Name")
+
+    def test_get_verbose_field_name_two_deep(self):
+        from TEKDB.models import Resources
+        from explore.views import get_verbose_field_name
+
+        model = Resources
+        field_name = "resourcealtindigenousname__altindigenousname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Alt Name")
+
+    def test_get_verbose_field_name_three_models_deep(self):
+        from TEKDB.models import ResourcesActivityEvents
+        from explore.views import get_verbose_field_name
+
+        model = ResourcesActivityEvents
+        field_name = "placeresourceid__resourceid__commonname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Common Name")
+
+    def test_get_verbose_field_name_four_deep(self):
+        from TEKDB.models import ResourcesActivityEvents
+        from explore.views import get_verbose_field_name
+
+        model = ResourcesActivityEvents
+        field_name = (
+            "placeresourceid__placeid__placealtindigenousname__altindigenousname"
+        )
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Alternate Name")
 
 
 # LookupTribe

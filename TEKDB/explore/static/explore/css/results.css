@@ -368,3 +368,7 @@ div.alert-notification p {
   margin-bottom: 0;
   font-size: 0.9rem;
 }
+
+.highlight {
+  background-color: yellow;
+}
