@@ -99,9 +99,9 @@
               </thead>
               <tbody data-bind="foreach: app.resultViewModel.results">
                 <tr data-bind="click: rowclick" class="link-result">
-                  <td><span data-bind='text: $data.category_name'></span></td>
+                  <td><span class="category-name-col" data-bind='text: $data.category_name'></span></td>
                   {% comment %} <td><img class='list-image' data-bind="attr: { src: $data.image }" /></td> {% endcomment %}
-                  <td data-bind='html: $data.name'>name</td>
+                  <td class="name-col" data-bind='html: $data.name'>name</td>
                   <td data-bind='html: $data.description'></td>
                   <td data-bind='html: $data.headline'></td>
                 </tr>

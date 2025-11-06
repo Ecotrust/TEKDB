@@ -606,7 +606,7 @@ def get_results(keyword_string, categories):
                     result_json["rank"] = result.rank
                     result_json["similarity"] = result.similarity
                     result_json["headline"] = (
-                        f"<span>{verbose_name}: {headline_value}</span>"
+                        f"<p class='headline'>{verbose_name}: {headline_value}</p>"
                         if headline_value and verbose_name
                         else None
                     )
