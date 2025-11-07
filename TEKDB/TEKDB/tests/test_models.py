@@ -370,7 +370,7 @@ class PlacesTest(ITKSearchTest):
 
         keyword = "Tolowa"
         tribe_fk_search = Places.keyword_search(keyword)
-        self.assertEqual(tribe_fk_search.count(), 15)
+        self.assertEqual(tribe_fk_search.count(), 13)
         self.assertTrue(25 in [x.pk for x in tribe_fk_search])
 
     def test_search_model_set_reference(self):

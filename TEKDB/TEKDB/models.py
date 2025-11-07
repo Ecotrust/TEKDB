@@ -106,8 +106,6 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
             # search=vector,
             rank=SearchRank(vector, query),
             similarity=similarity,
-            # adding annotation breaks the distinct() is that okay?
-            # breaks the test_search_foreign_key_field test
             **annotations,
         )
         .filter(
@@ -115,8 +113,9 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
             # Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
             Q(rank__gte=min_search_rank) | Q(similarity__gte=min_search_similarity)
         )
-        .order_by("-rank", "-similarity", sort_field)
-        .distinct()
+        .order_by("pk", "-rank", "-similarity", sort_field)
+        # adding pk to distinct to prevent duplicate ids
+        .distinct("pk")
     )
 
     return results
