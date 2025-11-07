@@ -569,6 +569,35 @@ def get_verbose_field_name(model, field_path):
 
     return field.verbose_name.title() if field else field_path.replace("_", " ").title()
 
+def get_greatest_similarity_attribute(result, pks):
+    greatest_similarity_attribute = None
+    matching_attributes = []
+
+    # get headline and similarity results
+    for match_attr in find_match_attributes(result):
+        match_value = getattr(result, match_attr)
+        if match_value is not None:
+            if match_value == result.similarity:
+                matching_attributes.append(match_attr)
+
+    # If multiple attributes have the same similarity, choose based on number of matching IDs
+    if len(matching_attributes) == 1:
+        greatest_similarity_attribute = matching_attributes[0]
+    elif len(matching_attributes) > 0:
+        num_same_id = pks[result.pk]
+        if num_same_id - 1 < len(matching_attributes):
+            greatest_similarity_attribute = matching_attributes[
+                num_same_id - 1
+            ]
+            pks[result.pk] -= 1
+        else:
+            greatest_similarity_attribute = matching_attributes[0]
+    else:
+        greatest_similarity_attribute = None
+
+    return greatest_similarity_attribute
+
+
 def get_results(keyword_string, categories):
     if keyword_string is None:
         keyword_string = ""
@@ -580,21 +609,31 @@ def get_results(keyword_string, categories):
         for model in query_models:
             # Find all results matching keyword in this model
             model_results = model.keyword_search(keyword_string)
+            pks = {}
+            # Count number of times each pk appears in results
             for result in model_results:
-                greatest_similarity_attribute = None
+                if hasattr(result, "pk"):
+                    if result.pk not in pks:
+                        pks[result.pk] = 1
+                    else:
+                        pks[result.pk] += 1
+            
+            for result in model_results:
                 actual_atribute = None
                 headline_value = None
-                # get headline and similarity results
-                match_attributes = find_match_attributes(result)
+                
+                greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
 
-                for match_attr in match_attributes:
-                    match_value = getattr(result, match_attr)
-                    if match_value is not None:
-                        if match_value == result.similarity:
-                            greatest_similarity_attribute = match_attr
-
-                actual_atribute = remove_match_prefix(greatest_similarity_attribute)
-                verbose_name = get_verbose_field_name(model, actual_atribute)
+                actual_atribute = (
+                    remove_match_prefix(greatest_similarity_attribute)
+                    if greatest_similarity_attribute
+                    else None
+                )
+                verbose_name = (
+                    get_verbose_field_name(model, actual_atribute)
+                    if actual_atribute
+                    else None
+                )
 
                 headline_key = f"headline_{actual_atribute}"
                 if hasattr(result, headline_key):
