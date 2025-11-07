@@ -482,7 +482,7 @@ def search(request):
         % query_value
     )
 
-    resultlist = getResults(query_string, categories)
+    resultlist = get_results(query_string, categories)
     items_per_page = request.GET.get("items_per_page")
     if not items_per_page:
         items_per_page = 25
@@ -544,7 +544,60 @@ def search(request):
     return render(request, "results.html", context)
 
 
-def getResults(keyword_string, categories):
+def find_match_attributes(obj):
+    match_attributes = [attr for attr in dir(obj) if "match" in attr]
+    return match_attributes
+
+
+def remove_match_prefix(string):
+    if string.startswith("match_"):
+        return string[6:]
+    return string
+
+
+def get_verbose_field_name(model, field_path):
+    parts = field_path.split("__")
+    field = None
+    current_model = model
+
+    for part in parts:
+        field = current_model._meta.get_field(part)
+
+        # If it's a related field, follow to the related model
+        if hasattr(field, "related_model") and field.related_model:
+            current_model = field.related_model
+
+    return field.verbose_name.title() if field else field_path.replace("_", " ").title()
+
+
+def get_greatest_similarity_attribute(result, pks):
+    greatest_similarity_attribute = None
+    matching_attributes = []
+
+    # get headline and similarity results
+    for match_attr in find_match_attributes(result):
+        match_value = getattr(result, match_attr)
+        if match_value is not None:
+            if match_value == result.similarity:
+                matching_attributes.append(match_attr)
+
+    # If multiple attributes have the same similarity, choose based on number of matching IDs
+    if len(matching_attributes) == 1:
+        greatest_similarity_attribute = matching_attributes[0]
+    elif len(matching_attributes) > 0:
+        num_same_id = pks[result.pk]
+        if num_same_id - 1 < len(matching_attributes):
+            greatest_similarity_attribute = matching_attributes[num_same_id - 1]
+            pks[result.pk] -= 1
+        else:
+            greatest_similarity_attribute = matching_attributes[0]
+    else:
+        greatest_similarity_attribute = None
+
+    return greatest_similarity_attribute
+
+
+def get_results(keyword_string, categories):
     if keyword_string is None:
         keyword_string = ""
 
@@ -555,15 +608,52 @@ def getResults(keyword_string, categories):
         for model in query_models:
             # Find all results matching keyword in this model
             model_results = model.keyword_search(keyword_string)
+            pks = {}
+            # Count number of times each pk appears in results
             for result in model_results:
-                # Create JSON object to be resturned
+                if hasattr(result, "pk"):
+                    if result.pk not in pks:
+                        pks[result.pk] = 1
+                    else:
+                        pks[result.pk] += 1
+
+            for result in model_results:
+                actual_attribute = None
+                headline_value = None
+
+                greatest_similarity_attribute = get_greatest_similarity_attribute(
+                    result, pks
+                )
+
+                actual_attribute = (
+                    remove_match_prefix(greatest_similarity_attribute)
+                    if greatest_similarity_attribute
+                    else None
+                )
+                verbose_name = (
+                    get_verbose_field_name(model, actual_attribute)
+                    if actual_attribute
+                    else None
+                )
+
+                headline_key = f"headline_{actual_attribute}"
+                if hasattr(result, headline_key):
+                    headline_value = getattr(result, headline_key)
+
+                # Create JSON object to be returned
                 result_json = result.get_response_format()
                 if keyword_string != "":
                     result_json["rank"] = result.rank
                     result_json["similarity"] = result.similarity
+                    result_json["headline"] = (
+                        f"<p class='headline'>{verbose_name}: {headline_value}</p>"
+                        if headline_value and verbose_name
+                        else None
+                    )
                 else:
                     result_json["rank"] = 0
                     result_json["similarity"] = 0
+                    result_json["headline"] = None
 
                 resultlist.append(result_json)
     # Sort results from all models by rank, then similarity (descending)
@@ -583,7 +673,7 @@ def get_category_list(request):
 @login_required
 def download(request):
     categories = get_category_list(request)
-    results = getResults(request.GET.get("query"), categories)
+    results = get_results(request.GET.get("query"), categories)
     format_type = request.GET.get("format")
     filename = "TEK_RESULTS"
     fieldnames = ["id", "name", "description", "type"]

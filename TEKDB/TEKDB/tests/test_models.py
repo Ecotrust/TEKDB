@@ -1,4 +1,7 @@
+from base64 import b64encode
+
 from django.test import TestCase
+from django.test.client import RequestFactory
 from TEKDB.models import (
     Places,
     Resources,
@@ -151,9 +154,9 @@ class MiscSearchTest(ITKSearchTest):
         """
         keyword = "salmon trout"
 
-        from explore.views import getResults
+        from explore.views import get_results
 
-        search_results = getResults(
+        search_results = get_results(
             keyword,
             categories=["places", "resources", "activities", "sources", "media"],
         )
@@ -161,6 +164,150 @@ class MiscSearchTest(ITKSearchTest):
         self.assertTrue(24 in [x["id"] for x in search_results])
         # 362 is cutthroat trout
         self.assertTrue(362 in [x["id"] for x in search_results])
+
+    def test_resource_search(self):
+        """
+        Test that a phrase search returns all objects that contain the phrase
+        """
+        keyword = "flurpie"
+
+        from explore.views import get_results
+
+        search_results = get_results(
+            keyword,
+            categories=["resources"],
+        )
+        ids = [x["id"] for x in search_results]
+        # 387 is test with altindigenousname 'flurpie'
+        self.assertIn(387, ids)
+
+
+class GetVerboseFieldNameTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_get_verbose_field_name_one_model_deep(self):
+        from TEKDB.models import Resources
+        from explore.views import get_verbose_field_name
+
+        model = Resources
+        field_name = "commonname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Common Name")
+
+    def test_get_verbose_field_name_two_deep(self):
+        from TEKDB.models import Resources
+        from explore.views import get_verbose_field_name
+
+        model = Resources
+        field_name = "resourcealtindigenousname__altindigenousname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Alt Name")
+
+    def test_get_verbose_field_name_three_models_deep(self):
+        from TEKDB.models import ResourcesActivityEvents
+        from explore.views import get_verbose_field_name
+
+        model = ResourcesActivityEvents
+        field_name = "placeresourceid__resourceid__commonname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Common Name")
+
+    def test_get_verbose_field_name_four_deep(self):
+        from TEKDB.models import ResourcesActivityEvents
+        from explore.views import get_verbose_field_name
+
+        model = ResourcesActivityEvents
+        field_name = (
+            "placeresourceid__placeid__placealtindigenousname__altindigenousname"
+        )
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Alternate Name")
+
+
+class GreatestSimilarityAttributeTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_get_greatest_similarity_attribute(self):
+        from TEKDB.models import Resources
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "chiton"
+        model_results = Resources.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(
+                result, pks
+            )
+            self.assertIsNotNone(greatest_similarity_attribute)
+
+    def test_get_greatest_similarity_attribute_no_matches(self):
+        from TEKDB.models import Resources
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "gisegiuesgeapgesijeh"  # nonsense keyword to ensure no matches
+        model_results = Resources.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(
+                result, pks
+            )
+            self.assertIsNone(greatest_similarity_attribute)
+
+    def test_get_greatest_similarity_attribute_multiple_matches(self):
+        from TEKDB.models import Places
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "test"  # common keyword with multiple matches
+        model_results = Places.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk in pks:
+                pks[result.pk] += 1
+            else:
+                pks[result.pk] = 1
+
+        similarity_attribute_per_pk = {}
+        pks_before = pks.copy()
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(
+                result, pks
+            )
+            if result.pk not in similarity_attribute_per_pk:
+                similarity_attribute_per_pk[result.pk] = [greatest_similarity_attribute]
+            else:
+                similarity_attribute_per_pk[result.pk].append(
+                    greatest_similarity_attribute
+                )
+
+        for pk, attributes in similarity_attribute_per_pk.items():
+            # remove duplicates from attributes to ensure they are all different
+            unique_attributes = set(attributes)
+            self.assertEqual(len(unique_attributes), pks_before[pk])
 
 
 # LookupTribe
@@ -203,6 +350,7 @@ class PlacesTest(ITKSearchTest):
                 )
             )
 
+    def test_search_foreign_key_field(self):
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
@@ -225,6 +373,7 @@ class PlacesTest(ITKSearchTest):
         self.assertEqual(tribe_fk_search.count(), 13)
         self.assertTrue(25 in [x.pk for x in tribe_fk_search])
 
+    def test_search_model_set_reference(self):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
@@ -251,7 +400,7 @@ class ResourcesTest(ITKSearchTest):
         # print("Total resources: {}".format(Resources.objects.all().count()))
         self.assertTrue(True)
 
-    def test_resources_search(self):
+    def test_search_text_field(self):
         ##############################
         ### TEST TEXT FIELD SEARCH ###
         ##############################
@@ -293,6 +442,7 @@ class ResourcesTest(ITKSearchTest):
             # self.assertTrue(resource.pk in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id])
             self.assertTrue(resource.pk != chiton_id)
 
+    def test_search_foreign_key_field(self):
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
@@ -304,6 +454,7 @@ class ResourcesTest(ITKSearchTest):
         self.assertEqual(anadromous_results.count(), 16)
         self.assertTrue(347 in [x.pk for x in anadromous_results])
 
+    def test_search_model_set_reference(self):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
@@ -320,7 +471,13 @@ class ResourcesTest(ITKSearchTest):
         keyword = "flurpie"
         flurpie_results = Resources.keyword_search(keyword)
         self.assertEqual(flurpie_results.count(), 2)
-        self.assertEqual(flurpie_results[0].commonname, "Test")
+        self.assertEqual(flurpie_results[1].commonname, "Test")
+        self.assertTrue(hasattr(flurpie_results[1], "match_commonname"))
+        self.assertTrue(
+            hasattr(
+                flurpie_results[1], "match_resourcealtindigenousname__altindigenousname"
+            )
+        )
 
     def test_resource_id_collision(self):
         """
