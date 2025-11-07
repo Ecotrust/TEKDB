@@ -569,6 +569,7 @@ def get_verbose_field_name(model, field_path):
 
     return field.verbose_name.title() if field else field_path.replace("_", " ").title()
 
+
 def get_greatest_similarity_attribute(result, pks):
     greatest_similarity_attribute = None
     matching_attributes = []
@@ -586,9 +587,7 @@ def get_greatest_similarity_attribute(result, pks):
     elif len(matching_attributes) > 0:
         num_same_id = pks[result.pk]
         if num_same_id - 1 < len(matching_attributes):
-            greatest_similarity_attribute = matching_attributes[
-                num_same_id - 1
-            ]
+            greatest_similarity_attribute = matching_attributes[num_same_id - 1]
             pks[result.pk] -= 1
         else:
             greatest_similarity_attribute = matching_attributes[0]
@@ -617,12 +616,14 @@ def get_results(keyword_string, categories):
                         pks[result.pk] = 1
                     else:
                         pks[result.pk] += 1
-            
+
             for result in model_results:
                 actual_attribute = None
                 headline_value = None
-                
-                greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
+
+                greatest_similarity_attribute = get_greatest_similarity_attribute(
+                    result, pks
+                )
 
                 actual_attribute = (
                     remove_match_prefix(greatest_similarity_attribute)
