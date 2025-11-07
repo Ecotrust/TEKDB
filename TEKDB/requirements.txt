@@ -31,3 +31,5 @@ ipdb
 ipython
 # FORMATTING AND LINTING
 ruff
+#pre-commit
+pre-commit
