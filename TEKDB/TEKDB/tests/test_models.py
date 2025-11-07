@@ -471,11 +471,11 @@ class ResourcesTest(ITKSearchTest):
         keyword = "flurpie"
         flurpie_results = Resources.keyword_search(keyword)
         self.assertEqual(flurpie_results.count(), 2)
-        self.assertEqual(flurpie_results[0].commonname, "Test")
-        self.assertTrue(hasattr(flurpie_results[0], "match_commonname"))
+        self.assertEqual(flurpie_results[1].commonname, "Test")
+        self.assertTrue(hasattr(flurpie_results[1], "match_commonname"))
         self.assertTrue(
             hasattr(
-                flurpie_results[0], "match_resourcealtindigenousname__altindigenousname"
+                flurpie_results[1], "match_resourcealtindigenousname__altindigenousname"
             )
         )
 
