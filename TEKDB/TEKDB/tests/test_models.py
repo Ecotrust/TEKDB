@@ -228,6 +228,76 @@ class GetVerboseFieldNameTest(TestCase):
         verbose_name = get_verbose_field_name(model, field_name)
         self.assertEqual(verbose_name, "Alternate Name")
 
+class GreatestSimilarityAttributeTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+    
+    def test_get_greatest_similarity_attribute(self):
+        from TEKDB.models import Resources
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "chiton"
+        model_results = Resources.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
+            self.assertIsNotNone(greatest_similarity_attribute)
+    
+    def test_get_greatest_similarity_attribute_no_matches(self):
+        from TEKDB.models import Resources
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "gisegiuesgeapgesijeh"  # nonsense keyword to ensure no matches
+        model_results = Resources.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
+            self.assertIsNone(greatest_similarity_attribute)
+    
+    def test_get_greatest_similarity_attribute_multiple_matches(self):
+        from TEKDB.models import Places
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "test"  # common keyword with multiple matches
+        model_results = Places.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        
+        similarity_attribute_per_pk = {}
+        
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
+            if result.pk not in similarity_attribute_per_pk:
+                similarity_attribute_per_pk[result.pk] = [greatest_similarity_attribute]
+            else:
+                similarity_attribute_per_pk[result.pk].append(greatest_similarity_attribute)
+        
+        for pk, attributes in similarity_attribute_per_pk.items():
+            # remove duplicates from attributes to ensure they are all different
+            unique_attributes = set(attributes)
+            self.assertTrue(len(unique_attributes) == pks[pk])
 
 # LookupTribe
 
