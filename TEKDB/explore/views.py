@@ -619,23 +619,23 @@ def get_results(keyword_string, categories):
                         pks[result.pk] += 1
             
             for result in model_results:
-                actual_atribute = None
+                actual_attribute = None
                 headline_value = None
                 
                 greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
 
-                actual_atribute = (
+                actual_attribute = (
                     remove_match_prefix(greatest_similarity_attribute)
                     if greatest_similarity_attribute
                     else None
                 )
                 verbose_name = (
-                    get_verbose_field_name(model, actual_atribute)
-                    if actual_atribute
+                    get_verbose_field_name(model, actual_attribute)
+                    if actual_attribute
                     else None
                 )
 
-                headline_key = f"headline_{actual_atribute}"
+                headline_key = f"headline_{actual_attribute}"
                 if hasattr(result, headline_key):
                     headline_value = getattr(result, headline_key)
 
