@@ -177,8 +177,9 @@ class MiscSearchTest(ITKSearchTest):
             keyword,
             categories=["resources"],
         )
+        ids = [x["id"] for x in search_results]
         # 387 is test with altindigenousname 'flurpie'
-        self.assertTrue(387 in [x["id"] for x in search_results])
+        self.assertIn(387, ids)
 
 
 class GetVerboseFieldNameTest(TestCase):
@@ -280,13 +281,13 @@ class GreatestSimilarityAttributeTest(TestCase):
 
         pks = {}
         for result in model_results:
-            if result.pk not in pks:
-                pks[result.pk] = 1
-            else:
+            if result.pk in pks:
                 pks[result.pk] += 1
-        
+            else:
+                pks[result.pk] = 1
+
         similarity_attribute_per_pk = {}
-        
+        pks_before = pks.copy()
         for result in model_results:
             greatest_similarity_attribute = get_greatest_similarity_attribute(result, pks)
             if result.pk not in similarity_attribute_per_pk:
@@ -297,7 +298,7 @@ class GreatestSimilarityAttributeTest(TestCase):
         for pk, attributes in similarity_attribute_per_pk.items():
             # remove duplicates from attributes to ensure they are all different
             unique_attributes = set(attributes)
-            self.assertTrue(len(unique_attributes) == pks[pk])
+            self.assertEqual(len(unique_attributes), pks_before[pk])
 
 # LookupTribe
 
