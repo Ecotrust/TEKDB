@@ -271,13 +271,14 @@ class RelatedTest(TestCase):
 
     def test_get_related_places(self):
         from TEKDB.views import get_related
-
+        
         related_request = create_get_related_request(
             self, "places", self.first_place.placeid
         )
         related_request.user = Users.objects.get(username="admin")
         response = get_related(related_request, "places", self.first_place.placeid)
         self.assertEqual(response.status_code, 200)
+        print(response.status_code) 
         data = json.loads(response.content)
         self.assertTrue(isinstance(data, list))
 
