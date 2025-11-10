@@ -45,5 +45,5 @@ jobs:
 
       - name: Run tests
         run: |
-          cd TEKDB && python manage.py test TEKDB.tests
+          cd TEKDB && python manage.py test
       
