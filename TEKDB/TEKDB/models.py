@@ -3331,7 +3331,7 @@ class PlacesMediaEvents(SimpleRelationship):
         }
 
     def get_relationship_json(self, req_model_type):
-        relationship_json = super(SimpleRelationship, self).get_relationship_json(
+        relationship_json = super(PlacesMediaEvents, self).get_relationship_json(
             req_model_type
         )
         # get the file link for media
@@ -4091,7 +4091,7 @@ class ResourcesMediaEvents(SimpleRelationship):
         }
 
     def get_relationship_json(self, req_model_type):
-        relationship_json = super(SimpleRelationship, self).get_relationship_json(
+        relationship_json = super(ResourcesMediaEvents, self).get_relationship_json(
             req_model_type
         )
         # get the file link for media
