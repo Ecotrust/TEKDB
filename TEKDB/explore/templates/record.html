@@ -78,6 +78,14 @@
                     {% endif %}
                     <div class="row align-items-baseline">
                       {% if link.issimplerelationship %}
+                          {% if relationship.key == "Media" %}
+                            {% if link.file and link.file.type == "image" %}
+                            <div class="col-md-6">
+                              <img src="{{ MEDIA_URL }}{{ link.file.file }}" />
+                              <br />
+                            </div>
+                            {% endif %}
+                          {% endif %}
                           <a href="{{ link.link }}{{ state }}"><strong>{{ link.name }}</strong></a>
                           {% if link.data.description %}
                             <div class='source-excerpt'>
@@ -126,7 +134,6 @@
           <div class="row">
             <div class="col">
               <div>
-                <!-- <a class='btn-download' href="{{ MEDIA_URL }}{{ record.media.file }}">Download</a> -->
                 <a class="btn btn-download" href="download">Download</a>
               </div>
             </div>
