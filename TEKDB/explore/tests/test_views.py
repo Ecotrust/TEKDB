@@ -40,8 +40,8 @@ class SearchTest(TestCase):
         # Assert that the search query string matches the query string submitted
         self.assertEqual(query_string, request.GET["query"])
 
-class GetModelByIdTest(TestCase):
 
+class GetModelByIdTest(TestCase):
     def setUp(self):
         import_fixture_file(
             join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")

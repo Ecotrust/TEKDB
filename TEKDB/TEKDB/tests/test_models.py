@@ -769,6 +769,26 @@ class PlacesMediaEventsTest(ITKTestCase):
         )
         self.assertTrue(collision_result)
 
+    def test_places_media_get_relationship_json(self):
+        """
+        Test that the response from get_relationship_json includes a file field with the media url
+        """
+        place = Places.objects.first()
+        media = Media.objects.create(
+            medianame="Test Media",
+            mediadescription="Test Media Description",
+            mediafile="test_media_file.jpg",
+        )
+        event = PlacesMediaEvents.objects.create(
+            placeid=place,
+            mediaid=media,
+            relationshipdescription="Test Relationship",
+        )
+        relationship_json = event.get_relationship_json(Places)
+
+        self.assertIn("file", relationship_json)
+        self.assertDictEqual(relationship_json["file"], media.media())
+
 
 class PlacesMediaEventsCascadeTest(ITKTestCase):
     def setUp(self):
@@ -1052,6 +1072,27 @@ class ResourcesMediaEventsTest(ITKTestCase):
             ResourcesMediaEvents, insertion_object, self
         )
         self.assertTrue(collision_result)
+
+    def test_resource_media_relationship_json(self):
+        """
+        Test that the response from get_relationship_json includes a file field with the media url
+        """
+        resource = Resources.objects.first()
+        media = Media.objects.create(
+            medianame="Test Media with File",
+            mediadescription="Test Media Description",
+            mediafile="test_media_file.png",
+        )
+        event = ResourcesMediaEvents.objects.create(
+            resourceid=resource,
+            mediaid=media,
+            relationshipdescription="Test Relationship with File",
+        )
+
+        relationship_json = event.get_relationship_json(Resources)
+
+        self.assertIn("file", relationship_json)
+        self.assertDictEqual(relationship_json["file"], media.media())
 
 
 # ResourceResourceEvents ('Resources - Resources')
