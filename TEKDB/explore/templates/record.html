@@ -79,13 +79,13 @@
                     <div class="row align-items-baseline">
                       {% if link.issimplerelationship %}
                           {% if relationship.key == "Media" %}
-                            {% if link.file.type == 'image' %}
+                            {% if link.file and link.file.type == "image" %}
                             <div class="col-md-6">
                               <img src="{{ MEDIA_URL }}{{ link.file.file }}" />
                               <br />
                             </div>
                             {% endif %}
-                          {% endif%}
+                          {% endif %}
                           <a href="{{ link.link }}{{ state }}"><strong>{{ link.name }}</strong></a>
                           {% if link.data.description %}
                             <div class='source-excerpt'>
