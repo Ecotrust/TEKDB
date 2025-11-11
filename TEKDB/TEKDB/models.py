@@ -3329,6 +3329,15 @@ class PlacesMediaEvents(SimpleRelationship):
             "description": self.relationshipdescription,
             "link": "/explore/%s/%d" % (type, self.pk),
         }
+    
+    def get_relationship_json(self, req_model_type):
+        relationship_json = super(SimpleRelationship, self).get_relationship_json(req_model_type)
+        # get the file link for media
+        if req_model_type == Places:
+            media_file_link = self.mediaid.media()
+            relationship_json["file"] = media_file_link
+
+        return relationship_json
 
     def get_relationship_model(self, req_model):
         if req_model == Media:
@@ -4079,6 +4088,15 @@ class ResourcesMediaEvents(SimpleRelationship):
             "link": "/explore/%s/%d" % (type, self.pk),
         }
 
+    def get_relationship_json(self, req_model_type):
+        relationship_json = super(SimpleRelationship, self).get_relationship_json(req_model_type)
+        # get the file link for media
+        if req_model_type == Resources:
+            media_file_link = self.mediaid.media()
+            relationship_json["file"] = media_file_link
+
+        return relationship_json
+    
     def get_relationship_model(self, req_model):
         if req_model == Resources:
             return self.mediaid

@@ -39,3 +39,13 @@ class SearchTest(TestCase):
         request.user = Users.objects.get(username="admin")
         # Assert that the search query string matches the query string submitted
         self.assertEqual(query_string, request.GET["query"])
+
+class GetModelByIdTest(TestCase):
+
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
