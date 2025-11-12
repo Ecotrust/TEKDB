@@ -212,7 +212,11 @@ def get_by_model_id(request, model_type, id):
                         hasPlaceResourceRelationships = True
                         break
 
-    if "map" in record_dict.keys() and record_dict["map"] is not None or hasPlaceResourceRelationships:
+    if (
+        "map" in record_dict.keys()
+        and record_dict["map"] is not None
+        or hasPlaceResourceRelationships
+    ):
         DATABASE_GEOGRAPHY = get_project_geography()
         context["default_lon"] = DATABASE_GEOGRAPHY["default_lon"]
         context["default_lat"] = DATABASE_GEOGRAPHY["default_lat"]

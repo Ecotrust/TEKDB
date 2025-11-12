@@ -18,6 +18,7 @@ def mult(value, arg):  # noqa: F811
 
 # register.filter('mult', mult)
 
+
 @register.filter
 def some(value, key):
     """Check if any item in the list has the specified key."""

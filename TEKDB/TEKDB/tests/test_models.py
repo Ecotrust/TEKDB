@@ -1042,7 +1042,7 @@ class PlacesResourceEventsTest(ITKTestCase):
             PlacesResourceEvents, insertion_object, self
         )
         self.assertTrue(collision_result)
-    
+
     def test_places_resource_get_query_json_has_map(self):
         """
         Test that the response from get_query_json includes no map data when map is False
@@ -1064,8 +1064,10 @@ class PlacesResourceEventsTest(ITKTestCase):
         """
         Test that the response from get_query_json includes no map data when map is False
         """
-        place = Places.objects.create(indigenousplacename="Test Place",
-            englishplacename="Test Place English",)
+        place = Places.objects.create(
+            indigenousplacename="Test Place",
+            englishplacename="Test Place English",
+        )
         resource = Resources.objects.create(
             commonname="Test Resource", indigenousname="Test Resource Indigenous"
         )
