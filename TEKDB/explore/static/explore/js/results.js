@@ -274,7 +274,7 @@ function show_map_results() {
     },
     features: features,
   };
-  console.log("HERE", featureCollection);
+
   var jsonFeatures = new ol.format.GeoJSON().readFeatures(featureCollection);
   vectorLayer.getSource().addFeatures(jsonFeatures);
 
