@@ -44,7 +44,7 @@ jobs:
           python -m pip install -r TEKDB/requirements.txt
       
       - name: Run Ruff
-        run: cd TEKDB && ruff check --output-format=full --output-format=github .
+        run: cd TEKDB && ruff check . --output-format=full
 
       - name: Run tests
         run: |
