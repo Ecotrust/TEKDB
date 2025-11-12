@@ -2,6 +2,10 @@
   height: 25em;
 }
 
+#place-resource-map {
+  height: 25em;
+}
+
 #places-resources-map {
   height: 25em;
   width: 100%;

@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="/static/explore/css/record.css">
 {% endblock %}
 
+{% load explore_tags %}
+
 {% block contentwrapper %}
 <div class="container record-wrapper content-container">
   <div class="row">
@@ -72,10 +74,10 @@
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
                   <h3>{{ relationship.key }}</h3>
-                  {% if relationship.key == "Place-Resource Events" %}
+                    {% if relationship.key == "Place-Resource Events" and model == 'resources' and relationship.value|some:"map" %}
                     <div class="col-md-6">
-                      {% with maps=relationship.value %}
-                        {% include "places-resources-map.html" with maps=maps %}
+                      {% with place_resource_features=relationship.value %}
+                        {% include "places-resources-map.html" with place_resource_features=place_resource_features %}
                       {% endwith %}
                     </div>
                   {% endif %}

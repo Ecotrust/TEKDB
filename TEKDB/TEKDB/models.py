@@ -1308,15 +1308,11 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
 
     def get_query_json(self):
         query_json = super().get_query_json()
-        # add place map information
         place_geom = self.placeid.map()
-        query_json["map"] = place_geom
-        query_json["default_lon"] = None
-        query_json["default_lat"] = None
-        query_json["default_zoom"] = None
-        query_json["min_zoom"] = None
-        query_json["max_zoom"] = None
-        query_json["map_extent"] = None
+
+        if place_geom:
+            # add place map information if available
+            query_json["map"] = place_geom
         return query_json
 
     def get_response_format(self):
