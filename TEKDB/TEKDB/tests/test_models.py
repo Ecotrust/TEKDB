@@ -1045,7 +1045,7 @@ class PlacesResourceEventsTest(ITKTestCase):
 
     def test_places_resource_get_query_json_has_map(self):
         """
-        Test that the response from get_query_json includes no map data when map is False
+        Test that the response from get_query_json includes map data when map is True
         """
         place = Places.objects.get(pk=19)
         resource = Resources.objects.create(
