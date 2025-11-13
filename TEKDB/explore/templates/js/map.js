@@ -76,8 +76,6 @@ const getEsriAerial = () => {
   });
 }
 
-const esriLabels = getEsriLabels();
-const esriAerial = getEsriAerial();
 
 const getVectorLayer = (vectorSource) => {
   return new ol.layer.Vector({
@@ -130,8 +128,6 @@ const getMousePositionControl = (target) => {
     undefinedHTML: '&nbsp;'
   });
 };
-
-
 
 /*--- MAP ZOOM ---*/
 
@@ -200,6 +196,10 @@ const mapView = () => {
 
 {% if record.map %}
 
+
+  const mainEsriLabels = getEsriLabels();
+  const mainEsriAerial = getEsriAerial();
+
   const mainScaleLineControl = getScaleLineControl();
   const mainMousePositionControl = getMousePositionControl('mouse-position');
   const mapVectorLayer = getVectorLayer(getVectorSource('{{ record.map | safe }}'));
@@ -250,7 +250,10 @@ const mapView = () => {
 
   const placeResourceVectorLayer = getVectorLayer(new ol.source.Vector());
 
-  const placeResourceMapLayers = getMapLayers([placeResourceVectorLayer, esriLabels], [esriAerial]);
+  const placeResourceEsriLabels = getEsriLabels();
+  const placeResourceEsriAerial = getEsriAerial();
+
+  const placeResourceMapLayers = getMapLayers([placeResourceVectorLayer, placeResourceEsriLabels], [placeResourceEsriAerial]);
   const placeResourceScaleLineControl = getScaleLineControl();
   const placeResourceMouseControl = getMousePositionControl('place-resource-mouse-position');
   const placeResourceMapControls = [placeResourceScaleLineControl, placeResourceMouseControl];
