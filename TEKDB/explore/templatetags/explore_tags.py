@@ -22,4 +22,7 @@ def mult(value, arg):  # noqa: F811
 @register.filter
 def some(value, key):
     """Check if any item in the list has the specified key."""
-    return any(key in item for item in value)
+    try:
+        return any(key in item for item in value)
+    except (TypeError, AttributeError):
+        return False

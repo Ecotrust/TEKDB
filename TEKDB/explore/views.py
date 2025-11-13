@@ -211,6 +211,8 @@ def get_by_model_id(request, model_type, id):
                     if "map" in value.keys() and value["map"] is not None:
                         hasPlaceResourceRelationships = True
                         break
+                if hasPlaceResourceRelationships:
+                    break
 
     if (
         "map" in record_dict.keys()
