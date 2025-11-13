@@ -49,7 +49,7 @@ const applyStyles = (mapPin) => (feature) => {
 /* --- LAYERS --*/
 const getEsriLabels = () => {
   return new ol.layer.Tile({
-    title: 'Labels',  
+    title: 'Labels',
     zIndex: 5,
     source: new ol.source.XYZ({
       url: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
@@ -65,7 +65,7 @@ const getEsriAerial = () => {
   return new ol.layer.Tile({
     title: 'Aerial',
     type: 'base',
-    visible: 'true',
+    visible: true,
     source: new ol.source.XYZ({
       url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
       attributions: [
@@ -203,7 +203,7 @@ const mapView = () => {
   const mainScaleLineControl = getScaleLineControl();
   const mainMousePositionControl = getMousePositionControl('mouse-position');
   const mapVectorLayer = getVectorLayer(getVectorSource('{{ record.map | safe }}'));
-  const mainMapLayers = getMapLayers([mapVectorLayer, esriLabels], [esriAerial]);
+  const mainMapLayers = getMapLayers([mapVectorLayer, mainEsriLabels], [mainEsriAerial]);
   const mainMapControls = [mainScaleLineControl, mainMousePositionControl];
   const mainMapTarget = 'map';
 
