@@ -33,7 +33,7 @@ const applyStyles = (mapPin) => (feature) => {
   if (!style) {
     style = getStyles(getFill(), getStroke(), getDefaultRadius());
   }
-  if (feature.getGeometry().getType() == 'Point' && mapPin != "") {
+  if (feature.getGeometry().getType() === 'Point' && mapPin !== "") {
     style.setImage( new ol.style.Icon({
       anchor: [0.5, 1],
       anchorXUnits: 'fraction',
@@ -52,9 +52,9 @@ const getEsriLabels = () => {
     title: 'Labels',  
     zIndex: 5,
     source: new ol.source.XYZ({
-      url: "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
       attributions: [
-        "<br/><a href='http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
+        "<br/><a href='https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
           Labels Sources: Esri, HERE, DeLorme, MapmyIndia, Â© OpenStreetMap contributors, and the GIS user community</a>"
       ]
     })
@@ -69,7 +69,7 @@ const getEsriAerial = () => {
     source: new ol.source.XYZ({
       url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
       attributions: [
-        "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
+        "<a href='https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
           Aerial Sources: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community</a>"
       ]
     })
@@ -131,8 +131,7 @@ const getMousePositionControl = (target) => {
   });
 };
 
-const scaleLineControl = getScaleLineControl();
-const mainMousePositionControl = getMousePositionControl('mouse-position');
+
 
 /*--- MAP ZOOM ---*/
 
@@ -159,7 +158,7 @@ const getMapLayers = (overlayLayers, baseLayers) => {
       zIndex: 10
     }),
     new ol.layer.Group({
-      'title': 'Base Maps',
+      title: 'Base Maps',
       layers: baseLayers,
       zIndex: 0
     })
@@ -200,12 +199,13 @@ const mapView = () => {
 /*--- MAIN MAP ---*/
 
 {% if record.map %}
+
+  const mainScaleLineControl = getScaleLineControl();
+  const mainMousePositionControl = getMousePositionControl('mouse-position');
   const mapVectorLayer = getVectorLayer(getVectorSource('{{ record.map | safe }}'));
   const mainMapLayers = getMapLayers([mapVectorLayer, esriLabels], [esriAerial]);
-  const mainMapControls = [scaleLineControl, mainMousePositionControl];
+  const mainMapControls = [mainScaleLineControl, mainMousePositionControl];
   const mainMapTarget = 'map';
-
-
 
   const getMainMap = () => getMap(
     mainMapTarget,
@@ -221,49 +221,50 @@ const mapView = () => {
 /* --- PLACE-RESOURCE MAP ---*/
 
 {% if place_resource_features %}
-const makePlaceResourceFeaturesArray = () => {
-  const features = [];
-  {% for feature in place_resource_features %}
-    {% if feature.map %}
-      const geometry_{{ forloop.counter }} = JSON.parse(`{{ feature.map|safe }}`);
-      if (geometry_{{ forloop.counter }}) {
-        const feature = {
-          type: "Feature",
-          id: {{ forloop.counter }},
-          geometry: geometry_{{ forloop.counter }},
-          properties: {
-            id: '{{ forloop.counter }}',
-            name: '{{ feature.name|escapejs }}'
-          }
-        };
+  const makePlaceResourceFeaturesArray = () => {
+    const features = [];
+    {% for feature in place_resource_features %}
+      {% if feature.map %}
+        const geometry_{{ forloop.counter }} = JSON.parse(`{{ feature.map|safe }}`);
+        if (geometry_{{ forloop.counter }}) {
+          const feature = {
+            type: "Feature",
+            id: {{ forloop.counter }},
+            geometry: geometry_{{ forloop.counter }},
+            properties: {
+              id: '{{ forloop.counter }}',
+              name: '{{ feature.name|escapejs }}'
+            }
+          };
 
-        features.push(feature);
-      }
-    {% endif %}
-  {% endfor %}
-  return features;
-}
+          features.push(feature);
+        }
+      {% endif %}
+    {% endfor %}
+    return features;
+  }
 
-const placeResourcesFeatures = makePlaceResourceFeaturesArray();
-const placeResourceFeatureCollection = makeFeatureCollection(placeResourcesFeatures);
-const placeResourceGeojson = getGeojsonFromFeatureCollection(placeResourceFeatureCollection);
+  const placeResourcesFeatures = makePlaceResourceFeaturesArray();
+  const placeResourceFeatureCollection = makeFeatureCollection(placeResourcesFeatures);
+  const placeResourceGeojson = getGeojsonFromFeatureCollection(placeResourceFeatureCollection);
 
-const placeResourceVectorLayer = getVectorLayer(new ol.source.Vector());
+  const placeResourceVectorLayer = getVectorLayer(new ol.source.Vector());
 
-const placeResourceMapLayers = getMapLayers([placeResourceVectorLayer, esriLabels], [esriAerial]);
-const placeResourceMouseControl = getMousePositionControl('place-resource-mouse-position');
-const placeResourceMapControls = [scaleLineControl, placeResourceMouseControl];
-const placeResourceMapTarget = 'place-resource-map';
+  const placeResourceMapLayers = getMapLayers([placeResourceVectorLayer, esriLabels], [esriAerial]);
+  const placeResourceScaleLineControl = getScaleLineControl();
+  const placeResourceMouseControl = getMousePositionControl('place-resource-mouse-position');
+  const placeResourceMapControls = [placeResourceScaleLineControl, placeResourceMouseControl];
+  const placeResourceMapTarget = 'place-resource-map';
 
-const getPlaceResourceMap = () => getMap(
-  placeResourceMapTarget,
-  placeResourceMapControls,
-  placeResourceMapLayers,
-  mapView()
-);
+  const getPlaceResourceMap = () => getMap(
+    placeResourceMapTarget,
+    placeResourceMapControls,
+    placeResourceMapLayers,
+    mapView()
+  );
 
-const placeResourceMap = getPlaceResourceMap();
-addFeaturesToSource(placeResourceVectorLayer, placeResourceGeojson);
-fitMapToFeatures(placeResourceVectorLayer, placeResourceMap);
+  const placeResourceMap = getPlaceResourceMap();
+  addFeaturesToSource(placeResourceVectorLayer, placeResourceGeojson);
+  fitMapToFeatures(placeResourceVectorLayer, placeResourceMap);
 
 {% endif %}
