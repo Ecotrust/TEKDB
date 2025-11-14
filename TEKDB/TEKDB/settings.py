@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 from glob import glob
+import subprocess
 
 try:
     GDAL_LIBRARY_PATH = glob("/usr/lib/libgdal.so.*")[0]
@@ -230,9 +231,13 @@ TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
 
 # Add Version to the admin site header
-VERSION = "2.2.2"
+try:
+    VERSION = subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]).decode("utf-8").strip()
+except Exception:
+    VERSION = "unknown"
+
 ADMIN_SITE_HEADER = os.environ.get(
-    "ADMIN_SITE_HEADER", default="ITK DB Admin v{}".format(VERSION)
+    "ADMIN_SITE_HEADER", default="ITK DB Admin {}".format(VERSION)
 )
 
 # X Frame Options
