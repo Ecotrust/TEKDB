@@ -21,6 +21,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        APP_VERSION: ${APP_VERSION}
     restart: unless-stopped
     depends_on:
       - db
@@ -35,6 +37,7 @@ services:
       SQL_PASSWORD: postgrespw
       SECRET_KEY: 'change-me'
       DEBUG: '0'
+      APP_VERSION: ${APP_VERSION}
     ports:
       - "8000:8000"
     volumes:

@@ -1,0 +1,22 @@
+name: Build Docker Image on Release
+
+on:
+  push
+
+# on:
+#   release:
+#     types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set version
+        run: echo "APP_VERSION=${GITHUB_REF_NAME#v}" >> .env
+
+    #   - name: Build images
+    #     run: docker compose build --build-arg APP_VERSION=${GITHUB_REF_NAME#v}
