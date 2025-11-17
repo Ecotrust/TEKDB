@@ -1306,6 +1306,15 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
             )
         return relationship_list
 
+    def get_query_json(self):
+        query_json = super().get_query_json()
+        place_geom = self.placeid.map()
+
+        if place_geom:
+            # add place map information if available
+            query_json["map"] = place_geom
+        return query_json
+
     def get_response_format(self):
         type = "Placesresourceevents"
         category_name = "Place - Resource"
