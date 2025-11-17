@@ -228,9 +228,15 @@ table#results_table>thead {
   vertical-align: middle;
 }
 
-#results_table td:last-of-type {
+#results_table td:nth-of-type(3) {
   font-family: var(--font-sans-serif);
   font-size: .875em;
+}
+
+#results_table td .headline {
+  font-family: var(--font-sans-serif);
+  font-size: .875em;
+  margin: 0;
 }
 
 #results_table_length {
@@ -367,4 +373,8 @@ div.alert-notification p {
   color: var(--highlight_font);
   margin-bottom: 0;
   font-size: 0.9rem;
+}
+
+.highlight {
+  background-color: yellow;
 }

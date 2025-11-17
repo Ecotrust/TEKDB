@@ -32,3 +32,5 @@ ipython
 
 # Serve static files in production containers
 whitenoise
+# FORMATTING AND LINTING
+ruff
