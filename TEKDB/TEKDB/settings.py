@@ -179,6 +179,8 @@ MEDIA_URL = "/media/"
 
 DIRECTORY = MEDIA_URL
 
+FILEBROWSER_LIST_PER_PAGE = 20
+
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATIC_URL = "/static/"
