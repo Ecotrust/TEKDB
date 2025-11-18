@@ -12,6 +12,7 @@ django-reversion
 django-tinymce
 pillow
 psycopg2-binary
+django-filebrowser-no-grappelli
 
 XlsxWriter
 #-e git+https://github.com/dominno/django-moderation.git@master#egg=moderation

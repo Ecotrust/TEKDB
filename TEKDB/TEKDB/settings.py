@@ -47,6 +47,7 @@ SITE_ID = 1
 INSTALLED_APPS = [
     "dal",
     "dal_select2",
+    "filebrowser",
     "django.contrib.contenttypes",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -175,6 +176,8 @@ STATICFILES_FINDERS = [
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 MEDIA_URL = "/media/"
+
+DIRECTORY = MEDIA_URL
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 

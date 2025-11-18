@@ -27,12 +27,16 @@ from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from filebrowser.sites import site as filebrowser_site
 from login import views as login_views
 
 from . import views
 
+filebrowser_site.directory = ""
+
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
+    path("admin/filebrowser/", filebrowser_site.urls),
     path("login/", login_views.login, name="login"),
     path("login_async/", login_views.login_async, name="login_async"),
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
