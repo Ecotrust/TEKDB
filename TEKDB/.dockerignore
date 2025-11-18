@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Editor & OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Git
+.git
+.gitignore
+
+# Build/dist
+build/
+dist/
+*.egg-info
+
+# Static/local settings
+media/
+static/
+local_settings.py
+*.sqlite3
+*.log
+
+# Node
+node_modules/
+
+# Docker
+Dockerfile
+docker-compose*.yml
