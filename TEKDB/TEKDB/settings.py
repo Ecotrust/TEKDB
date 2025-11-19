@@ -179,7 +179,6 @@ MEDIA_URL = "/media/"
 
 DIRECTORY = MEDIA_URL
 
-FILEBROWSER_LIST_PER_PAGE = 20
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -187,6 +186,25 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+###########################################
+##            FILEBROWSER               ###
+###########################################
+FILEBROWSER_LIST_PER_PAGE = 20
+
+FILEBROWSER_EXTENSIONS = {
+    'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff'],
+    'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.docx'],
+    'Video': ['.mov', '.mp4', '.m4v', '.webm', '.wmv', '.mpeg', '.mpg', '.avi', '.rm'],
+    'Audio': ['.mp3', '.wav', '.aiff', '.midi', '.m4p']
+}
+
+FILEBROWSER_EXCLUDE = ['.py']  # Exclude Python files
+
+FILEBROWSER_VERSIONS_BASEDIR = ""
+
+FILEBROWSER_VERSIONS = {}
+
+###
 # STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "explore", "static"),
 #    os.path.join(BASE_DIR, "TEKDB", "static"),
