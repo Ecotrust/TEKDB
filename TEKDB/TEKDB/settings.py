@@ -200,9 +200,13 @@ FILEBROWSER_EXTENSIONS = {
 
 FILEBROWSER_EXCLUDE = ['.py']  # Exclude Python files
 
-FILEBROWSER_VERSIONS_BASEDIR = ""
+FILEBROWSER_VERSIONS_BASEDIR = "_versions"
 
-FILEBROWSER_VERSIONS = {}
+FILEBROWSER_ADMIN_THUMBNAIL = "admin_thumbnail"
+
+FILEBROWSER_VERSIONS = {
+    'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
+}
 
 ###
 # STATICFILES_DIRS = [
