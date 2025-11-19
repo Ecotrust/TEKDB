@@ -1,82 +1,144 @@
 from django.core.files.storage import DefaultStorage
-# from django.core.paginator import Paginator, EmptyPage
-# from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage
+from django.conf import settings
 from filebrowser.sites import FileBrowserSite
 
+def media_matches(media_filter, obj):
+    """Return True if `obj` satisfies the media-record filter.
+
+    Supported values for media_filter:
+    - 'has_record' -> keep objects where obj.has_media_record() is True
+    - 'no_record'  -> keep objects where obj.has_media_record() is False
+    If no media_filter is set, everything matches.
+    """
+    if not media_filter:
+        return True
+    try:
+        has_attr = getattr(obj, 'has_media_record', None)
+        if callable(has_attr):
+            has = bool(has_attr())
+        else:
+            has = bool(has_attr)
+    except Exception:
+        has = False
+    if media_filter == 'has_record':
+        return has
+    if media_filter == 'no_record':
+        return not has
+    return True
 
 class FilesOnlyFileBrowserSite(FileBrowserSite):
     def browse(self, request):
+        """Call upstream browse(), then apply server-side filtering for the
+        `filter_media_record` query parameter. This keeps the UI filter backed
+        by server logic without changing upstream code.
+        """
         response = super().browse(request)
 
-        # if hasattr(response, 'context_data'):
-        #     paginator_replacements = {}
+        # Only proceed if the TemplateResponse has context data we can
+        # mutate.
+        if not hasattr(response, 'context_data'):
+            return response
 
-        #     for key, val in list(response.context_data.items()):
-        #         try:
-        #             # If this is a paginated Page-like object, rebuild the
-        #             # paginator using the filtered full object list.
-        #             if hasattr(val, 'paginator') and hasattr(val, 'number'):
-        #                 orig_paginator = val.paginator
-        #                 try:
-        #                     full_list = list(orig_paginator.object_list)
-        #                 except Exception:
-        #                     full_list = list(getattr(val, 'object_list', []))
+        media_filter = None
+        try:
+            media_filter = request.GET.get('filter_media_record')
+        except Exception:
+            media_filter = None
 
-        #                 # don't show folders or .py files
-        #                 # TODO: is this ok?
-        #                 filtered_full = [o for o in full_list if not getattr(o, 'is_folder', False) and not str(o).endswith('.py')]
+        paginator_replacements = {}
 
-        #                 # Recreate paginator and select the same page number if possible
-        #                 # Prefer the explicit FILEBROWSER_LIST_PER_PAGE setting
-        #                 # if the project defines it. Otherwise fall back to the
-        #                 # original paginator's per_page value, then to 20.
-        #                 per_page = getattr(settings, 'FILEBROWSER_LIST_PER_PAGE', None)
-        #                 if not per_page:
-        #                     per_page = getattr(orig_paginator, 'per_page', 20)
-        #                 new_paginator = Paginator(filtered_full, per_page)
-        #                 page_number = getattr(val, 'number', 1)
-        #                 try:
-        #                     new_page = new_paginator.page(page_number)
-        #                 except EmptyPage:
-        #                     # If requested page is out of range after filtering,
-        #                     # return the last page instead.
-        #                     new_page = new_paginator.page(new_paginator.num_pages)
+        # Walk context values and filter lists / paginators / pages
+        for key, val in list(response.context_data.items()):
+            print("Processing context key:", key)
+            try:
+                # Page-like objects (have .paginator and .number)
+                if hasattr(val, 'paginator') and hasattr(val, 'number'):
+                    orig_paginator = val.paginator
+                    try:
+                        full_list = list(orig_paginator.object_list)
+                    except Exception:
+                        full_list = list(getattr(val, 'object_list', []))
 
-        #                 # Replace this page in the context and remember the
-        #                 # paginator mapping so other context keys can be
-        #                 # updated too.
-        #                 response.context_data[key] = new_page
-        #                 paginator_replacements[orig_paginator] = new_paginator
+                    filtered_full = [o for o in full_list if media_matches(media_filter, o)]
 
-        #             # Plain lists/tuples (e.g. 'folders')
-        #             elif isinstance(val, (list, tuple)):
-        #                 response.context_data[key] = [o for o in val if not getattr(o, 'is_folder', False)]
-        #         except Exception:
-        #             # On any unexpected structure, skip and leave it unchanged
-        #             pass
+                    per_page = getattr(settings, 'FILEBROWSER_LIST_PER_PAGE', None)
+                    if not per_page:
+                        per_page = getattr(orig_paginator, 'per_page', 10)
 
-        #         for new in list(paginator_replacements.values()):
-        #             print(new)
-        #             new_count = getattr(new, 'count', None)
-        #             print(new_count)
-        #             if new_count is None:
-        #                 # Fallback to len of object_list if paginator doesn't
-        #                 # expose count (shouldn't happen with Django Paginator)
-        #                 new_count = len(getattr(new, 'object_list', []))
+                    new_paginator = Paginator(filtered_full, per_page)
+                    page_number = getattr(val, 'number', 1)
+                    try:
+                        new_page = new_paginator.page(page_number)
+                    except EmptyPage:
+                        new_page = new_paginator.page(new_paginator.num_pages)
 
-        #             for value in list(response.context_data.values()):
-        #                 try:
-        #                     if hasattr(value, 'results_total'):
-        #                         setattr(value, 'results_total', new_count)
+                    response.context_data[key] = new_page
+                    paginator_replacements[orig_paginator] = new_paginator
 
-        #                 except Exception:
-        #                     # Non-critical; skip any objects we can't mutate
-        #                     pass
+                # Objects with object_list attribute but not a paginator
+                elif hasattr(val, 'object_list') and key == 'p':
+                    print("Filtering object_list for key:", key)
+                    objs = list(val.object_list)
+                    print("Objs before filtering:", objs)
+                    filtered = [o for o in objs if media_matches(media_filter, o)]
+                    val.object_list = filtered
+
+            except Exception:
+                # Non-fatal: skip entries we can't process
+                pass
+
+        # Replace any remaining references to original paginators with the
+        # new ones so counts/num_pages are consistent.
+        if paginator_replacements:
+            for key, val in list(response.context_data.items()):
+                for orig, new in list(paginator_replacements.items()):
+                    if val is orig:
+                        response.context_data[key] = new
+                    elif hasattr(val, 'paginator') and val.paginator is orig:
+                        page_number = getattr(val, 'number', 1)
+                        try:
+                            response.context_data[key] = new.page(page_number)
+                        except EmptyPage:
+                            response.context_data[key] = new.page(new.num_pages)
+
+        # Update filelisting counts if present
+        try:
+            filelisting = response.context_data.get('filelisting')
+            if filelisting is not None:
+                # If filelisting exposes a list of current files, try to
+                # update results_current/total conservatively.
+                try:
+                    # Some implementations keep a 'results_current' attr
+                    # pointing at the currently visible files.
+                    if hasattr(filelisting, 'results_current'):
+                        # Try to infer count from page/paginator if present
+                        page = response.context_data.get('page') or response.context_data.get('p')
+                        if page is not None and hasattr(page, 'object_list'):
+                            filelisting.results_current = len(list(page.object_list))
+                        else:
+                            # Fallback: see if filelisting provides a total list
+                            try:
+                                filelisting.results_current = len(list(filelisting.files_listing_filtered()))
+                            except Exception:
+                                pass
+                    if hasattr(filelisting, 'results_total'):
+                        # If we can derive a total from a paginator replacement
+                        p_new = None
+                        for new in paginator_replacements.values():
+                            p_new = new
+                            break
+                        if p_new is not None:
+                            filelisting.results_total = getattr(p_new, 'count', len(getattr(p_new, 'object_list', [])))
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
         return response
 
 
 # Create your custom site instance
 storage = DefaultStorage()
-site = FilesOnlyFileBrowserSite(name="filebrowser", storage=storage)
+site = FilesOnlyFileBrowserSite(name='filebrowser', storage=storage)
 site.directory = ""
