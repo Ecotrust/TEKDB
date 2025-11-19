@@ -1,6 +1,6 @@
 from django.core.files.storage import DefaultStorage
-from django.core.paginator import Paginator, EmptyPage
-from django.conf import settings
+# from django.core.paginator import Paginator, EmptyPage
+# from django.conf import settings
 from filebrowser.sites import FileBrowserSite
 
 
@@ -23,7 +23,7 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
         #                     full_list = list(getattr(val, 'object_list', []))
 
         #                 # don't show folders or .py files
-        #                 # TODO: is this ok? 
+        #                 # TODO: is this ok?
         #                 filtered_full = [o for o in full_list if not getattr(o, 'is_folder', False) and not str(o).endswith('.py')]
 
         #                 # Recreate paginator and select the same page number if possible
@@ -54,8 +54,7 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
         #         except Exception:
         #             # On any unexpected structure, skip and leave it unchanged
         #             pass
-                
-            
+
         #         for new in list(paginator_replacements.values()):
         #             print(new)
         #             new_count = getattr(new, 'count', None)
@@ -73,10 +72,11 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
         #                 except Exception:
         #                     # Non-critical; skip any objects we can't mutate
         #                     pass
-        
+
         return response
+
 
 # Create your custom site instance
 storage = DefaultStorage()
-site = FilesOnlyFileBrowserSite(name='filebrowser', storage=storage)
+site = FilesOnlyFileBrowserSite(name="filebrowser", storage=storage)
 site.directory = ""

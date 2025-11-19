@@ -192,20 +192,25 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 FILEBROWSER_LIST_PER_PAGE = 20
 
 FILEBROWSER_EXTENSIONS = {
-    'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff'],
-    'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.docx'],
-    'Video': ['.mov', '.mp4', '.m4v', '.webm', '.wmv', '.mpeg', '.mpg', '.avi', '.rm'],
-    'Audio': ['.mp3', '.wav', '.aiff', '.midi', '.m4p']
+    "Image": [".jpg", ".jpeg", ".gif", ".png", ".tif", ".tiff"],
+    "Document": [".pdf", ".doc", ".rtf", ".txt", ".xls", ".csv", ".docx"],
+    "Video": [".mov", ".mp4", ".m4v", ".webm", ".wmv", ".mpeg", ".mpg", ".avi", ".rm"],
+    "Audio": [".mp3", ".wav", ".aiff", ".midi", ".m4p"],
 }
 
-FILEBROWSER_EXCLUDE = ['.py']  # Exclude Python files
+FILEBROWSER_EXCLUDE = [".py"]  # Exclude Python files
 
 FILEBROWSER_VERSIONS_BASEDIR = "_versions"
 
 FILEBROWSER_ADMIN_THUMBNAIL = "admin_thumbnail"
 
 FILEBROWSER_VERSIONS = {
-    'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
+    "admin_thumbnail": {
+        "verbose_name": "Admin Thumbnail",
+        "width": 60,
+        "height": 60,
+        "opts": "crop",
+    },
 }
 
 ###
