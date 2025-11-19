@@ -70,14 +70,26 @@
             </fieldset>
             <fieldset class="module aligned">
                 <h2>{% trans "Related Media Records" %}</h2>
+                {% if fileobject.has_media_record %}
+                {% for media in fileobject.get_related_media %}
+                    <div class="form-row">
+                        <div>
+                            <p>{{ media }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <p>{% trans "No related media records." %}</p>
+                {% endif %}
             </fieldset>
             {% endif %}
-
-            <div class="submit-row">
-                <p class="deletelink-box">
-                    <a href="{% url 'filebrowser:fb_delete_confirm' %}{% query_string %}" class="deletelink">{% trans "Delete" %}</a>
-                </p>
-            </div>
+            {% if not fileobject.has_media_record %}
+                <div class="submit-row">
+                    <p class="deletelink-box">
+                        <a href="{% url 'filebrowser:fb_delete_confirm' %}{% query_string %}" class="deletelink">{% trans "Delete" %}</a>
+                    </p>
+                </div>
+            {% endif %}
         </div>
     </form>
 </div>
