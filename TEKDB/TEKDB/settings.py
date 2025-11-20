@@ -198,7 +198,7 @@ FILEBROWSER_EXTENSIONS = {
     "Audio": [".mp3", ".wav", ".aiff", ".midi", ".m4p"],
 }
 
-FILEBROWSER_EXCLUDE = [".py"]  # Exclude Python files
+FILEBROWSER_EXCLUDE = []  # Exclude Python files
 
 FILEBROWSER_VERSIONS_BASEDIR = "_versions"
 

@@ -1,7 +1,22 @@
+import os
 from django.core.files.storage import DefaultStorage
 from django.core.paginator import Paginator, EmptyPage
+from django.template.response import TemplateResponse
 from django.conf import settings
-from filebrowser.sites import FileBrowserSite
+from filebrowser.sites import (
+    FileBrowserSite,
+    filebrowser_view,
+    get_settings_var,
+    get_breadcrumbs,
+    admin_site,
+)
+from filebrowser.decorators import path_exists
+from filebrowser.settings import (
+    DEFAULT_SORTING_BY,
+    DEFAULT_SORTING_ORDER,
+    VERSIONS_BASEDIR,
+)
+
 
 def media_matches(media_filter, obj):
     """Return True if `obj` satisfies the media-record filter.
@@ -14,20 +29,40 @@ def media_matches(media_filter, obj):
     if not media_filter:
         return True
     try:
-        has_attr = getattr(obj, 'has_media_record', None)
+        has_attr = getattr(obj, "has_media_record", None)
         if callable(has_attr):
             has = bool(has_attr())
         else:
             has = bool(has_attr)
     except Exception:
         has = False
-    if media_filter == 'has_record':
+    if media_filter == "has_record":
         return has
-    if media_filter == 'no_record':
+    if media_filter == "no_record":
         return not has
     return True
 
+
 class FilesOnlyFileBrowserSite(FileBrowserSite):
+    def files_folders_to_ignore(self):
+        return ["__pycache__", "__init__.py", VERSIONS_BASEDIR]
+
+    def get_urls(self):
+        from django.urls import re_path
+
+        urls = super().get_urls()
+
+        urls += [
+            re_path(
+                r"^delete-no-media-record/",
+                path_exists(
+                    self, filebrowser_view(self.delete_media_without_record_confirm)
+                ),
+                name="fb_delete_no_media_record",
+            ),
+        ]
+        return urls
+
     def browse(self, request):
         """Call upstream browse(), then apply server-side filtering for the
         `filter_media_record` query parameter. This keeps the UI filter backed
@@ -37,12 +72,12 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
         # Only proceed if the TemplateResponse has context data we can
         # mutate.
-        if not hasattr(response, 'context_data'):
+        if not hasattr(response, "context_data"):
             return response
 
         media_filter = None
         try:
-            media_filter = request.GET.get('filter_media_record')
+            media_filter = request.GET.get("filter_media_record")
         except Exception:
             media_filter = None
 
@@ -53,21 +88,23 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
             print("Processing context key:", key)
             try:
                 # Page-like objects (have .paginator and .number)
-                if hasattr(val, 'paginator') and hasattr(val, 'number'):
+                if hasattr(val, "paginator") and hasattr(val, "number"):
                     orig_paginator = val.paginator
                     try:
                         full_list = list(orig_paginator.object_list)
                     except Exception:
-                        full_list = list(getattr(val, 'object_list', []))
+                        full_list = list(getattr(val, "object_list", []))
 
-                    filtered_full = [o for o in full_list if media_matches(media_filter, o)]
+                    filtered_full = [
+                        o for o in full_list if media_matches(media_filter, o)
+                    ]
 
-                    per_page = getattr(settings, 'FILEBROWSER_LIST_PER_PAGE', None)
+                    per_page = getattr(settings, "FILEBROWSER_LIST_PER_PAGE", None)
                     if not per_page:
-                        per_page = getattr(orig_paginator, 'per_page', 10)
+                        per_page = getattr(orig_paginator, "per_page", 10)
 
                     new_paginator = Paginator(filtered_full, per_page)
-                    page_number = getattr(val, 'number', 1)
+                    page_number = getattr(val, "number", 1)
                     try:
                         new_page = new_paginator.page(page_number)
                     except EmptyPage:
@@ -77,7 +114,7 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
                     paginator_replacements[orig_paginator] = new_paginator
 
                 # Objects with object_list attribute but not a paginator
-                elif hasattr(val, 'object_list') and key == 'p':
+                elif hasattr(val, "object_list") and key == "p":
                     print("Filtering object_list for key:", key)
                     objs = list(val.object_list)
                     print("Objs before filtering:", objs)
@@ -95,8 +132,8 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
                 for orig, new in list(paginator_replacements.items()):
                     if val is orig:
                         response.context_data[key] = new
-                    elif hasattr(val, 'paginator') and val.paginator is orig:
-                        page_number = getattr(val, 'number', 1)
+                    elif hasattr(val, "paginator") and val.paginator is orig:
+                        page_number = getattr(val, "number", 1)
                         try:
                             response.context_data[key] = new.page(page_number)
                         except EmptyPage:
@@ -104,32 +141,38 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
         # Update filelisting counts if present
         try:
-            filelisting = response.context_data.get('filelisting')
+            filelisting = response.context_data.get("filelisting")
             if filelisting is not None:
                 # If filelisting exposes a list of current files, try to
                 # update results_current/total conservatively.
                 try:
                     # Some implementations keep a 'results_current' attr
                     # pointing at the currently visible files.
-                    if hasattr(filelisting, 'results_current'):
+                    if hasattr(filelisting, "results_current"):
                         # Try to infer count from page/paginator if present
-                        page = response.context_data.get('page') or response.context_data.get('p')
-                        if page is not None and hasattr(page, 'object_list'):
+                        page = response.context_data.get(
+                            "page"
+                        ) or response.context_data.get("p")
+                        if page is not None and hasattr(page, "object_list"):
                             filelisting.results_current = len(list(page.object_list))
                         else:
                             # Fallback: see if filelisting provides a total list
                             try:
-                                filelisting.results_current = len(list(filelisting.files_listing_filtered()))
+                                filelisting.results_current = len(
+                                    list(filelisting.files_listing_filtered())
+                                )
                             except Exception:
                                 pass
-                    if hasattr(filelisting, 'results_total'):
+                    if hasattr(filelisting, "results_total"):
                         # If we can derive a total from a paginator replacement
                         p_new = None
                         for new in paginator_replacements.values():
                             p_new = new
                             break
                         if p_new is not None:
-                            filelisting.results_total = getattr(p_new, 'count', len(getattr(p_new, 'object_list', [])))
+                            filelisting.results_total = getattr(
+                                p_new, "count", len(getattr(p_new, "object_list", []))
+                            )
                 except Exception:
                     pass
         except Exception:
@@ -137,8 +180,44 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
         return response
 
+    def delete_media_without_record_confirm(self, request):
+        """Delete selected files that do not have associated media records."""
+
+        query = request.GET
+        path = "%s" % os.path.join(self.directory, query.get("dir", ""))
+
+        filelisting = self.filelisting_class(
+            path,
+            filter_func=lambda fo: not fo.has_media_record()
+            and fo.filename not in self.files_folders_to_ignore(),
+            sorting_by=query.get("o", DEFAULT_SORTING_BY),
+            sorting_order=query.get("ot", DEFAULT_SORTING_ORDER),
+            site=self,
+        )
+        listing = filelisting.files_listing_filtered()
+        print(f"listing: {listing}")
+
+        return TemplateResponse(
+            request,
+            "filebrowser/delete_no_media_record_confirm.html",
+            dict(
+                admin_site.each_context(request),
+                **{
+                    "filelisting": listing,
+                    "query": query,
+                    "title": "Confirm Deletion of Unused Media Files",
+                    "settings_var": get_settings_var(directory=self.directory),
+                    "breadcrumbs": get_breadcrumbs(query, query.get("dir", "")),
+                    "breadcrumbs_title": "Delete Unused Media Files",
+                    "filebrowser_site": self,
+                },
+            ),
+        )
+
 
 # Create your custom site instance
 storage = DefaultStorage()
-site = FilesOnlyFileBrowserSite(name='filebrowser', storage=storage)
+site = FilesOnlyFileBrowserSite(name="filebrowser", storage=storage)
+
 site.directory = ""
+print(f"urls: {site.urls}")
