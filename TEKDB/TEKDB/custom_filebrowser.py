@@ -2,7 +2,11 @@ import os
 from django.core.files.storage import DefaultStorage
 from django.core.paginator import Paginator, EmptyPage
 from django.template.response import TemplateResponse
+from django.contrib import messages
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.conf import settings
+from filebrowser import signals
 from filebrowser.sites import (
     FileBrowserSite,
     filebrowser_view,
@@ -16,6 +20,7 @@ from filebrowser.settings import (
     DEFAULT_SORTING_ORDER,
     VERSIONS_BASEDIR,
 )
+from filebrowser.templatetags.fb_tags import query_helper
 
 
 def media_matches(media_filter, obj):
@@ -54,12 +59,19 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
         urls += [
             re_path(
-                r"^delete-no-media-record/",
+                r"^delete-media-without-record-confirm/",
                 path_exists(
                     self, filebrowser_view(self.delete_media_without_record_confirm)
                 ),
-                name="fb_delete_no_media_record",
+                name="fb_delete_all_media_without_record_confirm",
             ),
+            re_path(
+                r"^delete-media-without-record/",
+                path_exists(
+                    self, filebrowser_view(self.delete_media_without_record)
+                ),
+                name="fb_delete_all_media_without_record",
+            )
         ]
         return urls
 
@@ -195,7 +207,6 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
             site=self,
         )
         listing = filelisting.files_listing_filtered()
-        print(f"listing: {listing}")
 
         return TemplateResponse(
             request,
@@ -214,10 +225,60 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
             ),
         )
 
+    def delete_media_without_record(self, request):
+        """Delete selected files that do not have associated media records."""
+        query = request.GET
+        path = "%s" % os.path.join(self.directory, query.get("dir", ""))
+
+        filelisting = self.filelisting_class(
+            path,
+            filter_func=lambda fo: not fo.has_media_record()
+            and fo.filename not in self.files_folders_to_ignore(),
+            sorting_by=query.get("o", DEFAULT_SORTING_BY),
+            sorting_order=query.get("ot", DEFAULT_SORTING_ORDER),
+            site=self,
+        )
+        listing = filelisting.files_listing_filtered()
+
+        deleted_files = []
+        for fileobject in listing:
+            try:
+                signals.filebrowser_pre_delete.send(
+                    sender=request,
+                    path=fileobject.path,
+                    name=fileobject.filename,
+                    site=self,
+                )
+                fileobject.delete_versions()
+                fileobject.delete()
+                deleted_files.append(fileobject.filename)
+                signals.filebrowser_post_delete.send(
+                    sender=request,
+                    path=fileobject.path,
+                    name=fileobject.filename,
+                    site=self,
+                )
+            except OSError:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"Error deleting file: {fileobject.filename}",
+                )
+                break
+
+        messages.add_message(
+            request, messages.SUCCESS, f"Deleted files: {', '.join(deleted_files)}"
+        )
+
+        # Redirect back to browse after deletion
+        redirect_url = reverse(
+            "filebrowser:fb_browse", current_app=self.name
+        ) + query_helper(query, "", "filename,filetype")
+        return HttpResponseRedirect(redirect_url)
+
 
 # Create your custom site instance
 storage = DefaultStorage()
 site = FilesOnlyFileBrowserSite(name="filebrowser", storage=storage)
 
 site.directory = ""
-print(f"urls: {site.urls}")

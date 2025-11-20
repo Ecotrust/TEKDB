@@ -120,7 +120,7 @@ Copied from https://github.com/smacker/django-filebrowser-no-grappelli/blob/mast
         <!-- OBJECT-TOOLS -->
         {% block object-tools %}
             <ul class="object-tools">
-                <li><a href="{% url 'filebrowser:fb_delete_no_media_record' %}{% query_string '' 'p' %}">{% trans "Find and Clear Unused Media Files" %}</a></li>
+                <li><a href="{% url 'filebrowser:fb_delete_all_media_without_record_confirm' %}{% query_string '' 'p' %}">{% trans "Find and Clear Unused Media Files" %}</a></li>
             </ul>
         {% endblock %}
 
