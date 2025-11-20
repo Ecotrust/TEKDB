@@ -97,7 +97,6 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
         # Walk context values and filter lists / paginators / pages
         for key, val in list(response.context_data.items()):
-            print("Processing context key:", key)
             try:
                 # Page-like objects (have .paginator and .number)
                 if hasattr(val, "paginator") and hasattr(val, "number"):
@@ -127,9 +126,7 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
                 # Objects with object_list attribute but not a paginator
                 elif hasattr(val, "object_list") and key == "p":
-                    print("Filtering object_list for key:", key)
                     objs = list(val.object_list)
-                    print("Objs before filtering:", objs)
                     filtered = [o for o in objs if media_matches(media_filter, o)]
                     val.object_list = filtered
 
