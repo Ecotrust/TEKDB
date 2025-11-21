@@ -213,6 +213,13 @@ FILEBROWSER_VERSIONS = {
     },
 }
 
+# Apps to exclude from the export `dumpdata` command. This prevents
+# dumping third-party apps (like `filebrowser`) that may not have tables
+# in the test DB or that you don't want included in project backups.
+EXPORT_DUMP_EXCLUDE = [
+    "filebrowser",
+]
+
 ###
 # STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "explore", "static"),
