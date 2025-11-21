@@ -76,11 +76,11 @@ $(function () {
     });
   };
 
-  const resetExportButton = (iframe, clearInterval) => {
+  const resetExportButton = (iframe, clear) => {
     $("#export-button").prop("disabled", false);
     $("#export-button").html("Export to .zip");
     iframe.remove();
-    clearInterval();
+    clear();
   };
 
   $("button#import-button").click(function (e) {
@@ -190,10 +190,10 @@ $(function () {
       );
 
       if (exportStatus && exportStatus.includes("export_status=done")) {
-        resetExportButton(iframe, clearInterval(checkStatus));
+        resetExportButton(iframe, () => clearInterval(checkStatus));
       } else if (exportStatus && exportStatus.includes("export_status=error")) {
         $("#exportStatus").removeClass("hidden");
-        resetExportButton(iframe, clearInterval(checkStatus));
+        resetExportButton(iframe, () => clearInterval(checkStatus));
       }
     }, 1000);
   });
