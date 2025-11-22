@@ -48,7 +48,7 @@ def media_matches(media_filter, obj):
     return True
 
 
-class FilesOnlyFileBrowserSite(FileBrowserSite):
+class TekdbFileBrowserSite(FileBrowserSite):
     def files_folders_to_ignore(self):
         return ["__pycache__", "__init__.py", VERSIONS_BASEDIR]
 
@@ -67,11 +67,9 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
             ),
             re_path(
                 r"^delete-media-without-record/",
-                path_exists(
-                    self, filebrowser_view(self.delete_media_without_record)
-                ),
+                path_exists(self, filebrowser_view(self.delete_media_without_record)),
                 name="fb_delete_all_media_without_record",
-            )
+            ),
         ]
         return urls
 
@@ -99,7 +97,11 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
         for key, val in list(response.context_data.items()):
             try:
                 # Page-like objects (have .paginator and .number)
-                if hasattr(val, "paginator") and hasattr(val, "number"):
+                if (
+                    hasattr(val, "paginator")
+                    and hasattr(val, "number")
+                    and key == "page"
+                ):
                     orig_paginator = val.paginator
                     try:
                         full_list = list(orig_paginator.object_list)
@@ -123,12 +125,6 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
                     response.context_data[key] = new_page
                     paginator_replacements[orig_paginator] = new_paginator
-
-                # Objects with object_list attribute but not a paginator
-                elif hasattr(val, "object_list") and key == "p":
-                    objs = list(val.object_list)
-                    filtered = [o for o in objs if media_matches(media_filter, o)]
-                    val.object_list = filtered
 
             except Exception:
                 # Non-fatal: skip entries we can't process
@@ -203,7 +199,7 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
             sorting_order=query.get("ot", DEFAULT_SORTING_ORDER),
             site=self,
         )
-        listing = filelisting.files_listing_filtered()
+        listings = filelisting.files_listing_filtered()
 
         return TemplateResponse(
             request,
@@ -211,7 +207,7 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
             dict(
                 admin_site.each_context(request),
                 **{
-                    "filelisting": listing,
+                    "filelisting": listings,
                     "query": query,
                     "title": "Confirm Deletion of Unused Media Files",
                     "settings_var": get_settings_var(directory=self.directory),
@@ -276,6 +272,6 @@ class FilesOnlyFileBrowserSite(FileBrowserSite):
 
 # Create your custom site instance
 storage = DefaultStorage()
-site = FilesOnlyFileBrowserSite(name="filebrowser", storage=storage)
+site = TekdbFileBrowserSite(name="filebrowser", storage=storage)
 
 site.directory = ""

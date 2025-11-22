@@ -94,7 +94,7 @@ def ExportDatabase(request, test=False):
                     zip.write(media_file)
 
         response = FileResponse(open(tmp_zip.name, "rb"))
-        
+
     finally:
         try:
             if not test:
@@ -103,7 +103,7 @@ def ExportDatabase(request, test=False):
         except (PermissionError, NotADirectoryError):
             response.set_cookie("export_status", "error")
             pass
-    return response   
+    return response
 
 
 def getDBTruncateCommand():
