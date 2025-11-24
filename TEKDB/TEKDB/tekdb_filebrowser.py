@@ -186,7 +186,7 @@ class TekdbFileBrowserSite(FileBrowserSite):
         return response
 
     def delete_media_without_record_confirm(self, request):
-        """Delete selected files that do not have associated media records."""
+        """Confirm page to delete selected files that do not have associated media records."""
 
         query = request.GET
         path = "%s" % os.path.join(self.directory, query.get("dir", ""))
@@ -242,6 +242,9 @@ class TekdbFileBrowserSite(FileBrowserSite):
                     name=fileobject.filename,
                     site=self,
                 )
+                # we have disabled versions for TEKDB,
+                # but keep the call here in case that changes in future
+                # or in the off chance versions exist
                 fileobject.delete_versions()
                 fileobject.delete()
                 deleted_files.append(fileobject.filename)
@@ -270,8 +273,6 @@ class TekdbFileBrowserSite(FileBrowserSite):
         return HttpResponseRedirect(redirect_url)
 
 
-# Create your custom site instance
 storage = DefaultStorage()
 site = TekdbFileBrowserSite(name="filebrowser", storage=storage)
-
 site.directory = ""

@@ -5,11 +5,11 @@ from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from unittest.mock import patch, Mock
 
-from TEKDB import custom_filebrowser
+from TEKDB import tekdb_filebrowser
 from TEKDB.tests.test_views import import_fixture_file
 
 
-class Dummy:
+class MockFileObject:
     def __init__(self, val):
         # val can be bool or callable returning bool
         self._val = val
@@ -29,25 +29,25 @@ class CustomFileBrowserTests(TestCase):
         self.credentials = b64encode(b"admin:admin").decode("ascii")
 
     def test_media_matches_no_filter(self):
-        obj = Dummy(True)
+        obj = MockFileObject(True)
 
-        self.assertTrue(custom_filebrowser.media_matches(None, obj))
+        self.assertTrue(tekdb_filebrowser.media_matches(None, obj))
 
     def test_media_matches_has_record(self):
-        obj_true = Dummy(True)
-        obj_false = Dummy(False)
-        self.assertTrue(custom_filebrowser.media_matches("has_record", obj_true))
-        self.assertFalse(custom_filebrowser.media_matches("has_record", obj_false))
+        obj_true = MockFileObject(True)
+        obj_false = MockFileObject(False)
+        self.assertTrue(tekdb_filebrowser.media_matches("has_record", obj_true))
+        self.assertFalse(tekdb_filebrowser.media_matches("has_record", obj_false))
 
     def test_media_matches_no_record(self):
-        obj_true = Dummy(True)
-        obj_false = Dummy(False)
-        self.assertFalse(custom_filebrowser.media_matches("no_record", obj_true))
-        self.assertTrue(custom_filebrowser.media_matches("no_record", obj_false))
+        obj_true = MockFileObject(True)
+        obj_false = MockFileObject(False)
+        self.assertFalse(tekdb_filebrowser.media_matches("no_record", obj_true))
+        self.assertTrue(tekdb_filebrowser.media_matches("no_record", obj_false))
 
     def test_media_matches_callable_attribute(self):
-        obj = Dummy(lambda: True)
-        self.assertTrue(custom_filebrowser.media_matches("has_record", obj))
+        obj = MockFileObject(lambda: True)
+        self.assertTrue(tekdb_filebrowser.media_matches("has_record", obj))
 
     def test_get_urls(self):
         confirm_url = reverse("filebrowser:fb_delete_all_media_without_record_confirm")

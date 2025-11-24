@@ -24,11 +24,6 @@ class TEKDBConfig(AppConfig):
             """Check if this file has any related Media records"""
             return self.get_related_media().exists()
 
-        def get_media_count(self):
-            """Returns count of related Media records"""
-            return self.get_related_media().count()
-
         # Add methods to FileObject
         FileObject.get_related_media = get_related_media
         FileObject.has_media_record = has_media_record
-        FileObject.get_media_count = get_media_count

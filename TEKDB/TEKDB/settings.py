@@ -177,9 +177,6 @@ STATICFILES_FINDERS = [
 
 MEDIA_URL = "/media/"
 
-DIRECTORY = MEDIA_URL
-
-
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATIC_URL = "/static/"
@@ -189,6 +186,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 ###########################################
 ##            FILEBROWSER               ###
 ###########################################
+DIRECTORY = MEDIA_URL
+
 FILEBROWSER_LIST_PER_PAGE = 20
 
 FILEBROWSER_EXTENSIONS = {
@@ -198,11 +197,7 @@ FILEBROWSER_EXTENSIONS = {
     "Audio": [".mp3", ".wav", ".aiff", ".midi", ".m4p"],
 }
 
-FILEBROWSER_EXCLUDE = []  # Exclude Python files
-
-FILEBROWSER_VERSIONS_BASEDIR = "_versions"
-
-FILEBROWSER_ADMIN_THUMBNAIL = "admin_thumbnail"
+FILEBROWSER_EXCLUDE = []  # Add extensions to exclude from showing in filebrowser. E.g. ['.py',]
 
 FILEBROWSER_VERSIONS = {
     "admin_thumbnail": {
@@ -220,7 +215,10 @@ EXPORT_DUMP_EXCLUDE = [
     "filebrowser",
 ]
 
-###
+###########################################
+###          END FILEBROWSER            ###
+###########################################
+
 # STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "explore", "static"),
 #    os.path.join(BASE_DIR, "TEKDB", "static"),

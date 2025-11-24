@@ -14,7 +14,7 @@
     {% endif %}
     {% if filelisting|length > 0 %}
         <p>Are you sure you want to delete all media files without media records? All of the following related items will be deleted:</p>
-        {% if filelisting%}
+        {% if filelisting %}
             <ul>
                 {% for fileobject in filelisting %}
                     <li>{{ fileobject.filename }}</li>

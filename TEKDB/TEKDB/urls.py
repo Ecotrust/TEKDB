@@ -31,12 +31,12 @@ from django.contrib.auth import views as auth_views
 from login import views as login_views
 
 from . import views
-from .custom_filebrowser import site as custom_filebrowser
+from .tekdb_filebrowser import site as tekdb_filebrowser
 
 
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
-    path("admin/filebrowser/", custom_filebrowser.urls),
+    path("admin/filebrowser/", tekdb_filebrowser.urls),
     path("login/", login_views.login, name="login"),
     path("login_async/", login_views.login_async, name="login_async"),
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
