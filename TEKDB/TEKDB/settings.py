@@ -199,14 +199,7 @@ FILEBROWSER_EXTENSIONS = {
 
 FILEBROWSER_EXCLUDE = []  # Add extensions to exclude from showing in filebrowser. E.g. ['.py',]
 
-FILEBROWSER_VERSIONS = {
-    "admin_thumbnail": {
-        "verbose_name": "Admin Thumbnail",
-        "width": 60,
-        "height": 60,
-        "opts": "crop",
-    },
-}
+FILEBROWSER_VERSIONS = {} # Empty dict because we are not using versions
 
 # Apps to exclude from the export `dumpdata` command. This prevents
 # dumping third-party apps (like `filebrowser`) that may not have tables
