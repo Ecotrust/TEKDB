@@ -89,8 +89,8 @@ class CustomFileBrowserTests(TestCase):
         filtered_results_total = filtered_filelisting.results_total
         unfiltered_results_total = unfiltered_filelisting.results_total
 
-        self.assertTrue(filtered_results_current < unfiltered_results_current)
-        self.assertTrue(filtered_results_total < unfiltered_results_total)
+        self.assertLess(filtered_results_current, unfiltered_results_current)
+        self.assertLess(filtered_results_total, unfiltered_results_total)
 
     def test_browse_media_filter_no_record(self):
         from TEKDB.models import Users
