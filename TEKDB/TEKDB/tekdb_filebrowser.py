@@ -39,7 +39,7 @@ def media_matches(media_filter, obj):
             has = bool(has_attr())
         else:
             has = bool(has_attr)
-    except Exception:
+    except AttributeError:
         has = False
     if media_filter == "has_record":
         return has
@@ -89,7 +89,7 @@ class TekdbFileBrowserSite(FileBrowserSite):
         media_filter = None
         try:
             media_filter = request.GET.get("filter_media_record")
-        except Exception:
+        except AttributeError:
             media_filter = None
 
         # dict of original paginator -> new paginator
@@ -109,7 +109,7 @@ class TekdbFileBrowserSite(FileBrowserSite):
                     orig_paginator = val.paginator
                     try:
                         full_list = list(orig_paginator.object_list)
-                    except Exception:
+                    except (AttributeError, TypeError):
                         full_list = list(getattr(val, "object_list", []))
 
                     filtered_full = [
@@ -129,7 +129,7 @@ class TekdbFileBrowserSite(FileBrowserSite):
                     response.context_data[key] = new_page
                     paginator_replacements[orig_paginator] = new_paginator
 
-            except Exception:
+            except AttributeError:
                 # Non-fatal: skip entries we can't process
                 pass
 
@@ -163,20 +163,15 @@ class TekdbFileBrowserSite(FileBrowserSite):
                             break
 
                         if paginator_new is not None:
-                            total = None
-
-                            if total is None:
-                                try:
-                                    total = len(
-                                        getattr(paginator_new, "object_list", [])
-                                    )
-                                except Exception:
-                                    total = 0
+                            try:
+                                total = len(getattr(paginator_new, "object_list", []))
+                            except AttributeError:
+                                total = 0
 
                             filelisting.results_total = total
-                except Exception:
+                except AttributeError:
                     pass
-        except Exception:
+        except (AttributeError, TypeError):
             pass
 
         return response
