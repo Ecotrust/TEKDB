@@ -50,6 +50,7 @@ def media_matches(media_filter, obj):
 
 class TekdbFileBrowserSite(FileBrowserSite):
     def files_folders_to_ignore(self):
+        """Return list of filenames/folders to ignore in deleting media without record."""
         return ["__pycache__", "__init__.py", VERSIONS_BASEDIR]
 
     def get_urls(self):
@@ -91,12 +92,15 @@ class TekdbFileBrowserSite(FileBrowserSite):
         except Exception:
             media_filter = None
 
+        # dict of original paginator -> new paginator
         paginator_replacements = {}
 
-        # Walk context values and filter lists / paginators / pages
+        # loop does the following:
+        # 1. filter data if media_filter is set
+        # 2. set response.context_data["page"] to filtered page
+        # 3. build new paginators dict
         for key, val in list(response.context_data.items()):
             try:
-                # Page-like objects (have .paginator and .number)
                 if (
                     hasattr(val, "paginator")
                     and hasattr(val, "number")
@@ -109,20 +113,19 @@ class TekdbFileBrowserSite(FileBrowserSite):
                         full_list = list(getattr(val, "object_list", []))
 
                     filtered_full = [
-                        o for o in full_list if media_matches(media_filter, o)
+                        obj for obj in full_list if media_matches(media_filter, obj)
                     ]
 
-                    per_page = getattr(settings, "FILEBROWSER_LIST_PER_PAGE", None)
-                    if not per_page:
-                        per_page = getattr(orig_paginator, "per_page", 10)
+                    max_per_page = getattr(settings, "FILEBROWSER_LIST_PER_PAGE", None)
+                    if not max_per_page:
+                        max_per_page = getattr(orig_paginator, "per_page", 20)
 
-                    new_paginator = Paginator(filtered_full, per_page)
+                    new_paginator = Paginator(filtered_full, max_per_page)
                     page_number = getattr(val, "number", 1)
                     try:
                         new_page = new_paginator.page(page_number)
                     except EmptyPage:
                         new_page = new_paginator.page(new_paginator.num_pages)
-
                     response.context_data[key] = new_page
                     paginator_replacements[orig_paginator] = new_paginator
 
@@ -130,54 +133,47 @@ class TekdbFileBrowserSite(FileBrowserSite):
                 # Non-fatal: skip entries we can't process
                 pass
 
-        # Replace any remaining references to original paginators with the
-        # new ones so counts/num_pages are consistent.
+        # Replace response.context_data["p"] with new paginator
         if paginator_replacements:
-            for key, val in list(response.context_data.items()):
-                for orig, new in list(paginator_replacements.items()):
-                    if val is orig:
-                        response.context_data[key] = new
-                    elif hasattr(val, "paginator") and val.paginator is orig:
-                        page_number = getattr(val, "number", 1)
-                        try:
-                            response.context_data[key] = new.page(page_number)
-                        except EmptyPage:
-                            response.context_data[key] = new.page(new.num_pages)
+            for key, orig_paginator in list(response.context_data.items()):
+                for orig, new_paginator in list(paginator_replacements.items()):
+                    if orig_paginator is orig:
+                        response.context_data[key] = new_paginator
 
-        # Update filelisting counts if present
+        # Update results_current and results_total
         try:
             filelisting = response.context_data.get("filelisting")
             if filelisting is not None:
                 # If filelisting exposes a list of current files, try to
                 # update results_current/total conservatively.
                 try:
-                    # Some implementations keep a 'results_current' attr
-                    # pointing at the currently visible files.
                     if hasattr(filelisting, "results_current"):
-                        # Try to infer count from page/paginator if present
-                        page = response.context_data.get(
-                            "page"
-                        ) or response.context_data.get("p")
+                        # get new page set on line 129
+                        page = response.context_data.get("page")
+
                         if page is not None and hasattr(page, "object_list"):
+                            # update results_current from filtered page
                             filelisting.results_current = len(list(page.object_list))
-                        else:
-                            # Fallback: see if filelisting provides a total list
-                            try:
-                                filelisting.results_current = len(
-                                    list(filelisting.files_listing_filtered())
-                                )
-                            except Exception:
-                                pass
+
                     if hasattr(filelisting, "results_total"):
-                        # If we can derive a total from a paginator replacement
-                        p_new = None
-                        for new in paginator_replacements.values():
-                            p_new = new
+                        # derive results_total from a paginator replacement
+                        paginator_new = None
+                        for new_page in paginator_replacements.values():
+                            paginator_new = new_page
                             break
-                        if p_new is not None:
-                            filelisting.results_total = getattr(
-                                p_new, "count", len(getattr(p_new, "object_list", []))
-                            )
+
+                        if paginator_new is not None:
+                            total = None
+
+                            if total is None:
+                                try:
+                                    total = len(
+                                        getattr(paginator_new, "object_list", [])
+                                    )
+                                except Exception:
+                                    total = 0
+
+                            filelisting.results_total = total
                 except Exception:
                     pass
         except Exception:

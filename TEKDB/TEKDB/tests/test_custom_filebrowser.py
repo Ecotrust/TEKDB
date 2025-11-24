@@ -63,18 +63,34 @@ class CustomFileBrowserTests(TestCase):
         self.client.force_login(user)
 
         url = reverse("filebrowser:fb_browse")
-        response = self.client.get(
+        unfiltered_response = self.client.get(
+            url, headers={"Authorization": f"Basic {self.credentials}"}
+        )
+        self.assertEqual(unfiltered_response.status_code, 200)
+
+        filter_response = self.client.get(
             url,
             headers={"Authorization": f"Basic {self.credentials}"},
             QUERY_STRING="&filter_media_record=has_record",
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(filter_response.status_code, 200)
         self.assertEqual(
-            response.context_data["query"]["filter_media_record"], "has_record"
+            filter_response.context_data["query"]["filter_media_record"], "has_record"
         )
 
-        for item in response.context_data["page"]:
+        for item in filter_response.context_data["page"]:
             self.assertTrue(item.has_media_record())
+        filtered_filelisting = filter_response.context_data.get("filelisting")
+        unfiltered_filelisting = unfiltered_response.context_data.get("filelisting")
+
+        filtered_results_current = filtered_filelisting.results_current
+        unfiltered_results_current = unfiltered_filelisting.results_current
+
+        filtered_results_total = filtered_filelisting.results_total
+        unfiltered_results_total = unfiltered_filelisting.results_total
+
+        self.assertTrue(filtered_results_current < unfiltered_results_current)
+        self.assertTrue(filtered_results_total < unfiltered_results_total)
 
     def test_browse_media_filter_no_record(self):
         from TEKDB.models import Users
