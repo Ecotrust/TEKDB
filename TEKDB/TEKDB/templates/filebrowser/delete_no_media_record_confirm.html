@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+
+<!-- LOADING -->
+{% load static i18n fb_tags fb_compat %}
+
+<!-- BREADCRUMBS -->
+{% block breadcrumbs %}{% include "filebrowser/include/breadcrumbs.html" %}{% endblock %}
+
+<!-- CONTENT -->
+{% block content %}
+    <!-- POP-UP BREADCRUMBS -->
+    {% if query.pop %}
+        {% include "filebrowser/include/breadcrumbs.html" %}
+    {% endif %}
+    {% if filelisting|length > 0 %}
+        <p>Are you sure you want to delete all media files without media records? All of the following related items will be deleted:</p>
+        {% if filelisting %}
+            <ul>
+                {% for fileobject in filelisting %}
+                    <li>{{ fileobject.filename }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form action="{% url 'filebrowser:fb_delete_all_media_without_record' %}{% query_string %}" method="post">
+        {% csrf_token %}
+        <div>
+        <input type="submit" value="{% trans "Yes, I'm sure" %}" />
+        </div>
+        </form>
+    {% endif %}
+    {% if filelisting|length == 0  %}
+        <p>There are no media files without media records to delete.</p>
+    {% endif %}
+{% endblock %}
