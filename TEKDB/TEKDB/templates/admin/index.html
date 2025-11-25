@@ -54,18 +54,17 @@
         <li>
           Disk Space Used: {{ report.disk_space_used }} / {{ report.disk_space_used_percent }}%
           {% if report.disk_space_used_percent > 90 %}
-         <span class="text-danger"> Warning: Disk space usage is above 90%. Consider reaching out to your IT Team to free up space. </span>
-        {% endif %}
+            <span class="text-danger"> Warning: Disk space usage is above 90%. Consider reaching out to your IT Team to free up space.</span>
+          {% endif %}
         </li>
-        
         <li>
           Disk Space Available: {{ report.disk_space_free }}
         </li>
         <li>
-          Memory Used: {{ report.memory_used }} / {{ report.memory_used_percent }}% 
-        {% if report.memory_used_percent > 90 %}
-        <span class="text-danger"> Warning: Memory usage is above 90%. Consider reaching out to your IT Team to free up memory. </span>
-        {% endif %}
+          Memory Used: {{ report.memory_used }} / {{ report.memory_used_percent }}%
+          {% if report.memory_used_percent > 90 %}
+            <span class="text-danger"> Warning: Memory usage is above 90%. Consider reaching out to your IT Team to free up memory.</span>
+          {% endif %}
         </li>
         <li>
           Memory Available: {{ report.memory_free }}
@@ -74,13 +73,11 @@
         {% else %}
         <p> Disk usage report is not available. </p>
       {% endif %}
-  </div> 
-  
+    </div> 
+  </div>
   <hr />
 
   {% endif %}
-
-
 
   <div class="module" id="recent-actions-module">
     <h2>{% translate 'Recent actions' %}</h2>
