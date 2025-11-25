@@ -1,5 +1,5 @@
 {% extends "admin/index.html" %}
-{% load i18n static %}
+{% load i18n static disk_space_report %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -44,6 +44,36 @@
   </div>
 
   <hr />
+
+  <div>
+    <h3> Disk Usage Report </h3>
+    <div id="disk-usage-report" class="m-1">
+      {% disk_space_report as report %}
+      {% if report %}
+      <ul>
+        <li>
+          Disk Space Used: {{ report.disk_space_used }} / {{ report.disk_space_used_percent }}%
+          {% if report.disk_space_used_percent > 90 %}
+         <span class="text-danger"> Warning: Disk space usage is above 90%. Consider freeing up space. </span>
+        {% endif %}
+        </li>
+        
+        <li>
+          Disk Space Available: {{ report.disk_space_free }}
+        </li>
+        <li>
+          Memory Used: {{ report.memory_used }} / {{ report.memory_used_percent }}%         {% if report.memory_used_percent > 90 %}
+        <span class="text-danger"> Warning: Memory usage is above 90%. Consider closing some applications. </span>
+        {% endif %}
+        </li>
+        <li>
+          Memory Available: {{ report.memory_free }}
+        </li>
+      </ul>
+        {% else %}
+        <p> Disk usage report is not available. </p>
+      {% endif %}
+  </div> 
   {% endif %}
 
 
