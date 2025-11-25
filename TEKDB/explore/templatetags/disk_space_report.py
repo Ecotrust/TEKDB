@@ -5,6 +5,16 @@ import psutil
 register = template.Library()
 
 
+def bytes_to_mb(bytes_value):
+    """Converts bytes to MB."""
+    return bytes_value >> 20
+
+
+def bytes_to_gb(bytes_value):
+    """Converts bytes to GB."""
+    return bytes_value >> 30
+
+
 def disk_space_percent():
     """Returns the percentage of used disk space."""
     usage = psutil.disk_usage("/")
@@ -14,18 +24,18 @@ def disk_space_percent():
 def disk_space_free():
     """Returns the free disk space in GB or MB"""
     usage = psutil.disk_usage("/")
-    free_disk_space_gb = usage.free // (2**30)  # Convert bytes to GB
+    free_disk_space_gb = bytes_to_gb(usage.free)
     if free_disk_space_gb < 1:
-        return f"{usage.free // (2**20)} MB"  # Convert bytes to MB
+        return f"{bytes_to_mb(usage.free)} MB"
     return f"{free_disk_space_gb} GB"
 
 
 def disk_space_used():
     """Returns the used disk space in GB or MB"""
     usage = psutil.disk_usage("/")
-    used_disk_space_gb = usage.used // (2**30)  # Convert bytes to GB
+    used_disk_space_gb = bytes_to_gb(usage.used)
     if used_disk_space_gb < 1:
-        return f"{usage.used // (2**20)} MB"  # Convert bytes to MB
+        return f"{bytes_to_mb(usage.used)} MB"
     return f"{used_disk_space_gb} GB"
 
 
@@ -38,18 +48,18 @@ def memory_usage_percent():
 def memory_free():
     """Returns the free memory in GB or MB"""
     memory = psutil.virtual_memory()
-    free_memory_gb = memory.available // (2**30)  # Convert bytes to GB
+    free_memory_gb = bytes_to_gb(memory.available)
     if free_memory_gb < 1:
-        return f"{memory.available // (2**20)} MB"  # Convert bytes to MB
+        return f"{bytes_to_mb(memory.available)} MB"
     return f"{free_memory_gb} GB"
 
 
 def memory_used():
-    """Returns the used memory"""
+    """Returns the used memory in GB or MB"""
     memory = psutil.virtual_memory()
-    used_memory_gb = memory.used // (2**30)  # Convert bytes to GB
+    used_memory_gb = bytes_to_gb(memory.used)
     if used_memory_gb < 1:
-        return f"{memory.used // (2**20)} MB"  # Convert bytes to MB
+        return f"{bytes_to_mb(memory.used)} MB"
     return f"{used_memory_gb} GB"
 
 
