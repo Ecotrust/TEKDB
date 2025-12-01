@@ -54,6 +54,7 @@ main {
 .results-controls-left,
 /* .results-controls-center, */
 #results_table_paginate,
+#results_table_paginate_bottom,
 .results-controls-right {
   align-items: center;
   font-family: var(--font-sans-serif-bold);
@@ -246,22 +247,56 @@ table#results_table>thead {
 #results_table_info {
   font-size: .875em;
   text-align: right;
-  /*margin-top: -0.75em;*/
 }
 
 #results_table_length label {
   display: none;
 }
 
+.results-table-info {
+  display: flex;
+  justify-content: end;
+}
+
 #results_table_paginate,
-#results_table_paginate a {
+#results_table_paginate_bottom,
+#results_table_paginate a,
+#results_table_paginate_bottom a {
   color: var(--dark_font);
   cursor: pointer;
   padding: 0 0.375em;
+  border: none;
 }
 
-#results_table_paginate .paginate_button.current {
-  color: var(--primary_a);
+#results_table_paginate .paginate_button.current,
+#results_table_paginate_bottom .paginate_button.current {
+  color: var(--primary_a) !important;
+  border: none;
+  background: none;
+}
+
+#results_table_paginate .paginate_button:hover,
+#results_table_paginate_bottom .paginate_button:hover{
+  color: var(--dark_font) !important;
+  border: none;
+  background: none;
+  border-radius: 0;
+  padding: 0 0.375em;
+}
+
+#results_table_paginate_bottom a:active {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#results_table_paginate_bottom .paginate_button {
+  text-decoration: underline !important;
+}
+
+#results_table_paginate_bottom .disabled {
+  color: var(--dark_font) !important;
 }
 
 .link-result {
