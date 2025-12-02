@@ -79,12 +79,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="col mt-3">
-          <div id="results-controls">
-          </div>
-        </div>
-      </div>
-      <div class="row">
         <div class="col">
           <div data-bind="visible: app.resultViewModel.view_is_list">
             <table id='results_table' class="table table-striped table-hover result-list">
@@ -92,7 +86,6 @@
                 <tr>
                   <th></th>
                   <th id='name_col'>Name</th>
-                  <!-- <th id='category_col'>Category</th> -->
                   <th id='description_col'>Description</th>
                   <th id='headline_col'>Searched Result</th>
                 </tr>
@@ -100,7 +93,6 @@
               <tbody data-bind="foreach: app.resultViewModel.results">
                 <tr data-bind="click: rowclick" class="link-result">
                   <td><span class="category-name-col" data-bind='text: $data.category_name'></span></td>
-                  {% comment %} <td><img class='list-image' data-bind="attr: { src: $data.image }" /></td> {% endcomment %}
                   <td class="name-col" data-bind='html: $data.name'>name</td>
                   <td data-bind='html: $data.description'></td>
                   <td data-bind='html: $data.headline'></td>
@@ -114,7 +106,6 @@
     </div>
     <div class="col-md-4 results-right">
       
-      <!-- <button id="viewResultsMap" class="btn" type="button" onclick="show_map_results()">Show Results on Map</button> -->
       {% include 'results_map.html' %}
     </div>
   </div>
