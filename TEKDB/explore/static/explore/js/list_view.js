@@ -37,16 +37,6 @@ var get_current_page = function () {
   return parseInt($(".paginate_button.current").text());
 };
 
-var change_items_per_page = function (event) {
-  items_per_page = parseInt(event.target.value);
-  app.resultViewModel.state_items_per_page(items_per_page);
-  app.resultViewModel.state_page(get_current_page());
-  window.location.hash = $.query
-    .SET("items_per_page", items_per_page)
-    .SET("page", app.resultViewModel.state_page());
-  reset_triggers();
-};
-
 var change_filter = function (event) {
   setTimeout(function () {
     filter = event.target.value;
@@ -71,9 +61,9 @@ var change_filter = function (event) {
 
 var change_sort = function (event) {
   order = [];
-  column_keys = ["name", "category", "description"];
+  const column_keys = ["name", "category", "description"];
   for (var i = 0; i < column_keys.length; i++) {
-    sort_class = $("#" + column_keys[i] + "_col").attr("class");
+    const sort_class = $("#" + column_keys[i] + "_col").attr("class");
     console.log(sort_class);
     if (sort_class == "sorting_desc") {
       order.push([i + 1, "desc"]);
@@ -126,8 +116,8 @@ $(document).ready(function () {
   var display_start =
     (app.resultViewModel.state_page() - 1) *
     app.resultViewModel.state_items_per_page();
-  var initial_filter =
-    app.resultViewModel.db_query() == "*" ? "" : app.resultViewModel.db_query();
+  // var initial_filter =
+  //   app.resultViewModel.db_query() == "*" ? "" : app.resultViewModel.db_query();
 
   app.datatable = $("#results_table").DataTable({
     displayStart: display_start,
@@ -145,11 +135,7 @@ $(document).ready(function () {
       "<'#results_table_paginate_bottom.my-3 results_table_paginate'p>",
   });
 
-  // $('#pagination-container').append( $('#results_table_paginate') );
   $("#page-controls").append($("#results_table_paginate"));
-  $("#results_table_filter").detach();
-  $("#results-controls").append($("#results_table_length"));
-  $("#results_table_length > label > select").change(change_items_per_page);
   $("#name_col").click(change_sort);
   $("#category_col").click(change_sort);
   $("#description_col").click(change_sort);
