@@ -361,6 +361,155 @@ class GetSortedKeysTest(TestCase):
         self.assertEqual(sorted_keys, get_sorted_keys(keys))
 
 
+class ExportRecordCsvTest(TestCase):
+    def setUp(self):
+        from os.path import join
+        from django.conf import settings
+        from TEKDB.tests.test_views import import_fixture_file
+
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        from TEKDB.models import Users
+
+        self.user = Users.objects.get(username="admin")
+        self.client.force_login(self.user)
+
+    def test_export_record_csv(self):
+        from TEKDB.models import Places
+
+        place = Places.objects.get(pk=31)
+        url = f"/export/Places/{place.pk}/csv/"
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/csv")
+
+        self.assertIn(
+            f'attachment; filename="Places_{place.pk}_{str(place)}.csv"',
+            response["Content-Disposition"],
+        )
+        self.assertIn("id", response.content.decode())
+        self.assertIn("name", response.content.decode())
+
+
+class ExportRecordXlsTest(TestCase):
+    def setUp(self):
+        from os.path import join
+        from django.conf import settings
+        from TEKDB.tests.test_views import import_fixture_file
+
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        from TEKDB.models import Users
+
+        self.user = Users.objects.get(username="admin")
+        self.client.force_login(self.user)
+
+    def test_export_record_xls(self):
+        from TEKDB.models import Places
+
+        place = Places.objects.get(pk=31)
+        url = f"/export/Places/{place.pk}/xls/"
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Type"],
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+        self.assertIn(
+            f'attachment; filename="Places_{place.pk}_{str(place)}.xlsx"',
+            response["Content-Disposition"],
+        )
+        self.assertTrue(
+            response.content[:2] == b"PK"
+        )  # XLSX files start with 'PK' (zip signature)
+
+
+class SearchViewTest(TestCase):
+    def setUp(self):
+        from os.path import join
+        from django.conf import settings
+        from TEKDB.tests.test_views import import_fixture_file
+        from TEKDB.models import Users
+
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.user = Users.objects.get(username="admin")
+        self.client.force_login(self.user)
+
+    def test_search_view_get_request(self):
+        url = "/search/?query=test&category=places"
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["page"], "Results")
+        self.assertEqual(response.context["pageTitle"], "Results")
+        self.assertEqual(response.context["query"], "test")
+        self.assertEqual(response.context["keyword"], "test")
+        self.assertEqual(response.context["categories"], '["places"]')
+        self.assertIn(
+            '<input type="checkbox" id="places" name="places" value="places" checked=true>',
+            response.context["category_checkboxes"],
+        )
+        self.assertNotIn(
+            '<input type="checkbox" id="resources" name="resources" value="resources" checked=true>',
+            response.context["category_checkboxes"],
+        )
+
+    def test_search_view_misspelled_category(self):
+        url = "/search/?query=test&category=placess,resourcess"
+        response = self.client.get(url)
+        # should resort to all
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("test", response.context["query"])
+        self.assertEqual(
+            response.context["categories"],
+            '["places", "resources", "activities", "sources", "media"]',
+        )
+        self.assertNotIn(
+            '<input type="checkbox" id="places" name="places" value="places" checked=false>',
+            response.context["category_checkboxes"],
+        )
+
+    def test_search_view_no_category(self):
+        url = "/search/?query=test"
+        response = self.client.get(url)
+        # should resort to all
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("test", response.context["query"])
+        self.assertEqual(
+            response.context["categories"],
+            '["places", "resources", "activities", "sources", "media"]',
+        )
+        self.assertNotIn(
+            '<input type="checkbox" id="places" name="places" value="places" checked=false>',
+            response.context["category_checkboxes"],
+        )
+
+    def test_search_view_post_request(self):
+        url = "/search/"
+        data = {
+            "query": "test",
+            "activities": "on",
+            "citations": "on",
+            "media": "on",
+        }
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["page"], "Results")
+        self.assertEqual(response.context["pageTitle"], "Results")
+        self.assertIn("test", response.context["query"])
+        self.assertEqual(
+            response.context["categories"], '["activities", "sources", "media"]'
+        )
+
+
 class DownloadViewTest(TestCase):
     def setUp(self):
         from os.path import join
