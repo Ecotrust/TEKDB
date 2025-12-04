@@ -150,6 +150,46 @@ class MiscSearchTest(ITKSearchTest):
 
                 self.assertTrue(len(resultlist) == model.objects.count())
 
+    def test_all_search_results(self):
+        """
+        Test that a model_type of 'all' returns results from specific categories
+        """
+        categories = [
+            "resources",
+            "places",
+            "citations",
+            "media",
+            "resourcesactivityevents",
+        ]
+
+        from explore.views import get_model_by_type
+
+        query_models = get_model_by_type("all")
+        lowercase_query_model_names = [model.__name__.lower() for model in query_models]
+
+        for category in categories:
+            self.assertIn(category, lowercase_query_model_names)
+
+    def test_no_keyword_get_results(self):
+        """
+        Test that an empty string search returns all objects
+        """
+        keyword = None
+
+        from explore.views import get_results
+
+        search_results = get_results(
+            keyword,
+            categories=["resources"],
+        )
+        all_ranks = set([x["rank"] for x in search_results])
+        all_similarities = set([x["similarity"] for x in search_results])
+        all_headlines = set([x["headline"] for x in search_results])
+
+        self.assertEqual(all_ranks, {0})
+        self.assertEqual(all_similarities, {0})
+        self.assertEqual(all_headlines, {None})
+
     def test_phrase_search(self):
         """
         Test that a phrase search returns all objects that contain the phrase

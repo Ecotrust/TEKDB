@@ -244,11 +244,11 @@ def download_media_file(request, model_type, id):
     else:
         obj = None
 
-    media = obj.media()
-    if media:
+    if obj is not None:
         import os
         from TEKDB.settings import MEDIA_ROOT
 
+        media = obj.media()
         file_path = os.path.join(MEDIA_ROOT, media["file"])
         if os.path.exists(file_path):
             with open(file_path, "rb") as fh:
@@ -260,9 +260,9 @@ def download_media_file(request, model_type, id):
                 )
                 return response
         else:
-            return Http404
+            raise Http404
     else:
-        return Http404
+        raise Http404
 
 
 def get_sorted_keys(keys):
