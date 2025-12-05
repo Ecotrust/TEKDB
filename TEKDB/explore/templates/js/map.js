@@ -1,122 +1,137 @@
 /* ---- STYLES ---- */
 
-const default_stroke_color = '#FF6000';
-const default_fill_opacity = 0.4;
-const default_fill_color = 'rgba(255, 96, 0, ' + default_fill_opacity + ')';
+const getDefaultStrokeColor = () => '#FF6000';
+const getDefaultFillOpacity = () => 0.4;
+const getDefaultStrokeWidth = () => 1.25;
+const getDefaultFillColor = () => 'rgba(255, 96, 0, ' + getDefaultFillOpacity() + ')';
+const getDefaultRadius = () => 5;
 
-const fill = new ol.style.Fill({
-  color: default_fill_color,
+const getFill = () => new ol.style.Fill({
+  color: getDefaultFillColor(),
 });
-const stroke = new ol.style.Stroke({
-  color: default_stroke_color,
-  width: 1.25,
+
+const getStroke = () => new ol.style.Stroke({
+  color: getDefaultStrokeColor(),
+  width: getDefaultStrokeWidth(),
 });
-const styles = [
-  new ol.style.Style({
+
+const getStyles = (fill, stroke, radius) => {
+  return new ol.style.Style({
     image: new ol.style.Circle({
       fill: fill,
       stroke: stroke,
-      radius: 5,
+      radius: radius,
     }),
     fill: fill,
     stroke: stroke,
-  }),
-];
+  });
+};
 
-const styleFunction = function(feature) {
-  var style = feature.getStyle();
+const applyStyles = (mapPin) => (feature) => {
+  let style = feature.getStyle();
+
   if (!style) {
-    style = styles[0]
+    style = getStyles(getFill(), getStroke(), getDefaultRadius());
   }
-  if (feature.getGeometry().getType() == 'Point' && "{{ map_pin }}" != "") {
+  if (feature.getGeometry().getType() === 'Point' && mapPin !== "") {
     style.setImage( new ol.style.Icon({
       anchor: [0.5, 1],
       anchorXUnits: 'fraction',
       anchorYUnits: 'fraction',
-      src: '{{ map_pin }}',
+      src: mapPin,
       scale: 0.1
     }))
   }
+
   return style;
 }
 
 /* --- LAYERS --*/
-var esriLabels = new ol.layer.Tile({
-  title: 'Labels',
-  zIndex: 5,
-  source: new ol.source.XYZ({
-    url: "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
-    attributions: [
-      "<br/><a href='http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
-        Labels Sources: Esri, HERE, DeLorme, MapmyIndia, Â© OpenStreetMap contributors, and the GIS user community</a>"
-    ]
-  })
-});
-var esriAerial = new ol.layer.Tile({
-  title: 'Aerial',
-  type: 'base',
-  visible: 'true',
-  source: new ol.source.XYZ({
-    url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
-    attributions: [
-      "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
-        Aerial Sources: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community</a>"
-    ]
-  })
-});
-// var esri_2d = new ol.layer.Tile({
-//   title: 'Topo',
-//   type: 'base',
-//   source: new ol.source.XYZ({
-//       url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-//       attributions: [
-//         "<a href='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer' target='_blank'\
-//           >Topo Sources: Esri, HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia, Â© OpenStreetMap contributors, and the GIS User Community</a>"
-//       ]
-//   })
-// });
-// var nautical_charts = new ol.layer.Tile({
-//   title: 'Nautical',
-//   type: 'base',
-//   source: new ol.source.TileWMS({
-//     url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/services/RNC/NOAA_RNC/ImageServer/WMSServer',
-//     // params: {'LAYERS': 'NOAA_RNC'},
-//     params: {'LAYERS': '0'},
-//     attributions: [
-//       'Natical Source: NOAA Office of Coast Survey'
-//     ]
-//   })
-// });
+const getEsriLabels = () => {
+  return new ol.layer.Tile({
+    title: 'Labels',
+    zIndex: 5,
+    source: new ol.source.XYZ({
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}.png",
+      attributions: [
+        "<br/><a href='https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer' target='_blank'>\
+          Labels Sources: Esri, HERE, DeLorme, MapmyIndia, Â© OpenStreetMap contributors, and the GIS user community</a>"
+      ]
+    })
+  });
+}
 
-// const vector_feature = JSON.parse('{{ record.map | safe }}');
+const getEsriAerial = () => {
+  return new ol.layer.Tile({
+    title: 'Aerial',
+    type: 'base',
+    visible: true,
+    source: new ol.source.XYZ({
+      url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png",
+      attributions: [
+        "<a href='https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer' target='_blank'>\
+          Aerial Sources: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community</a>"
+      ]
+    })
+  });
+}
 
-var vectorLayer = new ol.layer.Vector({
-  source: new ol.source.Vector({
-    features: new ol.format.GeoJSON().readFeatures(JSON.parse('{{ record.map | safe }}'))
-  }),
-  title: 'Place',
-  zIndex: 100,
-  style: styleFunction,
-});
-// var osmLayer = new ol.layer.Tile({
-//   source: new ol.source.OSM(),
-//   title: 'Street',
-//   type: 'base'
-// });
+
+const getVectorLayer = (vectorSource) => {
+  return new ol.layer.Vector({
+    source: vectorSource,
+    title: 'Place',
+    zIndex: 100,
+    style: applyStyles('{{ map_pin }}'),
+  });
+}
+
+const getVectorSource = (mapData) => {
+  return new ol.source.Vector({
+      features: new ol.format.GeoJSON().readFeatures(JSON.parse(mapData))
+    });
+}
+
+const makeFeatureCollection = (features) => {
+  return {
+    type: "FeatureCollection",
+    crs: {
+    type: "name",
+      properties: {
+        name: "EPSG:3857",
+      },
+    },
+    features: features,
+  };
+}
+
+const getGeojsonFromFeatureCollection = (featureCollection) => {
+  return new ol.format.GeoJSON().readFeatures(featureCollection);
+}
+
+const addFeaturesToSource = (source, features) => {
+  source.getSource().addFeatures(features);
+}
 
 /* --- CONTROLS --*/
-var scaleLineControl = new ol.control.ScaleLine({
-units: 'us'
-});
-var mousePositionControl = new ol.control.MousePosition({
-coordinateFormat: ol.coordinate.createStringXY(4),
-projection: 'EPSG:4326',
-target: 'mouse-position',
-undefinedHTML: '&nbsp;'
-});
+
+const getScaleLineControl = () => {
+  return new ol.control.ScaleLine({
+    units: 'us'
+  });
+}
+const getMousePositionControl = (target) => {
+  return new ol.control.MousePosition({
+    coordinateFormat: ol.coordinate.createStringXY(4),
+    projection: 'EPSG:4326',
+    target: target,
+    undefinedHTML: '&nbsp;'
+  });
+};
 
 /*--- MAP ZOOM ---*/
-function buffer_extent(extent, buffer) {
+
+const getBufferExtent = (extent, buffer) => {
   let lat_total = extent[2] - extent[0];
   let lon_total = extent[3] - extent[1];
   let lat_buffer = lat_total*buffer;
@@ -130,48 +145,129 @@ function buffer_extent(extent, buffer) {
 }
 
 /*--- MAP ---*/
-var map = new ol.Map({
-  controls: ol.control.defaults({
-    attributionOptions: ({
-      collapsible: true
-    })
-  }).extend([
-    scaleLineControl,
-    mousePositionControl
-  ]),
-  layers: [
+
+const getMapLayers = (overlayLayers, baseLayers) => {
+  return [
     new ol.layer.Group({
       title: 'Overlays',
-      layers: [
-        vectorLayer,
-        esriLabels
-      ],
+      layers: overlayLayers,
       zIndex: 10
     }),
     new ol.layer.Group({
-      'title': 'Base Maps',
-      layers: [
-        // nautical_charts,
-        // esri_2d,
-        // osmLayer,
-        esriAerial
-      ],
+      title: 'Base Maps',
+      layers: baseLayers,
       zIndex: 0
     })
-  ],
-  target: 'map',
-  view: new ol.View({
+  ];
+}
+
+const getMap = (target, controls, layers, view) => {
+  return new ol.Map({
+    controls: ol.control.defaults({
+    attributionOptions: ({
+      collapsible: true
+    })
+  }).extend(controls),
+    layers: layers,
+    target: target,
+    view: view
+  })
+}
+
+const fitMapToFeatures = (layers, map) => {
+  if (layers.getSource().getFeatures().length > 0) {
+    let geometry_extent = layers.getSource().getExtent();
+    geometry_extent = getBufferExtent(geometry_extent, 0.1);
+    map.getView().fit(geometry_extent, map.getSize());
+  }
+}
+
+const mapView = () => {
+  return new ol.View({
     center: [{{ default_lon }}, {{ default_lat }}],
     zoom: {{ default_zoom }},
     minZoom: {{ min_zoom }},
     maxZoom: {{ max_zoom }},
     extent: {{ map_extent }}
-  })
-});
-if (vectorLayer.getSource().getFeatures().length > 0) {
-  var geometry_extent = vectorLayer.getSource().getExtent();
-  geometry_extent = buffer_extent(geometry_extent, 0.1);
-  map.getView().fit(geometry_extent,map.getSize());
+  });
 }
-// var layerSwitcher = new ol.control.LayerSwitcher();
-// map.addControl(layerSwitcher);
+
+/*--- MAIN MAP ---*/
+
+{% if record.map %}
+
+
+  const mainEsriLabels = getEsriLabels();
+  const mainEsriAerial = getEsriAerial();
+
+  const mainScaleLineControl = getScaleLineControl();
+  const mainMousePositionControl = getMousePositionControl('mouse-position');
+  const mapVectorLayer = getVectorLayer(getVectorSource('{{ record.map | safe }}'));
+  const mainMapLayers = getMapLayers([mapVectorLayer, mainEsriLabels], [mainEsriAerial]);
+  const mainMapControls = [mainScaleLineControl, mainMousePositionControl];
+  const mainMapTarget = 'map';
+
+  const getMainMap = () => getMap(
+    mainMapTarget,
+    mainMapControls,
+    mainMapLayers,
+    mapView()
+  );
+
+  const mainMap = getMainMap();
+  fitMapToFeatures(mapVectorLayer, mainMap);
+{% endif %}
+
+/* --- PLACE-RESOURCE MAP ---*/
+
+{% if place_resource_features %}
+  const makePlaceResourceFeaturesArray = () => {
+    const features = [];
+    {% for feature in place_resource_features %}
+      {% if feature.map %}
+        const geometry_{{ forloop.counter }} = JSON.parse(`{{ feature.map|safe }}`);
+        if (geometry_{{ forloop.counter }}) {
+          const feature = {
+            type: "Feature",
+            id: {{ forloop.counter }},
+            geometry: geometry_{{ forloop.counter }},
+            properties: {
+              id: '{{ forloop.counter }}',
+              name: '{{ feature.name|escapejs }}'
+            }
+          };
+
+          features.push(feature);
+        }
+      {% endif %}
+    {% endfor %}
+    return features;
+  }
+
+  const placeResourcesFeatures = makePlaceResourceFeaturesArray();
+  const placeResourceFeatureCollection = makeFeatureCollection(placeResourcesFeatures);
+  const placeResourceGeojson = getGeojsonFromFeatureCollection(placeResourceFeatureCollection);
+
+  const placeResourceVectorLayer = getVectorLayer(new ol.source.Vector());
+
+  const placeResourceEsriLabels = getEsriLabels();
+  const placeResourceEsriAerial = getEsriAerial();
+
+  const placeResourceMapLayers = getMapLayers([placeResourceVectorLayer, placeResourceEsriLabels], [placeResourceEsriAerial]);
+  const placeResourceScaleLineControl = getScaleLineControl();
+  const placeResourceMouseControl = getMousePositionControl('place-resource-mouse-position');
+  const placeResourceMapControls = [placeResourceScaleLineControl, placeResourceMouseControl];
+  const placeResourceMapTarget = 'place-resource-map';
+
+  const getPlaceResourceMap = () => getMap(
+    placeResourceMapTarget,
+    placeResourceMapControls,
+    placeResourceMapLayers,
+    mapView()
+  );
+
+  const placeResourceMap = getPlaceResourceMap();
+  addFeaturesToSource(placeResourceVectorLayer, placeResourceGeojson);
+  fitMapToFeatures(placeResourceVectorLayer, placeResourceMap);
+
+{% endif %}

@@ -202,7 +202,23 @@ def get_by_model_id(request, model_type, id):
         "state": state,
     }
 
-    if "map" in record_dict.keys() and record_dict["map"] is not None:
+    hasPlaceResourceRelationships = False
+    if "relationships" in record_dict.keys():
+        for relationship in record_dict["relationships"]:
+            if relationship["key"] == "Place-Resource Events":
+                values = relationship["value"]
+                for value in values:
+                    if "map" in value.keys() and value["map"] is not None:
+                        hasPlaceResourceRelationships = True
+                        break
+                if hasPlaceResourceRelationships:
+                    break
+
+    if (
+        "map" in record_dict.keys()
+        and record_dict["map"] is not None
+        or hasPlaceResourceRelationships
+    ):
         DATABASE_GEOGRAPHY = get_project_geography()
         context["default_lon"] = DATABASE_GEOGRAPHY["default_lon"]
         context["default_lat"] = DATABASE_GEOGRAPHY["default_lat"]
