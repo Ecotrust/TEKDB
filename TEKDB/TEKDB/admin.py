@@ -972,10 +972,10 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     change_list_template = "admin/TEKDB/places/change_list.html"
 
     def changelist_view(self, request, extra_context=None):
-        from .views import getPlacesGeoJSON
+        from .views import get_places_geojson
 
         extra_context = extra_context or {}
-        extra_context["results_geojson"] = getPlacesGeoJSON(request)
+        extra_context["results_geojson"] = get_places_geojson(request)
         return super(PlacesAdmin, self).changelist_view(
             request, extra_context=extra_context
         )
