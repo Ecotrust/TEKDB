@@ -11,8 +11,6 @@ RUN apt-get update \
        postgresql-client \
        postgresql-client-common \
        libpq-dev \
-       postgresql \
-       postgresql-contrib \
        build-essential \
        gcc \
        g++ \
@@ -34,7 +32,6 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 
 # Copy requirements first (cache pip install step when dependencies don't change)
-COPY requirements.txt /usr/src/app/
 COPY requirements.txt requirements_linux.txt /usr/src/app/
 
 # Upgrade pip and install Python dependencies

@@ -18,12 +18,18 @@ fi
 
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
-# initial data load - commented out after first run to avoid duplicates
-# python manage.py loaddata TEKDB/fixtures/default_users_fixture.json
-# python manage.py loaddata TEKDB/fixtures/default_lookups_fixture.json
+# Load default users only if no users exist
+echo "Checking for existing users..."
+if [ "$(python manage.py shell -c 'from django.contrib.auth import get_user_model; print(get_user_model().objects.count())')" = "0" ]; then
+    python manage.py loaddata TEKDB/fixtures/default_users_fixture.json
+fi
+# Load default lookups only if no lookups exist. Use LookupPlanningUnit as the check.
+echo "Checking for existing lookups..."
+if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())')" = "0" ]; then
+	python manage.py loaddata TEKDB/fixtures/default_lookups_fixture.json
+fi
 echo "Starting uWSGI (HTTP) on :8000"
 # Use HTTP socket so direct HTTP clients (browsers) can connect to the container port.
 # If you proxy with nginx using the uwsgi protocol, switch back to --socket and use
 # uwsgi_pass in nginx configuration.
 uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
-exec "$@"

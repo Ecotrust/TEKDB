@@ -34,7 +34,7 @@ services:
       SQL_USER: postgres
       SQL_PASSWORD: postgrespw
       SECRET_KEY: 'change-me'
-      DEBUG: '0'
+      DEBUG: '1'
     ports:
       - "8000:8000"
     volumes:
