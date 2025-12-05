@@ -190,13 +190,6 @@ DIRECTORY = MEDIA_URL
 
 FILEBROWSER_LIST_PER_PAGE = 20
 
-FILEBROWSER_EXTENSIONS = {
-    "Image": [".jpg", ".jpeg", ".gif", ".png", ".tif", ".tiff"],
-    "Document": [".pdf", ".doc", ".rtf", ".txt", ".xls", ".csv", ".docx"],
-    "Video": [".mov", ".mp4", ".m4v", ".webm", ".wmv", ".mpeg", ".mpg", ".avi", ".rm"],
-    "Audio": [".mp3", ".wav", ".aiff", ".midi", ".m4p"],
-}
-
 FILEBROWSER_EXCLUDE = []  # Add extensions to exclude from showing in filebrowser. E.g. ['.py',]
 
 FILEBROWSER_VERSIONS = {} # Empty dict because we are not using versions
