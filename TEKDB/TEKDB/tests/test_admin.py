@@ -198,7 +198,7 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         )
 
         self.assertTrue(Media.objects.filter(medianame="test_image").exists())
-        self.assertTrue(Media.objects.filter(medianame="test_image").count() == 2)
+        self.assertEqual(Media.objects.filter(medianame="test_image").count(), 2)
 
         self.assertTrue(Places.objects.filter(pk=place.pk).exists())
         self.assertTrue(Resources.objects.filter(pk=resource.pk).exists())

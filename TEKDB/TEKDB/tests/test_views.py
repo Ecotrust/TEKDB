@@ -520,7 +520,7 @@ class ImportDatabaseTest(TransactionTestCase):
             )
             self.import_request.FILES["import_file"] = import_file
             self.import_request.user = Users.objects.get(username="admin")
-            response = ImportDatabase(self.import_request)  # noqa: F841
+            ImportDatabase(self.import_request)
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
         self.assertEqual(
             Resources.objects.filter(commonname=self.dummy_1_name).count(), 0
@@ -556,7 +556,6 @@ class ImportDatabaseTest(TransactionTestCase):
             self.import_request.FILES["import_file"] = import_file
             self.import_request.user = Users.objects.get(username="admin")
             response = ImportDatabase(self.import_request)
-            print(response)
             self.assertEqual(response.status_code, 405)
 
     def test_failed_import_incorrect_file_type(self):

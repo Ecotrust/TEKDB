@@ -424,8 +424,8 @@ class ExportRecordXlsTest(TestCase):
             f'attachment; filename="Places_{place.pk}_{str(place)}.xlsx"',
             response["Content-Disposition"],
         )
-        self.assertTrue(
-            response.content[:2] == b"PK"
+        self.assertEqual(
+            response.content[:2], b"PK"
         )  # XLSX files start with 'PK' (zip signature)
 
 
@@ -548,6 +548,6 @@ class DownloadViewTest(TestCase):
         self.assertIn(
             "attachment; filename=TEK_RESULTS.xlsx", response["Content-Disposition"]
         )
-        self.assertTrue(
-            response.content[:2] == b"PK"
+        self.assertEqual(
+            response.content[:2], b"PK"
         )  # XLSX files start with 'PK' (zip signature)

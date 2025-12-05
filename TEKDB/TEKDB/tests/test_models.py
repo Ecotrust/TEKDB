@@ -647,7 +647,7 @@ class ResourcesActivityEventsTest(ITKSearchTest):
 
     def test_data(self):
         """
-        Test that activity data is correctly with all fields
+        Test that activity data is correctly generated with all fields
         """
         activity = ResourcesActivityEvents.objects.create(
             **{
@@ -1907,7 +1907,7 @@ class PeopleTest(ITKSearchTest):
         for item in data:
             key = item["key"]
             val = item["value"]
-            self.assertTrue(key in keys)
+            self.assertIn(key, keys)
             if key == "first name":
                 self.assertEqual(val, "John")
             elif key == "last name":
@@ -1921,7 +1921,7 @@ class PeopleTest(ITKSearchTest):
 
     def test_relationships(self):
         """
-        Test that relationships method retrns correct sources
+        Test that relationships method returns correct sources
         """
         person = People.objects.create(
             firstname="John",
