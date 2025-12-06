@@ -47,6 +47,7 @@ SITE_ID = 1
 INSTALLED_APPS = [
     "dal",
     "dal_select2",
+    "filebrowser",
     "django.contrib.contenttypes",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -188,6 +189,27 @@ STATICFILES_STORAGE = os.environ.get(
     'STATICFILES_STORAGE',
     'whitenoise.storage.CompressedStaticFilesStorage'
 )
+###########################################
+##            FILEBROWSER               ###
+###########################################
+DIRECTORY = MEDIA_URL
+
+FILEBROWSER_LIST_PER_PAGE = 20
+
+FILEBROWSER_EXCLUDE = []  # Add extensions to exclude from showing in filebrowser. E.g. ['.py',]
+
+FILEBROWSER_VERSIONS = {} # Empty dict because we are not using versions
+
+# Apps to exclude from the export `dumpdata` command. This prevents
+# dumping third-party apps (like `filebrowser`) that may not have tables
+# in the test DB or that you don't want included in project backups.
+EXPORT_DUMP_EXCLUDE = [
+    "filebrowser",
+]
+
+###########################################
+###          END FILEBROWSER            ###
+###########################################
 
 # STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "explore", "static"),
