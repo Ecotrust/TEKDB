@@ -78,7 +78,13 @@ def ExportDatabase(request, test=False):
             dumpfile = "{}_backup.json".format(datestamp)
             dumpfile_location = os.path.join(tmp_dir, dumpfile)
             with open(dumpfile_location, "w") as of:
-                management.call_command("dumpdata", "--indent=2", stdout=of)
+                excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
+                management.call_command(
+                    "dumpdata",
+                    exclude=excludes,
+                    indent=2,
+                    stdout=of,
+                )
             # zip up:
             #   * Data Dump file
             #   * Media files
@@ -88,7 +94,7 @@ def ExportDatabase(request, test=False):
                     zip.write(media_file)
 
         response = FileResponse(open(tmp_zip.name, "rb"))
-        
+
     finally:
         try:
             if not test:
@@ -97,7 +103,7 @@ def ExportDatabase(request, test=False):
         except (PermissionError, NotADirectoryError):
             response.set_cookie("export_status", "error")
             pass
-    return response   
+    return response
 
 
 def getDBTruncateCommand():
