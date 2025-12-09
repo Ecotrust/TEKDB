@@ -33,6 +33,6 @@ ipdb
 ipython
 
 # Serve static files in production containers
-whitenoise
+whitenoise>=6.0.0,<7.0.0
 # FORMATTING AND LINTING
 ruff
