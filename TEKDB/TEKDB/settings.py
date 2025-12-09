@@ -192,7 +192,7 @@ FILEBROWSER_LIST_PER_PAGE = 20
 
 FILEBROWSER_EXCLUDE = []  # Add extensions to exclude from showing in filebrowser. E.g. ['.py',]
 
-FILEBROWSER_VERSIONS = {} # Empty dict because we are not using versions
+FILEBROWSER_VERSIONS = {}  # Empty dict because we are not using versions
 
 # Apps to exclude from the export `dumpdata` command. This prevents
 # dumping third-party apps (like `filebrowser`) that may not have tables
