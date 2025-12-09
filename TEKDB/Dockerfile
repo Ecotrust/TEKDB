@@ -9,23 +9,10 @@ ENV PIP_NO_CACHE_DIR=1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        postgresql-client \
-       postgresql-client-common \
-       libpq-dev \
-       build-essential \
        gcc \
-       g++ \
-       python3-dev \
        gdal-bin \
        libgdal-dev \
        libgeos-dev \
-       proj-bin \
-       libproj-dev \
-       libjpeg-dev \
-       zlib1g-dev \
-       libfreetype6-dev \
-       libwebp-dev \
-       gettext \
-       curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
