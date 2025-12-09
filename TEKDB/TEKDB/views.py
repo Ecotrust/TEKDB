@@ -99,9 +99,9 @@ def ExportDatabase(request, test=False):
         try:
             if not test:
                 os.remove(tmp_zip.name)
-            response.set_cookie("export_status", "done")
+            response.set_cookie("export_status", "done", path="/")
         except (PermissionError, NotADirectoryError):
-            response.set_cookie("export_status", "error")
+            response.set_cookie("export_status", "error", path="/")
             pass
     return response
 
@@ -123,6 +123,10 @@ def ImportDatabase(request):
     if not request.method == "POST":
         status_code = 405
         status_message = "Request method not allowed. Must be a post."
+        return JsonResponse(
+            {"status_code": status_code, "status_message": status_message},
+            status=status_code,
+        )
     else:
         if "MEDIA_DIR" in request.POST.keys() and os.path.exists(
             request.POST["MEDIA_DIR"]
@@ -141,13 +145,15 @@ def ImportDatabase(request):
                     for chunk in request.FILES["import_file"].chunks():
                         tmp_zip_file.write(chunk)
                     tmp_zip_file.seek(0)
+
                 except Exception as e:
                     status_code = 500
                     status_message = 'Unable to read the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(
                         e
                     )
                     return JsonResponse(
-                        {"status_code": status_code, "status_message": status_message}
+                        {"status_code": status_code, "status_message": status_message},
+                        status=status_code,
                     )
                 if zipfile.is_zipfile(tmp_zip_file):
                     zip = zipfile.ZipFile(tmp_zip_file, "r")
@@ -162,7 +168,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
                     fixture_name = non_media[0]
                     try:
@@ -176,7 +183,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
                     try:
                         # Emptying DB tables
@@ -193,7 +201,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
 
                     try:
@@ -222,7 +231,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
 
                     try:
@@ -241,7 +251,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
                     status_code = 200
                     status_message = "Database import completed successfully."
@@ -254,18 +265,20 @@ def ImportDatabase(request):
                 "Request must have an attached zipfile to restore the database from"
             )
 
-    return JsonResponse({"status_code": status_code, "status_message": status_message})
+    return JsonResponse(
+        {"status_code": status_code, "status_message": status_message},
+        status=status_code,
+    )
 
 
 # Only Authenticated Users!
 @permission_required("TEKDB.change_list")
-def getPlacesGeoJSON(request):
+def get_places_geojson(request):
     from .models import Places
     import json
 
     # Get all places
     places = Places.objects.exclude(geometry__isnull=True)
-
     # GeoJSON to store all places
     geojson = {"type": "FeatureCollection", "features": []}
 

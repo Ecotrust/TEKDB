@@ -474,52 +474,53 @@ class ExportTest(TestCase):
             self.assertEqual(response.cookies["export_status"].value, "done")
 
 
-class ImportTest(TransactionTestCase):
-    # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-
-    @classmethod
-    def setUp(cls):
+class ImportDatabaseTest(TransactionTestCase):
+    def setUp(self):
         import_fixture_file(
             join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
         )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+        self.dummy_1_name = "Dummy Record 1"
+        self.zipname = join(
+            settings.BASE_DIR, "TEKDB", "tests", "test_files", "exported_db.zip"
+        )
+        self.tempmediadir = tempfile.TemporaryDirectory()
+        self.wrong_file_name = join(
+            settings.BASE_DIR,
+            "TEKDB",
+            "tests",
+            "test_files",
+            "test_wrong_import.txt",
+        )
 
-        cls.factory = RequestFactory()
-
-        cls.credentials = b64encode(b"admin:admin").decode("ascii")
-        cls.dummy_1_name = "Dummy Record 1"
-
-        cls.old_resources_count = Resources.objects.all().count()
-        new_record = Resources.objects.create(commonname=cls.dummy_1_name)
+    def test_successful_import(self):
+        self.old_resources_count = Resources.objects.all().count()
+        new_record = Resources.objects.create(commonname=self.dummy_1_name)
         new_record.save()
         # Resources.moderated_object.fget(new_record).approve()
 
-        cls.zipname = join(
-            settings.BASE_DIR, "TEKDB", "tests", "test_files", "exported_db.zip"
-        )
-        cls.tempmediadir = tempfile.TemporaryDirectory()
-        cls.import_request = cls.factory.post(
+        self.import_request = self.factory.post(
             reverse("import_database"),
             {
-                "MEDIA_DIR": cls.tempmediadir.name,
+                "MEDIA_DIR": self.tempmediadir.name,
                 "content_type": "application/zip",
                 "content_disposition": "attachment; filename=uploaded.dump",
             },
-            headers={"Authorization": f"Basic {cls.credentials}"},
+            headers={"Authorization": f"Basic {self.credentials}"},
         )
-        with open(cls.zipname, "rb") as z:
+        with open(self.zipname, "rb") as z:
             import_file = InMemoryUploadedFile(
                 z,
                 "import_file",
                 "exported_db.zip",
                 "application/zip",
-                getsize(cls.zipname),
+                getsize(self.zipname),
                 None,
             )
-            cls.import_request.FILES["import_file"] = import_file
-            cls.import_request.user = Users.objects.get(username="admin")
-            response = ImportDatabase(cls.import_request)  # noqa: F841
-
-    def test_import(self):
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+            ImportDatabase(self.import_request)
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
         self.assertEqual(
             Resources.objects.filter(commonname=self.dummy_1_name).count(), 0
@@ -533,117 +534,87 @@ class ImportTest(TransactionTestCase):
                 self.assertTrue(media_name in listdir(self.tempmediadir.name))
         shutil.rmtree(self.tempmediadir.name)
 
+    def test_failed_import_wrong_method(self):
+        self.import_request = self.factory.get(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+            response = ImportDatabase(self.import_request)
+            self.assertEqual(response.status_code, 405)
 
-### 2025-05-09: No one has any idea what a 'placeMap' is.
-# class PlaceMapTest(TestCase):
-#     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
+    def test_failed_import_incorrect_file_type(self):
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        # Upload a non-zip file
+        with open(
+            self.wrong_file_name,
+            "rb",
+        ) as f:
+            import_file = InMemoryUploadedFile(
+                f,
+                "import_file",
+                "test_wrong_import.txt",
+                "text/plain",
+                getsize(self.wrong_file_name),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+            response = ImportDatabase(self.import_request)
+            self.assertEqual(response.status_code, 400)
+            response.data = json.loads(response.content)
+            self.assertEqual(
+                "Uploaded file is not recognized as a zipfile. Be sure you have a valid backup file and try again.",
+                response.data["status_message"],
+            )
 
-#     @classmethod
-#     def setUp(cls):
-#         import_fixture_file(join(settings.BASE_DIR, 'TEKDB', 'fixtures', 'all_dummy_data.json'))
 
-#         cls.factory = RequestFactory()
-#         cls.credentials = b64encode(b"admin:admin").decode("ascii")
-#         cls.dummy_1_name = "Dummy Record 1"
+class GetPlacesGeoJSONTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
 
-#         new_record = Places.objects.create(englishplacename="Dummy Record 1")
-#         new_record.save()
+    def test_get_places_geojson(self):
+        from TEKDB.views import get_places_geojson
 
-#     def test_placeMap(self):
-#         request = self.factory.get(reverse('placeMap'))
-#         request.user = Users.objects.get(username='admin')
-#         response = placeMap(request)
-#         self.assertEqual(response.status_code, 200)
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.import_request = self.factory.get(
+            "/admin/TEKDB/places/",
+            {
+                "content_type": "application/zip",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.import_request.user = user
 
+        places_geojson = get_places_geojson(self.import_request)
 
-# class ExportImportTest(TestCase):
-#     # fixtures = ['TEKDB/fixtures/all_dummy_data.json',]
-#
-#     @classmethod
-#     def setUpTestData(cls):
-#         cls.factory = RequestFactory()
-#         cls.credentials = b64encode(b"admin:admin").decode("ascii")
-#
-#         cls.dummy_1_name = "Dummy Record 1"
-#         cls.dummy_2_name = "Dummy Record 2"
-#
-#         import ipdb; ipdb.set_trace()
-#
-#         new_record = Resources.objects.create(commonname=cls.dummy_1_name)
-#         new_record.save()
-#
-#         # Count records
-#         cls.original_media_count = Media.objects.all().count()
-#         cls.original_places_count = Places.objects.all().count()
-#         cls.original_resources_count = Resources.objects.all().count()
-#         cls.original_citations_count = Citations.objects.all().count()
-#         cls.original_activities_count = ResourcesActivityEvents.objects.all().count()
-#
-#         export_request = create_export_request(cls)
-#         export_request.user = Users.objects.get(username='admin')
-#         response = ExportDatabase(export_request)
-#         cls.tempdir = tempfile.gettempdir()
-#         zipname = get_export_file_from_response(response, cls.tempdir)
-#
-#         new_record2 = Resources.objects.create(commonname=cls.dummy_2_name)
-#         new_record2.save()
-#
-#         cls.tempmediadir = tempfile.gettempdir()
-#         cls.import_request = cls.factory.post(
-#             reverse('import_database'),
-#             {
-#                 'MEDIA_DIR': cls.tempmediadir,
-#             },
-#             headers = {
-#                 "Authorization": f"Basic {cls.credentials}"
-#             },
-#         )
-#         #   Attach .zip to request
-#         with open(zipname, 'rb') as z:
-#             cls.import_request.FILES['import_file'] = z
-#             cls.import_request.FILES['import_file'].read()
-#             z.seek(0)
-#
-#         cls.import_request.user = Users.objects.get(username='admin')
-#         response = ImportDatabase(cls.import_request)
-#
-#         remove(zipname)
-#
-#     def test_export_import(self):
-#         ############################################################
-#         ### IMPORT
-#         ############################################################
-#         tempdir = self.tempdir
-#         # zipname = self.zipname
-#
-#         # Prep for test import:
-#         #   Create temp dir to write media to
-#
-#         #   view must take optional MEDIA_DIR location
-#         #   MAKE SURE TEST DOESN"T OVERRIDE LIVE DB!!!
-#         self.assertEqual(Resources.objects.all().count(), self.original_resources_count )
-#         self.assertEqual(Media.objects.all().count(), self.original_media_count)
-#         self.assertEqual(Places.objects.all().count(), self.original_places_count)
-#         self.assertEqual(Resources.objects.all().count(), self.original_resources_count)
-#         self.assertEqual(Citations.objects.all().count(), self.original_citations_count)
-#         self.assertEqual(ResourcesActivityEvents.objects.all().count(), self.original_activities_count)
-#         # test for added record
-#         dummy1_q = Resources.objects.filter(commonname=self.dummy_1_name)
-#         dummy2_q = Resources.objects.filter(commonname=self.dummy_2_name)
-#         self.assertEqual(dummy1_q.count(), 1)
-#         self.assertEqual(dummy2_q.count(), 0)
-#         self.assertEqual(dummy1_q[0].pk, first_resource.pk)
-#         #
-#         # import .zip
-#         #   Create Request
-#
-#         self.import_request.user = AnonymousUser()
-#         anon_response = ImportDatabase(self.import_request)
-#         # Users w/out adequate permissions should be redirected (302)
-#         self.assertEqual(anon_response.status_code, 302)
-#         self.import_request.user = Users.objects.get(username='readonly')
-#         bad_response = ImportDatabase(self.import_request)
-#         self.assertEqual(bad_response.status_code, 302)
-#
-#         # self.assertEqual(response.status_code, 200)
-#         #   Specify target MEDIA_DIR in request
+        self.assertTrue(isinstance(places_geojson, dict))
+        self.assertIn("features", places_geojson)

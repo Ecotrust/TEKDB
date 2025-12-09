@@ -76,11 +76,17 @@ $(function () {
     });
   };
 
+  const clearExportStatusCookie = () => {
+    document.cookie =
+      "export_status=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  };
+
   const resetExportButton = (iframe, clear) => {
     $("#export-button").prop("disabled", false);
     $("#export-button").html("Export to .zip");
     iframe.remove();
     clear();
+    clearExportStatusCookie();
   };
 
   $("button#import-button").click(function (e) {
@@ -174,7 +180,7 @@ $(function () {
     );
 
     // set cookie to pending
-    document.cookie = "export_status=pending";
+    document.cookie = "export_status=pending; path=/";
 
     // create hidden iframe to trigger download
     const iframe = $("<iframe/>")
@@ -182,18 +188,35 @@ $(function () {
       .attr("src", "/export_database/")
       .appendTo("body");
 
+    const maxPollMs = 1 * 60 * 1000; // 1 minute safety cap (probably way longer than needed)
+    const startTime = Date.now();
+
     // poll cookie for export_status
-    const checkStatus = setInterval(function () {
+    const checkStatus = setInterval(() => {
       const cookies = document.cookie.split(";").map((c) => c.trim());
       const exportStatus = cookies.filter((c) =>
         c.startsWith("export_status=")
       );
 
-      if (exportStatus && exportStatus.includes("export_status=done")) {
+      if (
+        exportStatus &&
+        (exportStatus.includes("export_status=done") ||
+          exportStatus.includes("export_status=error"))
+      ) {
         resetExportButton(iframe, () => clearInterval(checkStatus));
-      } else if (exportStatus && exportStatus.includes("export_status=error")) {
-        $("#exportStatus").removeClass("hidden");
-        resetExportButton(iframe, () => clearInterval(checkStatus));
+        if (exportStatus.includes("export_status=error")) {
+          $("#exportStatus").removeClass("hidden");
+        }
+      } else {
+        if (Date.now() - startTime > maxPollMs) {
+          // timeout
+          resetExportButton(iframe, () => clearInterval(checkStatus));
+          $("#exportStatus")
+            .removeClass("hidden")
+            .html(
+              "<p class='text-danger'>Export timed out. Please try again.</p>"
+            );
+        }
       }
     }, 1000);
   });

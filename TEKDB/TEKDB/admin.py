@@ -104,6 +104,10 @@ class ResourcesActivityEventsForm(forms.ModelForm):
 
 
 class CitationsForm(forms.ModelForm):
+    class Meta:
+        model = Citations
+        fields = "__all__"
+
     def __init__(self, *args, **kwargs):
         super(CitationsForm, self).__init__(*args, **kwargs)
         self.fields["referencetype"].queryset = LookupReferenceType.objects.order_by(
@@ -138,6 +142,10 @@ class PlacesForm(forms.ModelForm):
 
 
 class ResourcesForm(forms.ModelForm):
+    class Meta:
+        model = Resources
+        fields = "__all__"
+
     def __init__(self, *args, **kwargs):
         super(ResourcesForm, self).__init__(*args, **kwargs)
         self.fields[
@@ -632,7 +640,6 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
                     mediatype__startswith="other"
                 ).first()
                 mediatype = media_type_instance
-
             filename = file.name.split(".")[0]
 
             media_instance = Media(
@@ -965,10 +972,10 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     change_list_template = "admin/TEKDB/places/change_list.html"
 
     def changelist_view(self, request, extra_context=None):
-        from .views import getPlacesGeoJSON
+        from .views import get_places_geojson
 
         extra_context = extra_context or {}
-        extra_context["results_geojson"] = getPlacesGeoJSON(request)
+        extra_context["results_geojson"] = get_places_geojson(request)
         return super(PlacesAdmin, self).changelist_view(
             request, extra_context=extra_context
         )
