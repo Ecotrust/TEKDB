@@ -32,24 +32,20 @@ def search_settings(request=None):
             pass
 
     if configs:
-        try:
-            min_search_rank = (
-                configs.min_search_rank
-                if configs.min_search_rank
-                else search_config["MIN_SEARCH_RANK"]
-            )
-            min_search_similarity = (
-                configs.min_search_similarity
-                if configs.min_search_similarity
-                else search_config["MIN_SEARCH_SIMILARITY"]
-            )
-            search_config = {
-                "MIN_SEARCH_RANK": min_search_rank,
-                "MIN_SEARCH_SIMILARITY": min_search_similarity,
-            }
-        except Exception:
-            print("No min_search_rank or min_search_similarity in Configuration")
-            pass
+        min_search_rank = (
+            configs.min_search_rank
+            if configs.min_search_rank
+            else search_config["MIN_SEARCH_RANK"]
+        )
+        min_search_similarity = (
+            configs.min_search_similarity
+            if configs.min_search_similarity
+            else search_config["MIN_SEARCH_SIMILARITY"]
+        )
+        search_config = {
+            "MIN_SEARCH_RANK": min_search_rank,
+            "MIN_SEARCH_SIMILARITY": min_search_similarity,
+        }
 
     return search_config
 
