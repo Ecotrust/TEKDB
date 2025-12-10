@@ -71,8 +71,9 @@ else
     echo "Checking out git ref: '$REF'"
     if git checkout "$REF"; then
         echo "Checked out '$REF' successfully."
-        If on a branch (not detached HEAD), fast-forward pull
+        # If on a branch (not detached HEAD), fast-forward pull
         CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        echo "Current branch: $CURRENT_BRANCH"
         if [ "$CURRENT_BRANCH" != "HEAD" ]; then
             git pull --ff-only || git pull
         fi
