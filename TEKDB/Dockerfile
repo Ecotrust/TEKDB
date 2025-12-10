@@ -30,7 +30,7 @@ COPY . /usr/src/app
 
 # Copy and make entrypoint executable. The repository contains `docker/entrypoint.sh`
 # which runs collectstatic, migrations and launches uWSGI.
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose the port the app runs on (entrypoint starts uWSGI on 8000)
