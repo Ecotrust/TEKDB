@@ -39,7 +39,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/usr/src/app
+      - ../TEKDB:/usr/src/app
 
 volumes:
   tekdb_db_data:

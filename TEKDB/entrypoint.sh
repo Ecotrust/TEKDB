@@ -16,7 +16,9 @@ if [ -n "$SQL_HOST" ]; then
 	echo "Postgres is up"
 fi
 
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
+echo "Applying database migrations..."
 python manage.py migrate --noinput
 # Load default users only if no users exist
 echo "Checking for existing users..."
