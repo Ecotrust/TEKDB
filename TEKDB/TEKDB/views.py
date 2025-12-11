@@ -262,7 +262,7 @@ def ImportDatabase(request):
         else:
             status_code = 400
             status_message = (
-                "Request must have an attached zipfile to restore the database from"
+                "Request must have an attached zipfile to restore the database from."
             )
 
     return JsonResponse(
