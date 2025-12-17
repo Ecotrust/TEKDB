@@ -2833,7 +2833,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
         return settings.RECORD_ICONS["media"]
 
     def subtitle(self):
-        return self.mediatype
+        return str(self.mediatype)
 
     def link(self):
         return "/explore/media/%d/" % self.pk

@@ -2,6 +2,7 @@ from django.http import Http404, HttpResponse
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+# from rest_framework.generics import GenericAPIView
 
 from .serializers import PageContentSerializer
 from ..models import PageContent
@@ -99,6 +100,22 @@ class PageContentSingle(APIView):
             }
         )
 
+class ExploreByType(APIView):
+    """Explore for a specific model type."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, model_type):
+        return Response(
+            {
+                "query": "",
+                "category": model_type,
+                "page": "Results",
+                "pageTitle": "Results",
+                "pageContent": "<p>Your search results:</p>",
+                "user": str(request.user)
+            }
+        )
+
 
 # ----- Explore/search endpoints -----
 class ExploreSearch(APIView):
@@ -188,11 +205,11 @@ class ExploreSearch(APIView):
             if categories == []:
                 categories = ["all"]
         # sanitize categories
+        # Zero tolerance for mispelled or 'all' categories. if it's not perfect, fail to 'all'
         for category in categories:
-            if category not in all_categories and category != "all":
+            if category not in all_categories:
                 categories = all_categories
                 break
-
         results = self.get_results(query_string, categories)
 
         # cap results by config
@@ -226,11 +243,10 @@ class ExploreSearch(APIView):
         )
 
 
-class RecordDetail(APIView):
+class ExploreById(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, model_type, id):
-
         models = _get_model_by_type(model_type)
         if len(models) != 1:
             return Response({"error": f"Incorrect number of models for {model_type}"}, status=status.HTTP_400_BAD_REQUEST)
@@ -240,7 +256,6 @@ class RecordDetail(APIView):
             record_dict = obj.get_record_dict(request.user, 3857)
         except Exception:
             raise Http404
-
         geo_info_needed = False
         if ("map" in record_dict and record_dict["map"] is not None) or any(
             rel.get("key") == "Place-Resource Events" and any(
@@ -280,7 +295,7 @@ class ExportRecord(APIView):
 
         filename = f"{model_type}_{id}_{record_dict.get('name','record')}"
         if format == "xls":
-            # Reuse original XLS export logic
+            # XLSX export
             import io
             from xlsxwriter.workbook import Workbook
 
@@ -345,7 +360,7 @@ class ExportRecord(APIView):
             resp["Content-Disposition"] = f'attachment; filename="{filename}.xlsx"'
             return resp
         else:
-            # CSV default
+            # CSV export
             import csv
             csv_response = HttpResponse(content_type="text/csv")
             csv_response["Content-Disposition"] = f'attachment; filename="{filename}.csv"'
@@ -390,7 +405,7 @@ class ExportRecord(APIView):
                 else:
                     writer.writerow([key, str(field)])
             return csv_response
-
+    
 
 class DownloadMediaFile(APIView):
     permission_classes = [permissions.IsAuthenticated]

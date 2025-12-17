@@ -1,17 +1,19 @@
 from django.urls import include, path, re_path
-from rest_framework import routers
 from .API import views as api_views
 
 from . import views
-
-router = routers.DefaultRouter()
-router.register(r"pagecontent", api_views.PageContentViewSet)
 
 explore_patterns = [
     path("", views.explore),
     re_path(r"^(?P<model_type>\w+)/$", views.get_by_model_type),
     re_path(r"^(?P<model_type>\w+)/(?P<id>\w+)/$", views.get_by_model_id),
     re_path(r"^(?P<model_type>\w+)/(?P<id>\w+)/download$", views.download_media_file),
+]
+
+api_explore_patterns = [
+    path("<str:model_type>/", api_views.ExploreByType.as_view()),
+    path("<str:model_type>/<int:id>/", api_views.ExploreById.as_view()),
+    path("<str:model_type>/<int:id>/download", api_views.DownloadMediaFile.as_view()),
 ]
 
 export_patterns = [
@@ -29,13 +31,12 @@ urlpatterns = [
     path("explore/", include(explore_patterns)),
     path("export", views.download),
     path("export/", include(export_patterns)),
-    # API endpoints (DRF)
-    path("api/pagecontent/", include(router.urls)),
-    re_path(r"^api/page/(?P<name>\w+)/$", api_views.PageContentSingle.as_view()),
-    path("api/search/", api_views.ExploreSearch.as_view()),
-    re_path(r"^api/record/(?P<model_type>\w+)/(?P<id>\w+)/$", api_views.RecordDetail.as_view()),
-    re_path(r"^api/export/(?P<model_type>\w+)/(?P<id>\w+)/(?P<format>\w+)/$", api_views.ExportRecord.as_view()),
-    re_path(r"^api/media/(?P<model_type>\w+)/(?P<id>\w+)/download$", api_views.DownloadMediaFile.as_view()),
     path("", views.home),
+
+    # API endpoints (DRF)
+    path("api/explore/", include(api_explore_patterns)),
+    path("api/page/<str:name>/", api_views.PageContentSingle.as_view()),
+    path("api/search/", api_views.ExploreSearch.as_view()),
+    path("api/export/<str:model_type>/<int:id>/<str:format>/", api_views.ExportRecord.as_view()),
 ]
 # url(r'^logout$', views.logout, name='logout'),
