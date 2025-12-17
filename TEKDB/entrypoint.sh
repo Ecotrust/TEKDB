@@ -34,4 +34,5 @@ echo "Starting uWSGI (HTTP) on :8000"
 # Use HTTP socket so direct HTTP clients (browsers) can connect to the container port.
 # If you proxy with nginx using the uwsgi protocol, switch back to --socket and use
 # uwsgi_pass in nginx configuration.
-uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+# uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+python manage.py runserver 0.0.0.0:8000

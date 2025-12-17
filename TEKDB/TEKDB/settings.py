@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "Relationships",
     "reversion",
     "django.contrib.sites",
+    "rest_framework"
     # 'moderation.apps.SimpleModerationConfig',
 ]
 
