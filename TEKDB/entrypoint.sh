@@ -30,8 +30,14 @@ echo "Checking for existing lookups..."
 if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())')" = "0" ]; then
 	python manage.py loaddata TEKDB/fixtures/default_lookups_fixture.json
 fi
-echo "Starting uWSGI (HTTP) on :8000"
-# Use HTTP socket so direct HTTP clients (browsers) can connect to the container port.
-# If you proxy with nginx using the uwsgi protocol, switch back to --socket and use
-# uwsgi_pass in nginx configuration.
-uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+
+if [ "$1" = "prod" ]; then
+    echo "Starting uWSGI (HTTP) on :8000"
+    uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+elif [ "$1" = "dev" ]; then
+    echo "Starting python development server on :8000"
+    python manage.py runserver 0.0.0.0:8000
+else
+    # Default to the passed command if not 'prod' or 'dev'
+    exec "$@"
+fi

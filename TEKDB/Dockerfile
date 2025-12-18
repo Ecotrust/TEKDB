@@ -33,10 +33,13 @@ COPY . /usr/src/app
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expose the port the app runs on (entrypoint starts uWSGI on 8000)
+# Expose the port the app runs on (entrypoint starts django development server or uWSGI on 8000)
 EXPOSE 8000
 
 # Default settings module (can be overridden at runtime)
 ENV DJANGO_SETTINGS_MODULE=TEKDB.settings
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# use development server by default 
+CMD ["dev"]
