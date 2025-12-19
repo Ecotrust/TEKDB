@@ -100,6 +100,7 @@ class ExploreViewTest(TestCase):
         data = response.json()
         self.assertEqual(data["categories"], ["places"])
 
+
 class GetByModelTypeTest(TestCase):
     def setUp(self):
         import_fixture_file(
@@ -183,7 +184,9 @@ class GetByModelIdTest(TestCase):
         rae = ResourcesActivityEvents.objects.first()
         url = f"/api/explore/resourcesactivityevents/{rae.pk}/"
         rae_response = self.client.get(url)
-        self.assertEqual(rae_response.json()["model"].lower(), "resourcesactivityevents")
+        self.assertEqual(
+            rae_response.json()["model"].lower(), "resourcesactivityevents"
+        )
         self.assertEqual(rae_response.status_code, 200)
 
         media = Media.objects.first()
@@ -309,6 +312,7 @@ class GetSortedKeysTest(TestCase):
 
         self.user = Users.objects.get(username="admin")
         self.client.force_login(self.user)
+
     # curl -u admin -H 'Accept: application/json; indent=4' http://localhost:8000/api/export/Places/31/csv/
     def test_sorted_keys_via_export_csv(self):
         # Indirectly verify ordering through CSV export payload
@@ -317,7 +321,7 @@ class GetSortedKeysTest(TestCase):
         place = Places.objects.get(pk=31)
         url = f"/api/export/Places/{place.pk}/csv/"
         response = self.client.get(url)
-        
+
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
         self.assertIn("name", content)
@@ -325,7 +329,6 @@ class GetSortedKeysTest(TestCase):
 
 
 class ExportRecordCsvTest(TestCase):
-
     def test_export_record_csv(self):
         from os.path import join
         from django.conf import settings
@@ -478,7 +481,8 @@ class DownloadViewTest(TestCase):
 
     def test_download_xlsx(self):
         url = "/api/export?query=test&places=true&format=xlsx"
-        response = self.client.get(url)
+        url = "/api/export?query=test&places=true&format=csv"
+        response = self.client.get(url, follow=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(

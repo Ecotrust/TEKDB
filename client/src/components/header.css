@@ -1,0 +1,117 @@
+nav.navbar {
+  align-items: stretch;
+  background-color: var(--default_background);
+  border-bottom: 1px solid var(--black);
+  height: var(--header_height);
+}
+
+.navbar-brand {
+  margin-right: auto;
+}
+
+/* Wrapper for logo */
+/* Logo value is a django variable in navbar.html */
+/* Logo is assigned as the background-image for .navbar-brand-wrapper */
+.navbar-brand-wrapper {
+  align-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  display: flex;
+  font-family: var(--font-sans-serif-extrabold);
+  font-size: 1.06375em;
+  letter-spacing: 0.025em;
+  flex-wrap: wrap;
+  height: 79px;
+  line-height: normal;
+  padding: 0;
+  text-align: center;
+  min-width: 120px;
+}
+
+/*
+  * Customizable Logo and text position
+  * 
+  * The text position can be set to left, right, or center.
+  * The background image will be positioned accordingly.
+  * For default styles see .navbar-brand-wrapper
+*/
+
+.navbar-brand-wrapper.text-before {
+  background-position: right center;
+  text-align: left;
+}
+
+.navbar-brand-wrapper.text-after {
+  background-position: left center;
+  text-align: right;
+}
+
+.navbar-brand-text {
+  width: 100%;
+}
+
+/*
+  * Navbar Toggler
+  * 
+*/
+
+ul.navbar-nav {
+  width: 100%;
+  margin-left: 10%;
+}
+
+.navbar-toggler {
+  margin-bottom: calc(var(--header_height)/4);
+}
+
+ul.navbar-nav li.nav-item {
+  flex-grow: 3;
+  text-align: center;
+}
+
+ul.navbar-nav li.nav-item a.nav-link {
+  border-bottom: 3px solid transparent;
+  color: var(--black);
+  display: inline-block;
+  font-size: 1.125em;
+  font-family: var(--font-sans-serif-bold);
+  letter-spacing: 0.125em;
+  transition: border-bottom 0.2s ease-in-out;
+}
+
+ul.navbar-nav li.nav-item a.nav-link.disabled {
+  color: rgba(0, 0, 0, .3);
+}
+
+ul.navbar-nav li.nav-item a.nav-link:hover {
+  border-bottom: 3px solid var(--highlight_underline);
+  color: var(--black);
+}
+
+ul.navbar-nav li.nav-item.active a.nav-link {
+  border-bottom: 3px solid var(--highlight_underline);
+}
+
+ul.navbar-nav li.nav-item.user-menu {
+  text-align: right;
+}
+
+ul.navbar-nav li.nav-item.user-menu a.header-button,
+ul.navbar-nav li.nav-item.user-menu a#userDropdown {
+  /* background-color: var(--alt_bg); */
+  font-family: var(--font-sans-serif);
+  font-size: .9375em;
+  padding: .6375em 1.375em;
+}
+
+/* ul.navbar-nav li.nav-item.user-menu a.header-button,
+ul.navbar-nav li.nav-item.user-menu a#userDropdown:hover {
+  border: 1px solid var(--default_border);
+} */
+
+ul.navbar-nav li.nav-item.user-menu ul.dropdown-menu[data-bs-popper] {
+  left: unset;
+  right: 2rem;
+}

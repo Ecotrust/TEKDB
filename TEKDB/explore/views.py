@@ -740,4 +740,3 @@ def download(request):
         for row in rows:
             writer.writerow(row)
         return csv_response
-

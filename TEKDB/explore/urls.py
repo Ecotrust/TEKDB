@@ -32,11 +32,17 @@ urlpatterns = [
     path("export", views.download),
     path("export/", include(export_patterns)),
     path("", views.home),
-
     # API endpoints (DRF)
     path("api/explore/", include(api_explore_patterns)),
     path("api/page/<str:name>/", api_views.PageContentSingle.as_view()),
     path("api/search/", api_views.ExploreSearch.as_view()),
-    path("api/export/<str:model_type>/<int:id>/<str:format>/", api_views.ExportRecord.as_view()),
+    path("api/export/", api_views.Download.as_view()),
+    path(
+        "api/export/<str:model_type>/<int:id>/<str:format>/",
+        api_views.ExportRecord.as_view(),
+    ),
+    path(
+        "api/site-info/", api_views.SiteConfigurationAPIView.as_view(), name="site-info"
+    ),
 ]
 # url(r'^logout$', views.logout, name='logout'),
