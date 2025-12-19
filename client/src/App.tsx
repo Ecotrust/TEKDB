@@ -40,7 +40,6 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    console.log("Fetching Site Info");
     fetchSiteInfo(controller.signal)
       .then((resp) => {
         setSiteInfo(resp);
