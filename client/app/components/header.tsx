@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useActionState } from "react";
 import { Link } from "react-router";
+import LoginModal from "./login-modal";
+import { tekdbApi, primeCsrf } from "../api/tekdbApi";
 import "./header.css";
 
 export type HeaderProps = {
@@ -12,6 +14,41 @@ export type HeaderProps = {
   isAuthenticated?: boolean;
 };
 
+const submitAction = async (prevState: any, formData: FormData) => {
+  const username = String(formData.get("username") ?? "");
+  const password = String(formData.get("password") ?? "");
+
+  // Prime CSRF cookie/token first
+  const csrfToken = await primeCsrf();
+
+  // Use form-encoded body
+  const body = new URLSearchParams();
+  body.append("username", username);
+  body.append("password", password);
+
+  const login = await tekdbApi.post("/login_async/", body, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRFToken": csrfToken,
+    },
+    withCredentials: true,
+  });
+
+  if (
+    login.status !== 200 ||
+    login.statusText !== "OK" ||
+    !login.data.success
+  ) {
+    // display error message
+    // isAuthenticated = false
+  } else if (login.status == 200) {
+    console.log("Login successful");
+    // set authenticated to true
+    // store username in state
+    // close modal
+  }
+};
+
 const Header: React.FC<HeaderProps> = ({
   projIcons,
   projTextPlacement,
@@ -19,9 +56,16 @@ const Header: React.FC<HeaderProps> = ({
   pageTitle,
   isAuthenticated,
 }) => {
-  // TODO: fix hardcoded URL
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [loginState, loginFormAction, isPending] = useActionState(
+    submitAction,
+    null
+  );
+  const handleCloseLoginModal = () => setShowLoginModal(false);
+  const handleShowLoginModal = () => setShowLoginModal(true);
+
   const logoUrl = projIcons.logo
-    ? `http://127.0.0.1:8000${projIcons.logo}`
+    ? `${import.meta.env.VITE_API_BASE_URL}${projIcons.logo}`
     : "";
 
   return (
@@ -113,19 +157,23 @@ const Header: React.FC<HeaderProps> = ({
                 </li>
               ) : (
                 <li className="nav-item user-menu">
-                  <a
+                  <button
                     className="header-button nav-link"
-                    data-bs-toggle="modal"
-                    data-bs-target="#loginModal"
+                    onClick={handleShowLoginModal}
                   >
                     Login
-                  </a>
+                  </button>
                 </li>
               )}
             </ul>
           </div>
         </div>
       </nav>
+      <LoginModal
+        show={showLoginModal}
+        handleClose={handleCloseLoginModal}
+        handleSubmit={loginFormAction}
+      />
     </header>
   );
 };

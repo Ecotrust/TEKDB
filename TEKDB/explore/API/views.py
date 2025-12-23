@@ -1,4 +1,5 @@
 from django.http import Http404, HttpResponse
+from django.middleware.csrf import get_token
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,6 +30,27 @@ class SiteConfigurationAPIView(APIView):
 
         serializer = SiteConfigurationSerializer(config_data)
         return Response(serializer.data)
+
+
+class CsrfTokenAPIView(APIView):
+    """
+    Return CSRF token for the client to use in subsequent requests.
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        csrf_token = get_token(request)
+        response = Response({"csrfToken": csrf_token})
+        # Ensure the CSRF cookie is set in the response
+        response.set_cookie(
+            key="csrftoken",
+            value=csrf_token,
+            max_age=86400,  # 1 day
+            httponly=False,  # Allow JavaScript to read it
+            samesite="Lax",
+        )
+        return response
 
 
 # ----- Utility functions ported from template views -----

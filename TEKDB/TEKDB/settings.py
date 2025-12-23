@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "colorfield",
+    "corsheaders",
     # 'registration',
     "leaflet",
     "nested_admin",
@@ -76,6 +77,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -86,6 +88,30 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "TEKDB.urls"
+
+# Cross Origin Resource Sharing (CORS)
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+# CSRF trusted origins must include scheme and port for cross-site requests
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+# CSRF Cookie settings for cross-origin requests
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read the cookie
+SESSION_COOKIE_SAMESITE = "Lax"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
 
 TEMPLATES = [
     {
