@@ -1,23 +1,22 @@
 import React from "react";
+import { Link } from "react-router";
 import "./header.css";
 
-interface HeaderProps {
+export type HeaderProps = {
   projIcons: {
     logo: string;
   };
   projTextPlacement: string;
   projLogoText: string;
   pageTitle: string;
-  setPageName: (name: "Welcome" | "About" | "Help") => void;
   isAuthenticated?: boolean;
-}
+};
 
 const Header: React.FC<HeaderProps> = ({
   projIcons,
   projTextPlacement,
   projLogoText,
   pageTitle,
-  setPageName,
   isAuthenticated,
 }) => {
   // TODO: fix hardcoded URL
@@ -55,19 +54,22 @@ const Header: React.FC<HeaderProps> = ({
               <li
                 className={`nav-item ${pageTitle === "About" ? "active" : ""}`}
               >
-                <a onClick={() => setPageName("About")} className="nav-link">
+                <Link to="/about" className="nav-link">
                   About
-                </a>
+                </Link>
               </li>
               <li
                 className={`nav-item ${pageTitle === "Results" || pageTitle === "Search" ? "active" : ""}`}
               >
                 <>
                   {isAuthenticated ? (
-                    <a href="/explore" className="nav-link nav-explore">
+                    <Link to="/explore" className="nav-link nav-explore">
                       Search
-                    </a>
+                    </Link>
                   ) : (
+                    // <a href="/explore" className="nav-link nav-explore">
+                    //   Search
+                    // </a>
                     <a className="nav-link nav-explore disabled">Search</a>
                   )}
                 </>
@@ -75,9 +77,12 @@ const Header: React.FC<HeaderProps> = ({
               <li
                 className={`nav-item ${pageTitle === "Help" ? "active" : ""}`}
               >
-                <a onClick={() => setPageName("Help")} className="nav-link">
+                <Link to="/help" className="nav-link">
                   Help
-                </a>
+                </Link>
+                {/* <a onClick={() => setPageName("Help")} className="nav-link">
+                  Help
+                </a> */}
               </li>
               {isAuthenticated ? (
                 <li className="nav-item dropdown user-menu">

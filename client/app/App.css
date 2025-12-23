@@ -1,0 +1,366 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+:root {
+  --header_height: 6rem;
+  --black: #000000;
+  --white: #ffffff;
+  /* PRIMARY A: Vivid, unique. ORIGINAL: SIENNA */
+  --current_pg_index: var(--primary_a);
+  --highlight_underline: var(--primary_a);
+  --highlight_font: var(--primary_a);
+  /* PRIMARY B VERY faint. ORIGINAL: OFF-WHITE */
+  --light_font: var(--primary_b);
+  --accent_bg: var(--primary_b);
+  /* PRIMARY C VERY dark, bold. ORIGINAL: OFF-BLACK */
+  --dark_font: var(--primary_c);
+  /* PRIMARY D neutral. ORIGINAL: GRAY */
+  --result_highlight: var(--primary_d);
+  --alt_bg: var(--primary_d);
+  --light_border: var(--primary_d);
+  /* SECONDARY A Themed, dark. ORIGINAL: FOREST-GREEN */
+  --link_color: var(--secondary_a);
+  --alt_field_bg: var(--secondary_a);
+  /* SECONDARY B Themed, moderate. ORIGINAL: OLIVE-GREEN */
+  /* SECONDARY C Themed, vivid. ORIGINAL: GREEN */
+  --ok_button_bg: var(--secondary_c);
+  --placeholder_font: var(--secondary_c);
+  /* SECONDARY D Vivid, unique, accent. ORIGINAL: FUCHSIA*/
+  /* PALETTE OVERRIDES */
+  --default_background: var(--white);
+  --default_alt_font: var(--white);
+  --default_font: var(--black);
+  --default_border: var(--black);
+  --btn_border: 2px solid var(--white);
+  --btn_color: var(--white);
+  /* Theme Colors */
+  --theme_bg_color: var(--black);
+  --theme_color: var(--white);
+  /* FONT OVERRIDES */
+  --bs-font-sans-serif: "Open Sans Regular", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans-serif: var(--bs-font-sans-serif);
+  --font-sans-serif-bold: "Open Sans Bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans-serif-extrabold: "Open Sans ExtraBold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --small_font_size: 0.7rem;
+
+  /* Spacing */
+  --margin_bottom: 1.5em; 
+  --margin_top: 1.5em;
+  --margin: 1.5em;
+  --letter_spacing: 0.05em;
+
+  /* Borders */
+  --default_border: 1px solid var(--default_font);
+  --default_border_radius: 0.3rem;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+main {
+  background: var(--white);
+}
+
+.min-full-height {
+  min-height: calc(100vh - 96px);
+}
+
+h1 {
+  display: block;
+  /* margin: var(--margin_top) 0 calc(var(--margin_bottom) / 2); */
+  margin-bottom: 0;
+  position: relative;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2em;
+  margin-top: var(--margin_top);
+}
+
+p {
+  font-size: 1.25em;
+  letter-spacing: .05em;
+  margin: calc(var(--margin_top) / 2) 0 calc(var(--margin_bottom) * 2)
+}
+
+.explore-form-row {
+  align-items: stretch;
+  flex-direction: row;
+}
+
+.explore-form-row > div {
+  /* width: 100%; */
+}
+
+.explore-form {
+  margin-top: calc(var(--margin_top) * 2);
+}
+
+.explore-input-group {
+  /* margin: var(--margin_top) 0 calc(var(--margin_bottom) * 2); */
+  padding: 0 10%; 
+}
+
+hr {
+  font-size: 1.25em;
+  margin: calc(var(--margin_top) * 2) 0 calc(var(--margin_bottom) * 2);
+}
+
+.explore-form .btn {
+  /* border: 1px solid var(--primary_d): */
+  /* position: relative; */
+}
+
+.button-wrapper {
+  /* justify-content: ; */
+  margin: calc(var(--margin_top) * 2) 0;
+  position: relative;
+  text-align: center;
+}
+
+button.btn {
+  background: var(--white);
+  border-color: var(--black);
+  border-radius: 0;
+  color: var(--black);
+  font-family: var(--font-sans-serif);
+  font-size: 1.0375em;
+}
+
+button.btn:hover {
+  background: var(--primary_a);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.arrow-right {
+  display: inline-block;
+  position: relative;
+}
+
+button.btn .arrow-right,
+button.btn .arrow-right::before,
+button.btn .arrow-right::after {
+  background: var(--primary_a);
+}
+
+button.btn:hover .arrow-right,
+button.btn:hover .arrow-right::before,
+button.btn:hover .arrow-right::after {
+  background: var(--white);
+}
+
+.form-wrapper {
+  margin-top: calc(var(--margin_top) * 2);
+  text-align: center;
+}
+
+
+.form-wrapper .explore-form h1:nth-of-type(2)::after {
+  background: var(--secondary_b);
+  border-radius: 50%;
+  color: var(--white);
+  content: "OR";
+  font-size: .3125em;
+  height: 4em;
+  left: 50%;
+  line-height: 4em;
+  position: absolute;
+  text-align: center;
+  top: -5em;
+  transform: translateX(-50%);
+  width: 4em;
+  white-space: nowrap;
+}
+
+#filter-checkboxes {
+  flex-direction: row;
+  padding-left: 40%;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+@media (min-width: 64em) {
+  #filter-checkboxes {
+    padding-left: 0%;
+  }
+}
+
+#filter-checkboxes div {
+  letter-spacing: .1em;
+}
+
+#filter-checkboxes p {
+  margin: 0;
+}
+
+main.content-wrapper div.container {
+  min-width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+}
+
+@media screen and (min-width: 992px) { 
+  div.homepage-column {
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: calc(100vh - var(--header_height));
+    /* max-height: calc(100vh - var(--header_height)); */
+  }
+}
+
+div#homepage-left-column {
+  background-color: var(--homepage_left_background);
+  overflow-y: auto;
+}
+
+.welcome-content-wrapper {
+  color: var(--home_font_color);
+  margin: 3rem 2rem;
+}
+
+.welcome-content-wrapper p {
+  font-family: var(--font-sans-serif-bold);
+}
+
+div.welcome-login-button-wrapper {
+  margin: 0 2rem;
+}
+
+div.welcome-login-button-wrapper a.btn.welcome-login-btn {
+  border-color: var(--home_font_color);
+  color: var(--home_font_color);
+}
+
+div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::before,
+div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right,
+div.welcome-login-button-wrapper a.btn.welcome-login-btn span.arrow-right::after {
+  background: var(--home_font_color);
+}
+
+div#homepage-right-column {
+  background-color: var(--homepage_right_background);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--header_height));
+}
+
+div#homepage-right-column::after {
+  background: var(--homepage_right_background);
+  bottom: 0;
+  content: "";
+  left: 40%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+div.proj-image-select-wrapper {
+  max-height: 100%;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.proj-image-select-wrapper img {
+  object-fit: contain;
+}
+
+div#proj-image-attribution {
+  color: var(--dark_font);
+  background-color: var(--accent_bg);
+  /* background-color: var(--white); */
+  border: var(--default_border);
+  border-radius: var(--default_border_radius);
+  bottom: .5rem;
+  opacity: 80%;
+  /* padding: .375rem .75rem; */
+  display: flex;
+  position: absolute;
+  right: .5rem;
+}
+
+div#proj-image-attribution .attribution-toggle {
+  color: #000;
+  font-family: serif;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: .375rem .75rem;
+  text-decoration: none;
+}
+
+div#proj-image-attribution .attribution-toggle.collapsed {
+  margin-right: 0; 
+}
+
+div#proj-image-attribution p {
+  font-size: var(--small_font_size);
+  margin: 5px 5px 0 5px;
+}
+
+#collapseAttribution.show:before {
+  background-color: var(--dark_font);
+  border: 1px solid #fff;
+  color: #fff;
+  content: "X";
+  font-family: Tahoma, sans-serif;
+  font-size: .875rem;
+  font-weight: bold;
+  height: 100%;
+  left: 0;
+  padding: .25rem .6125rem;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}

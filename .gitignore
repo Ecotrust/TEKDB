@@ -127,3 +127,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# client related files
+.react-router/
