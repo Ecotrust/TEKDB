@@ -1,8 +1,10 @@
 import { usePageContentAndSiteInfo } from "../api/pageContent";
+import { useLogin } from "../context/loginContext";
 
 const WelcomePage: React.FC = () => {
   const { pageContent, siteInfo } = usePageContentAndSiteInfo();
-  const isAuthenticated = false;
+  const { loginForm, setShowLoginModal } = useLogin();
+  const isAuthenticated = loginForm.isAuthenticated;
 
   return (
     <div className="container">
@@ -17,8 +19,7 @@ const WelcomePage: React.FC = () => {
               <button
                 type="button"
                 className="btn welcome-login-btn"
-                data-bs-toggle="modal"
-                data-bs-target="#loginModal"
+                onClick={() => setShowLoginModal(true)}
               >
                 Login <span className="arrow-right"></span>
               </button>

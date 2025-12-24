@@ -15,6 +15,7 @@ import {
   fetchPageContentAndSiteInfo,
   type PageContentAndSiteInfo,
 } from "./api/pageContent";
+import { LoginProvider } from "./context/loginContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -75,9 +76,11 @@ export default function Root() {
         `,
         }}
       />
-      <Outlet
-        context={{ pageContent, siteInfo } satisfies PageContentAndSiteInfo}
-      />
+      <LoginProvider>
+        <Outlet
+          context={{ pageContent, siteInfo } satisfies PageContentAndSiteInfo}
+        />
+      </LoginProvider>
     </>
   );
 }
@@ -93,6 +96,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
+    // @ts-ignore
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

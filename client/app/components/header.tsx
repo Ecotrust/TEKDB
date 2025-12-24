@@ -1,8 +1,8 @@
 import React, { useActionState, useEffect } from "react";
 import { Link } from "react-router";
 import LoginModal from "./login-modal";
-import { tekdbApi, primeCsrf } from "../api/tekdbApi";
 import "./header.css";
+import { useLogin } from "../context/loginContext";
 
 export type HeaderProps = {
   projIcons: {
@@ -14,122 +14,17 @@ export type HeaderProps = {
   isAuthenticated?: boolean;
 };
 
-type LoginState = {
-  success?: boolean;
-  error?: string | null;
-};
-
-type UseLoginFormReturn = {
-  isAuthenticated: boolean;
-  formAction: (formData: FormData) => void;
-  isPending: boolean;
-  error: string | null;
-};
-
-const useLoginForm = (
-  action: (prevState: LoginState, formData: FormData) => Promise<LoginState>,
-  onSuccess: () => void,
-  onError: () => void
-): UseLoginFormReturn => {
-  const [state, formAction, isPending] = useActionState<LoginState, FormData>(
-    action,
-    {
-      success: false,
-      error: null,
-    }
-  );
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-
-  useEffect(() => {
-    if (state?.success) {
-      setIsAuthenticated(true);
-      setError(null);
-      onSuccess();
-    } else {
-      setIsAuthenticated(false);
-      if (state?.error) {
-        setError(state.error);
-        onError();
-      }
-    }
-  }, [state?.success, state?.error, onSuccess, onError]);
-
-  return {
-    isAuthenticated,
-    formAction,
-    isPending,
-    error,
-  };
-};
-
-const submitAction = async (
-  prevState: LoginState,
-  formData: FormData
-): Promise<LoginState> => {
-  const username = String(formData.get("username") ?? "");
-  const password = String(formData.get("password") ?? "");
-
-  // Prime CSRF cookie/token first
-  const csrfToken = await primeCsrf();
-
-  // Use form-encoded body
-  const body = new URLSearchParams();
-  body.append("username", username);
-  body.append("password", password);
-
-  const login = await tekdbApi.post("/login_async/", body, {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-CSRFToken": csrfToken,
-    },
-    withCredentials: true,
-  });
-
-  if (
-    login.status !== 200 ||
-    login.statusText !== "OK" ||
-    !login.data.success
-  ) {
-    return {
-      ...prevState,
-      success: false,
-      error: login.data.error || "Invalid username or password",
-    };
-  } else if (login.status == 200) {
-    return { ...prevState, success: true, error: null };
-  }
-  return {
-    ...prevState,
-    success: false,
-    error: "Invalid username or password",
-  };
-};
-
 const Header: React.FC<HeaderProps> = ({
   projIcons,
   projTextPlacement,
   projLogoText,
   pageTitle,
 }) => {
-  const [showLoginModal, setShowLoginModal] = React.useState(false);
-  const handleCloseLoginModal = () => setShowLoginModal(false);
-  const handleShowLoginModal = () => setShowLoginModal(true);
-  const {
-    isAuthenticated,
-    formAction: loginFormAction,
-    isPending,
-    error,
-  } = useLoginForm(
-    submitAction,
-    () => handleCloseLoginModal(),
-    () => {
-      // Handle error (optional)
-    }
-  );
+  const { loginForm, showLoginModal, setShowLoginModal } = useLogin();
 
   const logoUrl = projIcons.logo
-    ? `${import.meta.env.VITE_API_BASE_URL}${projIcons.logo}`
+    ? // @ts-ignore
+      `${import.meta.env.VITE_API_BASE_URL}${projIcons.logo}`
     : "";
 
   return (
@@ -170,14 +65,11 @@ const Header: React.FC<HeaderProps> = ({
                 className={`nav-item ${pageTitle === "Results" || pageTitle === "Search" ? "active" : ""}`}
               >
                 <>
-                  {isAuthenticated ? (
+                  {loginForm.isAuthenticated ? (
                     <Link to="/explore" className="nav-link nav-explore">
                       Search
                     </Link>
                   ) : (
-                    // <a href="/explore" className="nav-link nav-explore">
-                    //   Search
-                    // </a>
                     <a className="nav-link nav-explore disabled">Search</a>
                   )}
                 </>
@@ -188,11 +80,8 @@ const Header: React.FC<HeaderProps> = ({
                 <Link to="/help" className="nav-link">
                   Help
                 </Link>
-                {/* <a onClick={() => setPageName("Help")} className="nav-link">
-                  Help
-                </a> */}
               </li>
-              {isAuthenticated ? (
+              {loginForm.isAuthenticated ? (
                 <li className="nav-item dropdown user-menu">
                   <a
                     className="nav-link dropdown-toggle"
@@ -223,7 +112,7 @@ const Header: React.FC<HeaderProps> = ({
                 <li className="nav-item user-menu">
                   <button
                     className="header-button nav-link"
-                    onClick={handleShowLoginModal}
+                    onClick={() => setShowLoginModal(true)}
                   >
                     Login
                   </button>
@@ -235,10 +124,10 @@ const Header: React.FC<HeaderProps> = ({
       </nav>
       <LoginModal
         show={showLoginModal}
-        handleClose={handleCloseLoginModal}
-        handleSubmit={loginFormAction}
-        isPending={isPending}
-        error={error}
+        handleClose={() => setShowLoginModal(false)}
+        handleSubmit={loginForm.formAction}
+        isPending={loginForm.isPending}
+        error={loginForm.error}
       />
     </header>
   );

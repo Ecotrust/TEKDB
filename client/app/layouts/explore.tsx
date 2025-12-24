@@ -17,11 +17,7 @@ const ExploreLayout: React.FC = () => {
         pageTitle={pageContent?.pageTitle || "Explore"}
       />
       <main className="content-wrapper">
-        <div className="container content-container">
-          <div className="row content-row">
-            <Outlet context={{ pageContent, siteInfo }} />
-          </div>
-        </div>
+        <Outlet context={{ pageContent, siteInfo }} />
       </main>
     </>
   );
