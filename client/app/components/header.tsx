@@ -1,4 +1,4 @@
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
 import { Link } from "react-router";
 import LoginModal from "./login-modal";
 import { tekdbApi, primeCsrf } from "../api/tekdbApi";
@@ -14,7 +14,59 @@ export type HeaderProps = {
   isAuthenticated?: boolean;
 };
 
-const submitAction = async (prevState: any, formData: FormData) => {
+type LoginState = {
+  success?: boolean;
+  error?: string | null;
+};
+
+type UseLoginFormReturn = {
+  isAuthenticated: boolean;
+  formAction: (formData: FormData) => void;
+  isPending: boolean;
+  error: string | null;
+};
+
+const useLoginForm = (
+  action: (prevState: LoginState, formData: FormData) => Promise<LoginState>,
+  onSuccess: () => void,
+  onError: () => void
+): UseLoginFormReturn => {
+  const [state, formAction, isPending] = useActionState<LoginState, FormData>(
+    action,
+    {
+      success: false,
+      error: null,
+    }
+  );
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    if (state?.success) {
+      setIsAuthenticated(true);
+      setError(null);
+      onSuccess();
+    } else {
+      setIsAuthenticated(false);
+      if (state?.error) {
+        setError(state.error);
+        onError();
+      }
+    }
+  }, [state?.success, state?.error, onSuccess, onError]);
+
+  return {
+    isAuthenticated,
+    formAction,
+    isPending,
+    error,
+  };
+};
+
+const submitAction = async (
+  prevState: LoginState,
+  formData: FormData
+): Promise<LoginState> => {
   const username = String(formData.get("username") ?? "");
   const password = String(formData.get("password") ?? "");
 
@@ -39,14 +91,19 @@ const submitAction = async (prevState: any, formData: FormData) => {
     login.statusText !== "OK" ||
     !login.data.success
   ) {
-    // display error message
-    // isAuthenticated = false
+    return {
+      ...prevState,
+      success: false,
+      error: login.data.error || "Invalid username or password",
+    };
   } else if (login.status == 200) {
-    console.log("Login successful");
-    // set authenticated to true
-    // store username in state
-    // close modal
+    return { ...prevState, success: true, error: null };
   }
+  return {
+    ...prevState,
+    success: false,
+    error: "Invalid username or password",
+  };
 };
 
 const Header: React.FC<HeaderProps> = ({
@@ -54,15 +111,22 @@ const Header: React.FC<HeaderProps> = ({
   projTextPlacement,
   projLogoText,
   pageTitle,
-  isAuthenticated,
 }) => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
-  const [loginState, loginFormAction, isPending] = useActionState(
-    submitAction,
-    null
-  );
   const handleCloseLoginModal = () => setShowLoginModal(false);
   const handleShowLoginModal = () => setShowLoginModal(true);
+  const {
+    isAuthenticated,
+    formAction: loginFormAction,
+    isPending,
+    error,
+  } = useLoginForm(
+    submitAction,
+    () => handleCloseLoginModal(),
+    () => {
+      // Handle error (optional)
+    }
+  );
 
   const logoUrl = projIcons.logo
     ? `${import.meta.env.VITE_API_BASE_URL}${projIcons.logo}`
@@ -173,6 +237,8 @@ const Header: React.FC<HeaderProps> = ({
         show={showLoginModal}
         handleClose={handleCloseLoginModal}
         handleSubmit={loginFormAction}
+        isPending={isPending}
+        error={error}
       />
     </header>
   );

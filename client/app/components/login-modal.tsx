@@ -7,12 +7,16 @@ type LoginModalProps = {
   show: boolean;
   handleClose: () => void;
   handleSubmit: (formData: FormData) => void;
+  isPending: boolean;
+  error: string | null;
 };
 
 const LoginModal: React.FC<LoginModalProps> = ({
   show,
   handleClose,
   handleSubmit,
+  isPending,
+  error,
 }) => {
   return (
     <Modal show={show} onHide={handleClose}>
@@ -41,11 +45,16 @@ const LoginModal: React.FC<LoginModalProps> = ({
               className="form-control"
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" disabled={isPending}>
             Log In
           </Button>
         </form>
       </Modal.Body>
+      {error && (
+        <Modal.Footer>
+          <div className="text-danger">{error}</div>
+        </Modal.Footer>
+      )}
     </Modal>
   );
 };
