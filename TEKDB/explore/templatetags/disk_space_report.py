@@ -12,6 +12,7 @@ def bytes_to_readable(num_bytes, suffix="B"):
             return f"{num_bytes:.2f} {unit}{suffix}"
         num_bytes /= 1024
 
+
 @register.simple_tag(name="disk_space_report")
 def disk_space_report():
     """Returns a dictionary with disk space and memory usage information."""
