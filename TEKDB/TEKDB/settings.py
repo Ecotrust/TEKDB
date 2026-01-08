@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "Relationships",
     "reversion",
     "django.contrib.sites",
+    "admin_async_upload",
     # 'moderation.apps.SimpleModerationConfig',
 ]
 

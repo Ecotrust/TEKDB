@@ -77,6 +77,7 @@ urlpatterns = [
         views.ResourceActivityAutocompleteView.as_view(),
         name="select2_fk_resourceactivity",
     ),
+    re_path(r"^admin_async_upload/", include("admin_async_upload.urls")),
     path("", include("explore.urls")),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
