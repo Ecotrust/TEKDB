@@ -22,6 +22,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt requirements_linux.txt /usr/src/app/
 
 # Upgrade pip and install Python dependencies
+# Note: editable packages (-e) will be installed at runtime via entrypoint.sh
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt -r requirements_linux.txt
 
