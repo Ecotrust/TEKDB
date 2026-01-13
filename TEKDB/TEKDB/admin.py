@@ -60,6 +60,8 @@ from .models import (
 from TEKDB.settings import ADMIN_SITE_HEADER
 from TEKDB.settings import BASE_DIR
 from TEKDB.widgets import OpenLayers6Widget
+from admin_async_upload.admin import AsyncFileCleanupMixin
+
 
 admin.site.site_header = ADMIN_SITE_HEADER
 
@@ -830,7 +832,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
 
 @admin.register(Media)
-class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
+class MediaAdmin(AsyncFileCleanupMixin, RecordAdminProxy, RecordModelAdmin):
     readonly_fields = (
         "medialink",
         "enteredbyname",
