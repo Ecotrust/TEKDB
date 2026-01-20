@@ -2761,6 +2761,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
         blank=True,
         null=True,
         verbose_name="file",
+        max_files=1,
     )
     limitedaccess = models.BooleanField(
         db_column="limitedaccess",
