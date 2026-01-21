@@ -1,7 +1,6 @@
 # from django.conf import settings
 from django.test import RequestFactory
 from unittest.mock import patch
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 from django.contrib.admin.sites import AdminSite
 from django.urls import reverse
@@ -165,9 +164,8 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         from TEKDB.admin import MediaBulkUploadAdmin
 
         url = reverse("admin:TEKDB_mediabulkupload_add")
-        test_image = SimpleUploadedFile(
-            "./test_image.jpg", b"\x00\x00\x00\x00", content_type="image"
-        )
+
+        test_image_paths = "test_image.jpg,test_image.jpg"
 
         place = Places.objects.create(indigenousplacename="Test Place")
         resource = Resources.objects.create(commonname="Test Resource")
@@ -180,7 +178,7 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         activity = ResourcesActivityEvents.objects.create(placeresourceid=placeresource)
 
         post_data = {
-            "files": [test_image, test_image],
+            "files": test_image_paths,
             "places": [place.pk],
             "resources": [resource.pk],
             "citations": [citation.pk],
@@ -208,14 +206,6 @@ class MediaBulkUploadAdminTest(ITKTestCase):
             PlacesResourceEvents.objects.filter(pk=placeresource.pk).exists()
         )
 
-        for media in Media.objects.filter(medianame="test_image"):
-            self.assertTrue(os.path.exists(media.mediafile.path))
-            os.remove(
-                media.mediafile.path
-            )  # Clean up the uploaded files after the test
-            self.assertFalse(os.path.exists(media.mediafile.path))
-            media.delete()
-
         # Clean up related objects
         activity.delete()
         placeresource.delete()
@@ -227,14 +217,11 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         from TEKDB.admin import MediaBulkUploadAdmin
 
         url = reverse("admin:TEKDB_mediabulkupload_add")
-        test_other_type = SimpleUploadedFile(
-            "./test_thing.shp", b"\x00\x00\x00\x00", content_type="other"
-        )
 
         request = self.factory.post(
             url,
             {
-                "files": [test_other_type, test_other_type],
+                "files": "test_thing.shp,test_thing.shp",
             },
         )
 
@@ -245,48 +232,20 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         bulk_admin.save_model(
             obj=MediaBulkUpload(), request=request, form=bulk_form, change=None
         )
-
-        for media in Media.objects.filter(medianame="test_thing"):
-            self.assertTrue(os.path.exists(media.mediafile.path))
-            os.remove(
-                media.mediafile.path
-            )  # Clean up the uploaded files after the test
-            self.assertFalse(os.path.exists(media.mediafile.path))
-            media.delete()
+        self.assertTrue(Media.objects.filter(medianame="test_thing").exists())
+        self.assertEqual(Media.objects.filter(medianame="test_thing").count(), 2)
 
     def test_media_bulk_upload_admin_thumbnail_gallery(self):
         from TEKDB.admin import MediaBulkUploadAdmin
         from TEKDB.models import MediaBulkUpload, Media
 
         url = reverse("admin:TEKDB_mediabulkupload_add")
-        test_image = SimpleUploadedFile(
-            "./thumbnail_test_image.jpg", b"\x00\x00\x00\x00", content_type="image"
-        )
-        test_video = SimpleUploadedFile(
-            "./thumbnail_test_video.mp4", b"\x00\x00\x00\x00", content_type="video"
-        )
-        test_audio = SimpleUploadedFile(
-            "./thumbnail_test_audio.mp3", b"\x00\x00\x00\x00", content_type="audio"
-        )
-        test_text = SimpleUploadedFile(
-            "./thumbnail_test_text.txt", b"\x00\x00\x00\x00", content_type="text"
-        )
-        test_other = SimpleUploadedFile(
-            "./thumbnail_test_thing.shp", b"\x00\x00\x00\x00", content_type="other"
-        )
-        test_unknown_type = SimpleUploadedFile(
-            "./thumbnail_test_unknown.xyz", b"\x00\x00\x00\x00", content_type="unknown"
-        )
+        test_file_paths = [
+            "thumbnail_test_image.jpg, thumbnail_test_video.mp4, thumbnail_test_audio.mp3, thumbnail_test_text.txt, thumbnail_test_thing.shp, thumbnail_test_unknown.xyz"
+        ]
 
         post_data = {
-            "files": [
-                test_image,
-                test_video,
-                test_audio,
-                test_text,
-                test_other,
-                test_unknown_type,
-            ],
+            "files": test_file_paths,
         }
 
         request = self.factory.post(url, post_data)

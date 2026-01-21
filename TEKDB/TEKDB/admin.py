@@ -630,8 +630,8 @@ class MediaBulkUploadAdmin(AsyncFileCleanupMixin, admin.ModelAdmin):
 
         # Handle async uploaded file (comes as a comma separated string of file paths)
         uploaded_file_paths = form.cleaned_data.get("files")
+
         if uploaded_file_paths:
-            from django.core.files.storage import default_storage
             import os
 
             # split the comma-separated string into a list
