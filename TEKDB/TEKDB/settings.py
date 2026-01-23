@@ -348,7 +348,9 @@ HOME_RIGHT_BACKGROUND = "#000000"
 
 DEFAULT_MAXIMUM_RESULTS = 500
 
+# Django Resumable Async Upload settings
 ADMIN_RESUMABLE_SHOW_THUMB = True
+ADMIN_SIMULTANEOUS_UPLOADS = 1
 
 try:
     from TEKDB.local_settings import *  # noqa: F403
