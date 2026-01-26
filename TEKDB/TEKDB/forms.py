@@ -29,7 +29,6 @@ class MultipleFileField(forms.FileField):
 
 
 class MediaBulkUploadForm(forms.ModelForm):
-    # files = MultipleFileField()
     files = FormResumableFileField(
         required=False,
         # not passing max_files here because FormResumableFileField defaults to undefined (unlimited),
@@ -68,6 +67,7 @@ class MediaBulkUploadForm(forms.ModelForm):
             "mediabulkname",
             "mediabulkdescription",
             "mediabulkdate",
+            "files",
             "places",
             "resources",
             "citations",

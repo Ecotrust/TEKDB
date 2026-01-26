@@ -635,7 +635,6 @@ class MediaBulkUploadAdmin(AsyncFileCleanupMixin, admin.ModelAdmin):
             import os
 
             # split the comma-separated string into a list
-            # TODO: need to add a step in the frontend to clean up any commas in filenames
             uploaded_file_paths_list = uploaded_file_paths.split(",")
 
             for uploaded_file_path in uploaded_file_paths_list:
