@@ -665,7 +665,6 @@ class MediaBulkUploadAdmin(AsyncFileCleanupMixin, admin.ModelAdmin):
                     mediafile=uploaded_file_path,
                     mediatype=mediatype,
                 )
-                print(f"[DEBUG]: Creating Media instance: {filename}")
                 media_instance.save()
                 obj.mediabulkupload.add(media_instance)
 
