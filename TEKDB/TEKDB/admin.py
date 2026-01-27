@@ -60,7 +60,6 @@ from .models import (
 from TEKDB.settings import ADMIN_SITE_HEADER
 from TEKDB.settings import BASE_DIR
 from TEKDB.widgets import OpenLayers6Widget
-from admin_async_upload.admin import AsyncFileCleanupMixin
 
 
 admin.site.site_header = ADMIN_SITE_HEADER
@@ -615,7 +614,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
 
 #   * Bulk Media Upload Admin
 @admin.register(MediaBulkUpload)
-class MediaBulkUploadAdmin(AsyncFileCleanupMixin, admin.ModelAdmin):
+class MediaBulkUploadAdmin(admin.ModelAdmin):
     form = MediaBulkUploadForm
 
     list_display = ("mediabulkname", "mediabulkdate", "enteredbyname", "enteredbydate")
@@ -847,7 +846,7 @@ class MediaBulkUploadAdmin(AsyncFileCleanupMixin, admin.ModelAdmin):
 
 
 @admin.register(Media)
-class MediaAdmin(AsyncFileCleanupMixin, RecordAdminProxy, RecordModelAdmin):
+class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = (
         "medialink",
         "enteredbyname",
