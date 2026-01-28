@@ -1,4 +1,5 @@
 # from django.conf import settings
+import json
 from django.test import RequestFactory
 from unittest.mock import patch
 from django.contrib.auth import get_user_model
@@ -165,7 +166,7 @@ class MediaBulkUploadAdminTest(ITKTestCase):
 
         url = reverse("admin:TEKDB_mediabulkupload_add")
 
-        test_image_paths = "test_image.jpg,test_image.jpg"
+        test_image_paths = ["test_image.jpg", "test_image.jpg"]
 
         place = Places.objects.create(indigenousplacename="Test Place")
         resource = Resources.objects.create(commonname="Test Resource")
@@ -178,7 +179,7 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         activity = ResourcesActivityEvents.objects.create(placeresourceid=placeresource)
 
         post_data = {
-            "files": test_image_paths,
+            "files": json.dumps(test_image_paths),
             "places": [place.pk],
             "resources": [resource.pk],
             "citations": [citation.pk],
@@ -221,7 +222,7 @@ class MediaBulkUploadAdminTest(ITKTestCase):
         request = self.factory.post(
             url,
             {
-                "files": "test_thing.shp,test_thing.shp",
+                "files": json.dumps(["test_thing.shp", "test_thing.shp"]),
             },
         )
 
@@ -241,11 +242,16 @@ class MediaBulkUploadAdminTest(ITKTestCase):
 
         url = reverse("admin:TEKDB_mediabulkupload_add")
         test_file_paths = [
-            "thumbnail_test_image.jpg, thumbnail_test_video.mp4, thumbnail_test_audio.mp3, thumbnail_test_text.txt, thumbnail_test_thing.shp, thumbnail_test_unknown.xyz"
+            "thumbnail_test_image.jpg",
+            "thumbnail_test_video.mp4",
+            "thumbnail_test_audio.mp3",
+            "thumbnail_test_text.txt",
+            "thumbnail_test_thing.shp",
+            "thumbnail_test_unknown.xyz",
         ]
 
         post_data = {
-            "files": test_file_paths,
+            "files": json.dumps(test_file_paths),
         }
 
         request = self.factory.post(url, post_data)

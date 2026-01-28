@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from admin_async_upload.fields import FormResumableFileField
+from admin_async_upload.fields import FormResumableMultipleFileField
 from admin_async_upload.widgets import ResumableAdminWidget
 from .models import (
     MediaBulkUpload,
@@ -29,7 +29,7 @@ class MultipleFileField(forms.FileField):
 
 
 class MediaBulkUploadForm(forms.ModelForm):
-    files = FormResumableFileField(
+    files = FormResumableMultipleFileField(
         required=False,
         # not passing max_files here because FormResumableFileField defaults to undefined (unlimited),
         # which is what we want for bulk upload.

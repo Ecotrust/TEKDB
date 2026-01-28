@@ -627,16 +627,13 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         activities = form.cleaned_data.get("activities")
         placesresources = form.cleaned_data.get("placesresources")
 
-        # Handle async uploaded file (comes as a comma separated string of file paths)
+        # Handle async uploaded file (comes as a list of file path strings)
         uploaded_file_paths = form.cleaned_data.get("files")
 
-        if uploaded_file_paths:
+        if uploaded_file_paths and isinstance(uploaded_file_paths, list):
             import os
 
-            # split the comma-separated string into a list
-            uploaded_file_paths_list = uploaded_file_paths.split(",")
-
-            for uploaded_file_path in uploaded_file_paths_list:
+            for uploaded_file_path in uploaded_file_paths:
                 # Extract just the filename from the path
                 file_name = os.path.basename(uploaded_file_path)
 
