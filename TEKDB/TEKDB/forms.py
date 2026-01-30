@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from admin_async_upload.fields import FormResumableMultipleFileField
-from admin_async_upload.widgets import ResumableAdminWidget
+from django_resumable_async_upload.fields import FormResumableMultipleFileField
+from django_resumable_async_upload.widgets import ResumableAdminWidget
 from .models import (
     MediaBulkUpload,
     Places,

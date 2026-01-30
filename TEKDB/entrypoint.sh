@@ -3,14 +3,6 @@
 # Exit on errors
 set -e
 
-# Install editable package if the directory is mounted
-if [ -d "/django-resumable-async-upload" ]; then
-    echo "Installing django-resumable-async-upload in editable mode for local development..."
-    pip install -e /django-resumable-async-upload
-else
-    echo "django-resumable-async-upload directory not found, skipping editable install"
-fi
-
 # If a SQL_HOST is provided, wait for Postgres to become available before running
 # migrations. This prevents race conditions when using docker-compose where the
 # web container starts before the DB is ready.

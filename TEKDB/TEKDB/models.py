@@ -24,7 +24,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
 from tinymce.models import HTMLField
-from admin_async_upload.models import AsyncFileField
+from django_resumable_async_upload.models import AsyncFileField
 
 
 # from moderation.db import ModeratedModel

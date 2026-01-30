@@ -40,7 +40,6 @@ services:
       - "8000:8000"
     volumes:
       - ../TEKDB:/usr/src/app
-      - ../../django-resumable-async-upload:/django-resumable-async-upload
 
 volumes:
   tekdb_db_data:
