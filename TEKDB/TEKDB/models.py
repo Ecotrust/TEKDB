@@ -24,6 +24,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
 from tinymce.models import HTMLField
+from django_resumable_async_upload.models import AsyncFileField
+
 
 # from moderation.db import ModeratedModel
 import os
@@ -2753,12 +2755,13 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
         null=True,
         verbose_name="historic location",
     )
-    mediafile = models.FileField(
+    mediafile = AsyncFileField(
         db_column="mediafile",
         max_length=255,
         blank=True,
         null=True,
         verbose_name="file",
+        max_files=1,
     )
     limitedaccess = models.BooleanField(
         db_column="limitedaccess",

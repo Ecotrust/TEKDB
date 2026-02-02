@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "Relationships",
     "reversion",
     "django.contrib.sites",
+    "django_resumable_async_upload",
     # 'moderation.apps.SimpleModerationConfig',
 ]
 
@@ -345,6 +346,11 @@ HOME_LEFT_BACKGROUND = "#000000"
 HOME_RIGHT_BACKGROUND = "#000000"
 
 DEFAULT_MAXIMUM_RESULTS = 500
+
+# Django Resumable Async Upload settings
+ADMIN_RESUMABLE_SHOW_THUMB = True
+ADMIN_SIMULTANEOUS_UPLOADS = 1
+ADMIN_RESUMABLE_CHUNK_FOLDER = "resumable_chunks"
 
 try:
     from TEKDB.local_settings import *  # noqa: F403

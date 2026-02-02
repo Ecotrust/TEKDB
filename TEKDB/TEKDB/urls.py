@@ -77,6 +77,10 @@ urlpatterns = [
         views.ResourceActivityAutocompleteView.as_view(),
         name="select2_fk_resourceactivity",
     ),
+    re_path(
+        r"^django_resumable_async_upload/",
+        include("django_resumable_async_upload.urls"),
+    ),
     path("", include("explore.urls")),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
