@@ -7,7 +7,6 @@ on: [push, workflow_dispatch]
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push-image:
@@ -35,6 +34,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        # note: IMAGE_NAME will be set in the next step via GITHUB_ENV
+      - name: Set lowercase image name
+        run: |
+          echo "IMAGE_NAME=$(echo \"${GITHUB_REPOSITORY}\" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - name: Format repo slug
         uses: actions/github-script@v8
         id: repo_slug
@@ -53,8 +56,7 @@ jobs:
           context: ./TEKDB
           file: ./TEKDB/prod.Dockerfile
           push: true
-          builder: ${{ steps.buildx.outputs.name }}
-          tags: ghcr.io/${{ github.repository }}/web:latest,ghcr.io/${{ github.repository }}/web:${{ github.sha }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ steps.repo_slug.outputs.result }}:main
           cache-to: type=inline
