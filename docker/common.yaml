@@ -16,7 +16,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  
   web:
     build:
       context: ../TEKDB/
@@ -40,6 +40,3 @@ services:
       - "8000:8000"
     volumes:
       - ../TEKDB:/usr/src/app
-
-volumes:
-  tekdb_db_data:

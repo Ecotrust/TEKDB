@@ -8,9 +8,6 @@ services:
     extends:
       file: common.yaml
       service: web
-    command: ["prod"]
-    env_file:
-      - .env.prod
 
 volumes:
   tekdb_db_data:
