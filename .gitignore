@@ -100,3 +100,9 @@ ENV/
 
 #vscode settings
 .vscode/
+
+# OpenTofu/Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
