@@ -8,7 +8,6 @@ services:
     extends:
       file: common.yaml
       service: web
-    image: ${ITKDB_ECR_PATH}:latest
     command: ["prod"]
     env_file:
       - .env.prod
@@ -17,12 +16,14 @@ services:
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
   proxy:
-    image: ${ITKDB_PROXY_ECR_PATH}:latest
+    build:
+      context: ../proxy/
+      dockerfile: ../proxy/Dockerfile
     restart: unless-stopped
     depends_on:
       - web
     ports:
-      - "80:8080"
+      - "8080:8080"
     volumes:
       - static_volume:/vol/static/static:ro
       - media_volume:/vol/static/media:ro
