@@ -8,9 +8,9 @@ services:
     extends:
       file: common.yaml
       service: web
-    command: ["prod"]
+    command: ["prod-local"]
     env_file:
-      - .env.prod
+      - .env.dev
     ports: []
     volumes:
       - static_volume:/usr/src/app/static

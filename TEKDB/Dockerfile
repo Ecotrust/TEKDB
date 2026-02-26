@@ -42,5 +42,3 @@ ENV DJANGO_SETTINGS_MODULE=TEKDB.settings
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-# use development server by default 
-CMD ["dev"]

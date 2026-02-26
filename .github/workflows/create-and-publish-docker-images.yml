@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./TEKDB
-          file: ./TEKDB/prod.Dockerfile
+          file: ./TEKDB/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}

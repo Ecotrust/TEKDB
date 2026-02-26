@@ -8,6 +8,7 @@ services:
     extends:
       file: common.yaml
       service: web
+    command: ["dev"]
     volumes:
       - ../TEKDB:/usr/src/app
     environment:
