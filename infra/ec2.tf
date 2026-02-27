@@ -17,19 +17,8 @@ resource "aws_instance" "itkdb" {
   user_data_replace_on_change = true
 
   # TODO: fix this! currently does not work
-  # Install Docker and AWS CLI v2 on first boot
-  user_data = <<-EOF
-    #!/bin/bash
-    set -e
-    sudo apt update
-    sudo apt install -y docker
-    systemctl start docker
-    systemctl enable docker
-    usermod -aG docker ubuntu
-    sudo snap install aws-cli --classic
-    unzip awscliv2.zip
-    sudo ./aws/install
-  EOF
+  # Install Docker, AWS CLI v2, and git on first boot
+  user_data = file("user_data.sh")
 
   root_block_device {
     volume_size = 20
