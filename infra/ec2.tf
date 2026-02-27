@@ -16,7 +16,6 @@ resource "aws_instance" "itkdb" {
   subnet_id                   = tolist(data.aws_subnets.default.ids)[0]
   user_data_replace_on_change = true
 
-  # TODO: fix this! currently does not work
   # Install Docker, AWS CLI v2, and git on first boot
   user_data = file("user_data.sh")
 
