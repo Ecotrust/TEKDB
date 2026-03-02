@@ -12,5 +12,3 @@ output "ecr_proxy_url" {
   description = "ECR URL for the proxy image"
   value       = aws_ecr_repository.proxy.repository_url
 }
-
-data "aws_caller_identity" "current" {}

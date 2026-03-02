@@ -11,7 +11,7 @@ terraform {
   backend "s3" {
     bucket  = "itkdb-tf-state"
     key     = "staging/terraform.tfstate"
-    region  = var.aws_region
+    region  = "us-west-2"
     profile = "default"
   }
 }

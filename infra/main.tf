@@ -14,12 +14,6 @@ variable "project_name" {
   default     = "itkdb"
 }
 
-variable "aws_profile" {
-  description = "AWS profile to use"
-  type        = string
-  default     = "default"
-}
-
 variable "bucket_name" {
   description = "S3 bucket name for Terraform state (must be globally unique)"
   type        = string
@@ -35,7 +29,7 @@ variable "ec2_instance_type" {
 variable "ec2_ami" {
   description = "Ubuntu 24.04 LTS AMI ID (region-specific — update if changing region)"
   type        = string
-  # Ubuntu 24.04 LTS us-west-1 — check https://cloud-images.ubuntu.com/locator/ec2/ for your region
+  # Ubuntu 24.04 LTS us-west-2 — check https://cloud-images.ubuntu.com/locator/ec2/ for your region
   default = "ami-06b527a1e4cb6f265"
 }
 
@@ -48,5 +42,4 @@ variable "ssh_public_key" {
 variable "allowed_ssh_cidr" {
   description = "CIDR block allowed to SSH into the EC2 instance (use your IP: x.x.x.x/32)"
   type        = string
-  default     = "0.0.0.0/0" # Restrict this to your IP in production!
 }
