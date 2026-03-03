@@ -77,7 +77,9 @@ jobs:
               "sudo docker pull ${{ secrets.PROXY_ECR_IMAGE_URI }}:latest",
               "cd /TEKDB",
               "sudo docker compose down",
-              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d -p tekdb"
+              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d",
+              "sleep 5",
+              "docker ps --filter name=web --format \"{{.Status}}\""
             ]' \
             --timeout-seconds 120 \
             --comment "Deploy ${{ github.sha }}" \
