@@ -1,0 +1,47 @@
+name: Build, Push, and Deploy to EC2 Staging
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+    build-push-and-deploy:
+        name: Build, Push to ECR, Deploy to EC2 Staging
+        runs-on: ubuntu-latest
+        permissions: 
+            id-token: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+            
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                aws-region: ${{ secrets.AWS_REGION}}
+            
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+            
+            - name: Build, tag, and push web Docker image to ECR
+              id: build-web-image
+              env:
+                IMAGE_TAG: ${{ github.sha }}
+                IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
+              run: |
+                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest .
+                docker push $IMAGE_URI:$IMAGE_TAG
+                docker push $IMAGE_URI:latest
+            
+            - name: Build, tag, and push proxy Docker image to ECR
+              id: build-proxy-image
+              env:
+                IMAGE_TAG: ${{ github.sha }}
+                IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
+              run: |
+                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest .
+                docker push $IMAGE_URI:$IMAGE_TAG
+                docker push $IMAGE_URI:latest
