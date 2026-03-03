@@ -65,8 +65,9 @@ jobs:
             --output text)
           echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
       - name: Deploy via SSM
+        id: ssm-deploy
         run: |
-          aws ssm send-command \
+          COMMAND_ID=$(aws ssm send-command \
             --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
             --document-name "AWS-RunShellScript" \
             --parameters 'commands=[
@@ -76,5 +77,29 @@ jobs:
               "sudo docker pull ${{ secrets.PROXY_ECR_IMAGE_URI }}:latest",
               "cd /TEKDB",
               "sudo docker compose down",
-              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d"
-            ]'
+              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d -p tekdb"
+            ]' \
+            --timeout-seconds 120 \
+            --comment "Deploy ${{ github.sha }}" \
+            --query "Command.CommandId" \
+            --output text)
+          echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
+      - name: Wait for deployment to complete
+        run: |
+          aws ssm wait command-executed \
+            --command-id ${{ steps.ssm-deploy.outputs.command_id }} \
+            --instance-id ${{ steps.get-instance.outputs.instance_id }}
+      - name: Verify deployment result
+        run: |
+          RESULT=$(aws ssm get-command-invocation \
+            --command-id ${{ steps.ssm-deploy.outputs.command_id }} \
+            --instance-id ${{ steps.get-instance.outputs.instance_id }} \
+            --query "{Status:Status,Output:StandardOutputContent,Error:StandardErrorContent}" \
+            --output json)
+          echo "$RESULT" | jq .
+          STATUS=$(echo "$RESULT" | jq -r '.Status')
+          if [ "$STATUS" != "Success" ]; then
+            echo "::error::Deployment failed with status: $STATUS"
+            exit 1
+          fi
+          echo "Deployment succeeded."
