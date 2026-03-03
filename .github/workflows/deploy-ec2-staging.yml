@@ -7,53 +7,72 @@ on:
   workflow_dispatch:
 
 jobs:
-    build-push-and-deploy:
-        name: Build, Push to ECR, Deploy to EC2 Staging
-        runs-on: ubuntu-latest
-        permissions: 
-            id-token: write
+  build-push-and-deploy:
+    name: Build, Push to ECR, Deploy to EC2 Staging
+    runs-on: ubuntu-latest
+    permissions: 
+        id-token: write
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v5
-            
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v5
-              with:
-                role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-                aws-region: ${{ secrets.AWS_REGION}}
-            
-            - name: Login to Amazon ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v2
-            
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION}}
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-            - name: Build, tag, and push web Docker image to ECR
-              id: build-web-image
-              env:
-                IMAGE_TAG: ${{ github.sha }}
-                IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
-              run: |
-                docker buildx build \
-                  --platform linux/amd64,linux/arm64 \
-                  -t $IMAGE_URI:$IMAGE_TAG \
-                  -t $IMAGE_URI:latest \
-                  -f ./TEKDB/Dockerfile ./TEKDB \
-                  --push
-                echo "pushed web image"
-            
-            - name: Build, tag, and push proxy Docker image to ECR
-              id: build-proxy-image
-              env:
-                IMAGE_TAG: ${{ github.sha }}
-                IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
-              run: |
-                docker buildx build \
-                  --platform linux/amd64,linux/arm64 \
-                  -t $IMAGE_URI:$IMAGE_TAG \
-                  -t $IMAGE_URI:latest \
-                  -f ./proxy/Dockerfile ./proxy \
-                  --push
-                echo "pushed proxy image"
+      - name: Build, tag, and push web Docker image to ECR
+        id: build-web-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_URI:$IMAGE_TAG \
+            -t $IMAGE_URI:latest \
+            -f ./TEKDB/Dockerfile ./TEKDB \
+            --push
+      
+      - name: Build, tag, and push proxy Docker image to ECR
+        id: build-proxy-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_URI:$IMAGE_TAG \
+            -t $IMAGE_URI:latest \
+            -f ./proxy/Dockerfile ./proxy \
+            --push
+      - name: get EC2 Instance ID
+        id: get-instance
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=${{ secrets.EC2_INSTANCE_NAME }}" \
+                      "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text)
+      - name: Deploy via SSM
+        run: |
+          aws ssm send-command \
+            --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
+            --document-name "AWS-RunShellScript" \
+            --parameters 'commands=[
+              "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username ${{ secrets.AWS_USER }} --password-stdin $(echo \"${{ secrets.WEB_ECR_IMAGE_URI }}",
+              "sudo docker pull ${{ secrets.ECR_IMAGE_URI_APP }}:latest",
+              "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username ${{ secrets.AWS_USER }} --password-stdin $(echo \"${{ secrets.PROXY_ECR_IMAGE_URI }}"
+              "sudo docker pull ${{ secrets.PROXY_ECR_IMAGE_URI }}:latest",
+              "cd /TEKDB",
+              "sudo docker compose down",
+              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d"
