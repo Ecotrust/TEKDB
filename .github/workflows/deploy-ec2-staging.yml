@@ -18,7 +18,7 @@ jobs:
               uses: actions/checkout@v5
             
             - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v6.0.0
+              uses: aws-actions/configure-aws-credentials@v5
               with:
                 role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
                 aws-region: ${{ secrets.AWS_REGION}}
@@ -33,7 +33,7 @@ jobs:
                 IMAGE_TAG: ${{ github.sha }}
                 IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
               run: |
-                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest .
+                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest -f ./TEKDB/Dockerfile ./TEKDB
                 docker push $IMAGE_URI:$IMAGE_TAG
                 docker push $IMAGE_URI:latest
                 echo "pushed web image"
@@ -44,7 +44,7 @@ jobs:
                 IMAGE_TAG: ${{ github.sha }}
                 IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
               run: |
-                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest .
+                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest -f ./proxy/Dockerfile ./proxy
                 docker push $IMAGE_URI:$IMAGE_TAG
                 docker push $IMAGE_URI:latest
                 echo "pushed proxy image"
