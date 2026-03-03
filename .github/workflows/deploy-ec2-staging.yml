@@ -27,15 +27,21 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v2
             
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
             - name: Build, tag, and push web Docker image to ECR
               id: build-web-image
               env:
                 IMAGE_TAG: ${{ github.sha }}
                 IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
               run: |
-                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest -f ./TEKDB/Dockerfile ./TEKDB
-                docker push $IMAGE_URI:$IMAGE_TAG
-                docker push $IMAGE_URI:latest
+                docker buildx build \
+                  --platform linux/amd64,linux/arm64 \
+                  -t $IMAGE_URI:$IMAGE_TAG \
+                  -t $IMAGE_URI:latest \
+                  -f ./TEKDB/Dockerfile ./TEKDB \
+                  --push
                 echo "pushed web image"
             
             - name: Build, tag, and push proxy Docker image to ECR
@@ -44,7 +50,10 @@ jobs:
                 IMAGE_TAG: ${{ github.sha }}
                 IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
               run: |
-                docker build -t $IMAGE_URI:$IMAGE_TAG -t $IMAGE_URI:latest -f ./proxy/Dockerfile ./proxy
-                docker push $IMAGE_URI:$IMAGE_TAG
-                docker push $IMAGE_URI:latest
+                docker buildx build \
+                  --platform linux/amd64,linux/arm64 \
+                  -t $IMAGE_URI:$IMAGE_TAG \
+                  -t $IMAGE_URI:latest \
+                  -f ./proxy/Dockerfile ./proxy \
+                  --push
                 echo "pushed proxy image"
