@@ -1,7 +1,6 @@
 name: Build, Push, and Deploy to EC2 Staging
 
 on:
-  push:
   release:
     types: [published]
   workflow_dispatch:
@@ -30,31 +29,31 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # - name: Build, tag, and push web Docker image to ECR
-      #   id: build-web-image
-      #   env:
-      #     IMAGE_TAG: ${{ github.sha }}
-      #     IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
-      #   run: |
-      #     docker buildx build \
-      #       --platform linux/amd64,linux/arm64 \
-      #       -t $IMAGE_URI:$IMAGE_TAG \
-      #       -t $IMAGE_URI:latest \
-      #       -f ./TEKDB/Dockerfile ./TEKDB \
-      #       --push
+      - name: Build, tag, and push web Docker image to ECR
+        id: build-web-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_URI:$IMAGE_TAG \
+            -t $IMAGE_URI:latest \
+            -f ./TEKDB/Dockerfile ./TEKDB \
+            --push
       
-      # - name: Build, tag, and push proxy Docker image to ECR
-      #   id: build-proxy-image
-      #   env:
-      #     IMAGE_TAG: ${{ github.sha }}
-      #     IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
-      #   run: |
-      #     docker buildx build \
-      #       --platform linux/amd64,linux/arm64 \
-      #       -t $IMAGE_URI:$IMAGE_TAG \
-      #       -t $IMAGE_URI:latest \
-      #       -f ./proxy/Dockerfile ./proxy \
-      #       --push
+      - name: Build, tag, and push proxy Docker image to ECR
+        id: build-proxy-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t $IMAGE_URI:$IMAGE_TAG \
+            -t $IMAGE_URI:latest \
+            -f ./proxy/Dockerfile ./proxy \
+            --push
       - name: get EC2 Instance ID
         id: get-instance
         run: |
