@@ -1,6 +1,7 @@
 name: Build, Push, and Deploy to EC2 Staging
 
 on:
+  push:
   release:
     types: [published]
   workflow_dispatch:
