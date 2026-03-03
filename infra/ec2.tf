@@ -17,7 +17,18 @@ resource "aws_instance" "itkdb" {
   user_data_replace_on_change = true
 
   # Install Docker, AWS CLI v2, and git on first boot
-  user_data = file("user_data.sh")
+  user_data = templatefile("user_data.tftpl", {
+    aws_region           = var.aws_region
+    web_ecr_image_uri    = var.web_ecr_image_uri
+    proxy_ecr_image_uri  = var.proxy_ecr_image_uri
+    django_secret_key    = var.django_secret_key
+    sql_host             = var.sql_host
+    sql_db_name          = var.sql_db_name
+    sql_db_user          = var.sql_db_user
+    sql_db_password      = var.sql_db_password
+    sql_port             = var.sql_port
+    django_allowed_hosts = var.django_allowed_hosts
+  })
 
   root_block_device {
     volume_size = 20

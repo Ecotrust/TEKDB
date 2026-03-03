@@ -43,3 +43,52 @@ variable "allowed_ssh_cidr" {
   description = "CIDR block allowed to SSH into the EC2 instance (use your IP: x.x.x.x/32)"
   type        = string
 }
+
+# vars for Django environment variables
+variable "django_secret_key" {
+  description = "Secret key for Django application"
+  type        = string
+  sensitive   = true
+}
+
+variable "django_allowed_hosts" {
+  description = "Comma-separated list of allowed hosts for Django"
+  type        = string
+}
+
+variable "sql_db_name" {
+  description = "Name of the PostgreSQL database"
+  type        = string
+}
+
+variable "sql_db_user" {
+  description = "PostgreSQL database user"
+  type        = string
+}
+
+variable "sql_db_password" {
+  description = "PostgreSQL database password"
+  type        = string
+  sensitive   = true
+}
+
+variable "sql_host" {
+  description = "Hostname for the PostgreSQL database"
+  type        = string
+}
+
+variable "sql_port" {
+  description = "Port for the PostgreSQL database"
+  type        = number
+  default     = 5432
+}
+
+variable "web_ecr_image_uri" {
+  description = "ECR image URI for the web application"
+  type        = string
+}
+
+variable "proxy_ecr_image_uri" {
+  description = "ECR image URI for the proxy"
+  type        = string
+}
