@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "Lookup",
     "Accounts",
     "Relationships",
+    "Logs",
     "reversion",
     "django.contrib.sites",
     "django_resumable_async_upload",
