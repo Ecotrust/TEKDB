@@ -2696,7 +2696,7 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
     from datetime import date
 
     # Default name for the media bulk upload
-    defaultmediabulkname = "Bulk Upload on %s" % date.today()
+    defaultmediabulkname = "Bulk Media Upload"
 
     mediabulkname = models.CharField(
         max_length=255,
