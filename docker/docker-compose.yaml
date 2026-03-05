@@ -1,0 +1,26 @@
+services:
+  db:
+    extends:
+      file: common.yaml
+      service: db
+
+  web:
+    extends:
+      file: common.yaml
+      service: web
+    command: ["dev"]
+    volumes:
+      - ../TEKDB:/usr/src/app
+    environment:
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DEBUG: ${DEBUG}
+      SQL_ENGINE: ${SQL_ENGINE}
+      SQL_HOST: ${SQL_HOST}
+      SQL_PORT: ${SQL_PORT}
+      SQL_DATABASE: ${SQL_DATABASE}
+      SQL_USER: ${SQL_USER}
+      SQL_PASSWORD: ${SQL_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+
+volumes:
+  tekdb_db_data:
