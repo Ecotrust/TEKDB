@@ -16,19 +16,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  redis:
+    image: redis:alpine
   web:
     build:
       context: ../TEKDB/
       dockerfile: ../TEKDB/Dockerfile
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
+
     env_file:
       - .env.dev
+    ports:
+      - "8000:8000"
     environment:
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       DEBUG: ${DEBUG}
@@ -40,18 +39,12 @@ services:
       SQL_PASSWORD: ${SQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
       CELERY_BROKER_URL: redis://redis:6379/0
-    ports:
-      - "8000:8000"
-    volumes:
-      - ../TEKDB:/usr/src/app
     healthcheck:
       test: ["CMD-SHELL", "python manage.py check --deploy 2>/dev/null || python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/\")' 2>/dev/null || exit 0"]
       interval: 15s
       timeout: 10s
       retries: 5
       start_period: 30s
-  redis:
-    image: redis:alpine
   
   celery: 
     build: ../TEKDB/
@@ -106,5 +99,4 @@ services:
       redis:
         condition: service_started
 
-volumes:
-  tekdb_db_data:
+

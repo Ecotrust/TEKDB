@@ -1,0 +1,33 @@
+services:
+  db:
+    extends:
+      file: common.yaml
+      service: db
+
+  web:
+    extends:
+      file: common.yaml
+      service: web
+    command: ["dev"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ../TEKDB:/usr/src/app
+  redis:
+    extends:
+      file: common.yaml
+      service: redis
+  celery:
+    extends:
+      file: common.yaml
+      service: celery
+  celery-beat:
+    extends:
+      file: common.yaml
+      service: celery-beat
+
+volumes:
+  tekdb_db_data:
