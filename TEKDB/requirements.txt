@@ -16,6 +16,7 @@ django-celery-beat
 pillow
 psycopg2-binary
 psutil
+redis
 django-filebrowser-no-grappelli>=4.0.0,<5.0.0
 XlsxWriter
 django-resumable-async-upload

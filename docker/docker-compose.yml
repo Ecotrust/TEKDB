@@ -23,7 +23,10 @@ services:
       dockerfile: ../TEKDB/Dockerfile
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     env_file:
       - .env.dev
     environment:
@@ -36,10 +39,72 @@ services:
       SQL_USER: ${SQL_USER}
       SQL_PASSWORD: ${SQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
+      CELERY_BROKER_URL: redis://redis:6379/0
     ports:
       - "8000:8000"
     volumes:
       - ../TEKDB:/usr/src/app
+    healthcheck:
+      test: ["CMD-SHELL", "python manage.py check --deploy 2>/dev/null || python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/\")' 2>/dev/null || exit 0"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+  redis:
+    image: redis:alpine
+  
+  celery: 
+    build: ../TEKDB/
+    entrypoint: []
+    command: celery -A TEKDB worker -l info
+    volumes: 
+      - ../TEKDB:/usr/src/app
+    env_file:
+      - .env.dev
+    environment:
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DEBUG: ${DEBUG}
+      SQL_ENGINE: ${SQL_ENGINE}
+      SQL_HOST: ${SQL_HOST}
+      SQL_PORT: ${SQL_PORT}
+      SQL_DATABASE: ${SQL_DATABASE}
+      SQL_USER: ${SQL_USER}
+      SQL_PASSWORD: ${SQL_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      CELERY_BROKER_URL: redis://redis:6379/0
+    depends_on:
+      web:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+  celery-beat:
+    build: ../TEKDB/
+    entrypoint: []
+    command: celery -A TEKDB beat -l info
+    volumes:
+      - ../TEKDB:/usr/src/app
+    env_file:
+      - .env.dev
+    environment:
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DEBUG: ${DEBUG}
+      SQL_ENGINE: ${SQL_ENGINE}
+      SQL_HOST: ${SQL_HOST}
+      SQL_PORT: ${SQL_PORT}
+      SQL_DATABASE: ${SQL_DATABASE}
+      SQL_USER: ${SQL_USER}
+      SQL_PASSWORD: ${SQL_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      CELERY_BROKER_URL: redis://redis:6379/0
+    depends_on:
+      web:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
 volumes:
   tekdb_db_data:
