@@ -71,7 +71,6 @@ INSTALLED_APPS = [
     "Lookup",
     "Accounts",
     "Relationships",
-    "Logs",
     "reversion",
     "django.contrib.sites",
     "django_resumable_async_upload",
@@ -364,8 +363,8 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BEAT_SCHEDULE = {
-    "delete-old-media-files-every-48-hours": {
-        "task": "Logs.tasks.delete_old_media_files",
+    "delete-expired-chunks-every-48-hours": {
+        "task": "TEKDB.tasks.delete_expired_chunks",
         "schedule": timedelta(hours=48),
         "kwargs": {"max_age_hours": 48},
     },

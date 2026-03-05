@@ -17,10 +17,8 @@ def bytes_to_readable(num_bytes, suffix="B"):
 
 
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,))
-def delete_old_media_files(self, max_age_hours=24):
-
+def delete_expired_chunks(self, max_age_hours=24):
     from django.conf import settings
-    from Logs.models import ExpiredChunkDeletionLog
 
     target_dir = os.path.join(
         settings.MEDIA_ROOT, settings.ADMIN_RESUMABLE_CHUNK_FOLDER
@@ -55,31 +53,10 @@ def delete_old_media_files(self, max_age_hours=24):
                 )
 
                 os.remove(file_path)
-                ExpiredChunkDeletionLog.objects.create(
-                    file_name=filename,
-                    file_path=file_path,
-                    file_size=file_size,
-                    original_created_at=timezone.datetime.fromtimestamp(
-                        mtime, tz=timezone.utc
-                    ),
-                    reason="age_policy",
-                    success=True,
-                )
                 deleted.append(file_path)
 
             except Exception as e:
                 logger.error(f"Failed to delete {file_path}: {e}")
-                ExpiredChunkDeletionLog.objects.create(
-                    file_name=filename,
-                    file_path=file_path,
-                    file_size=file_size,
-                    original_created_at=timezone.datetime.fromtimestamp(
-                        mtime, tz=timezone.utc
-                    ),
-                    reason="age_policy",
-                    success=False,
-                    error_message=str(e),
-                )
                 failed.append(file_path)
 
     logger.info(
