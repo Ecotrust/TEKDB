@@ -1,6 +1,7 @@
 #REQUIRED
 confusable-homoglyphs
 coverage
+celery
 django >=4.2.16,<4.3
 django-autocomplete-light
 django-ckeditor
@@ -10,6 +11,8 @@ django-nested-admin
 django-registration
 django-reversion
 django-tinymce
+django-celery-results
+django-celery-beat
 pillow
 psycopg2-binary
 psutil
