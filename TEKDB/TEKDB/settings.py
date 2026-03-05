@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from glob import glob
 
 try:
@@ -361,6 +362,14 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = "django-db"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "delete-old-media-files-every-48-hours": {
+        "task": "Logs.tasks.delete_old_media_files",
+        "schedule": timedelta(hours=48),
+        "kwargs": {"max_age_hours": 48},
+    },
+}
 
 try:
     from TEKDB.local_settings import *  # noqa: F403

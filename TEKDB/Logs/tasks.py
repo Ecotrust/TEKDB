@@ -85,8 +85,9 @@ def delete_old_media_files(self, max_age_hours=24):
     logger.info(
         f"Cleanup complete — deleted: {len(deleted)}, failed: {len(failed)}, skipped (too new): {len(skipped)}"
     )
-    self.stdout.write(
-        self.style.SUCCESS(
-            f"Deletion completed at {timezone.now()}. Deleted: {len(deleted)}, Failed: {len(failed)}, Skipped: {len(skipped)}"
-        )
-    )
+    return {
+        "deleted": len(deleted),
+        "failed": len(failed),
+        "skipped": len(skipped),
+        "completed_at": timezone.now().isoformat(),
+    }
