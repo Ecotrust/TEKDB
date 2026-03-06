@@ -5,7 +5,7 @@ from django.test import TestCase, override_settings
 from TEKDB.tasks import delete_expired_chunks
 
 
-class DeleteOldMediaFilesTest(TestCase):
+class DeleteExpiredChunksTest(TestCase):
     def test_missing_dir_returns_none(self):
         with override_settings(
             MEDIA_ROOT="/nonexistent", ADMIN_RESUMABLE_CHUNK_FOLDER="does_not_exist"
@@ -13,7 +13,7 @@ class DeleteOldMediaFilesTest(TestCase):
             result = delete_expired_chunks.run(max_age_hours=24)
         self.assertIsNone(result)
 
-    def test_deletes_old_files_and_skips_new(self):
+    def test_deletes_expired_chunks_and_skips_new(self):
         import tempfile
 
         with tempfile.TemporaryDirectory() as tmp_path:
