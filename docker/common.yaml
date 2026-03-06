@@ -23,22 +23,11 @@ services:
       context: ../TEKDB/
       dockerfile: ../TEKDB/Dockerfile
     restart: unless-stopped
-
     env_file:
       - .env.dev
     ports:
       - "8000:8000"
-    environment:
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-      DEBUG: ${DEBUG}
-      SQL_ENGINE: ${SQL_ENGINE}
-      SQL_HOST: ${SQL_HOST}
-      SQL_PORT: ${SQL_PORT}
-      SQL_DATABASE: ${SQL_DATABASE}
-      SQL_USER: ${SQL_USER}
-      SQL_PASSWORD: ${SQL_PASSWORD}
-      SECRET_KEY: ${SECRET_KEY}
-      CELERY_BROKER_URL: redis://redis:6379/0
+
     healthcheck:
       test: ["CMD-SHELL", "python manage.py check --deploy 2>/dev/null || python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/\")' 2>/dev/null || exit 0"]
       interval: 15s
