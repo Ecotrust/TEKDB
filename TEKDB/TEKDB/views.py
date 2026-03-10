@@ -71,14 +71,20 @@ def ExportDatabase(request, test=False):
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
-    response = None
+    response = HttpResponse()
     try:
         with tempfile.TemporaryDirectory() as tmp_dir:
             # create filename
             dumpfile = "{}_backup.json".format(datestamp)
             dumpfile_location = os.path.join(tmp_dir, dumpfile)
             with open(dumpfile_location, "w") as of:
-                management.call_command("dumpdata", "--indent=2", stdout=of)
+                excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
+                management.call_command(
+                    "dumpdata",
+                    exclude=excludes,
+                    indent=2,
+                    stdout=of,
+                )
             # zip up:
             #   * Data Dump file
             #   * Media files
@@ -88,20 +94,16 @@ def ExportDatabase(request, test=False):
                     zip.write(media_file)
 
         response = FileResponse(open(tmp_zip.name, "rb"))
-        return response
+
     finally:
         try:
             if not test:
                 os.remove(tmp_zip.name)
-
-            if response:
-                response.set_cookie("export_status", "done")
+            response.set_cookie("export_status", "done", path="/")
         except (PermissionError, NotADirectoryError):
-            if response:
-                response.set_cookie("export_status", "error")
+            response.set_cookie("export_status", "error", path="/")
             pass
-
-    return HttpResponse()
+    return response
 
 
 def getDBTruncateCommand():
@@ -121,6 +123,10 @@ def ImportDatabase(request):
     if not request.method == "POST":
         status_code = 405
         status_message = "Request method not allowed. Must be a post."
+        return JsonResponse(
+            {"status_code": status_code, "status_message": status_message},
+            status=status_code,
+        )
     else:
         if "MEDIA_DIR" in request.POST.keys() and os.path.exists(
             request.POST["MEDIA_DIR"]
@@ -139,13 +145,15 @@ def ImportDatabase(request):
                     for chunk in request.FILES["import_file"].chunks():
                         tmp_zip_file.write(chunk)
                     tmp_zip_file.seek(0)
+
                 except Exception as e:
                     status_code = 500
                     status_message = 'Unable to read the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(
                         e
                     )
                     return JsonResponse(
-                        {"status_code": status_code, "status_message": status_message}
+                        {"status_code": status_code, "status_message": status_message},
+                        status=status_code,
                     )
                 if zipfile.is_zipfile(tmp_zip_file):
                     zip = zipfile.ZipFile(tmp_zip_file, "r")
@@ -160,7 +168,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
                     fixture_name = non_media[0]
                     try:
@@ -174,7 +183,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
                     try:
                         # Emptying DB tables
@@ -191,7 +201,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
 
                     try:
@@ -220,7 +231,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
 
                     try:
@@ -239,7 +251,8 @@ def ImportDatabase(request):
                             {
                                 "status_code": status_code,
                                 "status_message": status_message,
-                            }
+                            },
+                            status=status_code,
                         )
                     status_code = 200
                     status_message = "Database import completed successfully."
@@ -249,21 +262,23 @@ def ImportDatabase(request):
         else:
             status_code = 400
             status_message = (
-                "Request must have an attached zipfile to restore the database from"
+                "Request must have an attached zipfile to restore the database from."
             )
 
-    return JsonResponse({"status_code": status_code, "status_message": status_message})
+    return JsonResponse(
+        {"status_code": status_code, "status_message": status_message},
+        status=status_code,
+    )
 
 
 # Only Authenticated Users!
 @permission_required("TEKDB.change_list")
-def getPlacesGeoJSON(request):
+def get_places_geojson(request):
     from .models import Places
     import json
 
     # Get all places
     places = Places.objects.exclude(geometry__isnull=True)
-
     # GeoJSON to store all places
     geojson = {"type": "FeatureCollection", "features": []}
 

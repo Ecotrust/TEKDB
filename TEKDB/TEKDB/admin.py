@@ -61,6 +61,7 @@ from TEKDB.settings import ADMIN_SITE_HEADER
 from TEKDB.settings import BASE_DIR
 from TEKDB.widgets import OpenLayers6Widget
 
+
 admin.site.site_header = ADMIN_SITE_HEADER
 
 
@@ -104,6 +105,10 @@ class ResourcesActivityEventsForm(forms.ModelForm):
 
 
 class CitationsForm(forms.ModelForm):
+    class Meta:
+        model = Citations
+        fields = "__all__"
+
     def __init__(self, *args, **kwargs):
         super(CitationsForm, self).__init__(*args, **kwargs)
         self.fields["referencetype"].queryset = LookupReferenceType.objects.order_by(
@@ -138,6 +143,10 @@ class PlacesForm(forms.ModelForm):
 
 
 class ResourcesForm(forms.ModelForm):
+    class Meta:
+        model = Resources
+        fields = "__all__"
+
     def __init__(self, *args, **kwargs):
         super(ResourcesForm, self).__init__(*args, **kwargs)
         self.fields[
@@ -618,58 +627,69 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
         activities = form.cleaned_data.get("activities")
         placesresources = form.cleaned_data.get("placesresources")
 
-        for file in request.FILES.getlist("files"):
-            mime_type, _ = guess_type(file.name)
-            # if mime_type:
-            file_mime_type = mime_type.split("/")[0]
-            media_type_instance = LookupMediaType.objects.filter(
-                mediatype__startswith=file_mime_type
-            ).first()
-            if media_type_instance:
+        # Handle async uploaded file (comes as a list of file path strings)
+        uploaded_file_paths = form.cleaned_data.get("files")
+
+        if uploaded_file_paths and isinstance(uploaded_file_paths, list):
+            import os
+
+            for uploaded_file_path in uploaded_file_paths:
+                # Extract just the filename from the path
+                file_name = os.path.basename(uploaded_file_path)
+
+                # Guess MIME type from filename
+                mime_type, _ = guess_type(file_name)
+                if mime_type:
+                    file_mime_type = mime_type.split("/")[0]
+                    media_type_instance = LookupMediaType.objects.filter(
+                        mediatype__startswith=file_mime_type
+                    ).first()
+                else:
+                    media_type_instance = None
+
+                if not media_type_instance:
+                    media_type_instance = LookupMediaType.objects.filter(
+                        mediatype__startswith="other"
+                    ).first()
+
                 mediatype = media_type_instance
-            else:
-                media_type_instance = LookupMediaType.objects.filter(
-                    mediatype__startswith="other"
-                ).first()
-                mediatype = media_type_instance
+                filename = file_name.rsplit(".", 1)[0]  # Remove extension
 
-            filename = file.name.split(".")[0]
+                media_instance = Media(
+                    medianame=filename,
+                    mediadescription=f'Part of the "{obj.mediabulkname}" Media Bulk Upload that was uploaded on {obj.mediabulkdate}',
+                    mediafile=uploaded_file_path,
+                    mediatype=mediatype,
+                )
+                media_instance.save()
+                obj.mediabulkupload.add(media_instance)
 
-            media_instance = Media(
-                medianame=filename,
-                mediadescription=f'Part of the "{obj.mediabulkname}" Media Bulk Upload that was uploaded on {obj.mediabulkdate}',
-                mediafile=file,
-                mediatype=mediatype,
-            )
-            media_instance.save()
-            obj.mediabulkupload.add(media_instance)
-
-            # Add relationships
-            if places:
-                for place in places:
-                    PlacesMediaEvents.objects.create(
-                        placeid=place, mediaid=media_instance
-                    )
-            if resources:
-                for resource in resources:
-                    ResourcesMediaEvents.objects.create(
-                        resourceid=resource, mediaid=media_instance
-                    )
-            if citations:
-                for citation in citations:
-                    MediaCitationEvents.objects.create(
-                        citationid=citation, mediaid=media_instance
-                    )
-            if activities:
-                for activity in activities:
-                    ResourceActivityMediaEvents.objects.create(
-                        resourceactivityid=activity, mediaid=media_instance
-                    )
-            if placesresources:
-                for placeresource in placesresources:
-                    PlacesResourceMediaEvents.objects.create(
-                        placeresourceid=placeresource, mediaid=media_instance
-                    )
+                # Add relationships
+                if places:
+                    for place in places:
+                        PlacesMediaEvents.objects.create(
+                            placeid=place, mediaid=media_instance
+                        )
+                if resources:
+                    for resource in resources:
+                        ResourcesMediaEvents.objects.create(
+                            resourceid=resource, mediaid=media_instance
+                        )
+                if citations:
+                    for citation in citations:
+                        MediaCitationEvents.objects.create(
+                            citationid=citation, mediaid=media_instance
+                        )
+                if activities:
+                    for activity in activities:
+                        ResourceActivityMediaEvents.objects.create(
+                            resourceactivityid=activity, mediaid=media_instance
+                        )
+                if placesresources:
+                    for placeresource in placesresources:
+                        PlacesResourceMediaEvents.objects.create(
+                            placeresourceid=placeresource, mediaid=media_instance
+                        )
 
     @admin.display(description="Thumbnails")
     def thumbnail_gallery(self, obj):
@@ -965,10 +985,10 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     change_list_template = "admin/TEKDB/places/change_list.html"
 
     def changelist_view(self, request, extra_context=None):
-        from .views import getPlacesGeoJSON
+        from .views import get_places_geojson
 
         extra_context = extra_context or {}
-        extra_context["results_geojson"] = getPlacesGeoJSON(request)
+        extra_context["results_geojson"] = get_places_geojson(request)
         return super(PlacesAdmin, self).changelist_view(
             request, extra_context=extra_context
         )

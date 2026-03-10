@@ -1,0 +1,34 @@
+services:
+  db:
+    extends:
+      file: common.yaml
+      service: db
+
+  web:
+    extends:
+      file: common.yaml
+      service: web
+    command: ["prod-local"]
+    env_file:
+      - .env.dev
+    ports: []
+    volumes:
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
+  proxy:
+    build:
+      context: ../proxy/
+      dockerfile: ../proxy/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "8080:8080"
+    volumes:
+      - static_volume:/vol/static/static:ro
+      - media_volume:/vol/static/media:ro
+
+volumes:
+  tekdb_db_data:
+  static_volume:
+  media_volume:

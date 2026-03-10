@@ -2,6 +2,10 @@
   height: 25em;
 }
 
+#place-resource-map {
+  height: 25em;
+}
+
 .layer-switcher {
   top: 0.5em;
 }

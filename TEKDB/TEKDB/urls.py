@@ -27,12 +27,16 @@ from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+
 from login import views as login_views
 
 from . import views
+from .tekdb_filebrowser import site as tekdb_filebrowser
+
 
 urlpatterns = [
     # url(r'^login/', include('login.urls')),
+    path("admin/filebrowser/", tekdb_filebrowser.urls),
     path("login/", login_views.login, name="login"),
     path("login_async/", login_views.login_async, name="login_async"),
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
@@ -72,6 +76,10 @@ urlpatterns = [
         "resource_activity_autocomplete/",
         views.ResourceActivityAutocompleteView.as_view(),
         name="select2_fk_resourceactivity",
+    ),
+    re_path(
+        r"^django_resumable_async_upload/",
+        include("django_resumable_async_upload.urls"),
     ),
     path("", include("explore.urls")),
 ]

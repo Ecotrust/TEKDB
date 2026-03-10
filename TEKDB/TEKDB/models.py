@@ -17,12 +17,15 @@ from django.contrib.postgres.search import (
     SearchRank,
     SearchVector,
     TrigramSimilarity,
+    SearchHeadline,
 )
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.gis.db.models import GeometryField
 from tinymce.models import HTMLField
+from django_resumable_async_upload.models import AsyncFileField
+
 
 # from moderation.db import ModeratedModel
 import os
@@ -42,11 +45,21 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     if keyword == "":
         return model.objects.all()
 
-    similarities = []
     vector = False
     similarity = False
+    annotations = {}
+
+    query = SearchQuery(keyword)
     for idx, val in enumerate(fields):
-        similarities.append(TrigramSimilarity(val, keyword, weight=weight_lookup[val]))
+        annotations[f"match_{val}"] = TrigramSimilarity(
+            val, keyword, weight=weight_lookup[val]
+        )
+        annotations[f"headline_{val}"] = SearchHeadline(
+            val,
+            query,
+            start_sel="<b class='highlight'>",
+            stop_sel="</b>",
+        )
         if idx == 0:
             vector = SearchVector(val, weight=weight_lookup[val])
         else:
@@ -54,15 +67,18 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
 
     for val in fk_fields:
         relationship_name = "__".join(val)
-        similarities.append(
-            TrigramSimilarity(relationship_name, keyword, weight=weight_lookup[val[0]])
+        annotations[f"match_{relationship_name}"] = TrigramSimilarity(
+            relationship_name, keyword, weight=weight_lookup[val[0]]
         )
+        annotations[f"headline_{relationship_name}"] = SearchHeadline(
+            relationship_name, query, start_sel="<b class='highlight'>", stop_sel="</b>"
+        )
+        # vector is only false if we have no fields to look through.
+        # Thus far we don't have any models that only search through fk fields.
         if not vector:
             vector = SearchVector(relationship_name, weight=weight_lookup[val[0]])
         else:
             vector += SearchVector(relationship_name, weight=weight_lookup[val[0]])
-
-    query = SearchQuery(keyword)
 
     # Last resort default values
     # These should be set in the settings.py file, but if they're not, we'll use these.
@@ -80,6 +96,8 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
         print(e)
         pass
 
+    similarities = [value for key, value in annotations.items() if "match_" in key]
+
     if len(similarities) > 1:
         similarity = Greatest(*similarities)
     elif len(similarities) == 1:
@@ -92,14 +110,16 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
             # search=vector,
             rank=SearchRank(vector, query),
             similarity=similarity,
+            **annotations,
         )
         .filter(
             # Q(search__icontains=keyword) | # for some reason 'search=' in Q lose icontains abilities
             # Q(search=keyword) | # for some reason __icontains paired w/ Q misses perfect matches
             Q(rank__gte=min_search_rank) | Q(similarity__gte=min_search_similarity)
         )
-        .order_by("-rank", "-similarity", sort_field)
-        .distinct()
+        .order_by("pk", "-rank", "-similarity", sort_field)
+        # adding pk to distinct to prevent duplicate ids
+        .distinct("pk")
     )
 
     return results
@@ -699,11 +719,6 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
             "feature": feature,
         }
 
-    # def get_record_dict(self, user, srid=3857):
-    #     record_dict = super(Places, self).get_record_dict(user, srid)
-    #     record_dict['map_pin'] = settings.RECORD_ICONS['map_pin']
-    #     return record_dict
-
     def get_related_objects(self, object_id):
         # place = Places.objects.get(pk=object_id)
         alt_names = self.placealtindigenousname_set.all()
@@ -853,38 +868,6 @@ class Resources(Reviewable, Queryable, Record, ModeratedModel):
         return run_keyword_search(
             Resources, keyword, fields, fk_fields, weight_lookup, sort_field
         )
-        ################################
-        # NEW APPROACH #################
-        ################################
-        # vector = SearchVector('commonname', weight='A') + \
-        #     SearchVector('indigenousname', weight='A') + \
-        #     SearchVector('resourceclassificationgroup__resourceclassificationgroup', weight='B') + \
-        #     SearchVector('genus', weight='C') + \
-        #     SearchVector('species', weight='C')
-        #     #HoW TO GET Alt Names?)
-        # query = SearchQuery(keyword)
-        # similarity=TrigramSimilarity('commonname', keyword, weight='A') + \
-        #     TrigramSimilarity('indigenousname', keyword, weight='A') + \
-        #     TrigramSimilarity('resourceclassificationgroup__resourceclassificationgroup', keyword, weight='B') + \
-        #     TrigramSimilarity('genus', keyword, weight='C') + \
-        #     TrigramSimilarity('species', keyword, weight='C')
-
-        ################################
-        # OLD APPROACH #################
-        ################################
-        # group_qs = LookupResourceGroup.objects.filter(resourceclassificationgroup__icontains=keyword)
-        # group_loi = [group.pk for group in group_qs]
-        # alt_name_qs = ResourceAltIndigenousName.objects.filter(altindigenousname__icontains=keyword)
-        # alt_name_loi = [ran.resourceid.pk for ran in alt_name_qs]
-        #
-        # return Resources.objects.filter(
-        #     Q(commonname__icontains=keyword) |
-        #     Q(indigenousname__icontains=keyword) |
-        #     Q(genus__icontains=keyword) |
-        #     Q(species__icontains=keyword) |
-        #     Q(resourceclassificationgroup__in=group_loi) |
-        #     Q(pk__in=alt_name_loi)
-        # )
 
     def image(self):
         return settings.RECORD_ICONS["resource"]
@@ -1163,10 +1146,8 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
     def keyword_search(keyword):
         resource_qs = Resources.keyword_search(keyword)
         resource_loi = [resource.pk for resource in resource_qs]
-
         place_qs = Places.keyword_search(keyword)
         place_loi = [place.pk for place in place_qs]
-
         part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
         part_loi = [part.pk for part in part_qs]
 
@@ -1178,7 +1159,6 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
 
         timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
         timing_loi = [timing.pk for timing in timing_qs]
-
         return PlacesResourceEvents.objects.filter(
             Q(resourceid__in=resource_loi)
             | Q(placeid__in=place_loi)
@@ -1289,6 +1269,15 @@ class PlacesResourceEvents(DefaultModel, Reviewable, Queryable):
                 {"key": "Bibliographic Sources", "value": citations}
             )
         return relationship_list
+
+    def get_query_json(self):
+        query_json = super().get_query_json()
+        place_geom = self.placeid.map()
+
+        if place_geom:
+            # add place map information if available
+            query_json["map"] = place_geom
+        return query_json
 
     def get_response_format(self):
         type = "Placesresourceevents"
@@ -1530,42 +1519,6 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             sort_field,
         )
 
-    # def keyword_search(keyword):
-    #     placeresource_qs = PlacesResourceEvents.keyword_search(keyword)
-    #     placeresource_loi = [placeresource.pk for placeresource in placeresource_qs]
-
-    #     part_qs = LookupPartUsed.objects.filter(partused__icontains=keyword)
-    #     part_loi = [part.pk for part in part_qs]
-
-    #     activity_qs = LookupActivity.objects.filter(activity__icontains=keyword)
-    #     activity_loi = [activity.pk for activity in activity_qs]
-
-    #     participant_qs = LookupParticipants.objects.filter(participants__icontains=keyword)
-    #     participant_loi = [participant.pk for participant in participant_qs]
-
-    #     technique_qs = LookupTechniques.objects.filter(techniques__icontains=keyword)
-    #     technique_loi = [technique.pk for technique in technique_qs]
-
-    #     use_qs = LookupCustomaryUse.objects.filter(usedfor__icontains=keyword)
-    #     use_loi = [use.pk for use in use_qs]
-
-    #     timing_qs = LookupTiming.objects.filter(timing__icontains=keyword)
-    #     timing_loi = [timing.pk for timing in timing_qs]
-
-    #     return ResourcesActivityEvents.objects.filter(
-    #         Q(placeresourceid__in=placeresource_loi) |
-    #         Q(relationshipdescription__icontains=keyword) |
-    #         Q(partused__in=part_loi) |
-    #         Q(activityshortdescription__in=activity_loi) |
-    #         Q(activitylongdescription__icontains=keyword) |
-    #         Q(participants__in=participant_loi) |
-    #         Q(technique__in=technique_loi) |
-    #         Q(gear__icontains=keyword) |
-    #         Q(customaryuse__in=use_loi) |
-    #         Q(timing__in=timing_loi) |
-    #         Q(timingdescription__icontains=keyword)
-    #     )
-
     def image(self):
         return settings.RECORD_ICONS["activity"]
 
@@ -1751,7 +1704,7 @@ class People(Lookup):
         relationship_list = []
         interviewee_citations = [x.get_query_json() for x in self.interviewee.all()]
         interviewer_citations = [x.get_query_json() for x in self.interviewer.all()]
-        # citations = list(set(interviewee_citations) | set(interviewer_citations))
+
         if len(interviewee_citations) > 0:
             relationship_list.append(
                 {"key": "Sources as interviewee", "value": interviewee_citations}
@@ -2743,7 +2696,7 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
     from datetime import date
 
     # Default name for the media bulk upload
-    defaultmediabulkname = "Bulk Upload on %s" % date.today()
+    defaultmediabulkname = "Bulk Media Upload"
 
     mediabulkname = models.CharField(
         max_length=255,
@@ -2802,12 +2755,13 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
         null=True,
         verbose_name="historic location",
     )
-    mediafile = models.FileField(
+    mediafile = AsyncFileField(
         db_column="mediafile",
         max_length=255,
         blank=True,
         null=True,
         verbose_name="file",
+        max_files=1,
     )
     limitedaccess = models.BooleanField(
         db_column="limitedaccess",
@@ -3329,6 +3283,17 @@ class PlacesMediaEvents(SimpleRelationship):
             "description": self.relationshipdescription,
             "link": "/explore/%s/%d" % (type, self.pk),
         }
+
+    def get_relationship_json(self, req_model_type):
+        relationship_json = super(PlacesMediaEvents, self).get_relationship_json(
+            req_model_type
+        )
+        # get the file link for media
+        if req_model_type == Places:
+            media_file_link = self.mediaid.media()
+            relationship_json["file"] = media_file_link
+
+        return relationship_json
 
     def get_relationship_model(self, req_model):
         if req_model == Media:
@@ -4078,6 +4043,17 @@ class ResourcesMediaEvents(SimpleRelationship):
             "description": self.relationshipdescription,
             "link": "/explore/%s/%d" % (type, self.pk),
         }
+
+    def get_relationship_json(self, req_model_type):
+        relationship_json = super(ResourcesMediaEvents, self).get_relationship_json(
+            req_model_type
+        )
+        # get the file link for media
+        if req_model_type == Resources:
+            media_file_link = self.mediaid.media()
+            relationship_json["file"] = media_file_link
+
+        return relationship_json
 
     def get_relationship_model(self, req_model):
         if req_model == Resources:

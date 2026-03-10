@@ -47,6 +47,7 @@ SITE_ID = 1
 INSTALLED_APPS = [
     "dal",
     "dal_select2",
+    "filebrowser",
     "django.contrib.contenttypes",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -69,11 +70,13 @@ INSTALLED_APPS = [
     "Relationships",
     "reversion",
     "django.contrib.sites",
+    "django_resumable_async_upload",
     # 'moderation.apps.SimpleModerationConfig',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -124,7 +127,7 @@ DATABASES = {
         "USER": os.environ.get("SQL_USER", "postgres"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", None),
         "HOST": os.environ.get("SQL_HOST", "db"),
-        "PORT": os.environ.get("SQL_PORT", None),
+        "PORT": os.environ.get("SQL_PORT", 5432),
     }
 }
 
@@ -182,6 +185,32 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+# Use WhiteNoise to serve static files when DEBUG is False (container / production)
+STATICFILES_STORAGE = os.environ.get(
+    "STATICFILES_STORAGE", "whitenoise.storage.CompressedStaticFilesStorage"
+)
+###########################################
+##            FILEBROWSER               ###
+###########################################
+DIRECTORY = MEDIA_URL
+
+FILEBROWSER_LIST_PER_PAGE = 20
+
+FILEBROWSER_EXCLUDE = []  # Add extensions to exclude from showing in filebrowser. E.g. ['.py',]
+
+FILEBROWSER_VERSIONS = {}  # Empty dict because we are not using versions
+
+# Apps to exclude from the export `dumpdata` command. This prevents
+# dumping third-party apps (like `filebrowser`) that may not have tables
+# in the test DB or that you don't want included in project backups.
+EXPORT_DUMP_EXCLUDE = [
+    "filebrowser",
+]
+
+###########################################
+###          END FILEBROWSER            ###
+###########################################
+
 # STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "explore", "static"),
 #    os.path.join(BASE_DIR, "TEKDB", "static"),
@@ -230,7 +259,7 @@ TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
 
 # Add Version to the admin site header
-VERSION = "2.2.2"
+VERSION = "2.8.0"
 ADMIN_SITE_HEADER = os.environ.get(
     "ADMIN_SITE_HEADER", default="ITK DB Admin v{}".format(VERSION)
 )
@@ -317,6 +346,11 @@ HOME_LEFT_BACKGROUND = "#000000"
 HOME_RIGHT_BACKGROUND = "#000000"
 
 DEFAULT_MAXIMUM_RESULTS = 500
+
+# Django Resumable Async Upload settings
+ADMIN_RESUMABLE_SHOW_THUMB = True
+ADMIN_SIMULTANEOUS_UPLOADS = 1
+ADMIN_RESUMABLE_CHUNK_FOLDER = "resumable_chunks"
 
 try:
     from TEKDB.local_settings import *  # noqa: F403

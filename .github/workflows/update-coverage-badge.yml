@@ -47,7 +47,7 @@ jobs:
 
       - name: Run Coverage Report
         run: |
-          cd TEKDB && coverage run manage.py test TEKDB.tests
+          cd TEKDB && coverage run manage.py test
           coverage json
       
       - name: Access Coverage Stat

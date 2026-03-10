@@ -1,0 +1,44 @@
+{% load i18n fb_tags %}
+{% comment %} 
+Copied from https://github.com/smacker/django-filebrowser-no-grappelli/blob/master/filebrowser/templates/filebrowser/include/filter.html
+{% endcomment %}
+
+<div id="changelist-filter">
+    <h2>{% trans 'Filter' %}</h2>
+
+    <h3>{% trans "By Date" %}</h3>
+    <ul>
+        <li{% if not query.filter_date %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_date,p" %}">{% trans "Any Date" %}</a></li>
+        <li{% if query.filter_date == "today" %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_date,p" %}&amp;filter_date=today">{% trans "Today" %}</a></li>
+        <li{% if query.filter_date == "past7days" %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_date,p" %}&amp;filter_date=past7days">{% trans "Past 7 days" %}</a></li>
+        <li{% if query.filter_date == "thismonth" %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_date,p" %}&amp;filter_date=thismonth">{% trans "This Month" %}</a></li>
+        <li{% if query.filter_date == "thisyear" %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_date,p" %}&amp;filter_date=thisyear">{% trans "This year" %}</a></li>
+    </ul>
+
+    <h3>{% trans "By Type" %}</h3>
+    <ul>
+        <li{% if not query.filter_type %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_type,p" %}">{% trans "All" %}</a></li>
+        <li{% if query.filter_type == 'Folder' %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_type,p" %}&amp;filter_type=Folder">{% trans "Folder" %}</a></li>
+        {% for extension in settings_var.EXTENSIONS %}
+        <li{% if query.filter_type == extension %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_type,p" %}&amp;filter_type={{ extension }}">{% trans extension %}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h3>{% trans "By Media Record" %}</h3>
+    <ul>
+        <li{% if not query.filter_media_record %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_media_record,p" %}">{% trans "All" %}</a></li>
+        <li{% if query.filter_media_record == "has_record" %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_media_record,p" %}&amp;filter_media_record=has_record">{% trans "Has media record" %}</a></li>
+        <li{% if query.filter_media_record == "no_record" %} class="selected"{% endif %}>
+        <a href="{% query_string "" "filter_media_record,p" %}&amp;filter_media_record=no_record">{% trans "No media record" %}</a></li>
+    </ul>
+</div>

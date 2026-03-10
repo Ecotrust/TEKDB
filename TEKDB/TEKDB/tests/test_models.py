@@ -1,4 +1,7 @@
+from base64 import b64encode
+
 from django.test import TestCase
+from django.test.client import RequestFactory
 from TEKDB.models import (
     Places,
     Resources,
@@ -35,6 +38,8 @@ from TEKDB.models import (
     LookupTiming,
     LookupTribe,
     LookupUserInfo,
+    Locality,
+    Users,
 )
 
 # from .forms import *
@@ -145,15 +150,55 @@ class MiscSearchTest(ITKSearchTest):
 
                 self.assertTrue(len(resultlist) == model.objects.count())
 
+    def test_all_search_results(self):
+        """
+        Test that a model_type of 'all' returns results from specific categories
+        """
+        categories = [
+            "resources",
+            "places",
+            "citations",
+            "media",
+            "resourcesactivityevents",
+        ]
+
+        from explore.views import get_model_by_type
+
+        query_models = get_model_by_type("all")
+        lowercase_query_model_names = [model.__name__.lower() for model in query_models]
+
+        for category in categories:
+            self.assertIn(category, lowercase_query_model_names)
+
+    def test_no_keyword_get_results(self):
+        """
+        Test that an empty string search returns all objects
+        """
+        keyword = None
+
+        from explore.views import get_results
+
+        search_results = get_results(
+            keyword,
+            categories=["resources"],
+        )
+        all_ranks = set([x["rank"] for x in search_results])
+        all_similarities = set([x["similarity"] for x in search_results])
+        all_headlines = set([x["headline"] for x in search_results])
+
+        self.assertEqual(all_ranks, {0})
+        self.assertEqual(all_similarities, {0})
+        self.assertEqual(all_headlines, {None})
+
     def test_phrase_search(self):
         """
         Test that a phrase search returns all objects that contain the phrase
         """
         keyword = "salmon trout"
 
-        from explore.views import getResults
+        from explore.views import get_results
 
-        search_results = getResults(
+        search_results = get_results(
             keyword,
             categories=["places", "resources", "activities", "sources", "media"],
         )
@@ -162,12 +207,164 @@ class MiscSearchTest(ITKSearchTest):
         # 362 is cutthroat trout
         self.assertTrue(362 in [x["id"] for x in search_results])
 
+    def test_resource_search(self):
+        """
+        Test that a phrase search returns all objects that contain the phrase
+        """
+        keyword = "flurpie"
+
+        from explore.views import get_results
+
+        search_results = get_results(
+            keyword,
+            categories=["resources"],
+        )
+        ids = [x["id"] for x in search_results]
+        # 387 is test with altindigenousname 'flurpie'
+        self.assertIn(387, ids)
+
+
+class GetVerboseFieldNameTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_get_verbose_field_name_one_model_deep(self):
+        from TEKDB.models import Resources
+        from explore.views import get_verbose_field_name
+
+        model = Resources
+        field_name = "commonname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Common Name")
+
+    def test_get_verbose_field_name_two_deep(self):
+        from TEKDB.models import Resources
+        from explore.views import get_verbose_field_name
+
+        model = Resources
+        field_name = "resourcealtindigenousname__altindigenousname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Alt Name")
+
+    def test_get_verbose_field_name_three_models_deep(self):
+        from TEKDB.models import ResourcesActivityEvents
+        from explore.views import get_verbose_field_name
+
+        model = ResourcesActivityEvents
+        field_name = "placeresourceid__resourceid__commonname"
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Common Name")
+
+    def test_get_verbose_field_name_four_deep(self):
+        from TEKDB.models import ResourcesActivityEvents
+        from explore.views import get_verbose_field_name
+
+        model = ResourcesActivityEvents
+        field_name = (
+            "placeresourceid__placeid__placealtindigenousname__altindigenousname"
+        )
+        verbose_name = get_verbose_field_name(model, field_name)
+        self.assertEqual(verbose_name, "Alternate Name")
+
+
+class GreatestSimilarityAttributeTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_get_greatest_similarity_attribute(self):
+        from TEKDB.models import Resources
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "chiton"
+        model_results = Resources.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(
+                result, pks
+            )
+            self.assertIsNotNone(greatest_similarity_attribute)
+
+    def test_get_greatest_similarity_attribute_no_matches(self):
+        from TEKDB.models import Resources
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "gisegiuesgeapgesijeh"  # nonsense keyword to ensure no matches
+        model_results = Resources.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk not in pks:
+                pks[result.pk] = 1
+            else:
+                pks[result.pk] += 1
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(
+                result, pks
+            )
+            self.assertIsNone(greatest_similarity_attribute)
+
+    def test_get_greatest_similarity_attribute_multiple_matches(self):
+        from TEKDB.models import Places
+        from explore.views import get_greatest_similarity_attribute
+
+        keyword = "test"  # common keyword with multiple matches
+        model_results = Places.keyword_search(keyword)
+
+        pks = {}
+        for result in model_results:
+            if result.pk in pks:
+                pks[result.pk] += 1
+            else:
+                pks[result.pk] = 1
+
+        similarity_attribute_per_pk = {}
+        pks_before = pks.copy()
+        for result in model_results:
+            greatest_similarity_attribute = get_greatest_similarity_attribute(
+                result, pks
+            )
+            if result.pk not in similarity_attribute_per_pk:
+                similarity_attribute_per_pk[result.pk] = [greatest_similarity_attribute]
+            else:
+                similarity_attribute_per_pk[result.pk].append(
+                    greatest_similarity_attribute
+                )
+
+        for pk, attributes in similarity_attribute_per_pk.items():
+            # remove duplicates from attributes to ensure they are all different
+            unique_attributes = set(attributes)
+            self.assertEqual(len(unique_attributes), pks_before[pk])
+
 
 # LookupTribe
 
 ####################################################
 #   Record Tests
 ####################################################
+
+
+class RecordTest(ITKTestCase):
+    def test_get_related_objects(self):
+        from TEKDB.models import Record
+
+        related_objects = Record.get_related_objects(Record, 1)
+        self.assertEqual(len(related_objects), 0)
 
 
 # Places
@@ -203,6 +400,7 @@ class PlacesTest(ITKSearchTest):
                 )
             )
 
+    def test_search_foreign_key_field(self):
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
@@ -225,6 +423,7 @@ class PlacesTest(ITKSearchTest):
         self.assertEqual(tribe_fk_search.count(), 13)
         self.assertTrue(25 in [x.pk for x in tribe_fk_search])
 
+    def test_search_model_set_reference(self):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
@@ -243,6 +442,32 @@ class PlacesTest(ITKSearchTest):
         collision_result = test_model_id_collision(Places, insertion_object, self)
         self.assertTrue(collision_result)
 
+    def test_relationships(self):
+        """
+        Test that place relationships are correctly identified
+        """
+        place = Places.objects.get(pk=21)  # Place with all types of relationships
+        relationships = place.relationships()
+        self.assertEqual(len(relationships), 4)
+
+    def test_link(self):
+        """
+        Test that place link is correctly generated
+        """
+        place = Places.objects.get(pk=21)
+        link = place.link()
+        self.assertEqual(link, "/explore/places/21/")
+
+    def test_get_response_format_no_feature(self):
+        """
+        Test that get_response_format works when no feature is provided
+        """
+        place = Places.objects.get(pk=28)  # Place with no geometry
+        response = place.get_response_format()
+        self.assertIn("id", response)
+        self.assertIn("feature", response)
+        self.assertIsNone(response["feature"])
+
 
 # Resources
 class ResourcesTest(ITKSearchTest):
@@ -251,7 +476,7 @@ class ResourcesTest(ITKSearchTest):
         # print("Total resources: {}".format(Resources.objects.all().count()))
         self.assertTrue(True)
 
-    def test_resources_search(self):
+    def test_search_text_field(self):
         ##############################
         ### TEST TEXT FIELD SEARCH ###
         ##############################
@@ -293,6 +518,7 @@ class ResourcesTest(ITKSearchTest):
             # self.assertTrue(resource.pk in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id])
             self.assertTrue(resource.pk != chiton_id)
 
+    def test_search_foreign_key_field(self):
         #####################################
         ### TEST FOREIGN KEY FIELD SEARCH ###
         #####################################
@@ -304,6 +530,7 @@ class ResourcesTest(ITKSearchTest):
         self.assertEqual(anadromous_results.count(), 16)
         self.assertTrue(347 in [x.pk for x in anadromous_results])
 
+    def test_search_model_set_reference(self):
         #######################################
         ### TEST MODEL SET REFERENCE SEARCH ###
         #######################################
@@ -320,7 +547,13 @@ class ResourcesTest(ITKSearchTest):
         keyword = "flurpie"
         flurpie_results = Resources.keyword_search(keyword)
         self.assertEqual(flurpie_results.count(), 2)
-        self.assertEqual(flurpie_results[0].commonname, "Test")
+        self.assertEqual(flurpie_results[1].commonname, "Test")
+        self.assertTrue(hasattr(flurpie_results[1], "match_commonname"))
+        self.assertTrue(
+            hasattr(
+                flurpie_results[1], "match_resourcealtindigenousname__altindigenousname"
+            )
+        )
 
     def test_resource_id_collision(self):
         """
@@ -331,6 +564,31 @@ class ResourcesTest(ITKSearchTest):
         }
         collision_result = test_model_id_collision(Resources, insertion_object, self)
         self.assertTrue(collision_result)
+
+    def test_subtitle(self):
+        """
+        Test that resource subtitle is correctly generated
+        """
+        resource = Resources.objects.get(pk=151)  # abalone, Black
+        subtitle = resource.subtitle()
+        self.assertEqual(subtitle, "cracherdoii")
+
+    def test_relationships(self):
+        """
+        Test that resource relationships are correctly identified
+        """
+        ResourcesMediaEvents.objects.create(
+            **{
+                "resourceid": Resources.objects.get(pk=207),
+                "mediaid": Media.objects.get(pk=6),
+            }
+        )
+        resource = Resources.objects.get(
+            pk=207
+        )  # Resource with multiple types of relationships
+        relationships = resource.relationships()
+
+        self.assertEqual(len(relationships), 4)
 
 
 # ResourcesActivityEvents ('Activities')
@@ -370,6 +628,64 @@ class ResourcesActivityEventsTest(ITKSearchTest):
             ResourcesActivityEvents, insertion_object, self
         )
         self.assertTrue(collision_result)
+
+    def test_relationships(self):
+        """
+        Test that activity relationships are correctly returned
+        """
+        activity = ResourcesActivityEvents.objects.get(pk=31)
+        ResourceActivityMediaEvents.objects.create(
+            **{
+                "pk": 2,
+                "resourceactivityid": activity,
+                "mediaid": Media.objects.all()[0],
+            }
+        )
+        relationships = activity.relationships()
+
+        self.assertEqual(len(relationships), 3)
+
+    def test_data(self):
+        """
+        Test that activity data is correctly generated with all fields
+        """
+        activity = ResourcesActivityEvents.objects.create(
+            **{
+                "placeresourceid": PlacesResourceEvents.objects.all()[0],
+                "relationshipdescription": "This is a test activity.",
+                "partused": LookupPartUsed.objects.all()[0],
+                "activityshortdescription": LookupActivity.objects.all()[0],
+                "activitylongdescription": "This is a long description of the activity.",
+                "participants": LookupParticipants.objects.all()[0],
+                "technique": LookupTechniques.objects.all()[0],
+                "gear": "Test gear",
+                "customaryuse": "customary use",
+                "timing": LookupTiming.objects.all()[0],
+                "timingdescription": "This is a description of the timing.",
+            }
+        )
+        activity.save()
+        retrieved_activity = ResourcesActivityEvents.objects.get(pk=activity.pk)
+        data = retrieved_activity.data()
+
+        keys = [
+            "place",
+            "resource",
+            "excerpt",
+            "part used",
+            "activity type",
+            "full description",
+            "participants",
+            "technique",
+            "gear",
+            "customary use",
+            "timing",
+            "timing description",
+        ]
+
+        data_keys = [item["key"].lower() for item in data]
+        for key in keys:
+            self.assertIn(key, data_keys)
 
 
 # Citations (Bibliographic 'Sources')
@@ -442,6 +758,72 @@ class CitationsTest(ITKSearchTest):
         }
         collision_result = test_model_id_collision(Citations, insertion_object, self)
         self.assertTrue(collision_result)
+
+    def test_relationships(self):
+        """
+        Test that citation relationships are correctly identified
+        """
+        interviewee = People.objects.create(firstname="Test", lastname="Interviewee")
+        interviewer = People.objects.create(firstname="Test", lastname="Interviewer")
+        citation = Citations.objects.create(
+            referencetext="Test Citation for Relationships",
+            referencetype=LookupReferenceType.objects.get(
+                pk=3
+            ),  # interview documenttype
+            intervieweeid=interviewee,
+            interviewerid=interviewer,
+        )
+
+        # create one of each relationship type
+        PlacesCitationEvents.objects.create(
+            placeid=Places.objects.first(), citationid=citation
+        )
+        ResourcesCitationEvents.objects.create(
+            resourceid=Resources.objects.first(), citationid=citation
+        )
+        MediaCitationEvents.objects.create(
+            mediaid=Media.objects.first(), citationid=citation
+        )
+        ResourceActivityCitationEvents.objects.create(
+            resourceactivityid=ResourcesActivityEvents.objects.first(),
+            citationid=citation,
+        )
+        PlacesResourceCitationEvents.objects.create(
+            placeresourceid=PlacesResourceEvents.objects.first(), citationid=citation
+        )
+        relationships = citation.relationships()
+        self.assertEqual(len(relationships), 6)
+
+    def test_title_text_interview(self):
+        """
+        Test that citation title_text is correctly generated for interview type
+        """
+        citation = Citations.objects.get(pk=12)  # Citation with interview referencetype
+        title_text = citation.title_text
+        self.assertEqual(title_text, "Jay Tosanic: interviewed by Manahe Herman")
+
+    def test_title_text_non_interview(self):
+        """
+        Test that citation title_text is correctly generated
+        """
+        citation = Citations.objects.get(
+            pk=11
+        )  # Citation of non interview referencetype
+        title_text = citation.title_text
+        self.assertEqual(
+            title_text, "Traditional Marine Harvesting of Native Americans"
+        )
+
+    def test_description_text(self):
+        """
+        Test that citation description_text is correctly generated
+        """
+        citation = Citations.objects.get(
+            pk=11
+        )  # Citation of non interview referencetype
+        description_text = citation.description_text
+        expected_description = "Text on marine flora and fauna"
+        self.assertEqual(description_text, expected_description)
 
 
 # Media
@@ -769,6 +1151,26 @@ class PlacesMediaEventsTest(ITKTestCase):
         )
         self.assertTrue(collision_result)
 
+    def test_places_media_get_relationship_json(self):
+        """
+        Test that the response from get_relationship_json includes a file field with the media url
+        """
+        place = Places.objects.first()
+        media = Media.objects.create(
+            medianame="Test Media",
+            mediadescription="Test Media Description",
+            mediafile="test_media_file.jpg",
+        )
+        event = PlacesMediaEvents.objects.create(
+            placeid=place,
+            mediaid=media,
+            relationshipdescription="Test Relationship",
+        )
+        relationship_json = event.get_relationship_json(Places)
+
+        self.assertIn("file", relationship_json)
+        self.assertDictEqual(relationship_json["file"], media.media())
+
 
 class PlacesMediaEventsCascadeTest(ITKTestCase):
     def setUp(self):
@@ -866,6 +1268,93 @@ class PlacesResourceEventsTest(ITKTestCase):
         )
         self.assertTrue(collision_result)
 
+    def test_places_resource_get_query_json_has_map(self):
+        """
+        Test that the response from get_query_json includes map data when map is True
+        """
+        place = Places.objects.get(pk=19)
+        resource = Resources.objects.create(
+            commonname="Test Resource", indigenousname="Test Resource Indigenous"
+        )
+        event = PlacesResourceEvents.objects.create(
+            placeid=place,
+            resourceid=resource,
+            relationshipdescription="Test Relationship",
+        )
+        query_json = event.get_query_json()
+
+        self.assertIn("map", query_json)
+
+    def test_places_resource_get_query_json_no_map(self):
+        """
+        Test that the response from get_query_json includes no map data when map is False
+        """
+        place = Places.objects.create(
+            indigenousplacename="Test Place",
+            englishplacename="Test Place English",
+        )
+        resource = Resources.objects.create(
+            commonname="Test Resource", indigenousname="Test Resource Indigenous"
+        )
+        event = PlacesResourceEvents.objects.create(
+            placeid=place,
+            resourceid=resource,
+            relationshipdescription="Test Relationship",
+        )
+        query_json = event.get_query_json()
+
+        self.assertNotIn("map", query_json)
+
+    def test_keyword_search(self):
+        """
+        Test that keyword_search returns expected results
+        """
+        place = Places.objects.create(
+            indigenousplacename="Keyword Place",
+            englishplacename="Keyword Place English",
+        )
+        resource = Resources.objects.create(
+            commonname="Keyword Resource", indigenousname="Keyword Indigenous Resource"
+        )
+        timing = LookupTiming.objects.create(timing="Seasonal")
+        event = PlacesResourceEvents.objects.create(
+            placeid=place,
+            resourceid=resource,
+            timing=timing,
+        )
+        keyword = "keyword"
+        results = PlacesResourceEvents.keyword_search(keyword)
+        self.assertIn(event, results)
+
+    def test_relationships(self):
+        place = Places.objects.get(pk=19)
+        resource = Resources.objects.create(
+            commonname="Test Resource", indigenousname="Test Resource Indigenous"
+        )
+
+        citation = Citations.objects.create(
+            referencetype=LookupReferenceType.objects.get(pk=1),
+            referencetext="Test Citation",
+        )
+
+        event = PlacesResourceEvents.objects.create(
+            placeid=place,
+            resourceid=resource,
+            relationshipdescription="Test Relationship",
+        )
+        PlacesResourceCitationEvents.objects.create(
+            placeresourceid=event,
+            citationid=citation,
+            relationshipdescription="Test Place-Resource-Citation Relationship",
+        )
+        ResourcesActivityEvents.objects.create(
+            placeresourceid=event,
+            relationshipdescription="Test Activity",
+        )
+        relationships = event.relationships()
+
+        self.assertEqual(len(relationships), 4)
+
 
 class PlacesResourceEventsCascadeTest(ITKTestCase):
     # fixtures = ['/usr/local/apps/TEKDB/TEKDB/TEKDB/fixtures/all_dummy_data.json',]
@@ -945,6 +1434,72 @@ class PlacesCitationEventsTest(ITKTestCase):
             PlacesCitationEvents, insertion_object, self
         )
         self.assertTrue(collision_result)
+
+    def test_keyword_search(self):
+        """
+        Test that keyword_search returns expected results
+        """
+        place = Places.objects.create(
+            indigenousplacename="Keyword Place",
+            englishplacename="Keyword Place English",
+        )
+        citation = Citations.objects.create(
+            referencetext="Keyword Citation",
+            referencetype=LookupReferenceType.objects.create(documenttype="Book"),
+        )
+        event = PlacesCitationEvents.objects.create(
+            placeid=place,
+            citationid=citation,
+            relationshipdescription="Keyword Relationship",
+        )
+        keyword = "keyword"
+        results = PlacesCitationEvents.keyword_search(keyword)
+        self.assertIn(event, results)
+
+    def test_property_and_methods(self):
+        """
+        Test that description_text is correctly generated
+        """
+        place = Places.objects.create(
+            indigenousplacename="Description Place",
+            englishplacename="Description Place English",
+        )
+        citation = Citations.objects.create(
+            referencetext="Description Citation",
+            referencetype=LookupReferenceType.objects.create(documenttype="Book"),
+        )
+        relationship_description = "Description Relationship"
+        event = PlacesCitationEvents.objects.create(
+            placeid=place,
+            citationid=citation,
+            relationshipdescription=relationship_description,
+        )
+        description_text = event.description_text
+
+        self.assertEqual(description_text, relationship_description)
+        self.assertEqual(event.image(), settings.RECORD_ICONS["activity"])
+        self.assertEqual(event.subtitle(), event.relationshipdescription)
+        self.assertEqual(event.link(), f"/explore/placescitationevents/{event.pk}/")
+
+    def test_relationships(self):
+        place = Places.objects.create(
+            indigenousplacename="Relationship Place",
+            englishplacename="Relationship Place English",
+        )
+        citation = Citations.objects.create(
+            referencetext="Relationship Citation",
+            referencetype=LookupReferenceType.objects.create(documenttype="Book"),
+        )
+        event = PlacesCitationEvents.objects.create(
+            placeid=place,
+            citationid=citation,
+            relationshipdescription="Relationship Description",
+        )
+        relationships = event.relationships()
+
+        self.assertEqual(
+            len(relationships), 2
+        )  # should have place and citation relationships
 
 
 class PlacesCitationEventsCascadeTest(ITKTestCase):
@@ -1052,6 +1607,27 @@ class ResourcesMediaEventsTest(ITKTestCase):
             ResourcesMediaEvents, insertion_object, self
         )
         self.assertTrue(collision_result)
+
+    def test_resource_media_relationship_json(self):
+        """
+        Test that the response from get_relationship_json includes a file field with the media url
+        """
+        resource = Resources.objects.first()
+        media = Media.objects.create(
+            medianame="Test Media with File",
+            mediadescription="Test Media Description",
+            mediafile="test_media_file.png",
+        )
+        event = ResourcesMediaEvents.objects.create(
+            resourceid=resource,
+            mediaid=media,
+            relationshipdescription="Test Relationship with File",
+        )
+
+        relationship_json = event.get_relationship_json(Resources)
+
+        self.assertIn("file", relationship_json)
+        self.assertDictEqual(relationship_json["file"], media.media())
 
 
 # ResourceResourceEvents ('Resources - Resources')
@@ -1282,6 +1858,119 @@ class PeopleTest(ITKSearchTest):
         collision_result = test_model_id_collision(People, insertion_object, self)
         self.assertTrue(collision_result)
 
+    def test_image(self):
+        """
+        Test that the image is from the settings
+        """
+        person = People.objects.create(
+            firstname="Image",
+            lastname="Tester",
+        )
+        image_data = person.image()
+
+        self.assertEqual(settings.RECORD_ICONS["person"], image_data)
+
+    def test_link(self):
+        """
+        Test that the link is correctly generated
+        """
+        person = People.objects.create(
+            firstname="Link",
+            lastname="Tester",
+        )
+        link = person.link()
+
+        expected_link = f"/explore/people/{person.pk}"
+        self.assertEqual(expected_link, link)
+
+    def test_data(self):
+        """
+        Test that data method returns correct structure
+        """
+        person = People.objects.create(
+            firstname="John",
+            lastname="Doe",
+            yearborn=1980,
+            village="Sample Village",
+            relationshiptootherpeople="Sample Relationship",
+        )
+        data = person.data()
+
+        keys = [
+            "first name",
+            "last name",
+            "year born",
+            "village",
+            "relationship to others",
+        ]
+
+        for item in data:
+            key = item["key"]
+            val = item["value"]
+            self.assertIn(key, keys)
+            if key == "first name":
+                self.assertEqual(val, "John")
+            elif key == "last name":
+                self.assertEqual(val, "Doe")
+            elif key == "year born":
+                self.assertEqual(val, "1980")
+            elif key == "village":
+                self.assertEqual(val, "Sample Village")
+            elif key == "relationship to others":
+                self.assertEqual(val, "Sample Relationship")
+
+    def test_relationships(self):
+        """
+        Test that relationships method returns correct sources
+        """
+        person = People.objects.create(
+            firstname="John",
+            lastname="Doe",
+        )
+        Citations.objects.create(
+            referencetype=LookupReferenceType.objects.get(pk=1),
+            referencetext="Interview Citation",
+            intervieweeid=person,
+        )
+        Citations.objects.create(
+            referencetype=LookupReferenceType.objects.get(pk=1),
+            referencetext="Interviewer Citation",
+            interviewerid=person,
+        )
+
+        relationships = person.relationships()
+        self.assertEqual(len(relationships), 2)
+
+    def test_get_query_json(self):
+        """
+        Test that get_query_json method returns correct structure
+        """
+        person = People.objects.create(
+            firstname="John",
+            lastname="Doe",
+        )
+        query_json = person.get_query_json()
+
+        self.assertEqual(query_json["name"], "John Doe")
+        self.assertEqual(query_json["link"], f"/explore/people/{person.pk}")
+        self.assertEqual(query_json["image"], settings.RECORD_ICONS["person"])
+
+    def test_get_record_dict(self):
+        """
+        Test that get_record_dict method returns correct structure
+        """
+        person = People.objects.create(
+            firstname="John",
+            lastname="Doe",
+            village="Sample Village",
+        )
+        user = Users.objects.get(username="admin")
+        record_dict = person.get_record_dict(user=user)
+
+        self.assertEqual(record_dict["name"], "John Doe")
+        self.assertEqual(record_dict["subtitle"], "Sample Village")
+        self.assertFalse(record_dict["map"])
+
 
 # LookupPlanningUnit
 class LookupPlanningUnitTest(ITKTestCase):
@@ -1458,3 +2147,38 @@ class LookupUserInfoTest(ITKTestCase):
 ####################################################
 
 # Locality
+
+
+class LocalityTest(ITKTestCase):
+    def test_keyword_search(self):
+        """
+        Test that keyword_search returns expected results
+        """
+        place = Places.objects.create(
+            indigenousplacename="Keyword Place",
+            englishplacename="Keyword Place English",
+        )
+        locality = Locality.objects.create(
+            englishname="Keyword Locality",
+            placeid=place,
+        )
+        keyword = "keyword"
+        results = Locality.keyword_search(keyword)
+        self.assertIn(locality, results)
+
+    def test_methods_properties(self):
+        """
+        Test that methods and properties return expected results
+        """
+        place = Places.objects.create(
+            indigenousplacename="Place",
+            englishplacename="Place English",
+        )
+        locality = Locality.objects.create(
+            englishname="Locality",
+            indigenousname="Indigenous Locality",
+            placeid=place,
+        )
+        self.assertEqual(locality.image(), settings.RECORD_ICONS["place"])
+        self.assertEqual(locality.subtitle(), locality.indigenousname)
+        self.assertEqual(locality.link(), f"/explore/locality/{locality.pk}/")
