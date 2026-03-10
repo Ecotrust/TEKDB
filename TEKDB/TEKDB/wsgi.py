@@ -15,5 +15,5 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "TEKDB.settings")
 
 application = get_wsgi_application()
-print('test')
+print('test again')
 # application = DjangoWhiteNoise(application)
