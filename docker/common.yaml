@@ -29,7 +29,7 @@ services:
       - "8000:8000"
 
     healthcheck:
-      test: ["CMD-SHELL", "python manage.py check --deploy 2>/dev/null || python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/\")' 2>/dev/null || exit 0"]
+      test: ["CMD-SHELL", "python manage.py check --deploy 2>/dev/null || python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/\")' 2>/dev/null"]
       interval: 15s
       timeout: 10s
       retries: 5
