@@ -41,5 +41,3 @@ $PYTHON $PROJ_ROOT/TEKDB/manage.py collectstatic --no-input
 
 sudo service uwsgi restart
 sudo service nginx restart
-sudo service celery-worker restart
-sudo service celery-beat restart
