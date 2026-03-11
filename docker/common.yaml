@@ -41,19 +41,8 @@ services:
     command: celery -A TEKDB worker -l info
     volumes: 
       - ../TEKDB:/usr/src/app
-    env_file:
-      - .env.dev
     environment:
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-      DEBUG: ${DEBUG}
-      SQL_ENGINE: ${SQL_ENGINE}
-      SQL_HOST: ${SQL_HOST}
-      SQL_PORT: ${SQL_PORT}
-      SQL_DATABASE: ${SQL_DATABASE}
-      SQL_USER: ${SQL_USER}
-      SQL_PASSWORD: ${SQL_PASSWORD}
-      SECRET_KEY: ${SECRET_KEY}
-      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     depends_on:
       web:
         condition: service_healthy
@@ -67,19 +56,8 @@ services:
     command: celery -A TEKDB beat -l info
     volumes:
       - ../TEKDB:/usr/src/app
-    env_file:
-      - .env.dev
     environment:
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-      DEBUG: ${DEBUG}
-      SQL_ENGINE: ${SQL_ENGINE}
-      SQL_HOST: ${SQL_HOST}
-      SQL_PORT: ${SQL_PORT}
-      SQL_DATABASE: ${SQL_DATABASE}
-      SQL_USER: ${SQL_USER}
-      SQL_PASSWORD: ${SQL_PASSWORD}
-      SECRET_KEY: ${SECRET_KEY}
-      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     depends_on:
       web:
         condition: service_healthy
