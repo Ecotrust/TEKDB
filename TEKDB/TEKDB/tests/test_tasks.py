@@ -1,5 +1,6 @@
 import os
 import time
+from unittest.mock import patch
 from django.test import TestCase, override_settings
 
 from TEKDB.tasks import delete_expired_chunks
@@ -42,3 +43,31 @@ class DeleteExpiredChunksTest(TestCase):
             self.assertEqual(result["failed"], 0)
             self.assertFalse(os.path.exists(old_file))
             self.assertTrue(os.path.exists(new_file))
+
+    def test_failed_to_delete_expired_chunks(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp_path:
+            target = os.path.join(tmp_path, "chunks")
+            os.makedirs(target)
+
+            old_file = os.path.join(target, "old.bin")
+            with open(old_file, "wb") as f:
+                f.write(b"old")
+
+            now = time.time()
+            os.utime(old_file, (now - 48 * 3600, now - 48 * 3600))  # 48 hours old
+
+            with override_settings(
+                MEDIA_ROOT=tmp_path, ADMIN_RESUMABLE_CHUNK_FOLDER="chunks"
+            ):
+                with patch(
+                    "os.remove", side_effect=PermissionError("permission denied")
+                ):
+                    result = delete_expired_chunks.run(max_age_hours=24)
+
+            self.assertIsInstance(result, dict)
+            self.assertEqual(result["deleted"], 0)
+            self.assertEqual(result["skipped"], 0)
+            self.assertEqual(result["failed"], 1)
+            self.assertTrue(os.path.exists(old_file))
