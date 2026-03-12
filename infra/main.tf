@@ -92,3 +92,8 @@ variable "proxy_ecr_image_uri" {
   description = "ECR image URI for the proxy"
   type        = string
 }
+
+variable "celery_broker_url" {
+  description = "Broker URL for Celery"
+  type        = string
+}

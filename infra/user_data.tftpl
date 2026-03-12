@@ -48,10 +48,10 @@ git clone https://github.com/Ecotrust/TEKDB.git
 cd TEKDB/
 
 # TODO: remove once the branch is merged to main
-git checkout docker-nginx
+git checkout develop
 
 # pull the latest changes from the remote repository
-git pull origin docker-nginx
+git pull origin develop
 
 # copy environment variables into the docker directory
 echo "Creating .env.prod file..."
@@ -68,6 +68,7 @@ SQL_HOST=${sql_host}
 SQL_PORT=${sql_port}
 ITKDB_ECR_PATH=${web_ecr_image_uri}
 ITKDB_PROXY_ECR_PATH=${proxy_ecr_image_uri}
+CELERY_BROKER_URL=${celery_broker_url}
 EOF
 
 echo "Logging in to AWS ECR for web image..."
