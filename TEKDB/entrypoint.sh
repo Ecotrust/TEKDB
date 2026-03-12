@@ -25,6 +25,36 @@ echo "Checking for existing users..."
 if [ "$(python manage.py shell -c 'from django.contrib.auth import get_user_model; print(get_user_model().objects.count())')" = "0" ]; then
     python manage.py loaddata TEKDB/fixtures/default_users_fixture.json
 fi
+
+# Set up restricted gis user after migrations now that tables are created
+echo "Configuring gis database permissions..."
+PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_USER" -d "$SQL_DATABASE" <<EOF
+-- Create user if it doesn't already exist
+DO \$\$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'gis') THEN
+        CREATE USER gis WITH PASSWORD '${GIS_USER_PASSWORD}';
+        RAISE NOTICE 'Created gis user';
+    ELSE
+        RAISE NOTICE 'gis user already exists, skipping creation';
+    END IF;
+END;
+\$\$;
+
+-- Schema and table permissions
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+GRANT USAGE ON SCHEMA public TO gis;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
+    public.places, 
+    public.lookuphabitat, 
+    public.lookupplanningunit, 
+    public.lookuptribe
+TO gis;
+GRANT USAGE, UPDATE ON SEQUENCE public.places_placeid_seq TO gis;
+EOF
+echo "gis user permissions configured."
+
+
 # Load default lookups only if no lookups exist. Use LookupPlanningUnit as the check.
 echo "Checking for existing lookups..."
 if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())')" = "0" ]; then
