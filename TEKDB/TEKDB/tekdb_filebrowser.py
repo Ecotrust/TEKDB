@@ -184,8 +184,10 @@ class TekdbFileBrowserSite(FileBrowserSite):
 
         filelisting = self.filelisting_class(
             path,
-            filter_func=lambda fo: not fo.has_media_record()
-            and fo.filename not in self.files_folders_to_ignore(),
+            filter_func=lambda fo: (
+                not fo.has_media_record()
+                and fo.filename not in self.files_folders_to_ignore()
+            ),
             sorting_by=query.get("o", DEFAULT_SORTING_BY),
             sorting_order=query.get("ot", DEFAULT_SORTING_ORDER),
             site=self,
@@ -216,8 +218,10 @@ class TekdbFileBrowserSite(FileBrowserSite):
 
         filelisting = self.filelisting_class(
             path,
-            filter_func=lambda fo: not fo.has_media_record()
-            and fo.filename not in self.files_folders_to_ignore(),
+            filter_func=lambda fo: (
+                not fo.has_media_record()
+                and fo.filename not in self.files_folders_to_ignore()
+            ),
             sorting_by=query.get("o", DEFAULT_SORTING_BY),
             sorting_order=query.get("ot", DEFAULT_SORTING_ORDER),
             site=self,
