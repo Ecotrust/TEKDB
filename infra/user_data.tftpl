@@ -40,17 +40,24 @@ sudo usermod -aG docker ubuntu
 echo "Installing git..."
 sudo apt install git -y
 
+echo "Making tekdb directory..."
 mkdir tekdb
+    
+echo "Changing to tekdb directory..."
+cd tekdb
 
 # clone the TEKDB repo
+echo "Cloning TEKDB repository..."
 git clone https://github.com/Ecotrust/TEKDB.git
 
+echo "Changing to TEKDB repository..."
 cd TEKDB/
 
-# TODO: remove once the branch is merged to main
+echo "Checking out develop branch..."
 git checkout develop
 
 # pull the latest changes from the remote repository
+echo "Pulling latest changes from develop branch..."
 git pull origin develop
 
 # copy environment variables into the docker directory
