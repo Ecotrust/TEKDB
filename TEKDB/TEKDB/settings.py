@@ -374,6 +374,9 @@ CELERY_BEAT_SCHEDULE = {
 try:
     from TEKDB.local_settings import *  # noqa: F403
 except Exception:
+    import sys
+
     print(
-        "ERROR: Unable to load local_settings.py. This is expected for docker deployment"
+        "ERROR: Unable to load local_settings.py. This is expected for docker deployment",
+        file=sys.stderr,
     )
