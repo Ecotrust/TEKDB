@@ -39,10 +39,14 @@ services:
     extends:
       file: common.yaml
       service: celery
+    env_file:
+      - .env.prod
   celery-beat:
     extends:
       file: common.yaml
       service: celery-beat
+    env_file:
+      - .env.prod
 
 volumes:
   tekdb_db_data:

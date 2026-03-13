@@ -38,6 +38,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
+            --cache-from type=gha,scope=web \
+            --cache-to type=gha,mode=max,scope=web \
             -t $IMAGE_URI:$IMAGE_TAG \
             -t $IMAGE_URI:latest \
             -f ./TEKDB/Dockerfile ./TEKDB \
@@ -51,6 +53,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
+            --cache-from type=gha,scope=proxy \
+            --cache-to type=gha,mode=max,scope=proxy \
             -t $IMAGE_URI:$IMAGE_TAG \
             -t $IMAGE_URI:latest \
             -f ./proxy/Dockerfile ./proxy \
