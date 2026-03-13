@@ -79,10 +79,8 @@ jobs:
               "sudo docker pull ${{ secrets.WEB_ECR_IMAGE_URI }}:latest",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.PROXY_ECR_IMAGE_URI }}",
               "sudo docker pull ${{ secrets.PROXY_ECR_IMAGE_URI }}:latest",
-              "cd /tekdb",
-              "cd /TEKDB",
-              "sudo docker compose down",
-              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d",
+              "sudo docker compose -f /tekdb/TEKDB/docker/docker-compose.prod.yaml down",
+              "docker compose --env-file /tekdb/TEKDB/docker/.env.prod -f /tekdb/TEKDB/docker/docker-compose.prod.yaml up -d",
               "sleep 5",
               "docker ps --filter name=web --format \"{{.Status}}\""
             ]' \
