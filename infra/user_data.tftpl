@@ -62,7 +62,7 @@ git pull origin develop
 
 # copy environment variables into the docker directory
 echo "Creating .env.prod file..."
-cat > /TEKDB/docker/.env.prod <<EOF
+cat > docker/.env.prod <<EOF
 DEBUG=0
 SECRET_KEY=${django_secret_key}
 
@@ -89,6 +89,6 @@ sudo docker pull ${web_ecr_image_uri}:latest
 sudo docker pull ${proxy_ecr_image_uri}:latest
 
 echo "Starting Docker containers using docker compose ..."
-cd /TEKDB && docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
+docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
 
 echo "TEKDB setup complete!"
