@@ -75,6 +75,7 @@ jobs:
             --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
             --document-name "AWS-RunShellScript" \
             --parameters 'commands=[
+              "cd /tekdb/TEKDB && git pull origin develop",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.WEB_ECR_IMAGE_URI }}",
               "sudo docker pull ${{ secrets.WEB_ECR_IMAGE_URI }}:latest",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.PROXY_ECR_IMAGE_URI }}",
