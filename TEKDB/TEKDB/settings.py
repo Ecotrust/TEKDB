@@ -371,6 +371,44 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "celery": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "celery.task": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "delete_expired_chunks": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
 try:
     from TEKDB.local_settings import *  # noqa: F403
 except Exception:

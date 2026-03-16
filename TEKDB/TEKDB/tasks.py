@@ -5,7 +5,7 @@ from celery import shared_task
 
 from django.utils import timezone
 
-logger = logging.getLogger("delete_partial_upload")
+logger = logging.getLogger("delete_expired_chunks")
 
 
 def bytes_to_readable(num_bytes, suffix="B"):
