@@ -36,11 +36,8 @@ services:
       start_period: 30s
   
   celery: 
-    build: ../TEKDB/
     entrypoint: []
     command: celery -A TEKDB worker -l info
-    volumes: 
-      - ../TEKDB:/usr/src/app
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     depends_on:
@@ -51,11 +48,8 @@ services:
       redis:
         condition: service_started
   celery-beat:
-    build: ../TEKDB/
     entrypoint: []
     command: celery -A TEKDB beat -l info
-    volumes:
-      - ../TEKDB:/usr/src/app
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     depends_on:

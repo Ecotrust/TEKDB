@@ -32,10 +32,16 @@ services:
       file: common.yaml
       service: redis
   celery:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
     extends:
       file: common.yaml
       service: celery
   celery-beat:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
     extends:
       file: common.yaml
       service: celery-beat
