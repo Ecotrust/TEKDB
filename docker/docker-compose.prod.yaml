@@ -39,14 +39,20 @@ services:
     extends:
       file: common.yaml
       service: celery
+    image: ${ITKDB_ECR_PATH}:latest
     env_file:
       - .env.prod
+    volumes:
+      - media_volume:/usr/src/app/media
   celery-beat:
     extends:
       file: common.yaml
       service: celery-beat
+    image: ${ITKDB_ECR_PATH}:latest
     env_file:
       - .env.prod
+    volumes:
+      - media_volume:/usr/src/app/media
 
 volumes:
   tekdb_db_data:
