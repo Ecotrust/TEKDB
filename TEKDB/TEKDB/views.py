@@ -3,6 +3,7 @@ from dal import autocomplete
 from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.contenttypes.models import ContentType
 from django.core import management
 from django.db import connection
 from django.db.models import Q
@@ -222,6 +223,13 @@ def ImportDatabase(request):
                                     fixture_file_path = target_fixture.name
 
                         management.call_command("loaddata", fixture_file_path)
+                        # Clear Django's in-memory ContentType cache so subsequent
+                        # requests use the PKs from the newly imported data, not
+                        # the stale pre-import values.  Without this, the
+                        # ResumableAdminWidget renders the wrong content_type_id
+                        # (e.g. the old Media PK now maps to LookupTechniques),
+                        # causing FieldDoesNotExist on upload.
+                        ContentType.objects.clear_cache()
                     except Exception as e:
                         status_code = 500
                         status_message = "Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {}".format(
