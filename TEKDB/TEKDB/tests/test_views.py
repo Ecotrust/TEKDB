@@ -520,7 +520,9 @@ class ImportDatabaseTest(TransactionTestCase):
             )
             self.import_request.FILES["import_file"] = import_file
             self.import_request.user = Users.objects.get(username="admin")
-            ImportDatabase(self.import_request)
+            with patch("TEKDB.views.ContentType.objects.clear_cache") as clear_cache:
+                ImportDatabase(self.import_request)
+                clear_cache.assert_called_once_with()
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
         self.assertEqual(
             Resources.objects.filter(commonname=self.dummy_1_name).count(), 0
