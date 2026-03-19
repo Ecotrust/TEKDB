@@ -4,11 +4,11 @@ After=network.target postgresql.service redis-server.service
 
 [Service]
 Type=simple
-User=ubuntu
-Group=ubuntu
+User=vagrant
+Group=vagrant
 WorkingDirectory=/usr/local/apps/TEKDB/TEKDB
 Environment="DJANGO_SETTINGS_MODULE=TEKDB.settings"
-ExecStart=/usr/local/apps/TEKDB/env/bin/celery -A TEKDB worker \
+ExecStart=/usr/local/apps/env/bin/celery -A TEKDB worker \
     --loglevel=info \
     --logfile=/var/log/celery/tekdb-worker.log
 Restart=on-failure

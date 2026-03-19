@@ -7,7 +7,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 PROJECT_DIR=/usr/local/apps/TEKDB
-APP_USER=vagrant
+APP_USER=ubuntu
 
 # Install Redis
 apt-get install -y redis-server
