@@ -5,11 +5,11 @@ on:
     branches: [ "develop", "main" ]
     paths:
       - "TEKDB/**"
-      - ".github/workflows/run-tests.yaml"
+      - ".github/workflows/run-tests.yml"
   push:
     paths:
       - "TEKDB/**"
-      - ".github/workflows/run-tests.yaml"
+      - ".github/workflows/run-tests.yml"
   workflow_dispatch:
 
 jobs:
