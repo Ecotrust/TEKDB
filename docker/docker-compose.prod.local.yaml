@@ -12,6 +12,11 @@ services:
     env_file:
       - .env.dev
     ports: []
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
@@ -27,6 +32,24 @@ services:
     volumes:
       - static_volume:/vol/static/static:ro
       - media_volume:/vol/static/media:ro
+  redis:
+    extends:
+      file: common.yaml
+      service: redis
+  celery:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
+    extends:
+      file: common.yaml
+      service: celery
+  celery-beat:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
+    extends:
+      file: common.yaml
+      service: celery-beat
 
 volumes:
   tekdb_db_data:

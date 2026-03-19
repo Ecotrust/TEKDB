@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from glob import glob
 
 try:
@@ -55,6 +56,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.gis",
+    "django_celery_results",
+    "django_celery_beat",
     "colorfield",
     # 'registration',
     "leaflet",
@@ -259,7 +262,7 @@ TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
 
 # Add Version to the admin site header
-VERSION = "2.8.0"
+VERSION = "2.9.1"
 ADMIN_SITE_HEADER = os.environ.get(
     "ADMIN_SITE_HEADER", default="ITK DB Admin v{}".format(VERSION)
 )
@@ -352,9 +355,66 @@ ADMIN_RESUMABLE_SHOW_THUMB = True
 ADMIN_SIMULTANEOUS_UPLOADS = 1
 ADMIN_RESUMABLE_CHUNK_FOLDER = "resumable_chunks"
 
+# Celery Configuration Options
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "delete-expired-chunks-every-48-hours": {
+        "task": "TEKDB.tasks.delete_expired_chunks",
+        "schedule": timedelta(hours=48),
+        "kwargs": {"max_age_hours": 48},
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "celery": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "celery.task": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "delete_expired_chunks": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
 try:
     from TEKDB.local_settings import *  # noqa: F403
 except Exception:
+    import sys
+
     print(
-        "ERROR: Unable to load local_settings.py. This is expected for docker deployment"
+        "ERROR: Unable to load local_settings.py. This is expected for docker deployment",
+        file=sys.stderr,
     )

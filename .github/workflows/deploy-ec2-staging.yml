@@ -38,6 +38,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
+            --cache-from type=gha,scope=web \
+            --cache-to type=gha,mode=max,scope=web \
             -t $IMAGE_URI:$IMAGE_TAG \
             -t $IMAGE_URI:latest \
             -f ./TEKDB/Dockerfile ./TEKDB \
@@ -51,6 +53,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
+            --cache-from type=gha,scope=proxy \
+            --cache-to type=gha,mode=max,scope=proxy \
             -t $IMAGE_URI:$IMAGE_TAG \
             -t $IMAGE_URI:latest \
             -f ./proxy/Dockerfile ./proxy \
@@ -71,13 +75,13 @@ jobs:
             --instance-ids "${{ steps.get-instance.outputs.instance_id }}" \
             --document-name "AWS-RunShellScript" \
             --parameters 'commands=[
+              "cd /tekdb/TEKDB && git pull origin develop",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.WEB_ECR_IMAGE_URI }}",
               "sudo docker pull ${{ secrets.WEB_ECR_IMAGE_URI }}:latest",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.PROXY_ECR_IMAGE_URI }}",
               "sudo docker pull ${{ secrets.PROXY_ECR_IMAGE_URI }}:latest",
-              "cd /TEKDB",
-              "sudo docker compose down",
-              "docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d",
+              "sudo docker compose -f /tekdb/TEKDB/docker/docker-compose.prod.yaml down",
+              "docker compose --env-file /tekdb/TEKDB/docker/.env.prod -f /tekdb/TEKDB/docker/docker-compose.prod.yaml up -d",
               "sleep 5",
               "docker ps --filter name=web --format \"{{.Status}}\""
             ]' \

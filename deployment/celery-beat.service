@@ -1,0 +1,18 @@
+[Unit]
+Description=TEKDB Celery Beat Service
+After=network.target postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/usr/local/apps/TEKDB/TEKDB
+Environment="DJANGO_SETTINGS_MODULE=TEKDB.settings"
+ExecStart=/usr/local/apps/TEKDB/env/bin/celery -A TEKDB beat \
+    --loglevel=info \
+    --logfile=/var/log/celery/tekdb-beat.log \
+    --scheduler django_celery_beat.schedulers:DatabaseScheduler
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
