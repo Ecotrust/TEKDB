@@ -22,6 +22,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt requirements_linux.txt /usr/src/app/
 
 # Upgrade pip and install Python dependencies
+# Note: editable packages (-e) will be installed at runtime via entrypoint.sh
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt -r requirements_linux.txt
 
@@ -33,6 +34,14 @@ COPY . /usr/src/app
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Create a non-root user and give it ownership of the app directory
+# TODO: consider using a non-root user for better security. Addings just this 
+# resulted in a permissions error, "ERROR: Unable to load local_settings.py."
+# RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser \
+#     && chown -R appuser:appgroup /usr/src/app
+
+# USER appuser
+
 # Expose the port the app runs on (entrypoint starts django development server or uWSGI on 8000)
 EXPOSE 8000
 
@@ -41,5 +50,3 @@ ENV DJANGO_SETTINGS_MODULE=TEKDB.settings
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-# use development server by default 
-CMD ["dev"]

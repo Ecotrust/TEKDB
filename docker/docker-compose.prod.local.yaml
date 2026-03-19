@@ -8,10 +8,9 @@ services:
     extends:
       file: common.yaml
       service: web
-    image: ${ITKDB_ECR_PATH}:latest
-    command: ["prod"]
+    command: ["prod-local"]
     env_file:
-      - .env.prod
+      - .env.dev
     ports: []
     depends_on:
       db:
@@ -22,12 +21,14 @@ services:
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
   proxy:
-    image: ${ITKDB_PROXY_ECR_PATH}:latest
+    build:
+      context: ../proxy/
+      dockerfile: ../proxy/Dockerfile
     restart: unless-stopped
     depends_on:
       - web
     ports:
-      - "80:8080"
+      - "8080:8080"
     volumes:
       - static_volume:/vol/static/static:ro
       - media_volume:/vol/static/media:ro
@@ -36,23 +37,19 @@ services:
       file: common.yaml
       service: redis
   celery:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
     extends:
       file: common.yaml
       service: celery
-    image: ${ITKDB_ECR_PATH}:latest
-    env_file:
-      - .env.prod
-    volumes:
-      - media_volume:/usr/src/app/media
   celery-beat:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
     extends:
       file: common.yaml
       service: celery-beat
-    image: ${ITKDB_ECR_PATH}:latest
-    env_file:
-      - .env.prod
-    volumes:
-      - media_volume:/usr/src/app/media
 
 volumes:
   tekdb_db_data:

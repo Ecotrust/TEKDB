@@ -1,0 +1,94 @@
+#!/bin/bash
+sudo apt-get update && sudo apt-get upgrade -y
+
+# install aws cli to pull images from ECR
+sudo snap install aws-cli --classic 
+
+# https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+sudo apt update -y
+sudo apt install ca-certificates curl -y
+sudo install -m 0755 -d /etc/apt/keyrings
+
+echo "Installing Docker's official GPG key..."
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo "Adding Docker's official repository..."
+# Source OS release file and store the codename in a variable to avoid
+# shell expansion issues inside the heredoc
+. /etc/os-release
+DOCKER_SUITE=$${UBUNTU_CODENAME:-$VERSION_CODENAME}
+
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $DOCKER_SUITE
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+sudo apt update
+
+echo "Installing Docker packages..."
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+echo "Adding user 'ubuntu' to the 'docker' group..."
+sudo usermod -aG docker ubuntu
+
+# install git to pull TEKDB repo
+echo "Installing git..."
+sudo apt install git -y
+
+echo "Making tekdb directory..."
+mkdir tekdb
+    
+echo "Changing to tekdb directory..."
+cd tekdb
+
+# clone the TEKDB repo
+echo "Cloning TEKDB repository..."
+git clone https://github.com/Ecotrust/TEKDB.git
+
+echo "Changing to TEKDB repository..."
+cd TEKDB/
+
+echo "Checking out develop branch..."
+git checkout develop
+
+# pull the latest changes from the remote repository
+echo "Pulling latest changes from develop branch..."
+git pull origin develop
+
+# copy environment variables into the docker directory
+echo "Creating .env.prod file..."
+cat > docker/.env.prod <<EOF
+DEBUG=0
+SECRET_KEY=${django_secret_key}
+
+ALLOWED_HOSTS=${django_allowed_hosts}
+SQL_ENGINE=django.contrib.gis.db.backends.postgis
+SQL_DATABASE=${sql_db_name}
+SQL_USER=${sql_db_user}
+SQL_PASSWORD=${sql_db_password}
+SQL_HOST=${sql_host}
+SQL_PORT=${sql_port}
+ITKDB_ECR_PATH=${web_ecr_image_uri}
+ITKDB_PROXY_ECR_PATH=${proxy_ecr_image_uri}
+CELERY_BROKER_URL=${celery_broker_url}
+EOF
+
+echo "Logging in to AWS ECR for web image..."
+aws ecr get-login-password --region ${aws_region} | sudo docker login --username AWS --password-stdin ${web_ecr_image_uri}
+
+echo "Logging in to AWS ECR for proxy image..."
+aws ecr get-login-password --region ${aws_region} | sudo docker login --username AWS --password-stdin ${proxy_ecr_image_uri}
+
+echo "Pulling latest Docker images..."
+sudo docker pull ${web_ecr_image_uri}:latest
+sudo docker pull ${proxy_ecr_image_uri}:latest
+
+echo "Starting Docker containers using docker compose ..."
+docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
+
+echo "TEKDB setup complete!"

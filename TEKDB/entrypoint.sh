@@ -22,18 +22,23 @@ echo "Applying database migrations..."
 python manage.py migrate --noinput
 # Load default users only if no users exist
 echo "Checking for existing users..."
-if [ "$(python manage.py shell -c 'from django.contrib.auth import get_user_model; print(get_user_model().objects.count())')" = "0" ]; then
+if [ "$(python manage.py shell -c 'from django.contrib.auth import get_user_model; print(get_user_model().objects.count())' 2>/dev/null | tail -1)" = "0" ]; then
+	echo "No users found, loading default users fixture..."
     python manage.py loaddata TEKDB/fixtures/default_users_fixture.json
 fi
 # Load default lookups only if no lookups exist. Use LookupPlanningUnit as the check.
 echo "Checking for existing lookups..."
-if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())')" = "0" ]; then
+if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())' 2>/dev/null | tail -1)" = "0" ]; then
+    echo "No lookups found, loading default lookups fixture..."
 	python manage.py loaddata TEKDB/fixtures/default_lookups_fixture.json
 fi
 
 if [ "$1" = "prod" ]; then
-    echo "Starting uWSGI (HTTP) on :8000"
-    uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+    echo "Starting uWSGI (socket) on :8000"
+    uwsgi --socket :8000 --master --enable-threads --module TEKDB.wsgi
+elif [ "$1" = "prod-local" ]; then
+	echo "Starting uWSGI (http) on :8000 with local settings"
+	uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
 elif [ "$1" = "dev" ]; then
     echo "Starting python development server on :8000"
     python manage.py runserver 0.0.0.0:8000
