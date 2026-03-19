@@ -19,8 +19,8 @@ mkdir -p /var/log/celery /var/run/celery
 chown $APP_USER:$APP_USER /var/log/celery /var/run/celery
 
 # Copy service files into systemd
-cp $PROJECT_DIR/deployment/celery-worker.prod.service /etc/systemd/system/
-cp $PROJECT_DIR/deployment/celery-beat.prod.service /etc/systemd/system/
+cp $PROJECT_DIR/deployment/celery-worker.service /etc/systemd/system/
+cp $PROJECT_DIR/deployment/celery-beat.service /etc/systemd/system/
 
 # Enable and start services
 systemctl daemon-reload

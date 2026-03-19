@@ -19,14 +19,14 @@ mkdir -p /var/log/celery /var/run/celery
 chown $APP_USER:$APP_USER /var/log/celery /var/run/celery
 
 # Copy service files into systemd
-cp $PROJECT_DIR/deployment/celery-worker.local.service /etc/systemd/system/
-cp $PROJECT_DIR/deployment/celery-beat.local.service /etc/systemd/system/
+cp $PROJECT_DIR/deployment/celery-worker-local.service /etc/systemd/system/
+cp $PROJECT_DIR/deployment/celery-beat-local.service /etc/systemd/system/
 
 # Enable and start services
 systemctl daemon-reload
-systemctl enable celery-worker
-systemctl enable celery-beat
-systemctl start celery-worker
-systemctl start celery-beat
+systemctl enable celery-worker-local
+systemctl enable celery-beat-local
+systemctl start celery-worker-local
+systemctl start celery-beat-local
 
-echo "Done. Check status with: systemctl status celery-worker celery-beat"
+echo "Done. Check status with: systemctl status celery-worker-local celery-beat-local"
