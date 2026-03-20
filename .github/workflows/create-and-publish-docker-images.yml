@@ -1,5 +1,5 @@
 # source: https://docs.github.com/en/actions/tutorials/publish-packages/publish-docker-images#publishing-images-to-docker-hub-and-github-packages
-name: Create and publish a Docker image
+name: Create and publish web and proxy Docker images
 
 # manually trigger while testing 
 on:
@@ -45,6 +45,9 @@ jobs:
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see [Usage](https://github.com/docker/build-push-action#usage) in the README of the `docker/build-push-action` repository.
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
       
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push web Docker image
         id: push
         uses: docker/build-push-action@v6
@@ -54,6 +57,9 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=ghcr-web
+          cache-to: type=gha,mode=max,scope=ghcr-web
+
       - name: Build and push proxy Docker image
         id: push-proxy
         uses: docker/build-push-action@v6
@@ -63,6 +69,8 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/proxy:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/proxy:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=ghcr-proxy
+          cache-to: type=gha,mode=max,scope=ghcr-proxy
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
       - name: Generate artifact attestation for web image

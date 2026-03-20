@@ -4,11 +4,11 @@ After=network.target postgresql.service redis-server.service
 
 [Service]
 Type=simple
-User=ubuntu
-Group=ubuntu
+User=vagrant
+Group=vagrant
 WorkingDirectory=/usr/local/apps/TEKDB/TEKDB
 Environment="DJANGO_SETTINGS_MODULE=TEKDB.settings"
-ExecStart=/usr/local/apps/TEKDB/env/bin/celery -A TEKDB beat \
+ExecStart=/usr/local/apps/env/bin/celery -A TEKDB beat \
     --loglevel=info \
     --logfile=/var/log/celery/tekdb-beat.log \
     --scheduler django_celery_beat.schedulers:DatabaseScheduler
