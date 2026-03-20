@@ -7,58 +7,89 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-push-and-deploy:
-    name: Build, Push to ECR, Deploy to EC2 Staging
+  build-web:
+    name: Build & Push Web Image
     runs-on: ubuntu-latest
-    permissions: 
-        id-token: write
-
+    permissions:
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION}}
-      
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Login to Amazon ECR
-        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build, tag, and push web Docker image to ECR
-        id: build-web-image
         env:
           IMAGE_TAG: ${{ github.sha }}
           IMAGE_URI: ${{ secrets.WEB_ECR_IMAGE_URI }}
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --cache-from type=gha,scope=web \
             --cache-to type=gha,mode=max,scope=web \
             -t $IMAGE_URI:$IMAGE_TAG \
             -t $IMAGE_URI:latest \
             -f ./TEKDB/Dockerfile ./TEKDB \
             --push
-      
+
+  build-proxy:
+    name: Build & Push Proxy Image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build, tag, and push proxy Docker image to ECR
-        id: build-proxy-image
         env:
           IMAGE_TAG: ${{ github.sha }}
           IMAGE_URI: ${{ secrets.PROXY_ECR_IMAGE_URI }}
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --cache-from type=gha,scope=proxy \
             --cache-to type=gha,mode=max,scope=proxy \
             -t $IMAGE_URI:$IMAGE_TAG \
             -t $IMAGE_URI:latest \
             -f ./proxy/Dockerfile ./proxy \
             --push
+
+  deploy:
+    name: Deploy to EC2 Staging
+    runs-on: ubuntu-latest
+    needs: [build-web, build-proxy]
+    permissions:
+      id-token: write
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: get EC2 Instance ID
         id: get-instance
         run: |
@@ -68,6 +99,7 @@ jobs:
             --query "Reservations[0].Instances[0].InstanceId" \
             --output text)
           echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
+
       - name: Deploy via SSM
         id: ssm-deploy
         run: |
