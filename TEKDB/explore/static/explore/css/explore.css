@@ -117,14 +117,30 @@ button.btn:hover .arrow-right::after {
 
 #filter-checkboxes {
   flex-direction: row;
-  padding-left: 40%;
   text-transform: uppercase;
   text-align: left;
+  .filter-checkboxes-wrapper {
+    justify-content: center;
+  }
 }
 
 @media (min-width: 64em) {
   #filter-checkboxes {
-    padding-left: 0%;
+    .filter-checkboxes-wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: 2em;
+    }
+  }
+}
+
+@media (max-width: 64em) {
+  #filter-checkboxes {
+   > .filter-checkboxes-wrapper {
+    width: max-content;
+    text-align: left;
+    margin: 0 auto;
+   }
   }
 }
 
