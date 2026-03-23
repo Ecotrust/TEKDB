@@ -101,7 +101,7 @@
                       type="checkbox"
                       onclick="setCategoryType('sources')"
                       id="check-sources"
-                    /><label for="check-sources"></label> Source
+                    /><label for="check-sources"></label> Sources
                   </div>
                   <div role="category-group">
                     <input
@@ -131,24 +131,20 @@
 <script>
   function setCategoryType(category) {
     const catSelection = document.getElementById("search-category-type");
+    const currentCategories = catSelection.value ? catSelection.value.split(",") : [];
+
     if (event.target.checked) {
-      if (!catSelection.value.includes(category)) {
-        if (catSelection.value.length > 0) {
-          catSelection.value += "," + category;
-        } else {
-          catSelection.value += category;
-        }
+      if (!currentCategories.includes(category)) {
+        currentCategories.push(category);
       }
     } else {
-      if (catSelection.value.includes(category)) {
-        if (catSelection.value.includes(",")) {
-          var newVal = catSelection.value.replace("," + category, "");
-        } else {
-          var newVal = catSelection.value.replace(category, "");
-        }
-        catSelection.value = newVal;
+      const idx = currentCategories.indexOf(category);
+      if (idx > -1) {
+        currentCategories.splice(idx, 1);
       }
     }
+
+    catSelection.value = currentCategories.join(",");
   }
 </script>
 
