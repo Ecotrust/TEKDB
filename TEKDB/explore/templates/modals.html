@@ -1,31 +1,48 @@
-
 <!-- LOGIN MODAL -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+<div
+  class="modal fade"
+  id="loginModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="loginModalLabel"
+>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="loginModalLabel">Please Log In</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
-      <div class="modal-body">
-        {% include 'registration/login.html' %}
-      </div>
+      <div class="modal-body">{% include 'registration/login.html' %}</div>
     </div>
   </div>
 </div>
 
 {% comment %}
 <!-- Results Map -->
-<div class="modal fade" id="resultsMapModal" tabindex="-1" role="dialog" aria-labelledby="resultsMapModalLabel">
+<div
+  class="modal fade"
+  id="resultsMapModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="resultsMapModalLabel"
+>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="resultsMapModalLabel">Results Map</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
-      <div class="modal-body">
-        {% include 'results_map.html' %}
-      </div>
+      <div class="modal-body">{% include 'results_map.html' %}</div>
     </div>
   </div>
 </div>
