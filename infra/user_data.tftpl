@@ -40,22 +40,29 @@ sudo usermod -aG docker ubuntu
 echo "Installing git..."
 sudo apt install git -y
 
+echo "Making tekdb directory..."
 mkdir tekdb
+    
+echo "Changing to tekdb directory..."
+cd tekdb
 
 # clone the TEKDB repo
+echo "Cloning TEKDB repository..."
 git clone https://github.com/Ecotrust/TEKDB.git
 
+echo "Changing to TEKDB repository..."
 cd TEKDB/
 
-# TODO: remove once the branch is merged to main
-git checkout docker-nginx
+echo "Checking out develop branch..."
+git checkout develop
 
 # pull the latest changes from the remote repository
-git pull origin docker-nginx
+echo "Pulling latest changes from develop branch..."
+git pull origin develop
 
 # copy environment variables into the docker directory
 echo "Creating .env.prod file..."
-cat > /TEKDB/docker/.env.prod <<EOF
+cat > docker/.env.prod <<EOF
 DEBUG=0
 SECRET_KEY=${django_secret_key}
 
@@ -68,6 +75,7 @@ SQL_HOST=${sql_host}
 SQL_PORT=${sql_port}
 ITKDB_ECR_PATH=${web_ecr_image_uri}
 ITKDB_PROXY_ECR_PATH=${proxy_ecr_image_uri}
+CELERY_BROKER_URL=${celery_broker_url}
 EOF
 
 echo "Logging in to AWS ECR for web image..."
@@ -81,6 +89,6 @@ sudo docker pull ${web_ecr_image_uri}:latest
 sudo docker pull ${proxy_ecr_image_uri}:latest
 
 echo "Starting Docker containers using docker compose ..."
-cd /TEKDB && docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
+docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
 
 echo "TEKDB setup complete!"

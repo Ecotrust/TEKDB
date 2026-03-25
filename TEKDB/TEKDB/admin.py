@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from dal import autocomplete
 from mimetypes import guess_type
 from django.templatetags.static import static
+from django_celery_results.admin import GroupResult
 
 # from moderation.admin import ModerationAdmin
 import nested_admin
@@ -1770,3 +1771,7 @@ admin.site.register(UserAccess)
 admin.site.register(LookupAuthorType)
 admin.site.register(LookupUserInfo)
 # admin.site.register(CurrentVersion)
+
+admin.site.unregister(GroupResult)
+# admin.site.unregister(CrontabScheduleAdmin)
+# admin.site.unregister(ClockedScheduleAdmin)
