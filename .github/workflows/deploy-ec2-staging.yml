@@ -120,7 +120,7 @@ jobs:
               "docker ps --filter name=web --format \"{{.Status}}\"",
               "docker system prune -f"
             ]' \
-            --timeout-seconds 120 \
+            --timeout-seconds 300 \
             --comment "Deploy ${{ github.sha }}" \
             --query "Command.CommandId" \
             --output text)
