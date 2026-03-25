@@ -1,0 +1,8 @@
+# packages to install when developing locally
+# these are not required for production, but are useful for development and testing
+pre-commit
+ruff==0.15.7
+
+# OPTIONAL, BUT LOVELY FOR DEBUGGING
+ipdb
+ipython
