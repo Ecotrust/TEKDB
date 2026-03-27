@@ -22,6 +22,13 @@ resource "aws_security_group" "itkdb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [var.allowed_ssh_cidr]
+  }
+
   # HTTPS (for when you add SSL via certbot/nginx later)
   ingress {
     from_port   = 443
