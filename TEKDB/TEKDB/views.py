@@ -1,4 +1,5 @@
 import contextlib
+import logging
 from dal import autocomplete
 from datetime import datetime
 from django.conf import settings
@@ -11,6 +12,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 import io
 import os
 import shutil
+import psutil
 from TEKDB.models import (
     Citations,
     Media,
@@ -22,6 +24,9 @@ from TEKDB.models import (
 import tempfile
 import zipfile
 from configuration.models import Configuration
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_related(request, model_name, id):
@@ -62,16 +67,88 @@ def get_all_file_paths(directory, cwd=False):
     return file_paths
 
 
+def _format_bytes(num_bytes):
+    units = ["B", "KB", "MB", "GB", "TB"]
+    value = float(num_bytes)
+    for unit in units:
+        if value < 1024 or unit == units[-1]:
+            return f"{value:.2f} {unit}"
+        value /= 1024
+
+
+def _get_directory_size(path):
+    total = 0
+    for root, _dirs, files in os.walk(path):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            try:
+                total += os.path.getsize(filepath)
+            except OSError:
+                continue
+    return total
+
+
+def _log_storage_snapshot(stage, monitored_paths):
+    disk_info = {}
+    for label, path in monitored_paths.items():
+        try:
+            usage = shutil.disk_usage(path)
+            disk_info[label] = {
+                "path": path,
+                "free": _format_bytes(usage.free),
+                "used": _format_bytes(usage.used),
+                "total": _format_bytes(usage.total),
+            }
+        except OSError:
+            disk_info[label] = {"path": path, "error": "unavailable"}
+    print(f"Storage snapshot [{stage}]: {disk_info}")
+
+
+# inner psutil function
+def process_memory():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    return mem_info.rss
+
+
+# decorator function
+def profile(func):
+    def wrapper(*args, **kwargs):
+
+        mem_before = process_memory()
+        result = func(*args, **kwargs)
+        mem_after = process_memory()
+        print(
+            f"{func.__name__}: consumed memory: {mem_before:,} -> {mem_after:,} (delta: {mem_after - mem_before:,})"
+        )
+
+        return result
+
+    return wrapper
+
+
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
+@profile
 def ExportDatabase(request, test=False):
     datestamp = datetime.now().strftime("%Y%m%d")
     tmp_zip = tempfile.NamedTemporaryFile(
         delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
     )
+    _log_storage_snapshot(
+        "export:start",
+        {
+            "temp": tempfile.gettempdir(),
+            "media": settings.MEDIA_ROOT,
+        },
+    )
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
+    media_size_bytes = _get_directory_size(settings.MEDIA_ROOT)
+    print(
+        f"Export source media footprint: files={len(media_paths)}, size={_format_bytes(media_size_bytes)}"
+    )
     response = HttpResponse()
     try:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -86,6 +163,8 @@ def ExportDatabase(request, test=False):
                     indent=2,
                     stdout=of,
                 )
+            dump_size_bytes = os.path.getsize(dumpfile_location)
+            print(f"Export dumpdata size: {_format_bytes(dump_size_bytes)}")
             # zip up:
             #   * Data Dump file
             #   * Media files
@@ -93,6 +172,16 @@ def ExportDatabase(request, test=False):
                 zip.write(dumpfile_location, dumpfile)
                 for media_file in media_paths:
                     zip.write(media_file)
+
+        archive_size_bytes = os.path.getsize(tmp_zip.name)
+        print(f"Export archive size: {_format_bytes(archive_size_bytes)}")
+        _log_storage_snapshot(
+            "export:archive-created",
+            {
+                "temp": tempfile.gettempdir(),
+                "media": settings.MEDIA_ROOT,
+            },
+        )
 
         response = FileResponse(open(tmp_zip.name, "rb"))
 
@@ -118,6 +207,7 @@ def getDBTruncateCommand():
 
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
+@profile
 def ImportDatabase(request):
     status_code = 500
     status_message = "An unknown error occurred."
@@ -138,6 +228,13 @@ def ImportDatabase(request):
             media_dir = settings.MEDIA_ROOT
         # Unzip file
         if "import_file" in request.FILES.keys():
+            _log_storage_snapshot(
+                "import:start",
+                {
+                    "temp": tempfile.gettempdir(),
+                    "media": media_dir,
+                },
+            )
             with tempfile.TemporaryDirectory() as tempdir:
                 try:
                     tmp_zip_file = tempfile.NamedTemporaryFile(
@@ -146,6 +243,9 @@ def ImportDatabase(request):
                     for chunk in request.FILES["import_file"].chunks():
                         tmp_zip_file.write(chunk)
                     tmp_zip_file.seek(0)
+                    print(
+                        f"Import uploaded archive size: {_format_bytes(tmp_zip_file.tell())}"
+                    )
 
                 except Exception as e:
                     status_code = 500
@@ -175,6 +275,17 @@ def ImportDatabase(request):
                     fixture_name = non_media[0]
                     try:
                         zip.extractall(tempdir)
+                        extracted_size_bytes = _get_directory_size(tempdir)
+                        print(
+                            f"Import extracted payload size: {_format_bytes(extracted_size_bytes)}"
+                        )
+                        _log_storage_snapshot(
+                            "import:after-extract",
+                            {
+                                "temp": tempfile.gettempdir(),
+                                "media": media_dir,
+                            },
+                        )
                     except Exception as e:
                         status_code = 500
                         status_message = 'Unable to unzip the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(
@@ -249,6 +360,17 @@ def ImportDatabase(request):
                             os.path.join(tempdir, "media"),
                             media_dir,
                             dirs_exist_ok=True,
+                        )
+                        media_size_after_import = _get_directory_size(media_dir)
+                        print(
+                            f"Import media footprint after restore: {_format_bytes(media_size_after_import)}"
+                        )
+                        _log_storage_snapshot(
+                            "import:complete",
+                            {
+                                "temp": tempfile.gettempdir(),
+                                "media": media_dir,
+                            },
                         )
                     except Exception as e:
                         status_code = 500
