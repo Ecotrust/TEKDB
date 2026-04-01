@@ -43,14 +43,14 @@ END;
 \$\$;
 
 -- Schema and table permissions
-GRANT USAGE ON SCHEMA public TO gis;
+GRANT USAGE ON SCHEMA tekdb TO gis;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
-    public.places, 
-    public.lookuphabitat, 
-    public.lookupplanningunit, 
-    public.lookuptribe
+    tekdb.places, 
+    tekdb.lookuphabitat, 
+    tekdb.lookupplanningunit, 
+    tekdb.lookuptribe
 TO gis;
-GRANT USAGE, UPDATE ON SEQUENCE public.places_placeid_seq TO gis;
+GRANT USAGE, UPDATE ON SEQUENCE tekdb.places_placeid_seq TO gis;
 EOF
 echo "gis user permissions configured."
 
