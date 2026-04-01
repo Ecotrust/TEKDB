@@ -43,14 +43,6 @@ END;
 \$\$;
 
 -- Schema and table permissions
-GRANT USAGE ON SCHEMA tekdb TO gis;
-# GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
-#     tekdb.places, 
-#     tekdb.lookuphabitat, 
-#     tekdb.lookupplanningunit, 
-#     tekdb.lookuptribe
-# TO gis;
-# GRANT USAGE, UPDATE ON SEQUENCE tekdb.places_placeid_seq TO gis;
 EOF
 echo "gis user permissions configured."
 
