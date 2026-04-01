@@ -131,6 +131,7 @@ DATABASES = {
         "PASSWORD": os.environ.get("SQL_PASSWORD", None),
         "HOST": os.environ.get("SQL_HOST", "db"),
         "PORT": os.environ.get("SQL_PORT", 5432),
+        "OPTIONS": {"options": "-c search_path=tekdb,public"},
     }
 }
 
