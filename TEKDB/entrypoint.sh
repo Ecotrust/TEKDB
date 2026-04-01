@@ -29,7 +29,7 @@ fi
 
 # Set up restricted gis user after migrations now that tables are created
 echo "Configuring gis database permissions..."
-PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_USER" -d "$SQL_DATABASE" <<EOF
+PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_USER" -d "$SQL_DATABASE" -v ON_ERROR_STOP=1 <<EOF
 -- Create user if it doesn't already exist
 DO \$\$
 BEGIN
@@ -43,7 +43,6 @@ END;
 \$\$;
 
 -- Schema and table permissions
-REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO gis;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
     public.places, 

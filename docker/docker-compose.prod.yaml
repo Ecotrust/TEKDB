@@ -11,7 +11,9 @@ services:
     image: ${ITKDB_ECR_PATH}:latest
     command: ["prod"]
     env_file:
-      - .env.prod
+      - path: .env.prod
+        required: true
+
     ports: []
     depends_on:
       db:
@@ -41,7 +43,8 @@ services:
       service: celery
     image: ${ITKDB_ECR_PATH}:latest
     env_file:
-      - .env.prod
+      - path: .env.prod
+        required: true
     volumes:
       - media_volume:/usr/src/app/media
   celery-beat:
@@ -50,7 +53,8 @@ services:
       service: celery-beat
     image: ${ITKDB_ECR_PATH}:latest
     env_file:
-      - .env.prod
+      - path: .env.prod
+        required: true
     volumes:
       - media_volume:/usr/src/app/media
 

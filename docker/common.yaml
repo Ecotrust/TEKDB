@@ -25,7 +25,8 @@ services:
       dockerfile: ../TEKDB/Dockerfile
     restart: unless-stopped
     env_file:
-      - .env.dev
+      - path: .env.dev
+        required: true
     ports:
       - "8000:8000"
 
