@@ -135,44 +135,30 @@ def profile(func):
 
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
-@profile
 def ExportDatabase(request, test=False):
     datestamp = datetime.now().strftime("%Y%m%d")
-    # tmp_zip = tempfile.NamedTemporaryFile(
-    #     delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
-    # )
-    _log_storage_snapshot(
-        "export:start",
-        {
-            "temp": tempfile.gettempdir(),
-            "media": settings.MEDIA_ROOT,
-        },
-    )
+
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
     media_size = _get_directory_size(relative_media_directory)
-    print(
-        f"Export source media footprint: files={len(media_paths)}, size={_format_bytes(media_size)}"
-    )
 
     tmp_path = tempfile.gettempdir()
     has_space, free_bytes = check_disk_space(media_size, tmp_path)
     if not has_space:
-        return JsonResponse(
+        response = JsonResponse(
             {
                 "status_code": 507,
                 "status_message": (
-                    "Not enough disk space to export the database. "
-                    "The media directory is {} but only {} is available. "
+                    f"Not enough disk space to export the database. "
+                    f"The media directory is {_format_bytes(media_size)} but only {_format_bytes(free_bytes)} is available. "
                     "Please free up disk space or contact your IT team."
-                ).format(
-                    _format_bytes(media_size),
-                    _format_bytes(free_bytes),
                 ),
             },
             status=507,
         )
+        response.set_cookie("export_status", "error", path="/")
+        return response
 
     tmp_zip = tempfile.NamedTemporaryFile(
         delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
@@ -180,31 +166,6 @@ def ExportDatabase(request, test=False):
 
     response = HttpResponse()
     try:
-        # with tempfile.TemporaryDirectory() as tmp_dir:
-        #     # create filename
-        #     dumpfile = "{}_backup.json".format(datestamp)
-        #     dumpfile_location = os.path.join(tmp_dir, dumpfile)
-        #     with open(dumpfile_location, "w") as of:
-        #         excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
-        #         management.call_command(
-        #             "dumpdata",
-        #             exclude=excludes,
-        #             indent=2,
-        #             stdout=of,
-        #         )
-        #     dump_size_bytes = os.path.getsize(dumpfile_location)
-        #     print(f"Export dumpdata size: {_format_bytes(dump_size_bytes)}")
-        #     # zip up:
-        #     #   * Data Dump file
-        #     #   * Media files
-        #     with zipfile.ZipFile(tmp_zip.name, "w") as zip:
-        #         zip.write(dumpfile_location, dumpfile)
-        #         for media_file in media_paths:
-        #             zip.write(media_file)
-
-        # archive_size_bytes = os.path.getsize(tmp_zip.name)
-
-        # Dump data directly into a StringIO buffer instead of a temp file
         dumpfile = "{}_backup.json".format(datestamp)
         json_buffer = io.StringIO()
         excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
@@ -214,8 +175,6 @@ def ExportDatabase(request, test=False):
             indent=2,
             stdout=json_buffer,
         )
-        dump_size_bytes = len(json_buffer.getvalue().encode("utf-8"))
-        print(f"Export dumpdata size: {_format_bytes(dump_size_bytes)}")
 
         # Write the zip with compression — no temp directory needed
         with zipfile.ZipFile(tmp_zip.name, "w", compression=zipfile.ZIP_DEFLATED) as zf:
@@ -223,16 +182,6 @@ def ExportDatabase(request, test=False):
             json_buffer.close()  # Free memory as soon as possible
             for media_file in media_paths:
                 zf.write(media_file)
-
-        archive_size_bytes = os.path.getsize(tmp_zip.name)
-        print(f"Export archive size: {_format_bytes(archive_size_bytes)}")
-        _log_storage_snapshot(
-            "export:archive-created",
-            {
-                "temp": tempfile.gettempdir(),
-                "media": settings.MEDIA_ROOT,
-            },
-        )
 
         response = FileResponse(open(tmp_zip.name, "rb"))
 

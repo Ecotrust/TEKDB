@@ -417,6 +417,20 @@ class ExportTest(TestCase):
         self.assertIn("export_status", response.cookies)
         self.assertEqual(response.cookies["export_status"].value, "error")
 
+    # Test failure in export process due to insufficient disk space
+    def test_not_enough_disk_space_export(self):
+        export_request = create_export_request(self)
+        export_request.user = Users.objects.get(username="admin")
+        with patch("TEKDB.views.shutil.disk_usage") as mock_disk_usage:
+            mock_disk_usage.return_value = shutil._ntuple_diskusage(
+                total=0, used=0, free=0
+            )
+            response = ExportDatabase(export_request, test=False)
+        self.assertEqual(response.status_code, 507)
+        # Assert that the 'export_status=error' cookie is set
+        self.assertIn("export_status", response.cookies)
+        self.assertEqual(response.cookies["export_status"].value, "error")
+
     # Test success in export process
     def test_valid_admin_export(self):
         # dump data
