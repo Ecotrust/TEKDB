@@ -1,5 +1,4 @@
 import contextlib
-import logging
 from dal import autocomplete
 from datetime import datetime
 from django.conf import settings
@@ -23,9 +22,6 @@ from TEKDB.models import (
 import tempfile
 import zipfile
 from configuration.models import Configuration
-
-
-logger = logging.getLogger(__name__)
 
 
 def get_related(request, model_name, id):
