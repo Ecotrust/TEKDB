@@ -12,7 +12,6 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 import io
 import os
 import shutil
-import psutil
 from TEKDB.models import (
     Citations,
     Media,
@@ -94,45 +93,6 @@ def _get_directory_size(path):
     return total
 
 
-def _log_storage_snapshot(stage, monitored_paths):
-    disk_info = {}
-    for label, path in monitored_paths.items():
-        try:
-            usage = shutil.disk_usage(path)
-            disk_info[label] = {
-                "path": path,
-                "free": _format_bytes(usage.free),
-                "used": _format_bytes(usage.used),
-                "total": _format_bytes(usage.total),
-            }
-        except OSError:
-            disk_info[label] = {"path": path, "error": "unavailable"}
-    print(f"Storage snapshot [{stage}]: {disk_info}")
-
-
-# inner psutil function
-def process_memory():
-    process = psutil.Process(os.getpid())
-    mem_info = process.memory_info()
-    return mem_info.rss
-
-
-# decorator function
-def profile(func):
-    def wrapper(*args, **kwargs):
-
-        mem_before = process_memory()
-        result = func(*args, **kwargs)
-        mem_after = process_memory()
-        print(
-            f"{func.__name__}: consumed memory: {mem_before:,} -> {mem_after:,} (delta: {mem_after - mem_before:,})"
-        )
-
-        return result
-
-    return wrapper
-
-
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request, test=False):
@@ -146,14 +106,13 @@ def ExportDatabase(request, test=False):
     tmp_path = tempfile.gettempdir()
     has_space, free_bytes = check_disk_space(media_size, tmp_path)
     if not has_space:
+        status_code = 507
+        status_message = f"Not enough disk space to export the database. The media directory is {_format_bytes(media_size)} but only {_format_bytes(free_bytes)} is available. Please free up disk space or contact your IT team."
+        print(status_message)
         response = JsonResponse(
             {
-                "status_code": 507,
-                "status_message": (
-                    f"Not enough disk space to export the database. "
-                    f"The media directory is {_format_bytes(media_size)} but only {_format_bytes(free_bytes)} is available. "
-                    "Please free up disk space or contact your IT team."
-                ),
+                "status_code": status_code,
+                "status_message": status_message,
             },
             status=507,
         )
@@ -161,12 +120,12 @@ def ExportDatabase(request, test=False):
         return response
 
     tmp_zip = tempfile.NamedTemporaryFile(
-        delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
+        delete=False, prefix=f"{datestamp}_backup_", suffix=".zip"
     )
 
     response = HttpResponse()
     try:
-        dumpfile = "{}_backup.json".format(datestamp)
+        dumpfile = f"{datestamp}_backup.json"
         json_buffer = io.StringIO()
         excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
         management.call_command(
@@ -207,7 +166,6 @@ def getDBTruncateCommand():
 
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
-@profile
 def ImportDatabase(request):
     status_code = 500
     status_message = "An unknown error occurred."
@@ -228,13 +186,6 @@ def ImportDatabase(request):
             media_dir = settings.MEDIA_ROOT
         # Unzip file
         if "import_file" in request.FILES.keys():
-            _log_storage_snapshot(
-                "import:start",
-                {
-                    "temp": tempfile.gettempdir(),
-                    "media": media_dir,
-                },
-            )
             with tempfile.TemporaryDirectory() as tempdir:
                 try:
                     tmp_zip_file = tempfile.NamedTemporaryFile(
@@ -243,15 +194,10 @@ def ImportDatabase(request):
                     for chunk in request.FILES["import_file"].chunks():
                         tmp_zip_file.write(chunk)
                     tmp_zip_file.seek(0)
-                    print(
-                        f"Import uploaded archive size: {_format_bytes(tmp_zip_file.tell())}"
-                    )
 
                 except Exception as e:
                     status_code = 500
-                    status_message = 'Unable to read the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(
-                        e
-                    )
+                    status_message = f'Unable to read the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {e}'
                     return JsonResponse(
                         {"status_code": status_code, "status_message": status_message},
                         status=status_code,
@@ -297,17 +243,11 @@ def ImportDatabase(request):
                     # Check temp directory space (for the extracted fixture)
                     tmp_path = tempfile.gettempdir()
                     has_tmp_space, tmp_free = check_disk_space(fixture_size, tmp_path)
+
                     if not has_tmp_space:
                         status_code = 507
-                        status_message = (
-                            "Not enough disk space to extract the database fixture. "
-                            "The fixture requires {} but only {} is available in the "
-                            "temp directory. Please free up disk space or contact your "
-                            "IT team."
-                        ).format(
-                            _format_bytes(fixture_size),
-                            _format_bytes(tmp_free),
-                        )
+                        status_message = f"Not enough disk space to extract the database fixture. The fixture requires {_format_bytes(fixture_size)} but only {_format_bytes(tmp_free)} is available in the temp directory. Please free up disk space or contact your IT team."
+
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -320,16 +260,10 @@ def ImportDatabase(request):
                     has_media_space, media_free = check_disk_space(
                         media_size, media_dir
                     )
+
                     if not has_media_space:
                         status_code = 507
-                        status_message = (
-                            "Not enough disk space to restore media files. "
-                            "The media requires {} but only {} is available. "
-                            "Please free up disk space or contact your IT team."
-                        ).format(
-                            _format_bytes(media_size),
-                            _format_bytes(media_free),
-                        )
+                        status_message = f"Not enough disk space to restore media files. The media requires {_format_bytes(media_size)} but only {_format_bytes(media_free)} is available. Please free up disk space or contact your IT team."
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -340,21 +274,11 @@ def ImportDatabase(request):
 
                     try:
                         zip.extract(fixture_name, tempdir)
-                        extracted_size_bytes = _get_directory_size(tempdir)
-                        print(
-                            f"Import extracted payload size: {_format_bytes(extracted_size_bytes)}"
-                        )
-                        _log_storage_snapshot(
-                            "import:after-extract",
-                            {
-                                "temp": tempfile.gettempdir(),
-                                "media": media_dir,
-                            },
-                        )
+
                     except Exception as e:
                         status_code = 500
-                        status_message = "Unable to extract the fixture from the provided file. {}".format(
-                            e
+                        status_message = (
+                            f"Unable to extract the fixture from the provided file. {e}"
                         )
                         return JsonResponse(
                             {
@@ -371,9 +295,7 @@ def ImportDatabase(request):
                                 cursor.execute(sql_command)
                     except Exception as e:
                         status_code = 500
-                        status_message = "Error while attempting to remove old database data. New data has NOT been imported. Significant data loss possible. Please check your import file and try again. {}".format(
-                            e
-                        )
+                        status_message = f"Error while attempting to remove old database data. New data has NOT been imported. Significant data loss possible. Please check your import file and try again. {e}"
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -408,9 +330,7 @@ def ImportDatabase(request):
                         ContentType.objects.clear_cache()
                     except Exception as e:
                         status_code = 500
-                        status_message = "Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {}".format(
-                            e
-                        )
+                        status_message = f"Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {e}"
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -436,22 +356,10 @@ def ImportDatabase(request):
                                 open(target_path, "wb") as dst,
                             ):
                                 shutil.copyfileobj(src, dst)
-                        media_size_after_import = _get_directory_size(media_dir)
-                        print(
-                            f"Import media footprint after restore: {_format_bytes(media_size_after_import)}"
-                        )
-                        _log_storage_snapshot(
-                            "import:complete",
-                            {
-                                "temp": tempfile.gettempdir(),
-                                "media": media_dir,
-                            },
-                        )
+
                     except Exception as e:
                         status_code = 500
-                        status_message = "Error while restoring your media files. Please work with IT to restore these, providing them your zipfile and this error message:\n {}".format(
-                            e
-                        )
+                        status_message = f"Error while restoring your media files. Please work with IT to restore these, providing them your zipfile and this error message:\n {e}"
                         return JsonResponse(
                             {
                                 "status_code": status_code,
