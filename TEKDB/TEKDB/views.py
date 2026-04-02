@@ -67,6 +67,12 @@ def get_all_file_paths(directory, cwd=False):
     return file_paths
 
 
+def check_disk_space(required_bytes, path="/"):
+    """Return (has_space, free_bytes) for the filesystem containing `path`."""
+    disk = shutil.disk_usage(path)
+    return disk.free >= required_bytes, disk.free
+
+
 def _format_bytes(num_bytes):
     units = ["B", "KB", "MB", "GB", "TB"]
     value = float(num_bytes)
@@ -132,9 +138,9 @@ def profile(func):
 @profile
 def ExportDatabase(request, test=False):
     datestamp = datetime.now().strftime("%Y%m%d")
-    tmp_zip = tempfile.NamedTemporaryFile(
-        delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
-    )
+    # tmp_zip = tempfile.NamedTemporaryFile(
+    #     delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
+    # )
     _log_storage_snapshot(
         "export:start",
         {
@@ -145,33 +151,78 @@ def ExportDatabase(request, test=False):
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
-    media_size_bytes = _get_directory_size(settings.MEDIA_ROOT)
+    media_size = _get_directory_size(relative_media_directory)
     print(
-        f"Export source media footprint: files={len(media_paths)}, size={_format_bytes(media_size_bytes)}"
+        f"Export source media footprint: files={len(media_paths)}, size={_format_bytes(media_size)}"
     )
+
+    tmp_path = tempfile.gettempdir()
+    has_space, free_bytes = check_disk_space(media_size, tmp_path)
+    if not has_space:
+        return JsonResponse(
+            {
+                "status_code": 507,
+                "status_message": (
+                    "Not enough disk space to export the database. "
+                    "The media directory is {} but only {} is available. "
+                    "Please free up disk space or contact your IT team."
+                ).format(
+                    _format_bytes(media_size),
+                    _format_bytes(free_bytes),
+                ),
+            },
+            status=507,
+        )
+
+    tmp_zip = tempfile.NamedTemporaryFile(
+        delete=False, prefix="{}_backup_".format(datestamp), suffix=".zip"
+    )
+
     response = HttpResponse()
     try:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            # create filename
-            dumpfile = "{}_backup.json".format(datestamp)
-            dumpfile_location = os.path.join(tmp_dir, dumpfile)
-            with open(dumpfile_location, "w") as of:
-                excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
-                management.call_command(
-                    "dumpdata",
-                    exclude=excludes,
-                    indent=2,
-                    stdout=of,
-                )
-            dump_size_bytes = os.path.getsize(dumpfile_location)
-            print(f"Export dumpdata size: {_format_bytes(dump_size_bytes)}")
-            # zip up:
-            #   * Data Dump file
-            #   * Media files
-            with zipfile.ZipFile(tmp_zip.name, "w") as zip:
-                zip.write(dumpfile_location, dumpfile)
-                for media_file in media_paths:
-                    zip.write(media_file)
+        # with tempfile.TemporaryDirectory() as tmp_dir:
+        #     # create filename
+        #     dumpfile = "{}_backup.json".format(datestamp)
+        #     dumpfile_location = os.path.join(tmp_dir, dumpfile)
+        #     with open(dumpfile_location, "w") as of:
+        #         excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
+        #         management.call_command(
+        #             "dumpdata",
+        #             exclude=excludes,
+        #             indent=2,
+        #             stdout=of,
+        #         )
+        #     dump_size_bytes = os.path.getsize(dumpfile_location)
+        #     print(f"Export dumpdata size: {_format_bytes(dump_size_bytes)}")
+        #     # zip up:
+        #     #   * Data Dump file
+        #     #   * Media files
+        #     with zipfile.ZipFile(tmp_zip.name, "w") as zip:
+        #         zip.write(dumpfile_location, dumpfile)
+        #         for media_file in media_paths:
+        #             zip.write(media_file)
+
+        # archive_size_bytes = os.path.getsize(tmp_zip.name)
+
+        # Dump data directly into a StringIO buffer instead of a temp file
+        dumpfile = "{}_backup.json".format(datestamp)
+        json_buffer = io.StringIO()
+        excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
+        management.call_command(
+            "dumpdata",
+            exclude=excludes,
+            indent=2,
+            stdout=json_buffer,
+        )
+        dump_size_bytes = len(json_buffer.getvalue().encode("utf-8"))
+        print(f"Export dumpdata size: {_format_bytes(dump_size_bytes)}")
+
+        # Write the zip with compression — no temp directory needed
+        with zipfile.ZipFile(tmp_zip.name, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+            zf.writestr(dumpfile, json_buffer.getvalue())
+            json_buffer.close()  # Free memory as soon as possible
+            for media_file in media_paths:
+                zf.write(media_file)
 
         archive_size_bytes = os.path.getsize(tmp_zip.name)
         print(f"Export archive size: {_format_bytes(archive_size_bytes)}")
@@ -272,9 +323,74 @@ def ImportDatabase(request):
                             },
                             status=status_code,
                         )
+                    # --- Pre-flight disk space check ---
+                    # We need space for the JSON fixture in tempdir plus
+                    # the media files written to MEDIA_ROOT. Calculate the
+                    # uncompressed size of the fixture and media separately.
                     fixture_name = non_media[0]
+                    media_members = [
+                        m
+                        for m in zip.namelist()
+                        if m.startswith("media/") and not m.endswith("/")
+                    ]
+
+                    fixture_size = sum(
+                        info.file_size
+                        for info in zip.infolist()
+                        if info.filename == fixture_name
+                    )
+                    media_size = sum(
+                        info.file_size
+                        for info in zip.infolist()
+                        if info.filename in media_members
+                    )
+
+                    # Check temp directory space (for the extracted fixture)
+                    tmp_path = tempfile.gettempdir()
+                    has_tmp_space, tmp_free = check_disk_space(fixture_size, tmp_path)
+                    if not has_tmp_space:
+                        status_code = 507
+                        status_message = (
+                            "Not enough disk space to extract the database fixture. "
+                            "The fixture requires {} but only {} is available in the "
+                            "temp directory. Please free up disk space or contact your "
+                            "IT team."
+                        ).format(
+                            _format_bytes(fixture_size),
+                            _format_bytes(tmp_free),
+                        )
+                        return JsonResponse(
+                            {
+                                "status_code": status_code,
+                                "status_message": status_message,
+                            },
+                            status=status_code,
+                        )
+
+                    # Check media directory space (for the restored media)
+                    has_media_space, media_free = check_disk_space(
+                        media_size, media_dir
+                    )
+                    if not has_media_space:
+                        status_code = 507
+                        status_message = (
+                            "Not enough disk space to restore media files. "
+                            "The media requires {} but only {} is available. "
+                            "Please free up disk space or contact your IT team."
+                        ).format(
+                            _format_bytes(media_size),
+                            _format_bytes(media_free),
+                        )
+                        return JsonResponse(
+                            {
+                                "status_code": status_code,
+                                "status_message": status_message,
+                            },
+                            status=status_code,
+                        )
+
                     try:
-                        zip.extractall(tempdir)
+                        zip.extract(fixture_name, tempdir)
                         extracted_size_bytes = _get_directory_size(tempdir)
                         print(
                             f"Import extracted payload size: {_format_bytes(extracted_size_bytes)}"
@@ -288,7 +404,7 @@ def ImportDatabase(request):
                         )
                     except Exception as e:
                         status_code = 500
-                        status_message = 'Unable to unzip the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {}'.format(
+                        status_message = "Unable to extract the fixture from the provided file. {}".format(
                             e
                         )
                         return JsonResponse(
@@ -355,12 +471,22 @@ def ImportDatabase(request):
                         )
 
                     try:
-                        # Copy media into MEDIA dir
-                        shutil.copytree(
-                            os.path.join(tempdir, "media"),
-                            media_dir,
-                            dirs_exist_ok=True,
-                        )
+                        # Copy media files directly from the zip into
+                        # MEDIA_ROOT one at a time, instead of extracting
+                        # everything to a temp dir first
+                        for member in media_members:
+                            # Strip the leading "media/" prefix to get
+                            # the relative path inside MEDIA_ROOT
+                            relative_path = member[len("media/") :]
+                            if not relative_path:
+                                continue
+                            target_path = os.path.join(media_dir, relative_path)
+                            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                            with (
+                                zip.open(member) as src,
+                                open(target_path, "wb") as dst,
+                            ):
+                                shutil.copyfileobj(src, dst)
                         media_size_after_import = _get_directory_size(media_dir)
                         print(
                             f"Import media footprint after restore: {_format_bytes(media_size_after_import)}"
