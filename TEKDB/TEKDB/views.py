@@ -63,9 +63,9 @@ def get_all_file_paths(directory, cwd=False):
     return file_paths
 
 
-def get_directory_size(path):
+def get_directory_size(directory):
     total = 0
-    for root, _dirs, files in os.walk(path):
+    for root, directories, files in os.walk(directory):
         for filename in files:
             filepath = os.path.join(root, filename)
             try:
