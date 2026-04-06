@@ -11,6 +11,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 import io
 import os
 import shutil
+from TEKDB.utils import bytes_to_readable, check_disk_space
 from TEKDB.models import (
     Citations,
     Media,
@@ -62,22 +63,7 @@ def get_all_file_paths(directory, cwd=False):
     return file_paths
 
 
-def check_disk_space(required_bytes, path="/"):
-    """Return (has_space, free_bytes) for the filesystem containing `path`."""
-    disk = shutil.disk_usage(path)
-    return disk.free >= required_bytes, disk.free
-
-
-def _format_bytes(num_bytes):
-    units = ["B", "KB", "MB", "GB", "TB"]
-    value = float(num_bytes)
-    for unit in units:
-        if value < 1024 or unit == units[-1]:
-            return f"{value:.2f} {unit}"
-        value /= 1024
-
-
-def _get_directory_size(path):
+def get_directory_size(path):
     total = 0
     for root, _dirs, files in os.walk(path):
         for filename in files:
@@ -97,14 +83,13 @@ def ExportDatabase(request, test=False):
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
     relative_media_directory = settings.MEDIA_ROOT.split(os.path.sep)[-1]
     media_paths = get_all_file_paths(relative_media_directory, cwd=os.getcwd())
-    media_size = _get_directory_size(relative_media_directory)
+    media_size = get_directory_size(relative_media_directory)
 
     tmp_path = tempfile.gettempdir()
     has_space, free_bytes = check_disk_space(media_size, tmp_path)
     if not has_space:
         status_code = 507
-        status_message = f"Not enough disk space to export the database. The media directory is {_format_bytes(media_size)} but only {_format_bytes(free_bytes)} is available. Please free up disk space or contact your IT team."
-        print(status_message)
+        status_message = f"Not enough disk space to export the database. The media directory is {bytes_to_readable(media_size)} but only {bytes_to_readable(free_bytes)} is available. Please free up disk space or contact your IT team."
         response = JsonResponse(
             {
                 "status_code": status_code,
@@ -242,7 +227,7 @@ def ImportDatabase(request):
 
                     if not has_tmp_space:
                         status_code = 507
-                        status_message = f"Not enough disk space to extract the database fixture. The fixture requires {_format_bytes(fixture_size)} but only {_format_bytes(tmp_free)} is available in the temp directory. Please free up disk space or contact your IT team."
+                        status_message = f"Not enough disk space to extract the database fixture. The fixture requires {bytes_to_readable(fixture_size)} but only {bytes_to_readable(tmp_free)} is available in the temp directory. Please free up disk space or contact your IT team."
 
                         return JsonResponse(
                             {
@@ -259,7 +244,7 @@ def ImportDatabase(request):
 
                     if not has_media_space:
                         status_code = 507
-                        status_message = f"Not enough disk space to restore media files. The media requires {_format_bytes(media_size)} but only {_format_bytes(media_free)} is available. Please free up disk space or contact your IT team."
+                        status_message = f"Not enough disk space to restore media files. The media requires {bytes_to_readable(media_size)} but only {bytes_to_readable(media_free)} is available. Please free up disk space or contact your IT team."
                         return JsonResponse(
                             {
                                 "status_code": status_code,
