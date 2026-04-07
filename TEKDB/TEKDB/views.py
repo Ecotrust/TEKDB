@@ -107,21 +107,28 @@ def ExportDatabase(request, test=False):
     response = HttpResponse()
     try:
         dumpfile = f"{datestamp}_backup.json"
-        json_buffer = io.StringIO()
-        excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
-        management.call_command(
-            "dumpdata",
-            exclude=excludes,
-            indent=2,
-            stdout=json_buffer,
-        )
-
-        # Write the zip with compression — no temp directory needed
-        with zipfile.ZipFile(tmp_zip.name, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-            zf.writestr(dumpfile, json_buffer.getvalue())
-            json_buffer.close()  # Free memory as soon as possible
-            for media_file in media_paths:
-                zf.write(media_file)
+        # SpooledTemporaryFile keeps the dump in memory up to max_size,
+        # spilling to disk only if it exceeds that threshold (10 MB ).
+        with tempfile.SpooledTemporaryFile(
+            max_size=10 * 1024 * 1024, mode="w+", encoding="utf-8"
+        ) as spooled:
+            excludes = getattr(settings, "EXPORT_DUMP_EXCLUDE", [])
+            management.call_command(
+                "dumpdata",
+                exclude=excludes,
+                indent=2,
+                stdout=spooled,
+            )
+            spooled.seek(0)
+            # zip up:
+            #   * Data Dump (written directly from the spooled buffer)
+            #   * Media files
+            with zipfile.ZipFile(
+                tmp_zip.name, "w", compression=zipfile.ZIP_DEFLATED
+            ) as zf:
+                zf.writestr(dumpfile, spooled.read())
+                for media_file in media_paths:
+                    zf.write(media_file)
 
         response = FileResponse(open(tmp_zip.name, "rb"))
 
