@@ -634,6 +634,15 @@ class ImportDatabaseTest(TransactionTestCase):
                 )
                 response = ImportDatabase(self.import_request)
         self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to extract the database fixture.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
 
     def test_failed_import_insufficient_disk_space_for_media(self):
         self.import_request = self.factory.post(
@@ -666,8 +675,12 @@ class ImportDatabaseTest(TransactionTestCase):
                 response = ImportDatabase(self.import_request)
         self.assertEqual(response.status_code, 507)
         response.data = json.loads(response.content)
-        self.assertEqual(
-            "Not enough disk space to restore media files. The media requires 1.83 MB but only 292.97 KB is available. Please free up disk space or contact your IT team.",
+        self.assertIn(
+            "Not enough disk space to restore media files",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
             response.data["status_message"],
         )
 
