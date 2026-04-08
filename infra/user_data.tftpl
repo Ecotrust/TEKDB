@@ -9,12 +9,17 @@ echo "Installing certbot..."
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-echo "getting SSL certificate for domain"
+echo "Getting SSL certificate for domain"
 sudo certbot certonly --standalone \
   --non-interactive \
   --agree-tos \
   --email ${ssl_admin_email} \
   -d ${domain_name}
+
+echo "Setting letsencrypt directory permissions for nginx container..."
+sudo chmod 755 /etc/letsencrypt/live/
+sudo chmod 755 /etc/letsencrypt/archive/
+sudo chmod 644 /etc/letsencrypt/archive/${domain_name}/*.pem
 
 # install docker
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
@@ -109,6 +114,9 @@ echo "Setting up certbot renewal hook to reload nginx..."
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy
 sudo tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh > /dev/null <<'HOOK'
 #!/bin/bash
+chmod 755 /etc/letsencrypt/live/
+chmod 755 /etc/letsencrypt/archive/
+chmod 644 /etc/letsencrypt/archive/${domain_name}/*.pem
 docker exec $(docker ps -qf "name=proxy") nginx -s reload
 HOOK
 sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
