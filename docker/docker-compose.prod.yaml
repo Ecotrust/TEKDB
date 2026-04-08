@@ -30,9 +30,14 @@ services:
       - web
     ports:
       - "80:8080"
+      - "443:8443"
+    env_file:
+      - path: .env.prod
+        required: true
     volumes:
       - static_volume:/vol/static/static:ro
       - media_volume:/vol/static/media:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
   redis:
     extends:
       file: common.yaml

@@ -30,6 +30,8 @@ resource "aws_instance" "itkdb" {
     django_allowed_hosts = var.django_allowed_hosts
     celery_broker_url    = var.celery_broker_url
     gis_user_password    = var.gis_user_password
+    domain_name          = var.domain_name
+    ssl_admin_email      = var.ssl_admin_email
   })
 
   root_block_device {
