@@ -4,6 +4,19 @@ sudo apt-get update && sudo apt-get upgrade -y
 # install aws cli to pull images from ECR
 sudo snap install aws-cli --classic 
 
+# install certbot for SSL certificate management
+echo "Installing certbot..."
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+echo "getting SSL certificate for domain"
+sudo certbot certonly --standalone \
+  --non-interactive \
+  --agree-tos \
+  --email ${ssl_admin_email} \
+  -d ${domain_name}
+
+# install docker
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 sudo apt update -y
 sudo apt install ca-certificates curl -y
@@ -65,7 +78,6 @@ echo "Creating .env.prod file..."
 cat > docker/.env.prod <<EOF
 DEBUG=0
 SECRET_KEY=${django_secret_key}
-
 ALLOWED_HOSTS=${django_allowed_hosts}
 SQL_ENGINE=django.contrib.gis.db.backends.postgis
 SQL_DATABASE=${sql_db_name}
@@ -77,6 +89,7 @@ ITKDB_ECR_PATH=${web_ecr_image_uri}
 ITKDB_PROXY_ECR_PATH=${proxy_ecr_image_uri}
 CELERY_BROKER_URL=${celery_broker_url}
 GIS_USER_PASSWORD=${gis_user_password}
+DOMAIN_NAME=${domain_name}
 EOF
 
 echo "Logging in to AWS ECR for web image..."
@@ -91,5 +104,13 @@ sudo docker pull ${proxy_ecr_image_uri}:latest
 
 echo "Starting Docker containers using docker compose ..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
+
+echo "Setting up certbot renewal hook to reload nginx..."
+sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy
+sudo tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh > /dev/null <<'HOOK'
+#!/bin/bash
+docker exec $(docker ps -qf "name=proxy") nginx -s reload
+HOOK
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
 
 echo "TEKDB setup complete!"
