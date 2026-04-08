@@ -4,23 +4,6 @@ sudo apt-get update && sudo apt-get upgrade -y
 # install aws cli to pull images from ECR
 sudo snap install aws-cli --classic 
 
-# install certbot for SSL certificate management
-echo "Installing certbot..."
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-
-echo "Getting SSL certificate for domain"
-sudo certbot certonly --standalone \
-  --non-interactive \
-  --agree-tos \
-  --email ${ssl_admin_email} \
-  -d ${domain_name}
-
-echo "Setting letsencrypt directory permissions for nginx container..."
-sudo chmod 755 /etc/letsencrypt/live/
-sudo chmod 755 /etc/letsencrypt/archive/
-sudo chmod 644 /etc/letsencrypt/archive/${domain_name}/*.pem
-
 # install docker
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 sudo apt update -y
@@ -106,6 +89,38 @@ aws ecr get-login-password --region ${aws_region} | sudo docker login --username
 echo "Pulling latest Docker images..."
 sudo docker pull ${web_ecr_image_uri}:latest
 sudo docker pull ${proxy_ecr_image_uri}:latest
+
+# install certbot for SSL certificate management
+echo "Installing certbot..."
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+echo "Waiting for DNS to resolve ${domain_name}..."
+TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" \
+  -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+EXPECTED_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
+  http://169.254.169.254/latest/meta-data/public-ipv4)
+for i in $(seq 1 20); do
+  RESOLVED_IP=$(dig +short ${domain_name} | tail -1)
+  if [ "$RESOLVED_IP" = "$EXPECTED_IP" ]; then
+    echo "DNS resolved correctly to $EXPECTED_IP"
+    break
+  fi
+  echo "Waiting for DNS... (got $RESOLVED_IP, want $EXPECTED_IP)"
+  sleep 30
+done
+
+echo "Getting SSL certificate for domain"
+sudo certbot certonly --standalone \
+  --non-interactive \
+  --agree-tos \
+  --email ${ssl_admin_email} \
+  -d ${domain_name}
+
+echo "Setting letsencrypt directory permissions for nginx container..."
+sudo chmod 755 /etc/letsencrypt/live/
+sudo chmod 755 /etc/letsencrypt/archive/
+sudo chmod 644 /etc/letsencrypt/archive/${domain_name}/*.pem
 
 echo "Starting Docker containers using docker compose ..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
