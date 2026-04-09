@@ -26,6 +26,11 @@ class TestBytesToReadable(TestCase):
     def test_petabytes(self):
         self.assertEqual(bytes_to_readable(1024 * 1024 * 1024 * 1024 * 1024), "1.00 PB")
 
+    def test_1026_petabytes(self):
+        self.assertEqual(
+            bytes_to_readable(1026 * 1024 * 1024 * 1024 * 1024 * 1024), "1026.00 PB"
+        )
+
     def test_zero_bytes(self):
         self.assertEqual(bytes_to_readable(0), "0.00 B")
 
