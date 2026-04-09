@@ -417,6 +417,20 @@ class ExportTest(TestCase):
         self.assertIn("export_status", response.cookies)
         self.assertEqual(response.cookies["export_status"].value, "error")
 
+    # Test failure in export process due to insufficient disk space
+    def test_not_enough_disk_space_export(self):
+        export_request = create_export_request(self)
+        export_request.user = Users.objects.get(username="admin")
+        with patch("TEKDB.views.shutil.disk_usage") as mock_disk_usage:
+            mock_disk_usage.return_value = shutil._ntuple_diskusage(
+                total=0, used=0, free=0
+            )
+            response = ExportDatabase(export_request, test=False)
+        self.assertEqual(response.status_code, 507)
+        # Assert that the 'export_status=error' cookie is set
+        self.assertIn("export_status", response.cookies)
+        self.assertEqual(response.cookies["export_status"].value, "error")
+
     # Test success in export process
     def test_valid_admin_export(self):
         # dump data
@@ -592,6 +606,83 @@ class ImportDatabaseTest(TransactionTestCase):
                 "Uploaded file is not recognized as a zipfile. Be sure you have a valid backup file and try again.",
                 response.data["status_message"],
             )
+
+    def test_failed_import_insufficient_disk_space_for_fixture(self):
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+            with patch("TEKDB.views.shutil.disk_usage") as mock_disk_usage:
+                mock_disk_usage.return_value = shutil._ntuple_diskusage(
+                    total=0, used=0, free=0
+                )
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to extract the database fixture.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
+    def test_failed_import_insufficient_disk_space_for_media(self):
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+            import_size = getsize(self.zipname)
+
+            with patch("shutil.disk_usage") as mock_disk_usage:
+                # Simulate sufficient space for fixture but insufficient space for media
+                mock_disk_usage.return_value = shutil._ntuple_diskusage(
+                    total=import_size, used=import_size, free=300000
+                )
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to restore media files",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
 
 
 class GetPlacesGeoJSONTest(TestCase):
