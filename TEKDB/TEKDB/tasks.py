@@ -22,7 +22,7 @@ def delete_expired_chunks(self, max_age_hours=24):
 
     if not os.path.isdir(target_dir):
         logger.error(f"Target directory does not exist: {target_dir}")
-        return
+        return "Target directory not found; skipping cleanup."
 
     logger.info(
         f"Starting cleanup of '{target_dir}' — files older than {max_age_hours}h"
