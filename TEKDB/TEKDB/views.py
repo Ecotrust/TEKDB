@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import management
 from django.db import connection
 from django.db.models import Q
-from django.http import HttpResponse, FileResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 import io
 import os
 import shutil
@@ -23,6 +23,16 @@ from TEKDB.models import (
 import tempfile
 import zipfile
 from configuration.models import Configuration
+
+
+def chunk_text_file(text_file, chunk_size=64 * 1024):
+    """Generator that yields chunks of a text file as bytes"""
+    text_file.seek(0)
+    while True:
+        chunk = text_file.read(chunk_size)
+        if not chunk:
+            return
+        yield chunk.encode("utf-8")
 
 
 def get_related(request, model_name, id):
@@ -119,16 +129,17 @@ def ExportDatabase(request, test=False):
                 indent=2,
                 stdout=spooled,
             )
-            spooled.seek(0)
             # zip up:
             #   * Data Dump (written directly from the spooled buffer)
             #   * Media files
             with zipfile.ZipFile(
                 tmp_zip.name, "w", compression=zipfile.ZIP_DEFLATED
-            ) as zf:
-                zf.writestr(dumpfile, spooled.read())
+            ) as zip:
+                with zip.open(dumpfile, "w") as dump_entry:
+                    for chunk in chunk_text_file(spooled):
+                        dump_entry.write(chunk)
                 for media_file in media_paths:
-                    zf.write(media_file)
+                    zip.write(media_file)
 
         response = FileResponse(open(tmp_zip.name, "rb"))
 
