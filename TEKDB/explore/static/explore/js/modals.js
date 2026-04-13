@@ -26,7 +26,6 @@ $("#changePasswordModal").on("shown.bs.modal", function () {
   changePasswordForm.addEventListener("submit", function (event) {
     event.preventDefault();
     account.changePassword(event, this, function (response) {
-      console.log('%cresponse from change password request: %o', 'color:blue;', response);
       if (response.success) {
         // clear any previous error messages
         const errorLists = document.querySelectorAll("#changePasswordModal ul");
