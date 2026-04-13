@@ -63,15 +63,15 @@ var account = {
             success: function(response) {
                 if (!!response.data) {
                     console.log('%csuccessfully changed password', 'color:green;');
-                    callback(true);
+                    callback({success: true, data: response.data});
                 } else {
-                    console.log('%cerror changing password: %o', 'color: red;', response);
-                    callback(false);
+                    console.log('%cerror changing password: %o', 'color: red;', response.data);
+                    callback({success: false, data: response.data});
                 }
             },
             error: function(response) {
                 console.log('%cerror with change password request submission: %o', 'color: red', JSON.stringify(response.responseText));
-                callback(false);
+                callback({success: false, data: response.responseJSON});
             }
         });
     }

@@ -61,6 +61,9 @@ def login_async(request):
 
 
 class PasswordChangeView(PasswordChangeView):
+    def form_invalid(self, form):
+        return JsonResponse({"data": form.errors}, status=400)
+
     def form_valid(self, form):
         self.object = form.save()
         # prevent user’s auth session to be invalidated
