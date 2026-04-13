@@ -19,3 +19,22 @@ $("#loginModal").on("shown.bs.modal", function () {
     });
   });
 });
+
+$("#changePasswordModal").on("shown.bs.modal", function () {
+  $("#currentPasswordInput").focus();
+  var changePasswordForm = document.querySelector("#changePasswordModal form");
+  const CHANGE_PASSWORD_ERROR_MESSAGE = "Error changing password";
+  changePasswordForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    account.changePassword(event, this, function (success) {
+      if (success) {
+        $("#changePasswordModal").modal("hide");
+        alert("Password changed successfully");
+      } else {
+        if (!changePasswordForm.innerHTML.includes(CHANGE_PASSWORD_ERROR_MESSAGE)) {
+          changePasswordForm.append(CHANGE_PASSWORD_ERROR_MESSAGE);
+        }
+      }
+    });
+  });
+});

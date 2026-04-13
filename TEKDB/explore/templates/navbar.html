@@ -37,13 +37,14 @@
           </li>
           {% if user.is_authenticated %}
             <li class="nav-item dropdown user-menu">
-              <a class="nav-link dropdown-toggle" hred="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ user.username }}
               </a>
               <ul class="dropdown-menu" aria-labelledby="userDropdown">
                 {% if user.is_staff %}
                   <li><a class="dropdown-item" href="/admin" target="_blank">Administration</a></li>
                 {% endif %}
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</a></li>
                 <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
               </ul>
             </li>

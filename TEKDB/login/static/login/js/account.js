@@ -51,5 +51,28 @@ var account = {
                 callback(false);
             }
         });
+    },
+    changePassword: function(event, form, callback) {
+        var formData = $(form).serialize();
+        var url = '/change_password/';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (!!response.data) {
+                    console.log('%csuccessfully changed password', 'color:green;');
+                    callback(true);
+                } else {
+                    console.log('%cerror changing password: %o', 'color: red;', response);
+                    callback(false);
+                }
+            },
+            error: function(response) {
+                console.log('%cerror with change password request submission: %o', 'color: red', JSON.stringify(response.responseText));
+                callback(false);
+            }
+        });
     }
 };
