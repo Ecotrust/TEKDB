@@ -60,7 +60,7 @@ def login_async(request):
     return JsonResponse(context)
 
 
-class PasswordChangeView(PasswordChangeView):
+class TEKDBPasswordChangeView(PasswordChangeView):
     def form_invalid(self, form):
         return JsonResponse({"data": form.errors}, status=400)
 

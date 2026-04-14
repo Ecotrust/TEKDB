@@ -4,7 +4,7 @@ from django.urls import reverse
 from unittest.mock import MagicMock, patch
 import json
 from login.views import (
-    PasswordChangeView as CustomPasswordChangeView,
+    TEKDBPasswordChangeView,
     index,
     login_logic,
 )
@@ -71,7 +71,7 @@ class LoginViewTests(TestCase):
         self.assertFalse(data["success"])
 
     def test_password_change_form_invalid_returns_json_errors(self):
-        view = CustomPasswordChangeView()
+        view = TEKDBPasswordChangeView()
         form = MagicMock()
         form.errors = {"old_password": ["This field is required."]}
 
@@ -85,7 +85,7 @@ class LoginViewTests(TestCase):
     def test_password_change_form_valid_updates_session_and_returns_success(
         self, mock_update_session_auth_hash
     ):
-        view = CustomPasswordChangeView()
+        view = TEKDBPasswordChangeView()
         view.request = self.factory.post("/change_password/")
         form = MagicMock()
         form.save.return_value = self.user

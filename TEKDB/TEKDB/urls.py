@@ -37,7 +37,7 @@ from .tekdb_filebrowser import site as tekdb_filebrowser
 urlpatterns = [
     path(
         "change_password/",
-        login_views.PasswordChangeView.as_view(),
+        login_views.TEKDBPasswordChangeView.as_view(),
         name="change_password",
     ),
     path("admin/filebrowser/", tekdb_filebrowser.urls),
