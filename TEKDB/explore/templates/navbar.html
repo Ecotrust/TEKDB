@@ -44,13 +44,13 @@
                 {% if user.is_staff %}
                   <li><a class="dropdown-item" href="/admin" target="_blank">Administration</a></li>
                 {% endif %}
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal" href="#">Change Password</a></li>
                 <li><a class="dropdown-item" href="/logout?next=/">Logout</a></li>
               </ul>
             </li>
           {% else %}
             <li class="nav-item user-menu">
-              <a class="header-button nav-link" data-bs-toggle="modal" data-bs-target="#loginModal">
+              <a class="header-button nav-link" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">
                 Login
               </a>
             </li>
