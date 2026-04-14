@@ -80,6 +80,7 @@ class LoginViewTests(TestCase):
         self.assertEqual(response.status_code, 400)
         payload = json.loads(response.content)
         self.assertEqual(payload["data"], form.errors)
+        self.assertFalse(payload["success"])
 
     @patch("login.views.update_session_auth_hash")
     def test_password_change_form_valid_updates_session_and_returns_success(
@@ -95,7 +96,7 @@ class LoginViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         payload = json.loads(response.content)
-        self.assertTrue(payload["data"])
+        self.assertTrue(payload["success"])
         self.assertEqual(view.object, self.user)
         form.save.assert_called_once_with()
         mock_update_session_auth_hash.assert_called_once_with(view.request, self.user)

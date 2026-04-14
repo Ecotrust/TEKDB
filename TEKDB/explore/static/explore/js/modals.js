@@ -21,31 +21,36 @@ $("#loginModal").on("shown.bs.modal", function () {
 });
 
 $("#changePasswordModal").on("shown.bs.modal", function () {
-  $("#currentPasswordInput").focus();
-  var changePasswordForm = document.querySelector("#changePasswordModal form");
+  const changePasswordForm = document.querySelector("#changePasswordModal form");
+  
   changePasswordForm.addEventListener("submit", function (event) {
     event.preventDefault();
     account.changePassword(event, this, function (response) {
       if (response.success) {
         // clear any previous error messages
         const errorLists = document.querySelectorAll("#changePasswordModal ul");
-        errorLists.forEach((list) => list.remove());
-        const submitButton = changePasswordForm.querySelector('#changePasswordSubmit');
-        const successMessage = document.createElement("p");
-        successMessage.setAttribute("id", "changePasswordSuccessMessage");
-        successMessage.textContent = "Password successfully changed!";
-        successMessage.setAttribute("style", "color: green;");
-        successMessage.setAttribute("class", "m-0");
-        submitButton.after(successMessage);
+        if (errorLists.length) {
+           errorLists.forEach((list) => list.remove());
+        }
+        // clear any previous success message
+        const previousSuccessMessage = document.querySelector("#changePasswordSuccessMessage");
+        if (!previousSuccessMessage) {
+          // display success message
+          const successMessage = document.createElement("p");
+          successMessage.setAttribute("id", "changePasswordSuccessMessage");
+          successMessage.textContent = "Password successfully changed!";
+          successMessage.setAttribute("style", "color: green;");
+          successMessage.setAttribute("class", "m-0");
+
+          // insert success message after submit button
+          const submitButton = changePasswordForm.querySelector('#changePasswordSubmit');
+          submitButton.after(successMessage);
+        }
+        
         // reset form
         changePasswordForm.reset();
       } else {
-        // clear any previous error messages and styling
-        const errorLists = document.querySelectorAll("#changePasswordModal ul");
-        errorLists.forEach((list) => list.remove());
-        const passwordInputs = document.querySelectorAll("#changePasswordModal input[type='password']");
-        passwordInputs.forEach((input) => input.setAttribute("style", ""));
-        
+        // display error messages
         for (const elementId in response.data.data) {
           const errorList = document.createElement("ul");
           const erroredInput = document.querySelector(`#${elementId}`);
@@ -66,12 +71,12 @@ $("#changePasswordModal").on("shown.bs.modal", function () {
 });
 
 $("#changePasswordModal").on("hidden.bs.modal", function () {
+  // clear error messages
   const errorLists = document.querySelectorAll("#changePasswordModal ul");
   errorLists.forEach((list) => list.remove());
   // reset input border color
   const passwordInputs = document.querySelectorAll("#changePasswordModal input[type='password']");
   passwordInputs.forEach((input) => input.setAttribute("style", ""));
-
   // clear form
   document.querySelector("#changePasswordModal form").reset();
   // clear success message
