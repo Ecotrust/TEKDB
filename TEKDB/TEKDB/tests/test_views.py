@@ -1,6 +1,7 @@
 from base64 import b64encode
 from datetime import datetime
 from unittest.mock import patch
+from urllib.parse import unquote
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
@@ -410,12 +411,17 @@ class ExportTest(TestCase):
     def test_invalid_admin_export(self):
         export_request = create_export_request(self)
         export_request.user = Users.objects.get(username="admin")
-        with patch("os.remove", side_effect=NotADirectoryError):
+        with patch("os.remove", side_effect=NotADirectoryError("Test error")):
             response = ExportDatabase(export_request, test=False)
         self.assertEqual(response.status_code, 200)
         # Assert that the 'export_status=error' cookie is set
         self.assertIn("export_status", response.cookies)
         self.assertEqual(response.cookies["export_status"].value, "error")
+        # Assert that the 'export_error_message' cookie is set with correct message
+        self.assertIn("export_error_message", response.cookies)
+        error_message = unquote(response.cookies["export_error_message"].value)
+        self.assertIn("Error cleaning up temporary files", error_message)
+        self.assertIn("Test error", error_message)
 
     # Test failure in export process due to insufficient disk space
     def test_not_enough_disk_space_export(self):
@@ -430,6 +436,10 @@ class ExportTest(TestCase):
         # Assert that the 'export_status=error' cookie is set
         self.assertIn("export_status", response.cookies)
         self.assertEqual(response.cookies["export_status"].value, "error")
+        # Assert that the 'export_error_message' cookie is set with correct message
+        self.assertIn("export_error_message", response.cookies)
+        error_message = unquote(response.cookies["export_error_message"].value)
+        self.assertIn("Not enough disk space to export the database", error_message)
 
     # Test success in export process
     def test_valid_admin_export(self):

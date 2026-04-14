@@ -210,7 +210,23 @@ $(function () {
       ) {
         resetExportButton(iframe, () => clearInterval(checkStatus));
         if (exportStatus.includes("export_status=error")) {
-          $("#exportStatus").removeClass("hidden");
+          // Get the error message from cookie
+          const errorMsgCookie = cookies.find((c) =>
+            c.startsWith("export_error_message=")
+          );
+          let errorMsg = "An error occurred during export.";
+          if (errorMsgCookie) {
+            errorMsg = decodeURIComponent(
+              errorMsgCookie.split("=").slice(1).join("=")
+            );
+            // Clear the error message cookie
+            document.cookie =
+              "export_error_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          }
+          $("#exportStatus")
+            .removeClass("hidden")
+            .empty()
+            .append($("<p>").addClass("text-danger").text(errorMsg));
         }
       } else {
         if (Date.now() - startTime > maxPollMs) {
