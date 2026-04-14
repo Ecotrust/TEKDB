@@ -61,7 +61,7 @@ var account = {
             data: formData,
             dataType: 'json',
             success: function(response) {
-                if (!!response.data) {
+                if (response.success) {
                     console.log('%csuccessfully changed password', 'color:green;');
                     callback({success: true, data: response.data});
                 } else {
@@ -70,7 +70,7 @@ var account = {
                 }
             },
             error: function(response) {
-                console.log('%cerror with change password request submission: %o', 'color: red', JSON.stringify(response.responseText));
+                console.log('%cerror with change password request submission: %o', 'color: red', response.data);
                 callback({success: false, data: response.responseJSON});
             }
         });

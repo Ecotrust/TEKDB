@@ -64,11 +64,11 @@ def login_async(request):
 
 class TEKDBPasswordChangeView(PasswordChangeView):
     def form_invalid(self, form):
-        return JsonResponse({"data": form.errors}, status=400)
+        return JsonResponse({"data": form.errors, "success": False}, status=400)
 
     def form_valid(self, form):
         self.object = form.save()
         # prevent user’s auth session to be invalidated
         # and user have to log in again after password change
         update_session_auth_hash(self.request, self.object)
-        return JsonResponse({"data": form.is_valid()}, status=200)
+        return JsonResponse({"data": None, "success": True}, status=200)
