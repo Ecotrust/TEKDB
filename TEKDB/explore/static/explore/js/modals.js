@@ -40,6 +40,12 @@ $("#changePasswordModal").on("shown.bs.modal", function () {
         // reset form
         changePasswordForm.reset();
       } else {
+        // clear any previous error messages and styling
+        const errorLists = document.querySelectorAll("#changePasswordModal ul");
+        errorLists.forEach((list) => list.remove());
+        const passwordInputs = document.querySelectorAll("#changePasswordModal input[type='password']");
+        passwordInputs.forEach((input) => input.setAttribute("style", ""));
+        
         for (const elementId in response.data.data) {
           const errorList = document.createElement("ul");
           const erroredInput = document.querySelector(`#${elementId}`);
