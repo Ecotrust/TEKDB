@@ -1,9 +1,11 @@
-# Create your views here.
 from django.http.response import JsonResponse
 from django.shortcuts import render
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
-from django.contrib.auth.views import PasswordChangeView, update_session_auth_hash
+from django.contrib.auth import (
+    authenticate,
+    login as auth_login,
+    update_session_auth_hash,
+)
+from django.contrib.auth.views import PasswordChangeView
 
 
 def index(request):
