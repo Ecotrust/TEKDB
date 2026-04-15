@@ -81,12 +81,24 @@ $(function () {
       "export_status=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   };
 
+  const clearExportErrorMessageCookie = () => {
+    document.cookie =
+      "export_error_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  const showErrorMessage = (message) => {
+    $("#exportStatus")
+      .removeClass("hidden")
+      .html(`<p class='text-danger'>${message}</p>`);
+  }
+
   const resetExportButton = (iframe, clear) => {
     $("#export-button").prop("disabled", false);
     $("#export-button").html("Export to .zip");
     iframe.remove();
     clear();
     clearExportStatusCookie();
+    clearExportErrorMessageCookie();
   };
 
   $("button#import-button").click(function (e) {
@@ -220,23 +232,15 @@ $(function () {
               errorMsgCookie.split("=").slice(1).join("=")
             );
             // Clear the error message cookie
-            document.cookie =
-              "export_error_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            clearExportErrorMessageCookie();
           }
-          $("#exportStatus")
-            .removeClass("hidden")
-            .empty()
-            .append($("<p>").addClass("text-danger").text(errorMsg));
+          showErrorMessage(errorMsg);
         }
       } else {
         if (Date.now() - startTime > maxPollMs) {
           // timeout
           resetExportButton(iframe, () => clearInterval(checkStatus));
-          $("#exportStatus")
-            .removeClass("hidden")
-            .html(
-              "<p class='text-danger'>Export timed out. Please try again.</p>"
-            );
+          showErrorMessage("Export timed out. Please try again.");
         }
       }
     }, 1000);
