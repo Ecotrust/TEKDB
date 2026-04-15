@@ -194,6 +194,20 @@ def ImportDatabase(request):
             media_dir = settings.MEDIA_ROOT
         # Unzip file
         if "import_file" in request.FILES.keys():
+            upload_size = request.FILES["import_file"].size
+
+            # Pre-flight: check /tmp has space for the uploaded zip before writing it
+            tmp_path = tempfile.gettempdir()
+            has_tmp_space, tmp_free = check_disk_space(upload_size, tmp_path)
+            if not has_tmp_space:
+                return JsonResponse(
+                    {
+                        "status_code": 507,
+                        "status_message": f"Not enough disk space to process the uploaded file. The file is {bytes_to_readable(upload_size)} but only {bytes_to_readable(tmp_free)} is available. Please free up disk space or contact your IT team.",
+                    },
+                    status=507,
+                )
+
             with tempfile.TemporaryDirectory() as tempdir:
                 try:
                     tmp_zip_file = tempfile.NamedTemporaryFile(

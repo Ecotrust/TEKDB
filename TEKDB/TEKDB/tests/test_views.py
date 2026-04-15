@@ -617,7 +617,7 @@ class ImportDatabaseTest(TransactionTestCase):
                 response.data["status_message"],
             )
 
-    def test_failed_import_insufficient_disk_space_for_fixture(self):
+    def test_failed_import_preflight_no_disk_space_for_upload(self):
         self.import_request = self.factory.post(
             reverse("import_database"),
             {
@@ -638,10 +638,102 @@ class ImportDatabaseTest(TransactionTestCase):
             )
             self.import_request.FILES["import_file"] = import_file
             self.import_request.user = Users.objects.get(username="admin")
-            with patch("TEKDB.views.shutil.disk_usage") as mock_disk_usage:
-                mock_disk_usage.return_value = shutil._ntuple_diskusage(
-                    total=0, used=0, free=0
-                )
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # Simulate no disk space available for the uploaded file
+                mock_check_disk_space.return_value = (False, 0)
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to process the uploaded file.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "2.05 MB",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "0.00 B",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
+    def test_failed_import_preflight_partial_disk_space_for_upload(self):
+        """Test pre-flight check: partial disk space available for uploaded file"""
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # Simulate insufficient disk space (only 300000 bytes = 292.97 KB available)
+                mock_check_disk_space.return_value = (False, 300000)
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to process the uploaded file.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "2.05 MB",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "292.97 KB",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
+    def test_failed_import_insufficient_disk_space_for_fixture_extraction(self):
+        """Test insufficient disk space for extracting database fixture"""
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # First call (upload): sufficient space
+                # Second call (fixture extraction): insufficient space
+                mock_check_disk_space.side_effect = [(True, 10000000), (False, 5000)]
                 response = ImportDatabase(self.import_request)
         self.assertEqual(response.status_code, 507)
         response.data = json.loads(response.content)
@@ -654,7 +746,8 @@ class ImportDatabaseTest(TransactionTestCase):
             response.data["status_message"],
         )
 
-    def test_failed_import_insufficient_disk_space_for_media(self):
+    def test_failed_import_insufficient_disk_space_for_media_restoration(self):
+        """Test insufficient disk space for restoring media files"""
         self.import_request = self.factory.post(
             reverse("import_database"),
             {
@@ -675,18 +768,21 @@ class ImportDatabaseTest(TransactionTestCase):
             )
             self.import_request.FILES["import_file"] = import_file
             self.import_request.user = Users.objects.get(username="admin")
-            import_size = getsize(self.zipname)
 
-            with patch("shutil.disk_usage") as mock_disk_usage:
-                # Simulate sufficient space for fixture but insufficient space for media
-                mock_disk_usage.return_value = shutil._ntuple_diskusage(
-                    total=import_size, used=import_size, free=300000
-                )
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # First call (upload): sufficient space
+                # Second call (fixture extraction): sufficient space
+                # Third call (media restoration): insufficient space
+                mock_check_disk_space.side_effect = [
+                    (True, 10000000),
+                    (True, 10000000),
+                    (False, 1000),
+                ]
                 response = ImportDatabase(self.import_request)
         self.assertEqual(response.status_code, 507)
         response.data = json.loads(response.content)
         self.assertIn(
-            "Not enough disk space to restore media files",
+            "Not enough disk space to restore media files.",
             response.data["status_message"],
         )
         self.assertIn(
