@@ -12,6 +12,7 @@ import io
 import os
 import shutil
 from TEKDB.utils import bytes_to_readable, check_disk_space
+from urllib.parse import quote
 from TEKDB.models import (
     Citations,
     Media,
@@ -108,6 +109,7 @@ def ExportDatabase(request, test=False):
             status=507,
         )
         response.set_cookie("export_status", "error", path="/")
+        response.set_cookie("export_error_message", quote(status_message), path="/")
         return response
 
     tmp_zip = tempfile.NamedTemporaryFile(
@@ -143,13 +145,20 @@ def ExportDatabase(request, test=False):
 
         response = FileResponse(open(tmp_zip.name, "rb"))
 
+    except Exception as e:
+        error_message = f"An error occurred during export: {str(e)}"
+        response.set_cookie("export_status", "error", path="/")
+        response.set_cookie("export_error_message", quote(error_message), path="/")
+        return response
     finally:
         try:
             if not test:
                 os.remove(tmp_zip.name)
             response.set_cookie("export_status", "done", path="/")
-        except (PermissionError, NotADirectoryError):
+        except (PermissionError, NotADirectoryError) as e:
+            error_message = f"Error cleaning up temporary files: {str(e)}"
             response.set_cookie("export_status", "error", path="/")
+            response.set_cookie("export_error_message", quote(error_message), path="/")
             pass
     return response
 
@@ -185,6 +194,20 @@ def ImportDatabase(request):
             media_dir = settings.MEDIA_ROOT
         # Unzip file
         if "import_file" in request.FILES.keys():
+            upload_size = request.FILES["import_file"].size
+
+            # Pre-flight: check /tmp has space for the uploaded zip before writing it
+            tmp_path = tempfile.gettempdir()
+            has_tmp_space, tmp_free = check_disk_space(upload_size, tmp_path)
+            if not has_tmp_space:
+                return JsonResponse(
+                    {
+                        "status_code": 507,
+                        "status_message": f"Not enough disk space to process the uploaded file. The file is {bytes_to_readable(upload_size)} but only {bytes_to_readable(tmp_free)} is available. Please free up disk space or contact your IT team.",
+                    },
+                    status=507,
+                )
+
             with tempfile.TemporaryDirectory() as tempdir:
                 try:
                     tmp_zip_file = tempfile.NamedTemporaryFile(
