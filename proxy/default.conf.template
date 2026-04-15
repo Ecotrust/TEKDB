@@ -18,6 +18,11 @@ server {
   location /media {
     alias /vol/static/media;
   }
+  location /import_database/ {
+    uwsgi_request_buffering off;
+    uwsgi_pass web:8000;
+    include /etc/nginx/uwsgi_params;
+  }
   location / {
     uwsgi_pass web:8000;
     include /etc/nginx/uwsgi_params;
