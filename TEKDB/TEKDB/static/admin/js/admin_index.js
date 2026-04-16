@@ -159,12 +159,19 @@ $(function () {
         },
         error: function (xhr) {
           showNextStepsSection();
-          $("#modalNextSteps").html(
-            unexpectedError(
-              xhr.responseJSON?.status_code || xhr.status,
-              xhr.responseJSON?.status_message || xhr.statusText
-            )
-          );
+          let statusCode = xhr.responseJSON?.status_code || xhr.status;
+          let statusMessage = xhr.responseJSON?.status_message || xhr.statusText;
+          if (xhr.status === 0 || xhr.status === 502 || xhr.status === 503) {
+            statusMessage =
+              "The server could not process the request. This may be caused by insufficient disk space on the server. Please contact your IT team.";
+          } else if (xhr.status === 507) {
+            statusMessage =
+              xhr.responseJSON?.status_message ||
+              "Not enough disk space on the server to process the upload. Please contact your IT team.";
+          } else if (xhr.status === 413) {
+            statusMessage = "The uploaded file is too large for the server to accept.";
+          }
+          $("#modalNextSteps").html(unexpectedError(statusCode, statusMessage));
           $("#continueImport").prop("disabled", false);
           resetModal();
         },
