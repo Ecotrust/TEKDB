@@ -64,7 +64,7 @@ git pull origin develop
 # copy environment variables into the docker directory
 echo "Creating .env.prod file..."
 cat > docker/.env.prod <<EOF
-DEBUG=1
+DEBUG=0
 SECRET_KEY=${django_secret_key}
 ALLOWED_HOSTS=${django_allowed_hosts}
 SQL_ENGINE=django.contrib.gis.db.backends.postgis
