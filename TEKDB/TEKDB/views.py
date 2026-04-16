@@ -99,11 +99,9 @@ def ExportDatabase(request, test=False):
 
     tmp_path = tempfile.gettempdir()
     has_space, free_bytes = check_disk_space(media_size, tmp_path)
-    print(f"Has space for export in {tmp_path}? {has_space}")
     if not has_space:
         status_code = 507
         status_message = f"Not enough disk space to export the database. The media directory is {bytes_to_readable(media_size)} but only {bytes_to_readable(free_bytes)} is available. Please free up disk space or contact your IT team."
-        print(status_message)
         response = JsonResponse(
             {
                 "status_code": status_code,
@@ -150,7 +148,6 @@ def ExportDatabase(request, test=False):
 
     except Exception as e:
         error_message = f"An error occurred during export: {str(e)}"
-        print(error_message)
         response.set_cookie("export_status", "error", path="/")
         response.set_cookie("export_error_message", quote(error_message), path="/")
         return response
@@ -161,7 +158,6 @@ def ExportDatabase(request, test=False):
             response.set_cookie("export_status", "done", path="/")
         except (PermissionError, NotADirectoryError) as e:
             error_message = f"Error cleaning up temporary files: {str(e)}"
-            print(error_message)
             response.set_cookie("export_status", "error", path="/")
             response.set_cookie("export_error_message", quote(error_message), path="/")
             pass
@@ -204,10 +200,6 @@ def ImportDatabase(request):
             # Pre-flight: check /tmp has space for the uploaded zip before writing it
             tmp_path = tempfile.gettempdir()
             has_tmp_space, tmp_free = check_disk_space(upload_size, tmp_path)
-            print(
-                f"Upload size: {bytes_to_readable(upload_size)}, /tmp free space: {bytes_to_readable(tmp_free)}"
-            )
-            print(f"Has space for upload in /tmp? {has_tmp_space}")
             if not has_tmp_space:
                 return JsonResponse(
                     {
