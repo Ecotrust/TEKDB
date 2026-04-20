@@ -24,11 +24,7 @@ from TEKDB.models import (
 )
 import tempfile
 import zipfile
-import time
-import logging
 from configuration.models import Configuration
-
-logger = logging.getLogger(__name__)
 
 
 def chunk_text_file(text_file, chunk_size=64 * 1024):
@@ -182,13 +178,9 @@ def getDBTruncateCommand():
 def ImportDatabase(request):
     status_code = 500
     status_message = "An unknown error occurred."
-    t_start = time.time()
     if not request.method == "POST":
         status_code = 405
         status_message = "Request method not allowed. Must be a post."
-        logger.warning(
-            f"import: Total time for import request {time.time() - t_start:.2f}s"
-        )
         return JsonResponse(
             {"status_code": status_code, "status_message": status_message},
             status=status_code,
@@ -209,9 +201,6 @@ def ImportDatabase(request):
             tmp_path = tempfile.gettempdir()
             has_tmp_space, tmp_free = check_disk_space(upload_size, tmp_path)
             if not has_tmp_space:
-                logger.warning(
-                    f"import: Total time for import request {time.time() - t_start:.2f}s"
-                )
                 return JsonResponse(
                     {
                         "status_code": 507,
@@ -230,9 +219,6 @@ def ImportDatabase(request):
                     tmp_zip_file.seek(0)
                 except OSError as e:
                     if e.errno == errno.ENOSPC:
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
-                        )
                         return JsonResponse(
                             {
                                 "status_code": 507,
@@ -245,9 +231,6 @@ def ImportDatabase(request):
                 except Exception as e:
                     status_code = 500
                     status_message = f'Unable to read the provided file. Be sure it is a zipped file containing a .json representing the database and a "media" directory containing any static files. {e}'
-                    logger.warning(
-                        f"import: Total time for import request {time.time() - t_start:.2f}s"
-                    )
                     return JsonResponse(
                         {"status_code": status_code, "status_message": status_message},
                         status=status_code,
@@ -261,9 +244,6 @@ def ImportDatabase(request):
                     if not len(non_media) == 1 or len(zip.namelist()) < 2:
                         status_code = 500
                         status_message = "Received malformed import file. Must be a zipfile contailing one JSON file and a directory named 'media'"
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
-                        )
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -317,9 +297,6 @@ def ImportDatabase(request):
                     if not has_media_space:
                         status_code = 507
                         status_message = f"Not enough disk space to restore media files. The media requires {bytes_to_readable(media_size)} but only {bytes_to_readable(media_free)} is available. Please free up disk space or contact your IT team."
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
-                        )
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -330,16 +307,10 @@ def ImportDatabase(request):
 
                     try:
                         zip.extract(fixture_name, tempdir)
-                        logger.warning(
-                            f"import: Writing zip took {time.time() - t_start:.2f}s"
-                        )
                     except Exception as e:
                         status_code = 500
                         status_message = (
                             f"Unable to extract the fixture from the provided file. {e}"
-                        )
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
                         )
                         return JsonResponse(
                             {
@@ -354,15 +325,9 @@ def ImportDatabase(request):
                         with connection.cursor() as cursor:
                             for sql_command in truncate_tables_cmds:
                                 cursor.execute(sql_command)
-                        logger.warning(
-                            f"import: Writing DB Truncate took {time.time() - t_start:.2f}s"
-                        )
                     except Exception as e:
                         status_code = 500
                         status_message = f"Error while attempting to remove old database data. New data has NOT been imported. Significant data loss possible. Please check your import file and try again. {e}"
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
-                        )
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -395,15 +360,9 @@ def ImportDatabase(request):
                         # (e.g. the old Media PK now maps to LookupTechniques),
                         # causing FieldDoesNotExist on upload.
                         ContentType.objects.clear_cache()
-                        logger.warning(
-                            f"import: Loading DB Fixture took {time.time() - t_start:.2f}s"
-                        )
                     except Exception as e:
                         status_code = 500
                         status_message = f"Error while loading in data from provided zipfile. Your old data has been removed. Please coordinate with IT to restore your database, and share this error message with them:\n {e}"
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
-                        )
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -433,9 +392,6 @@ def ImportDatabase(request):
                     except Exception as e:
                         status_code = 500
                         status_message = f"Error while restoring your media files. Please work with IT to restore these, providing them your zipfile and this error message:\n {e}"
-                        logger.warning(
-                            f"import: Total time for import request {time.time() - t_start:.2f}s"
-                        )
                         return JsonResponse(
                             {
                                 "status_code": status_code,
@@ -443,9 +399,6 @@ def ImportDatabase(request):
                             },
                             status=status_code,
                         )
-                    logger.warning(
-                        f"import: Restoring media files took {time.time() - t_start:.2f}s"
-                    )
                     status_code = 200
                     status_message = "Database import completed successfully."
                 else:
@@ -456,9 +409,6 @@ def ImportDatabase(request):
             status_message = (
                 "Request must have an attached zipfile to restore the database from."
             )
-    logger.warning(
-        f"import: Total time for import request {time.time() - t_start:.2f}s"
-    )
     return JsonResponse(
         {"status_code": status_code, "status_message": status_message},
         status=status_code,
