@@ -1,8 +1,11 @@
-# Create your views here.
 from django.http.response import JsonResponse
 from django.shortcuts import render
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import (
+    authenticate,
+    login as auth_login,
+    update_session_auth_hash,
+)
+from django.contrib.auth.views import PasswordChangeView
 
 
 def index(request):
@@ -10,15 +13,6 @@ def index(request):
         "pageTitle": "Login",
     }
     return render(request, "index.html", context)
-    # return HttpResponse("<h1>Server error: Already Logged In")
-
-
-def forgot(request):
-    context = {
-        "pageTitle": "Forgot Login",
-    }
-    return render(request, "forgot.html", context)
-    # return HttpResponse("<h1>Forgot Password")
 
 
 def login(request):
@@ -66,3 +60,15 @@ def login_async(request):
         "success": login_user["success"],
     }
     return JsonResponse(context)
+
+
+class TEKDBPasswordChangeView(PasswordChangeView):
+    def form_invalid(self, form):
+        return JsonResponse({"data": form.errors, "success": False}, status=400)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        # prevent user’s auth session to be invalidated
+        # and user have to log in again after password change
+        update_session_auth_hash(self.request, self.object)
+        return JsonResponse({"data": None, "success": True}, status=200)
