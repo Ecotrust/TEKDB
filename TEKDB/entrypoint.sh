@@ -29,12 +29,12 @@ fi
 
 # Set up restricted gis user after migrations now that tables are created
 echo "Configuring gis database permissions..."
-PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_USER" -d "$SQL_DATABASE" -v ON_ERROR_STOP=1 <<EOF
+PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_USER" -d "$SQL_DATABASE" -v ON_ERROR_STOP=1 -v GIS_USER_PASSWORD="$GIS_USER_PASSWORD" <<EOF
 -- Create user if it doesn't already exist
 DO \$\$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'gis') THEN
-        CREATE USER gis WITH PASSWORD '${GIS_USER_PASSWORD}';
+        EXECUTE 'CREATE USER gis WITH PASSWORD ' || quote_literal(:'GIS_USER_PASSWORD');
         RAISE NOTICE 'Created gis user';
     ELSE
         RAISE NOTICE 'gis user already exists, skipping creation';

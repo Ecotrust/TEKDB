@@ -118,6 +118,7 @@ def ExportDatabase(request, test=False):
     )
 
     response = HttpResponse()
+    export_succeeded = False
     try:
         dumpfile = f"{datestamp}_backup.json"
         # SpooledTemporaryFile keeps the dump in memory up to max_size,
@@ -145,6 +146,7 @@ def ExportDatabase(request, test=False):
                     zip.write(media_file)
 
         response = FileResponse(open(tmp_zip.name, "rb"))
+        export_succeeded = True
 
     except Exception as e:
         error_message = f"An error occurred during export: {str(e)}"
@@ -155,12 +157,12 @@ def ExportDatabase(request, test=False):
         try:
             if not test:
                 os.remove(tmp_zip.name)
-            response.set_cookie("export_status", "done", path="/")
+            if export_succeeded:
+                response.set_cookie("export_status", "done", path="/")
         except (PermissionError, NotADirectoryError) as e:
             error_message = f"Error cleaning up temporary files: {str(e)}"
             response.set_cookie("export_status", "error", path="/")
             response.set_cookie("export_error_message", quote(error_message), path="/")
-            pass
     return response
 
 
