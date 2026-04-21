@@ -15,35 +15,32 @@
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
-        ></button>
+        ><i class="bi bi-x-lg text-light"></i></button>
       </div>
       <div class="modal-body">{% include 'registration/login.html' %}</div>
     </div>
   </div>
 </div>
 
-{% comment %}
-<!-- Results Map -->
 <div
   class="modal fade"
-  id="resultsMapModal"
+  id="changePasswordModal"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="resultsMapModalLabel"
+  aria-labelledby="changePasswordModalLabel"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="resultsMapModalLabel">Results Map</h4>
+        <h4 class="modal-title" id="changePasswordModalLabel">Change Password</h4>
         <button
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
-        ></button>
+        ><i class="bi bi-x-lg text-light"></i></button>
       </div>
-      <div class="modal-body">{% include 'results_map.html' %}</div>
+      <div class="modal-body">{% include 'change_password.html' %}</div>
     </div>
   </div>
 </div>
-{% endcomment %}
