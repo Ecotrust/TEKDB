@@ -10,7 +10,8 @@ services:
       service: web
     command: ["prod-local"]
     env_file:
-      - .env.dev
+      - path: .env.dev
+        required: true
     ports: []
     depends_on:
       db:
@@ -23,7 +24,7 @@ services:
   proxy:
     build:
       context: ../proxy/
-      dockerfile: ../proxy/Dockerfile
+      dockerfile: ../proxy/Dockerfile.local
     restart: unless-stopped
     depends_on:
       - web

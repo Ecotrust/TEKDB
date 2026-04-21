@@ -81,12 +81,24 @@ $(function () {
       "export_status=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   };
 
+  const clearExportErrorMessageCookie = () => {
+    document.cookie =
+      "export_error_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  const showErrorMessage = (message) => {
+    $("#exportStatus")
+      .removeClass("hidden")
+      .html(`<p class='text-danger'>${message}</p>`);
+  }
+
   const resetExportButton = (iframe, clear) => {
     $("#export-button").prop("disabled", false);
     $("#export-button").html("Export to .zip");
     iframe.remove();
     clear();
     clearExportStatusCookie();
+    clearExportErrorMessageCookie();
   };
 
   $("button#import-button").click(function (e) {
@@ -147,12 +159,19 @@ $(function () {
         },
         error: function (xhr) {
           showNextStepsSection();
-          $("#modalNextSteps").html(
-            unexpectedError(
-              xhr.responseJSON?.status_code || xhr.status,
-              xhr.responseJSON?.status_message || xhr.statusText
-            )
-          );
+          let statusCode = xhr.responseJSON?.status_code || xhr.status;
+          let statusMessage = xhr.responseJSON?.status_message || xhr.statusText;
+          if (xhr.status === 0 || xhr.status === 502 || xhr.status === 503) {
+            statusMessage =
+              "The server could not process the request. This may be caused by insufficient disk space on the server. Please contact your IT team.";
+          } else if (xhr.status === 507) {
+            statusMessage =
+              xhr.responseJSON?.status_message ||
+              "Not enough disk space on the server to process the upload. Please contact your IT team.";
+          } else if (xhr.status === 413) {
+            statusMessage = "The uploaded file is too large for the server to accept.";
+          }
+          $("#modalNextSteps").html(unexpectedError(statusCode, statusMessage));
           $("#continueImport").prop("disabled", false);
           resetModal();
         },
@@ -210,17 +229,25 @@ $(function () {
       ) {
         resetExportButton(iframe, () => clearInterval(checkStatus));
         if (exportStatus.includes("export_status=error")) {
-          $("#exportStatus").removeClass("hidden");
+          // Get the error message from cookie
+          const errorMsgCookie = cookies.find((c) =>
+            c.startsWith("export_error_message=")
+          );
+          let errorMsg = "An error occurred during export.";
+          if (errorMsgCookie) {
+            errorMsg = decodeURIComponent(
+              errorMsgCookie.split("=").slice(1).join("=")
+            );
+            // Clear the error message cookie
+            clearExportErrorMessageCookie();
+          }
+          showErrorMessage(errorMsg);
         }
       } else {
         if (Date.now() - startTime > maxPollMs) {
           // timeout
           resetExportButton(iframe, () => clearInterval(checkStatus));
-          $("#exportStatus")
-            .removeClass("hidden")
-            .html(
-              "<p class='text-danger'>Export timed out. Please try again.</p>"
-            );
+          showErrorMessage("Export timed out. Please try again.");
         }
       }
     }, 1000);

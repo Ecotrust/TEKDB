@@ -7,6 +7,7 @@ services:
       POSTGRES_DB: ${SQL_DATABASE}
       POSTGRES_USER: ${SQL_USER}
       POSTGRES_PASSWORD: ${SQL_PASSWORD}
+      GIS_USER_PASSWORD: ${GIS_USER_PASSWORD}
     volumes:
       - tekdb_db_data:/var/lib/postgresql/data
     ports:
@@ -24,7 +25,8 @@ services:
       dockerfile: ../TEKDB/Dockerfile
     restart: unless-stopped
     env_file:
-      - .env.dev
+      - path: .env.dev
+        required: true
     ports:
       - "8000:8000"
 

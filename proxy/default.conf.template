@@ -1,0 +1,30 @@
+server {
+  listen 8080;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 8443 ssl;
+  client_max_body_size 0;
+
+  ssl_certificate     /etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem;
+  ssl_protocols       TLSv1.2 TLSv1.3;
+  ssl_ciphers         HIGH:!aNULL:!MD5;
+
+  location /static {
+    alias /vol/static/static;
+  }
+  location /media {
+    alias /vol/static/media;
+  }
+  location /import_database/ {
+    uwsgi_request_buffering off;
+    uwsgi_pass web:8000;
+    include /etc/nginx/uwsgi_params;
+  }
+  location / {
+    uwsgi_pass web:8000;
+    include /etc/nginx/uwsgi_params;
+  }
+}

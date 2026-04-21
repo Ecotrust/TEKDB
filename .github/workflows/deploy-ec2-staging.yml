@@ -117,9 +117,10 @@ jobs:
               "sudo docker compose -f /tekdb/TEKDB/docker/docker-compose.prod.yaml down",
               "docker compose --env-file /tekdb/TEKDB/docker/.env.prod -f /tekdb/TEKDB/docker/docker-compose.prod.yaml up -d",
               "sleep 5",
-              "docker ps --filter name=web --format \"{{.Status}}\""
+              "docker ps --filter name=web --format \"{{.Status}}\"",
+              "docker image prune -f"
             ]' \
-            --timeout-seconds 120 \
+            --timeout-seconds 300 \
             --comment "Deploy ${{ github.sha }}" \
             --query "Command.CommandId" \
             --output text)

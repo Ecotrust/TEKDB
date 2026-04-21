@@ -1,16 +1,9 @@
 from django import template
 import psutil
 
+from TEKDB.utils import bytes_to_readable
 
 register = template.Library()
-
-
-def bytes_to_readable(num_bytes, suffix="B"):
-    """Converts bytes to a human-readable format (e.g., KB, MB, GB)."""
-    for unit in ["", "K", "M", "G", "T", "P"]:
-        if num_bytes < 1024:
-            return f"{num_bytes:.2f} {unit}{suffix}"
-        num_bytes /= 1024
 
 
 @register.simple_tag(name="disk_space_report")

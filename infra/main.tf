@@ -97,3 +97,18 @@ variable "celery_broker_url" {
   description = "Broker URL for Celery"
   type        = string
 }
+
+variable "gis_user_password" {
+  description = "Password for GIS database user"
+  type        = string
+}
+
+variable "domain_name" {
+  description = "Domain name for the application"
+  type        = string
+}
+
+variable "ssl_admin_email" {
+  description = "Admin email for SSL certificate registration (Certbot)"
+  type        = string
+}

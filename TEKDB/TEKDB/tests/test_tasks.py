@@ -12,7 +12,7 @@ class DeleteExpiredChunksTest(TestCase):
             MEDIA_ROOT="/nonexistent", ADMIN_RESUMABLE_CHUNK_FOLDER="does_not_exist"
         ):
             result = delete_expired_chunks.run(max_age_hours=24)
-        self.assertIsNone(result)
+        self.assertEqual(result, "Target directory not found; skipping cleanup.")
 
     def test_deletes_expired_chunks_and_skips_new(self):
         import tempfile

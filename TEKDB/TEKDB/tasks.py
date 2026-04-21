@@ -2,18 +2,12 @@ import os
 import logging
 from datetime import timedelta
 from celery import shared_task
-
 from django.utils import timezone
 
+from TEKDB.utils import bytes_to_readable
+
+
 logger = logging.getLogger("delete_expired_chunks")
-
-
-def bytes_to_readable(num_bytes, suffix="B"):
-    """Converts bytes to a human-readable format (e.g., KB, MB, GB)."""
-    for unit in ["", "K", "M", "G", "T", "P"]:
-        if num_bytes < 1024:
-            return f"{num_bytes:.2f} {unit}{suffix}"
-        num_bytes /= 1024
 
 
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,))
@@ -28,7 +22,7 @@ def delete_expired_chunks(self, max_age_hours=24):
 
     if not os.path.isdir(target_dir):
         logger.error(f"Target directory does not exist: {target_dir}")
-        return
+        return "Target directory not found; skipping cleanup."
 
     logger.info(
         f"Starting cleanup of '{target_dir}' — files older than {max_age_hours}h"

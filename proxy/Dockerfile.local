@@ -1,0 +1,12 @@
+FROM nginxinc/nginx-unprivileged:1-alpine
+
+USER root
+
+COPY ./default.local.conf /etc/nginx/templates/default.local.conf
+COPY ./uwsgi_params /etc/nginx/uwsgi_params
+
+RUN chmod 644 /etc/nginx/templates/default.local.conf /etc/nginx/uwsgi_params && \
+    mkdir -p /vol/static && \
+    chmod 755 /vol/static
+
+USER nginx

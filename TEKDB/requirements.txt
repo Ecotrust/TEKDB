@@ -32,11 +32,5 @@ testresources
 twisted>=22.4.0
 urllib3>=1.26.5
 
-#OPTIONAL, BUT LOVELY FOR DEBUGGING
-ipdb
-ipython
-
 # Serve static files in production containers
 whitenoise>=6.0.0,<7.0.0
-# FORMATTING AND LINTING
-ruff
