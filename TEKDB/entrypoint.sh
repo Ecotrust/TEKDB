@@ -34,7 +34,7 @@ PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_U
 DO \$\$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'gis') THEN
-        EXECUTE 'CREATE USER gis WITH PASSWORD ' || quote_literal(:'GIS_USER_PASSWORD');
+        CREATE USER gis WITH PASSWORD :'GIS_USER_PASSWORD';
         RAISE NOTICE 'Created gis user';
     ELSE
         RAISE NOTICE 'gis user already exists, skipping creation';
