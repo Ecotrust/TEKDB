@@ -606,6 +606,19 @@ class ResourcesTest(ITKSearchTest):
 
         self.assertEqual(len(relationships), 4)
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Resources.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Common Name",
+            "Indigenous Name",
+            "Genus",
+            "Species",
+            "Broad Species Group",
+            "Alt Name",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # ResourcesActivityEvents ('Activities')
 class ResourcesActivityEventsTest(ITKSearchTest):

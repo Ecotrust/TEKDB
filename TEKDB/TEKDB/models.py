@@ -862,6 +862,20 @@ class LookupResourceGroup(Lookup):
 
 
 class Resources(Reviewable, Queryable, Record, ModeratedModel):
+    FIELDS = ["commonname", "indigenousname", "genus", "species"]
+    FK_FIELDS = [
+        ("resourceclassificationgroup", "resourceclassificationgroup"),
+        ("resourcealtindigenousname", "altindigenousname"),
+    ]
+    WEIGHT_LOOKUP = {
+        "commonname": "A",
+        "indigenousname": "A",
+        "genus": "C",
+        "species": "C",
+        "resourceclassificationgroup": "B",
+        "resourcealtindigenousname": "A",
+    }
+    SORT_FIELD = "commonname"
     resourceid = models.AutoField(db_column="resourceid", primary_key=True)
     commonname = models.CharField(
         db_column="commonname",
@@ -911,28 +925,31 @@ class Resources(Reviewable, Queryable, Record, ModeratedModel):
     def __str__(self):
         return self.commonname or ""
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=["commonname", "indigenousname", "genus", "species"],  # fields to search
-        fk_fields=[
-            ("resourceclassificationgroup", "resourceclassificationgroup"),
-            ("resourcealtindigenousname", "altindigenousname"),
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "commonname": "A",
-            "indigenousname": "A",
-            "genus": "C",
-            "species": "C",
-            "resourceclassificationgroup": "B",
-            "resourcealtindigenousname": "A",
-        }
+        instance = cls()
+        if fields is None:
+            fields = instance.FIELDS
+        if fk_fields is None:
+            fk_fields = instance.FK_FIELDS
 
-        sort_field = "commonname"
+        weight_lookup = instance.WEIGHT_LOOKUP
+        sort_field = instance.SORT_FIELD
 
         return run_keyword_search(
             Resources, keyword, fields, fk_fields, weight_lookup, sort_field
         )
+
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        instance = cls()
+        return list_queryable_fields(cls, instance)
 
     def image(self):
         return settings.RECORD_ICONS["resource"]
