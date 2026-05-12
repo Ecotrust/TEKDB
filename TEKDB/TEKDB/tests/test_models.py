@@ -468,6 +468,22 @@ class PlacesTest(ITKSearchTest):
         self.assertIn("feature", response)
         self.assertIsNone(response["feature"])
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Places.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Indigenous Name",
+            "English Name",
+            "English Translation",
+            "Source",
+            "Digitized By",
+            "Planning Unit",
+            "Primary Habitat",
+            "Tribe",
+            "Alternate Name",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # Resources
 class ResourcesTest(ITKSearchTest):

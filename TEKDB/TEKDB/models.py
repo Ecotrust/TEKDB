@@ -125,6 +125,23 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     return results
 
 
+def list_queryable_fields(model):
+    """Returns a list of verbose names for for fields on the given model that are included in the keyword_search 'fields' or 'fk_fields lists."""
+    queryable_fields = []
+    if hasattr(model, "keyword_search_fields"):
+        queryable_fields += model.keyword_search_fields
+    if hasattr(model, "keyword_search_fk_fields"):
+        queryable_fields += [field[0] for field in model.keyword_search_fk_fields]
+    verbose_field_names = []
+    for field in model._meta.fields:
+        if field.name in queryable_fields:
+            verbose_field_names.append(field.verbose_name)
+    for field in model._meta.related_objects:
+        if field.name in queryable_fields:
+            verbose_field_names.append(field.related_model._meta.verbose_name)
+    return verbose_field_names
+
+
 class ModeratedModel(models.Model):
     class Meta:
         abstract = True
@@ -513,6 +530,32 @@ class LookupHabitat(Lookup):
 
 
 class Places(Reviewable, Queryable, Record, ModeratedModel):
+    FIELDS = [
+        "indigenousplacename",
+        "englishplacename",
+        "indigenousplacenamemeaning",
+        "Source",
+        "DigitizedBy",
+    ]
+    FK_FIELDS = [
+        ("planningunitid", "planningunitname"),
+        ("primaryhabitat", "habitat"),
+        ("tribeid", "tribe"),
+        ("placealtindigenousname", "altindigenousname"),
+    ]
+    WEIGHT_LOOKUP = {
+        "indigenousplacename": "A",
+        "englishplacename": "A",
+        "indigenousplacenamemeaning": "A",
+        "Source": "C",
+        "DigitizedBy": "C",
+        "planningunitid": "B",
+        "primaryhabitat": "B",
+        "tribeid": "B",
+        "placealtindigenousname": "A",
+    }
+    SORT_FIELD = "indigenousplacename"
+
     placeid = models.AutoField(db_column="placeid", primary_key=True)
     # PlaceID
     indigenousplacename = models.CharField(
@@ -607,39 +650,51 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name = "Place"
         verbose_name_plural = "Places"
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "indigenousplacename",
-            "englishplacename",
-            "indigenousplacenamemeaning",
-            "Source",
-            "DigitizedBy",
-        ],  # fields to search
-        fk_fields=[
-            ("planningunitid", "planningunitname"),
-            ("primaryhabitat", "habitat"),
-            ("tribeid", "tribe"),
-            ("placealtindigenousname", "altindigenousname"),
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "indigenousplacename": "A",
-            "englishplacename": "A",
-            "indigenousplacenamemeaning": "A",
-            "Source": "C",
-            "DigitizedBy": "C",
-            "planningunitid": "B",
-            "primaryhabitat": "B",
-            "tribeid": "B",
-            "placealtindigenousname": "A",
-        }
+        instance = cls()
+        if fields is None:
+            fields = instance.FIELDS
+        if fk_fields is None:
+            fk_fields = instance.FK_FIELDS
 
-        sort_field = "indigenousplacename"
+        weight_lookup = instance.WEIGHT_LOOKUP
+        sort_field = instance.SORT_FIELD
 
         return run_keyword_search(
             Places, keyword, fields, fk_fields, weight_lookup, sort_field
         )
+
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        instance = cls()
+
+        fk_related_field_lookup = {fk[0]: fk[1] for fk in instance.FK_FIELDS}
+
+        human_readable_fields = []
+
+        for key in instance.WEIGHT_LOOKUP.keys():
+            field = cls._meta.get_field(key)
+            if hasattr(field, "verbose_name"):
+                human_readable_fields.append(str(field.verbose_name).title())
+            else:
+                # ManyToOneRel (reverse relation) — look up the related field via FK_FIELDS
+                related_field_name = fk_related_field_lookup.get(key)
+                if related_field_name:
+                    related_field = field.related_model._meta.get_field(
+                        related_field_name
+                    )
+                    human_readable_fields.append(
+                        str(related_field.verbose_name).title()
+                    )
+
+        return human_readable_fields
 
     def image(self):
         return settings.RECORD_ICONS["place"]
