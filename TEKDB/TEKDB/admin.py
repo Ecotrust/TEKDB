@@ -579,6 +579,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                     "placeofinterview",
                     ("journal", "journalpages"),
                     "preparedfor",
+                    "keywords",
                     # 'rawcitation',
                     "comments",
                 ),
@@ -913,6 +914,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
                     "medialink",
                     "mediadescription",
                     "mediabulkupload",
+                    "keywords",
                 )
             },
         ),
@@ -996,6 +998,7 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
                     ("planningunitid", "primaryhabitat"),
                     "tribeid",
                     "geometry",
+                    "keywords",
                 )
             },
         ),
@@ -1089,6 +1092,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
                     ("commonname", "indigenousname"),
                     ("genus", "species"),
                     "resourceclassificationgroup",
+                    "keywords",
                 )
             },
         ),
@@ -1179,6 +1183,7 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
                     "customaryuse",
                     "timing",
                     "timingdescription",
+                    "keywords",
                 )
             },
         ),

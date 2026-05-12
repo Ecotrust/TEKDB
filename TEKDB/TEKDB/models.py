@@ -301,6 +301,17 @@ class Reviewable(models.Model):
         abstract = True
 
 
+class KeywordSearchable(models.Model):
+    keywords = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="keywords",
+    )
+
+    class Meta:
+        abstract = True
+
+
 class Queryable(models.Model):
     enteredbyname = models.CharField(
         db_column="enteredbyname",
@@ -559,13 +570,14 @@ class LookupHabitat(Lookup):
         return self.habitat or ""
 
 
-class Places(Reviewable, Queryable, Record, ModeratedModel):
+class Places(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
     FIELDS = [
         "indigenousplacename",
         "englishplacename",
         "indigenousplacenamemeaning",
         "Source",
         "DigitizedBy",
+        "keywords",
     ]
     FK_FIELDS = [
         ("planningunitid", "planningunitname"),
@@ -574,6 +586,7 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         ("placealtindigenousname", "altindigenousname"),
     ]
     WEIGHT_LOOKUP = {
+        "keywords": "A",
         "indigenousplacename": "A",
         "englishplacename": "A",
         "indigenousplacenamemeaning": "A",
@@ -861,13 +874,14 @@ class LookupResourceGroup(Lookup):
         return self.resourceclassificationgroup or ""
 
 
-class Resources(Reviewable, Queryable, Record, ModeratedModel):
-    FIELDS = ["commonname", "indigenousname", "genus", "species"]
+class Resources(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
+    FIELDS = ["commonname", "indigenousname", "genus", "species", "keywords"]
     FK_FIELDS = [
         ("resourceclassificationgroup", "resourceclassificationgroup"),
         ("resourcealtindigenousname", "altindigenousname"),
     ]
     WEIGHT_LOOKUP = {
+        "keywords": "A",
         "commonname": "A",
         "indigenousname": "A",
         "genus": "C",
@@ -1432,8 +1446,13 @@ class LookupActivity(Lookup):
         return self.activity or ""
 
 
-class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
+class ResourcesActivityEvents(
+    Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable
+):
+    """Aka 'Activity' - this is the relationship between a Place and a Resource that describes an activity that took place involving that resource at that place."""
+
     FIELDS = [
+        "keywords",
         "relationshipdescription",
         "activitylongdescription",
         "gear",
@@ -1457,6 +1476,7 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
         ("timing", "timing"),
     ]
     WEIGHT_LOOKUP = {
+        "keywords": "A",
         "relationshipdescription": "B",
         "activitylongdescription": "A",
         "gear": "B",
@@ -1878,8 +1898,9 @@ class LookupAuthorType(Lookup):
         return self.authortype or ""
 
 
-class Citations(Reviewable, Queryable, Record, ModeratedModel):
+class Citations(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
     FIELDS = [
+        "keywords",
         "referencetext",
         "authorprimary",
         "authorsecondary",
@@ -1897,6 +1918,7 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         ("authortype", "authortype"),
     ]
     WEIGHT_LOOKUP = {
+        "keywords": "A",
         "referencetext": "A",
         "authorprimary": "A",
         "authorsecondary": "A",
@@ -2802,15 +2824,10 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
     def __str__(self):
         return self.mediabulkname or ""
 
-    # @property
-    # def count(self):
-    # number of media items uploaded
 
-    # Ability to edit Media
-
-
-class Media(Reviewable, Queryable, Record, ModeratedModel):
+class Media(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
     FIELDS = [
+        "keywords",
         "medianame",
         "mediadescription",
         "medialink",
@@ -2818,6 +2835,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     ]
     FK_FIELDS = [("mediatype", "mediatype")]
     WEIGHT_LOOKUP = {
+        "keywords": "A",
         "medianame": "A",
         "mediadescription": "B",
         "medialink": "B",
