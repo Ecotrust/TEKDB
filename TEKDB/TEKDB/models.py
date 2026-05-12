@@ -1862,6 +1862,39 @@ class LookupAuthorType(Lookup):
 
 
 class Citations(Reviewable, Queryable, Record, ModeratedModel):
+    FIELDS = [
+        "referencetext",
+        "authorprimary",
+        "authorsecondary",
+        "placeofinterview",
+        "title",
+        "seriestitle",
+        "seriesvolume",
+        "serieseditor",
+        "publisher",
+        "publishercity",
+        "preparedfor",
+    ]
+    FK_FIELDS = [
+        ("referencetype", "documenttype"),
+        ("authortype", "authortype"),
+    ]
+    WEIGHT_LOOKUP = {
+        "referencetext": "A",
+        "authorprimary": "A",
+        "authorsecondary": "A",
+        "placeofinterview": "C",
+        "title": "A",
+        "seriestitle": "C",
+        "seriesvolume": "C",
+        "serieseditor": "C",
+        "publisher": "C",
+        "publishercity": "C",
+        "preparedfor": "C",
+        "referencetype": "B",
+        "authortype": "B",
+    }
+    SORT_FIELD = "referencetext"
     citationid = models.AutoField(db_column="citationid", primary_key=True)
     referencetype = models.ForeignKey(
         LookupReferenceType,
@@ -1964,7 +1997,7 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         max_length=100,
         blank=True,
         null=True,
-        verbose_name="prepared_for",
+        verbose_name="prepared for",
     )
     rawcitation = HTMLField(
         db_column="rawcitation",
@@ -1987,81 +2020,31 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name = "Bibliographic Source"
         verbose_name_plural = "Bibliographic Sources"
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "referencetext",
-            "authorprimary",
-            "authorsecondary",
-            "placeofinterview",
-            "title",
-            "seriestitle",
-            "seriesvolume",
-            "serieseditor",
-            "publisher",
-            "publishercity",
-            "preparedfor",
-        ],  # fields to search
-        fk_fields=[
-            ("referencetype", "documenttype"),
-            ("authortype", "authortype"),
-            # ('intervieweeid','interviewee'),
-            # ('interviewerid','interviewer')
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "referencetext": "A",
-            "authorprimary": "A",
-            "authorsecondary": "A",
-            "placeofinterview": "C",
-            "title": "A",
-            "seriestitle": "C",
-            "seriesvolume": "C",
-            "serieseditor": "C",
-            "publisher": "C",
-            "publishercity": "C",
-            "preparedfor": "C",
-            "referencetype": "B",
-            "authortype": "B",
-            # 'intervieweeid': 'B',
-            # 'interviewerid': 'B'
-        }
+        instance = cls()
+        if fields is None:
+            fields = instance.FIELDS
+        if fk_fields is None:
+            fk_fields = instance.FK_FIELDS
 
-        sort_field = "referencetext"
+        weight_lookup = instance.WEIGHT_LOOKUP
+        sort_field = instance.SORT_FIELD
 
         return run_keyword_search(
             Citations, keyword, fields, fk_fields, weight_lookup, sort_field
         )
 
-    # def keyword_search(keyword):
-    #     reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
-    #     reference_loi = [reference.pk for reference in reference_qs]
-
-    #     authortype_qs = LookupAuthorType.objects.filter(authortype__icontains=keyword)
-    #     authortype_loi = [authortype.pk for authortype in authortype_qs]
-
-    #     people_qs = People.keyword_search(keyword)
-    #     people_loi = [person.pk for person in people_qs]
-
-    #     return Citations.objects.filter(
-    #         Q(referencetype__in=reference_loi) |
-    #         Q(referencetext__icontains=keyword) |
-    #         Q(authortype__in=authortype_loi) |
-    #         Q(authorprimary__icontains=keyword) |
-    #         Q(authorsecondary__icontains=keyword) |
-    #         Q(intervieweeid__in=people_loi) |
-    #         Q(interviewerid__in=people_loi) |
-    #         Q(placeofinterview__icontains=keyword) |
-    #         Q(title__icontains=keyword) |
-    #         Q(seriestitle__icontains=keyword) |
-    #         Q(seriesvolume__icontains=keyword) |
-    #         Q(serieseditor__icontains=keyword) |
-    #         Q(publisher__icontains=keyword) |
-    #         Q(publishercity__icontains=keyword) |
-    #         Q(preparedfor__icontains=keyword) |
-    #         Q(comments__icontains=keyword) |
-    #         Q(journal__icontains=keyword)
-    #     )
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        instance = cls()
+        return list_queryable_fields(cls, instance)
 
     def image(self):
         return settings.RECORD_ICONS["citation"]

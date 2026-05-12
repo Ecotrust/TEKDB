@@ -864,6 +864,26 @@ class CitationsTest(ITKSearchTest):
         expected_description = "Text on marine flora and fauna"
         self.assertEqual(description_text, expected_description)
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Citations.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Description",
+            "Primary Author",
+            "Secondary Author",
+            "Place Of Interview",
+            "Title",
+            "Series Title",
+            "Series Volume",
+            "Series Editor",
+            "Publisher",
+            "City",
+            "Prepared For",
+            "Reference Type",
+            "Author Type",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # Media
 class MediaTest(ITKSearchTest):
