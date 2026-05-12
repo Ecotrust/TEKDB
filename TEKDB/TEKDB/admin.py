@@ -535,9 +535,14 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = (
         "searchable_fields_display",
         "enteredbydate",
-        "modifiedbydate",
         "enteredbyname",
+        "enteredbytitle",
+        "enteredbytribe",
+        "modifiedbydate",
         "modifiedbyname",
+        "modifiedbytitle",
+        "modifiedbytribe",
+        "modifiedbydate",
     )
 
     @admin.display(description="Keyword-searchable fields")
