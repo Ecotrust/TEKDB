@@ -2793,6 +2793,22 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
 
 
 class Media(Reviewable, Queryable, Record, ModeratedModel):
+    FIELDS = [
+        "medianame",
+        "mediadescription",
+        "medialink",
+        "mediafile",
+    ]
+    FK_FIELDS = [("mediatype", "mediatype")]
+    WEIGHT_LOOKUP = {
+        "medianame": "A",
+        "mediadescription": "B",
+        "medialink": "B",
+        "mediafile": "B",
+        "mediatype": "C",
+    }
+    SORT_FIELD = "medianame"
+
     mediaid = models.AutoField(db_column="mediaid", primary_key=True)
     mediatype = models.ForeignKey(
         LookupMediaType,
@@ -2856,40 +2872,32 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     def __str__(self):
         return "%s [ %s ]" % (self.medianame, self.mediatype) or ""
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "medianame",
-            "mediadescription",
-            "medialink",
-            "mediafile",
-        ],  # fields to search
-        fk_fields=[("mediatype", "mediatype")],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "medianame": "A",
-            "mediadescription": "B",
-            "medialink": "B",
-            "mediafile": "B",
-            "mediatype": "C",
-        }
+        instance = cls()
+        if fields is None:
+            fields = instance.FIELDS
+        if fk_fields is None:
+            fk_fields = instance.FK_FIELDS
 
-        sort_field = "medianame"
+        weight_lookup = instance.WEIGHT_LOOKUP
+        sort_field = instance.SORT_FIELD
 
         return run_keyword_search(
             Media, keyword, fields, fk_fields, weight_lookup, sort_field
         )
 
-    # def keyword_search(keyword):
-    #     type_qs = LookupMediaType.keyword_search(keyword)
-    #     type_loi = [mtype.pk for mtype in type_qs]
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        instance = cls()
+        return list_queryable_fields(cls, instance)
 
-    #     return Media.objects.filter(
-    #         Q(mediatype__in=type_loi) |
-    #         Q(medianame__icontains=keyword)|
-    #         Q(mediadescription__icontains=keyword) |
-    #         Q(medialink__icontains=keyword)
-    #     )
     @property
     def description_text(self):
         from django.utils.html import strip_tags

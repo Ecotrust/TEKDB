@@ -869,6 +869,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 @admin.register(Media)
 class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     readonly_fields = (
+        "searchable_fields_display",
         "medialink",
         "enteredbyname",
         "enteredbytribe",
@@ -889,11 +890,19 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
         "enteredbyname",
         "enteredbydate",
     )
+
+    @admin.display(description="Keyword-searchable fields")
+    def searchable_fields_display(self, instance):
+        fields = instance.__class__.human_readable_list_of_searchable_fields()
+        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
+        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+
     fieldsets = (
         (
             None,
             {
                 "fields": (
+                    "searchable_fields_display",
                     ("medianame", "mediatype", "limitedaccess"),
                     "mediafile",
                     "medialink",

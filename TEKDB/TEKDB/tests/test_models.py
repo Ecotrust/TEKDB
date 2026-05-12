@@ -919,6 +919,18 @@ class MediaTest(ITKSearchTest):
         collision_result = test_model_id_collision(Media, insertion_object, self)
         self.assertTrue(collision_result)
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Media.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Name",
+            "Description",
+            "Historic Location",
+            "File",
+            "Type",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # MediaBulkUpload
 class MediaBulkUploadTest(ITKSearchTest):
