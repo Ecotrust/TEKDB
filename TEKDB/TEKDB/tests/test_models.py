@@ -703,6 +703,29 @@ class ResourcesActivityEventsTest(ITKSearchTest):
         for key in keys:
             self.assertIn(key, data_keys)
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = (
+            ResourcesActivityEvents.human_readable_list_of_searchable_fields()
+        )
+        expected_fields = [
+            "Excerpt",
+            "Full Activity Description",
+            "Gear",
+            "Customary Use",
+            "Timing Description",
+            "Part Used",
+            "Place Resource - Common Name",
+            "Place Resource - English Name",
+            "Place Resource - Indigenous Name",
+            "Place Resource - Alternate Name",
+            "Activity Type",
+            "Participants",
+            "Technique",
+            "Timing",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # Citations (Bibliographic 'Sources')
 class CitationsTest(ITKSearchTest):

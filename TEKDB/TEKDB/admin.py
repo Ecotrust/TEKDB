@@ -1083,8 +1083,34 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
         "enteredbyname",
         "enteredbydate",
     )
+    readonly_fields = (
+        "searchable_fields_display",
+        "enteredbyname",
+        "enteredbytitle",
+        "enteredbytribe",
+        "enteredbydate",
+        "modifiedbyname",
+        "modifiedbytitle",
+        "modifiedbytribe",
+        "modifiedbydate",
+    )
+
+    @admin.display(description="Keyword-searchable fields")
+    def searchable_fields_display(self, instance):
+        fields = instance.__class__.human_readable_list_of_searchable_fields()
+        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
+        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+
     fieldsets = (
-        (None, {"fields": ("placeresourceid",)}),
+        (
+            None,
+            {
+                "fields": (
+                    "searchable_fields_display",
+                    "placeresourceid",
+                )
+            },
+        ),
         (
             "Activity",
             {

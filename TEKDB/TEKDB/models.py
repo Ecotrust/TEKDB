@@ -125,21 +125,51 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     return results
 
 
-def list_queryable_fields(model):
-    """Returns a list of verbose names for for fields on the given model that are included in the keyword_search 'fields' or 'fk_fields lists."""
-    queryable_fields = []
-    if hasattr(model, "keyword_search_fields"):
-        queryable_fields += model.keyword_search_fields
-    if hasattr(model, "keyword_search_fk_fields"):
-        queryable_fields += [field[0] for field in model.keyword_search_fk_fields]
-    verbose_field_names = []
-    for field in model._meta.fields:
-        if field.name in queryable_fields:
-            verbose_field_names.append(field.verbose_name)
-    for field in model._meta.related_objects:
-        if field.name in queryable_fields:
-            verbose_field_names.append(field.related_model._meta.verbose_name)
-    return verbose_field_names
+def list_queryable_fields(cls, instance):
+    human_readable_fields = []
+
+    for field_name in instance.FIELDS:
+        field = cls._meta.get_field(field_name)
+        if hasattr(field, "verbose_name"):
+            human_readable_fields.append(str(field.verbose_name).title())
+        else:
+            human_readable_fields.append(str(field.name).title())
+
+    for field_name_tuple in instance.FK_FIELDS:
+        first_field_name = field_name_tuple[0]
+        first_field = cls._meta.get_field(first_field_name)
+        if hasattr(first_field, "verbose_name"):
+            first_verbose = str(first_field.verbose_name).title()
+        else:
+            first_verbose = str(first_field_name).title()
+
+        if len(field_name_tuple) == 2:
+            # Simple case: forward FK uses the FK's verbose_name; reverse relation uses the related field's
+            if hasattr(first_field, "verbose_name"):
+                human_readable_fields.append(first_verbose)
+            else:
+                related_field = first_field.related_model._meta.get_field(
+                    field_name_tuple[1]
+                )
+                human_readable_fields.append(str(related_field.verbose_name).title())
+        else:
+            # Multi-level traversal: show "[first field] - [last field]"
+            current_model = getattr(first_field, "related_model", None)
+            last_verbose = None
+            for field_name in field_name_tuple[1:]:
+                if current_model is None:
+                    break
+                field = current_model._meta.get_field(field_name)
+                if hasattr(field, "verbose_name"):
+                    last_verbose = str(field.verbose_name).title()
+                current_model = getattr(field, "related_model", None)
+
+            if last_verbose:
+                human_readable_fields.append(f"{first_verbose} - {last_verbose}")
+            else:
+                human_readable_fields.append(first_verbose)
+
+    return human_readable_fields
 
 
 class ModeratedModel(models.Model):
@@ -674,27 +704,7 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
     def human_readable_list_of_searchable_fields(cls):
         """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
         instance = cls()
-
-        fk_related_field_lookup = {fk[0]: fk[1] for fk in instance.FK_FIELDS}
-
-        human_readable_fields = []
-
-        for key in instance.WEIGHT_LOOKUP.keys():
-            field = cls._meta.get_field(key)
-            if hasattr(field, "verbose_name"):
-                human_readable_fields.append(str(field.verbose_name).title())
-            else:
-                # ManyToOneRel (reverse relation) — look up the related field via FK_FIELDS
-                related_field_name = fk_related_field_lookup.get(key)
-                if related_field_name:
-                    related_field = field.related_model._meta.get_field(
-                        related_field_name
-                    )
-                    human_readable_fields.append(
-                        str(related_field.verbose_name).title()
-                    )
-
-        return human_readable_fields
+        return list_queryable_fields(cls, instance)
 
     def image(self):
         return settings.RECORD_ICONS["place"]
@@ -1406,6 +1416,44 @@ class LookupActivity(Lookup):
 
 
 class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
+    FIELDS = [
+        "relationshipdescription",
+        "activitylongdescription",
+        "gear",
+        "customaryuse",
+        "timingdescription",
+    ]
+    FK_FIELDS = [
+        ("partused", "partused"),
+        ("placeresourceid", "resourceid", "commonname"),
+        ("placeresourceid", "placeid", "englishplacename"),
+        ("placeresourceid", "placeid", "indigenousplacename"),
+        (
+            "placeresourceid",
+            "placeid",
+            "placealtindigenousname",
+            "altindigenousname",
+        ),
+        ("activityshortdescription", "activity"),
+        ("participants", "participants"),
+        ("technique", "techniques"),
+        ("timing", "timing"),
+    ]
+    WEIGHT_LOOKUP = {
+        "relationshipdescription": "B",
+        "activitylongdescription": "A",
+        "gear": "B",
+        "customaryuse": "B",
+        "timingdescription": "B",
+        "partused": "C",
+        "placeresourceid": "A",
+        "activityshortdescription": "A",
+        "participants": "C",
+        "technique": "C",
+        "timing": "C",
+    }
+    SORT_FIELD = "activitylongdescription"
+
     resourceactivityid = models.AutoField(
         db_column="resourceactivityid", primary_key=True
     )
@@ -1523,47 +1571,20 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
 
         return unescape(strip_tags(self.relationshipdescription))
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "relationshipdescription",
-            "activitylongdescription",
-            "gear",
-            "customaryuse",
-            "timingdescription",
-        ],  # fields to search
-        fk_fields=[
-            ("partused", "partused"),
-            ("placeresourceid", "resourceid", "commonname"),
-            ("placeresourceid", "placeid", "englishplacename"),
-            ("placeresourceid", "placeid", "indigenousplacename"),
-            (
-                "placeresourceid",
-                "placeid",
-                "placealtindigenousname",
-                "altindigenousname",
-            ),
-            ("activityshortdescription", "activity"),
-            ("participants", "participants"),
-            ("technique", "techniques"),
-            ("timing", "timing"),
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "relationshipdescription": "B",
-            "activitylongdescription": "A",
-            "gear": "B",
-            "customaryuse": "B",
-            "timingdescription": "B",
-            "partused": "C",
-            "placeresourceid": "A",
-            "activityshortdescription": "A",
-            "participants": "C",
-            "technique": "C",
-            "timing": "C",
-        }
-
-        sort_field = "activitylongdescription"
+        instance = cls()
+        if fields is None:
+            fields = instance.FIELDS
+        if fk_fields is None:
+            fk_fields = instance.FK_FIELDS
+        weight_lookup = instance.WEIGHT_LOOKUP
+        sort_field = instance.SORT_FIELD
 
         return run_keyword_search(
             ResourcesActivityEvents,
@@ -1573,6 +1594,12 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             weight_lookup,
             sort_field,
         )
+
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        instance = cls()
+        return list_queryable_fields(cls, instance)
 
     def image(self):
         return settings.RECORD_ICONS["activity"]
