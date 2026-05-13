@@ -549,17 +549,17 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
     def searchable_fields_display(self, instance):
         fields = instance.__class__.human_readable_list_of_searchable_fields()
         items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+        return format_html(
+            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
+            items,
+        )
 
     fieldsets = (
         (
             None,
             {
                 "classes": ("citation-ref-type",),
-                "fields": (
-                    "searchable_fields_display",
-                    "referencetype",
-                ),
+                "fields": ("referencetype",),
             },
         ),
         (
@@ -580,7 +580,6 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                     ("journal", "journalpages"),
                     "preparedfor",
                     "keywords",
-                    # 'rawcitation',
                     "comments",
                 ),
             },
@@ -605,6 +604,7 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
                 )
             },
         ),
+        ("Guide", {"fields": ("searchable_fields_display",)}),
     )
 
     add_form_template = "%s/TEKDB/templates/admin/CitationsForm.html" % BASE_DIR
@@ -901,14 +901,16 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
     def searchable_fields_display(self, instance):
         fields = instance.__class__.human_readable_list_of_searchable_fields()
         items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+        return format_html(
+            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
+            items,
+        )
 
     fieldsets = (
         (
             None,
             {
                 "fields": (
-                    "searchable_fields_display",
                     ("medianame", "mediatype", "limitedaccess"),
                     "mediafile",
                     "medialink",
@@ -938,6 +940,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
                 )
             },
         ),
+        ("Guide", {"fields": ("searchable_fields_display",)}),
     )
     from TEKDB.settings import BASE_DIR
 
@@ -985,14 +988,16 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     def searchable_fields_display(self, instance):
         fields = instance.__class__.human_readable_list_of_searchable_fields()
         items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+        return format_html(
+            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
+            items,
+        )
 
     fieldsets = (
         (
             None,
             {
                 "fields": (
-                    "searchable_fields_display",
                     ("indigenousplacename", "indigenousplacenamemeaning"),
                     "englishplacename",
                     ("planningunitid", "primaryhabitat"),
@@ -1023,6 +1028,7 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
                 )
             },
         ),
+        ("Guide", {"fields": ("searchable_fields_display",)}),
     )
 
     search_fields = (
@@ -1081,14 +1087,16 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
     def searchable_fields_display(self, instance):
         fields = instance.__class__.human_readable_list_of_searchable_fields()
         items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+        return format_html(
+            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
+            items,
+        )
 
     fieldsets = (
         (
             None,
             {
                 "fields": (
-                    "searchable_fields_display",
                     ("commonname", "indigenousname"),
                     ("genus", "species"),
                     "resourceclassificationgroup",
@@ -1116,6 +1124,7 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
                 )
             },
         ),
+        ("Guide", {"fields": ("searchable_fields_display",)}),
     )
     search_fields = (
         "commonname",
@@ -1159,17 +1168,15 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
     def searchable_fields_display(self, instance):
         fields = instance.__class__.human_readable_list_of_searchable_fields()
         items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html("<ul style='margin:0;padding-left:1.2em'>{}</ul>", items)
+        return format_html(
+            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
+            items,
+        )
 
     fieldsets = (
         (
             None,
-            {
-                "fields": (
-                    "searchable_fields_display",
-                    "placeresourceid",
-                )
-            },
+            {"fields": ("placeresourceid",)},
         ),
         (
             "Activity",
@@ -1207,6 +1214,7 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
                 )
             },
         ),
+        ("Guide", {"fields": ("searchable_fields_display",)}),
     )
     search_fields = (
         "placeresourceid__resourceid__commonname",
