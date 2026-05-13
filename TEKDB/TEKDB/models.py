@@ -125,17 +125,17 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     return results
 
 
-def list_queryable_fields(cls, instance):
+def list_queryable_fields(cls):
     human_readable_fields = []
 
-    for field_name in instance.FIELDS:
+    for field_name in cls.FIELDS:
         field = cls._meta.get_field(field_name)
         if hasattr(field, "verbose_name"):
             human_readable_fields.append(str(field.verbose_name).title())
         else:
             human_readable_fields.append(str(field.name).title())
 
-    for field_name_tuple in instance.FK_FIELDS:
+    for field_name_tuple in cls.FK_FIELDS:
         first_field_name = field_name_tuple[0]
         first_field = cls._meta.get_field(first_field_name)
         if hasattr(first_field, "verbose_name"):
@@ -700,14 +700,13 @@ class Places(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
         fields=None,  # fields to search
         fk_fields=None,  # fields to search for fk objects
     ):
-        instance = cls()
         if fields is None:
-            fields = instance.FIELDS
+            fields = cls.FIELDS
         if fk_fields is None:
-            fk_fields = instance.FK_FIELDS
+            fk_fields = cls.FK_FIELDS
 
-        weight_lookup = instance.WEIGHT_LOOKUP
-        sort_field = instance.SORT_FIELD
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Places, keyword, fields, fk_fields, weight_lookup, sort_field
@@ -716,8 +715,7 @@ class Places(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
     @classmethod
     def human_readable_list_of_searchable_fields(cls):
         """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
-        instance = cls()
-        return list_queryable_fields(cls, instance)
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["place"]
@@ -946,14 +944,13 @@ class Resources(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable
         fields=None,  # fields to search
         fk_fields=None,  # fields to search for fk objects
     ):
-        instance = cls()
         if fields is None:
-            fields = instance.FIELDS
+            fields = cls.FIELDS
         if fk_fields is None:
-            fk_fields = instance.FK_FIELDS
+            fk_fields = cls.FK_FIELDS
 
-        weight_lookup = instance.WEIGHT_LOOKUP
-        sort_field = instance.SORT_FIELD
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Resources, keyword, fields, fk_fields, weight_lookup, sort_field
@@ -962,8 +959,7 @@ class Resources(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable
     @classmethod
     def human_readable_list_of_searchable_fields(cls):
         """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
-        instance = cls()
-        return list_queryable_fields(cls, instance)
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["resource"]
@@ -1615,13 +1611,12 @@ class ResourcesActivityEvents(
         fields=None,  # fields to search
         fk_fields=None,  # fields to search for fk objects
     ):
-        instance = cls()
         if fields is None:
-            fields = instance.FIELDS
+            fields = cls.FIELDS
         if fk_fields is None:
-            fk_fields = instance.FK_FIELDS
-        weight_lookup = instance.WEIGHT_LOOKUP
-        sort_field = instance.SORT_FIELD
+            fk_fields = cls.FK_FIELDS
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             ResourcesActivityEvents,
@@ -1635,8 +1630,7 @@ class ResourcesActivityEvents(
     @classmethod
     def human_readable_list_of_searchable_fields(cls):
         """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
-        instance = cls()
-        return list_queryable_fields(cls, instance)
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["activity"]
@@ -2066,14 +2060,13 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable
         fields=None,  # fields to search
         fk_fields=None,  # fields to search for fk objects
     ):
-        instance = cls()
         if fields is None:
-            fields = instance.FIELDS
+            fields = cls.FIELDS
         if fk_fields is None:
-            fk_fields = instance.FK_FIELDS
+            fk_fields = cls.FK_FIELDS
 
-        weight_lookup = instance.WEIGHT_LOOKUP
-        sort_field = instance.SORT_FIELD
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Citations, keyword, fields, fk_fields, weight_lookup, sort_field
@@ -2082,8 +2075,7 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable
     @classmethod
     def human_readable_list_of_searchable_fields(cls):
         """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
-        instance = cls()
-        return list_queryable_fields(cls, instance)
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["citation"]
@@ -2914,14 +2906,13 @@ class Media(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
         fields=None,  # fields to search
         fk_fields=None,  # fields to search for fk objects
     ):
-        instance = cls()
         if fields is None:
-            fields = instance.FIELDS
+            fields = cls.FIELDS
         if fk_fields is None:
-            fk_fields = instance.FK_FIELDS
+            fk_fields = cls.FK_FIELDS
 
-        weight_lookup = instance.WEIGHT_LOOKUP
-        sort_field = instance.SORT_FIELD
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Media, keyword, fields, fk_fields, weight_lookup, sort_field
@@ -2930,8 +2921,7 @@ class Media(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
     @classmethod
     def human_readable_list_of_searchable_fields(cls):
         """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
-        instance = cls()
-        return list_queryable_fields(cls, instance)
+        return list_queryable_fields(cls)
 
     @property
     def description_text(self):

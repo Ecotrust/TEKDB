@@ -404,6 +404,21 @@ class LocalityGISSelectionsInline(admin.TabularInline):
 ####################
 ### MODEL ADMINS ###
 ####################
+
+#### Mixins ####
+
+
+class SearchableFieldsGuideMixin(admin.ModelAdmin):
+    @admin.display(description="Keyword-searchable fields")
+    def searchable_fields_display(self, instance):
+        fields = instance.__class__.human_readable_list_of_searchable_fields()
+        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
+        return format_html(
+            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
+            items,
+        )
+
+
 #### PROXY MODELS ####
 # class RecordAdminProxy(VersionAdmin, ModerationAdmin):
 class RecordAdminProxy(VersionAdmin):
@@ -521,7 +536,7 @@ class RecordModelAdmin(VersionAdmin):
 
 
 @admin.register(Citations)
-class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
+class CitationsAdmin(RecordAdminProxy, RecordModelAdmin, SearchableFieldsGuideMixin):
     list_display = (
         "referencetype",
         "title_text",
@@ -538,21 +553,11 @@ class CitationsAdmin(RecordAdminProxy, RecordModelAdmin):
         "enteredbyname",
         "enteredbytitle",
         "enteredbytribe",
-        "modifiedbydate",
         "modifiedbyname",
         "modifiedbytitle",
         "modifiedbytribe",
         "modifiedbydate",
     )
-
-    @admin.display(description="Keyword-searchable fields")
-    def searchable_fields_display(self, instance):
-        fields = instance.__class__.human_readable_list_of_searchable_fields()
-        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html(
-            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
-            items,
-        )
 
     fieldsets = (
         (
@@ -873,7 +878,7 @@ class MediaBulkUploadAdmin(admin.ModelAdmin):
 
 
 @admin.register(Media)
-class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
+class MediaAdmin(RecordAdminProxy, RecordModelAdmin, SearchableFieldsGuideMixin):
     readonly_fields = (
         "searchable_fields_display",
         "medialink",
@@ -896,15 +901,6 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
         "enteredbyname",
         "enteredbydate",
     )
-
-    @admin.display(description="Keyword-searchable fields")
-    def searchable_fields_display(self, instance):
-        fields = instance.__class__.human_readable_list_of_searchable_fields()
-        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html(
-            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
-            items,
-        )
 
     fieldsets = (
         (
@@ -962,7 +958,7 @@ class MediaAdmin(RecordAdminProxy, RecordModelAdmin):
 
 # class PlacesAdmin(NestedRecordAdminProxy, OSMGeoAdmin, RecordModelAdmin):
 @admin.register(Places)
-class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
+class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin, SearchableFieldsGuideMixin):
     list_display = (
         "indigenousplacename",
         "englishplacename",
@@ -983,15 +979,6 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
         "modifiedbytribe",
         "modifiedbydate",
     )
-
-    @admin.display(description="Keyword-searchable fields")
-    def searchable_fields_display(self, instance):
-        fields = instance.__class__.human_readable_list_of_searchable_fields()
-        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html(
-            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
-            items,
-        )
 
     fieldsets = (
         (
@@ -1061,7 +1048,9 @@ class PlacesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
 
 
 @admin.register(Resources)
-class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
+class ResourcesAdmin(
+    NestedRecordAdminProxy, RecordModelAdmin, SearchableFieldsGuideMixin
+):
     list_display = (
         "commonname",
         "indigenousname",
@@ -1082,15 +1071,6 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
         "modifiedbytribe",
         "modifiedbydate",
     )
-
-    @admin.display(description="Keyword-searchable fields")
-    def searchable_fields_display(self, instance):
-        fields = instance.__class__.human_readable_list_of_searchable_fields()
-        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html(
-            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
-            items,
-        )
 
     fieldsets = (
         (
@@ -1142,7 +1122,9 @@ class ResourcesAdmin(NestedRecordAdminProxy, RecordModelAdmin):
 
 
 @admin.register(ResourcesActivityEvents)
-class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
+class ResourcesActivityEventsAdmin(
+    RecordAdminProxy, RecordModelAdmin, SearchableFieldsGuideMixin
+):
     list_display = (
         "placeresourceid",
         "excerpt_text",
@@ -1163,15 +1145,6 @@ class ResourcesActivityEventsAdmin(RecordAdminProxy, RecordModelAdmin):
         "modifiedbytribe",
         "modifiedbydate",
     )
-
-    @admin.display(description="Keyword-searchable fields")
-    def searchable_fields_display(self, instance):
-        fields = instance.__class__.human_readable_list_of_searchable_fields()
-        items = mark_safe("".join(f"<li>{f}</li>" for f in fields))
-        return format_html(
-            "<ul style='margin:0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px;'>{}</ul>",
-            items,
-        )
 
     fieldsets = (
         (
