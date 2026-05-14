@@ -125,6 +125,53 @@ def run_keyword_search(model, keyword, fields, fk_fields, weight_lookup, sort_fi
     return results
 
 
+def list_queryable_fields(cls):
+    human_readable_fields = []
+
+    for field_name in cls.FIELDS:
+        field = cls._meta.get_field(field_name)
+        if hasattr(field, "verbose_name"):
+            human_readable_fields.append(str(field.verbose_name).title())
+        else:
+            human_readable_fields.append(str(field.name).title())
+
+    for field_name_tuple in cls.FK_FIELDS:
+        first_field_name = field_name_tuple[0]
+        first_field = cls._meta.get_field(first_field_name)
+        if hasattr(first_field, "verbose_name"):
+            first_verbose = str(first_field.verbose_name).title()
+        else:
+            first_verbose = str(first_field_name).title()
+
+        if len(field_name_tuple) == 2:
+            # Simple case: forward FK uses the FK's verbose_name; reverse relation uses the related field's
+            if hasattr(first_field, "verbose_name"):
+                human_readable_fields.append(first_verbose)
+            else:
+                related_field = first_field.related_model._meta.get_field(
+                    field_name_tuple[1]
+                )
+                human_readable_fields.append(str(related_field.verbose_name).title())
+        else:
+            # Multi-level traversal: show "[first field] - [last field]"
+            current_model = getattr(first_field, "related_model", None)
+            last_verbose = None
+            for field_name in field_name_tuple[1:]:
+                if current_model is None:
+                    break
+                field = current_model._meta.get_field(field_name)
+                if hasattr(field, "verbose_name"):
+                    last_verbose = str(field.verbose_name).title()
+                current_model = getattr(field, "related_model", None)
+
+            if last_verbose:
+                human_readable_fields.append(f"{first_verbose} - {last_verbose}")
+            else:
+                human_readable_fields.append(first_verbose)
+
+    return human_readable_fields
+
+
 class ModeratedModel(models.Model):
     class Meta:
         abstract = True
@@ -248,6 +295,17 @@ class Reviewable(models.Model):
         null=True,
         default=None,
         verbose_name="Research Comments",
+    )
+
+    class Meta:
+        abstract = True
+
+
+class KeywordSearchable(models.Model):
+    keywords = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="keywords",
     )
 
     class Meta:
@@ -512,7 +570,35 @@ class LookupHabitat(Lookup):
         return self.habitat or ""
 
 
-class Places(Reviewable, Queryable, Record, ModeratedModel):
+class Places(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
+    FIELDS = [
+        "indigenousplacename",
+        "englishplacename",
+        "indigenousplacenamemeaning",
+        "Source",
+        "DigitizedBy",
+        "keywords",
+    ]
+    FK_FIELDS = [
+        ("planningunitid", "planningunitname"),
+        ("primaryhabitat", "habitat"),
+        ("tribeid", "tribe"),
+        ("placealtindigenousname", "altindigenousname"),
+    ]
+    WEIGHT_LOOKUP = {
+        "keywords": "A",
+        "indigenousplacename": "A",
+        "englishplacename": "A",
+        "indigenousplacenamemeaning": "A",
+        "Source": "C",
+        "DigitizedBy": "C",
+        "planningunitid": "B",
+        "primaryhabitat": "B",
+        "tribeid": "B",
+        "placealtindigenousname": "A",
+    }
+    SORT_FIELD = "indigenousplacename"
+
     placeid = models.AutoField(db_column="placeid", primary_key=True)
     # PlaceID
     indigenousplacename = models.CharField(
@@ -607,39 +693,29 @@ class Places(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name = "Place"
         verbose_name_plural = "Places"
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "indigenousplacename",
-            "englishplacename",
-            "indigenousplacenamemeaning",
-            "Source",
-            "DigitizedBy",
-        ],  # fields to search
-        fk_fields=[
-            ("planningunitid", "planningunitname"),
-            ("primaryhabitat", "habitat"),
-            ("tribeid", "tribe"),
-            ("placealtindigenousname", "altindigenousname"),
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "indigenousplacename": "A",
-            "englishplacename": "A",
-            "indigenousplacenamemeaning": "A",
-            "Source": "C",
-            "DigitizedBy": "C",
-            "planningunitid": "B",
-            "primaryhabitat": "B",
-            "tribeid": "B",
-            "placealtindigenousname": "A",
-        }
+        if fields is None:
+            fields = cls.FIELDS
+        if fk_fields is None:
+            fk_fields = cls.FK_FIELDS
 
-        sort_field = "indigenousplacename"
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Places, keyword, fields, fk_fields, weight_lookup, sort_field
         )
+
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["place"]
@@ -796,7 +872,22 @@ class LookupResourceGroup(Lookup):
         return self.resourceclassificationgroup or ""
 
 
-class Resources(Reviewable, Queryable, Record, ModeratedModel):
+class Resources(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
+    FIELDS = ["commonname", "indigenousname", "genus", "species", "keywords"]
+    FK_FIELDS = [
+        ("resourceclassificationgroup", "resourceclassificationgroup"),
+        ("resourcealtindigenousname", "altindigenousname"),
+    ]
+    WEIGHT_LOOKUP = {
+        "keywords": "A",
+        "commonname": "A",
+        "indigenousname": "A",
+        "genus": "C",
+        "species": "C",
+        "resourceclassificationgroup": "B",
+        "resourcealtindigenousname": "A",
+    }
+    SORT_FIELD = "commonname"
     resourceid = models.AutoField(db_column="resourceid", primary_key=True)
     commonname = models.CharField(
         db_column="commonname",
@@ -846,28 +937,29 @@ class Resources(Reviewable, Queryable, Record, ModeratedModel):
     def __str__(self):
         return self.commonname or ""
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=["commonname", "indigenousname", "genus", "species"],  # fields to search
-        fk_fields=[
-            ("resourceclassificationgroup", "resourceclassificationgroup"),
-            ("resourcealtindigenousname", "altindigenousname"),
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "commonname": "A",
-            "indigenousname": "A",
-            "genus": "C",
-            "species": "C",
-            "resourceclassificationgroup": "B",
-            "resourcealtindigenousname": "A",
-        }
+        if fields is None:
+            fields = cls.FIELDS
+        if fk_fields is None:
+            fk_fields = cls.FK_FIELDS
 
-        sort_field = "commonname"
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Resources, keyword, fields, fk_fields, weight_lookup, sort_field
         )
+
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["resource"]
@@ -1350,7 +1442,51 @@ class LookupActivity(Lookup):
         return self.activity or ""
 
 
-class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
+class ResourcesActivityEvents(
+    Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable
+):
+    """Aka 'Activity' - this is the relationship between a Place and a Resource that describes an activity that took place involving that resource at that place."""
+
+    FIELDS = [
+        "keywords",
+        "relationshipdescription",
+        "activitylongdescription",
+        "gear",
+        "customaryuse",
+        "timingdescription",
+    ]
+    FK_FIELDS = [
+        ("partused", "partused"),
+        ("placeresourceid", "resourceid", "commonname"),
+        ("placeresourceid", "placeid", "englishplacename"),
+        ("placeresourceid", "placeid", "indigenousplacename"),
+        (
+            "placeresourceid",
+            "placeid",
+            "placealtindigenousname",
+            "altindigenousname",
+        ),
+        ("activityshortdescription", "activity"),
+        ("participants", "participants"),
+        ("technique", "techniques"),
+        ("timing", "timing"),
+    ]
+    WEIGHT_LOOKUP = {
+        "keywords": "A",
+        "relationshipdescription": "B",
+        "activitylongdescription": "A",
+        "gear": "B",
+        "customaryuse": "B",
+        "timingdescription": "B",
+        "partused": "C",
+        "placeresourceid": "A",
+        "activityshortdescription": "A",
+        "participants": "C",
+        "technique": "C",
+        "timing": "C",
+    }
+    SORT_FIELD = "activitylongdescription"
+
     resourceactivityid = models.AutoField(
         db_column="resourceactivityid", primary_key=True
     )
@@ -1468,47 +1604,19 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
 
         return unescape(strip_tags(self.relationshipdescription))
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "relationshipdescription",
-            "activitylongdescription",
-            "gear",
-            "customaryuse",
-            "timingdescription",
-        ],  # fields to search
-        fk_fields=[
-            ("partused", "partused"),
-            ("placeresourceid", "resourceid", "commonname"),
-            ("placeresourceid", "placeid", "englishplacename"),
-            ("placeresourceid", "placeid", "indigenousplacename"),
-            (
-                "placeresourceid",
-                "placeid",
-                "placealtindigenousname",
-                "altindigenousname",
-            ),
-            ("activityshortdescription", "activity"),
-            ("participants", "participants"),
-            ("technique", "techniques"),
-            ("timing", "timing"),
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "relationshipdescription": "B",
-            "activitylongdescription": "A",
-            "gear": "B",
-            "customaryuse": "B",
-            "timingdescription": "B",
-            "partused": "C",
-            "placeresourceid": "A",
-            "activityshortdescription": "A",
-            "participants": "C",
-            "technique": "C",
-            "timing": "C",
-        }
-
-        sort_field = "activitylongdescription"
+        if fields is None:
+            fields = cls.FIELDS
+        if fk_fields is None:
+            fk_fields = cls.FK_FIELDS
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             ResourcesActivityEvents,
@@ -1518,6 +1626,11 @@ class ResourcesActivityEvents(Reviewable, Queryable, Record, ModeratedModel):
             weight_lookup,
             sort_field,
         )
+
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["activity"]
@@ -1779,7 +1892,42 @@ class LookupAuthorType(Lookup):
         return self.authortype or ""
 
 
-class Citations(Reviewable, Queryable, Record, ModeratedModel):
+class Citations(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
+    FIELDS = [
+        "keywords",
+        "referencetext",
+        "authorprimary",
+        "authorsecondary",
+        "placeofinterview",
+        "title",
+        "seriestitle",
+        "seriesvolume",
+        "serieseditor",
+        "publisher",
+        "publishercity",
+        "preparedfor",
+    ]
+    FK_FIELDS = [
+        ("referencetype", "documenttype"),
+        ("authortype", "authortype"),
+    ]
+    WEIGHT_LOOKUP = {
+        "keywords": "A",
+        "referencetext": "A",
+        "authorprimary": "A",
+        "authorsecondary": "A",
+        "placeofinterview": "C",
+        "title": "A",
+        "seriestitle": "C",
+        "seriesvolume": "C",
+        "serieseditor": "C",
+        "publisher": "C",
+        "publishercity": "C",
+        "preparedfor": "C",
+        "referencetype": "B",
+        "authortype": "B",
+    }
+    SORT_FIELD = "referencetext"
     citationid = models.AutoField(db_column="citationid", primary_key=True)
     referencetype = models.ForeignKey(
         LookupReferenceType,
@@ -1882,7 +2030,7 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         max_length=100,
         blank=True,
         null=True,
-        verbose_name="prepared_for",
+        verbose_name="prepared for",
     )
     rawcitation = HTMLField(
         db_column="rawcitation",
@@ -1905,81 +2053,29 @@ class Citations(Reviewable, Queryable, Record, ModeratedModel):
         verbose_name = "Bibliographic Source"
         verbose_name_plural = "Bibliographic Sources"
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "referencetext",
-            "authorprimary",
-            "authorsecondary",
-            "placeofinterview",
-            "title",
-            "seriestitle",
-            "seriesvolume",
-            "serieseditor",
-            "publisher",
-            "publishercity",
-            "preparedfor",
-        ],  # fields to search
-        fk_fields=[
-            ("referencetype", "documenttype"),
-            ("authortype", "authortype"),
-            # ('intervieweeid','interviewee'),
-            # ('interviewerid','interviewer')
-        ],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "referencetext": "A",
-            "authorprimary": "A",
-            "authorsecondary": "A",
-            "placeofinterview": "C",
-            "title": "A",
-            "seriestitle": "C",
-            "seriesvolume": "C",
-            "serieseditor": "C",
-            "publisher": "C",
-            "publishercity": "C",
-            "preparedfor": "C",
-            "referencetype": "B",
-            "authortype": "B",
-            # 'intervieweeid': 'B',
-            # 'interviewerid': 'B'
-        }
+        if fields is None:
+            fields = cls.FIELDS
+        if fk_fields is None:
+            fk_fields = cls.FK_FIELDS
 
-        sort_field = "referencetext"
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Citations, keyword, fields, fk_fields, weight_lookup, sort_field
         )
 
-    # def keyword_search(keyword):
-    #     reference_qs = LookupReferenceType.objects.filter(documenttype__icontains=keyword)
-    #     reference_loi = [reference.pk for reference in reference_qs]
-
-    #     authortype_qs = LookupAuthorType.objects.filter(authortype__icontains=keyword)
-    #     authortype_loi = [authortype.pk for authortype in authortype_qs]
-
-    #     people_qs = People.keyword_search(keyword)
-    #     people_loi = [person.pk for person in people_qs]
-
-    #     return Citations.objects.filter(
-    #         Q(referencetype__in=reference_loi) |
-    #         Q(referencetext__icontains=keyword) |
-    #         Q(authortype__in=authortype_loi) |
-    #         Q(authorprimary__icontains=keyword) |
-    #         Q(authorsecondary__icontains=keyword) |
-    #         Q(intervieweeid__in=people_loi) |
-    #         Q(interviewerid__in=people_loi) |
-    #         Q(placeofinterview__icontains=keyword) |
-    #         Q(title__icontains=keyword) |
-    #         Q(seriestitle__icontains=keyword) |
-    #         Q(seriesvolume__icontains=keyword) |
-    #         Q(serieseditor__icontains=keyword) |
-    #         Q(publisher__icontains=keyword) |
-    #         Q(publishercity__icontains=keyword) |
-    #         Q(preparedfor__icontains=keyword) |
-    #         Q(comments__icontains=keyword) |
-    #         Q(journal__icontains=keyword)
-    #     )
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        return list_queryable_fields(cls)
 
     def image(self):
         return settings.RECORD_ICONS["citation"]
@@ -2720,14 +2816,26 @@ class MediaBulkUpload(Reviewable, Queryable, Record, ModeratedModel):
     def __str__(self):
         return self.mediabulkname or ""
 
-    # @property
-    # def count(self):
-    # number of media items uploaded
 
-    # Ability to edit Media
+class Media(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
+    FIELDS = [
+        "keywords",
+        "medianame",
+        "mediadescription",
+        "medialink",
+        "mediafile",
+    ]
+    FK_FIELDS = [("mediatype", "mediatype")]
+    WEIGHT_LOOKUP = {
+        "keywords": "A",
+        "medianame": "A",
+        "mediadescription": "B",
+        "medialink": "B",
+        "mediafile": "B",
+        "mediatype": "C",
+    }
+    SORT_FIELD = "medianame"
 
-
-class Media(Reviewable, Queryable, Record, ModeratedModel):
     mediaid = models.AutoField(db_column="mediaid", primary_key=True)
     mediatype = models.ForeignKey(
         LookupMediaType,
@@ -2791,40 +2899,30 @@ class Media(Reviewable, Queryable, Record, ModeratedModel):
     def __str__(self):
         return "%s [ %s ]" % (self.medianame, self.mediatype) or ""
 
+    @classmethod
     def keyword_search(
+        cls,
         keyword,  # string
-        fields=[
-            "medianame",
-            "mediadescription",
-            "medialink",
-            "mediafile",
-        ],  # fields to search
-        fk_fields=[("mediatype", "mediatype")],  # fields to search for fk objects
+        fields=None,  # fields to search
+        fk_fields=None,  # fields to search for fk objects
     ):
-        weight_lookup = {
-            "medianame": "A",
-            "mediadescription": "B",
-            "medialink": "B",
-            "mediafile": "B",
-            "mediatype": "C",
-        }
+        if fields is None:
+            fields = cls.FIELDS
+        if fk_fields is None:
+            fk_fields = cls.FK_FIELDS
 
-        sort_field = "medianame"
+        weight_lookup = cls.WEIGHT_LOOKUP
+        sort_field = cls.SORT_FIELD
 
         return run_keyword_search(
             Media, keyword, fields, fk_fields, weight_lookup, sort_field
         )
 
-    # def keyword_search(keyword):
-    #     type_qs = LookupMediaType.keyword_search(keyword)
-    #     type_loi = [mtype.pk for mtype in type_qs]
+    @classmethod
+    def human_readable_list_of_searchable_fields(cls):
+        """Returns a human readable list of the fields that are included in the keyword_search 'fields' or 'fk_fields lists."""
+        return list_queryable_fields(cls)
 
-    #     return Media.objects.filter(
-    #         Q(mediatype__in=type_loi) |
-    #         Q(medianame__icontains=keyword)|
-    #         Q(mediadescription__icontains=keyword) |
-    #         Q(medialink__icontains=keyword)
-    #     )
     @property
     def description_text(self):
         from django.utils.html import strip_tags

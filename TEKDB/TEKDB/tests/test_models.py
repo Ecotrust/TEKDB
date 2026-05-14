@@ -386,11 +386,29 @@ class PlacesTest(ITKSearchTest):
         #   * placealtindigenousname
         #   * Source
         #   * DigitizedBy
+        #   * Keywords
         keyword = "place"
         place_results = Places.keyword_search(keyword)
         # do we get 3 results? also checks that we do not return all results in Place category
         self.assertEqual(place_results.count(), 3)
         # checkout results belong to one of the search fields
+        for result in place_results:
+            self.assertTrue(hasattr(result, "similarity"))
+            self.assertTrue(
+                (
+                    result.similarity
+                    and result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+
+    def test_matches_keywords_field(self):
+        #####################################
+        ### TEST KEYWORD FIELD SEARCH ###
+        #####################################
+        # search 'foobarbaz' in keywords field
+        keyword = "foobarbaz"
+        place_results = Places.keyword_search(keyword)
+        self.assertEqual(place_results.count(), 2)
         for result in place_results:
             self.assertTrue(hasattr(result, "similarity"))
             self.assertTrue(
@@ -468,6 +486,23 @@ class PlacesTest(ITKSearchTest):
         self.assertIn("feature", response)
         self.assertIsNone(response["feature"])
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Places.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Indigenous Name",
+            "English Name",
+            "English Translation",
+            "Source",
+            "Digitized By",
+            "Keywords",
+            "Planning Unit",
+            "Primary Habitat",
+            "Tribe",
+            "Alternate Name",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # Resources
 class ResourcesTest(ITKSearchTest):
@@ -517,6 +552,23 @@ class ResourcesTest(ITKSearchTest):
         for resource in advanced_results:
             # self.assertTrue(resource.pk in [gumboot_chiton_id, skunk_cabbage_id, sea_cucumber_id])
             self.assertTrue(resource.pk != chiton_id)
+
+    def test_matches_keywords_field(self):
+        #####################################
+        ### TEST KEYWORD FIELD SEARCH ###
+        #####################################
+        # search 'foobarbaz' in keywords field
+        keyword = "foobarbaz"
+        resources_results = Resources.keyword_search(keyword)
+        self.assertEqual(resources_results.count(), 2)
+        for result in resources_results:
+            self.assertTrue(hasattr(result, "similarity"))
+            self.assertTrue(
+                (
+                    result.similarity
+                    and result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
 
     def test_search_foreign_key_field(self):
         #####################################
@@ -590,6 +642,20 @@ class ResourcesTest(ITKSearchTest):
 
         self.assertEqual(len(relationships), 4)
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Resources.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Common Name",
+            "Indigenous Name",
+            "Genus",
+            "Species",
+            "Keywords",
+            "Broad Species Group",
+            "Alt Name",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # ResourcesActivityEvents ('Activities')
 class ResourcesActivityEventsTest(ITKSearchTest):
@@ -608,6 +674,23 @@ class ResourcesActivityEventsTest(ITKSearchTest):
         activity_results = ResourcesActivityEvents.keyword_search(keyword)
         self.assertEqual(activity_results.count(), 2)
 
+        for result in activity_results:
+            self.assertTrue(hasattr(result, "similarity"))
+            self.assertTrue(
+                (
+                    result.similarity
+                    and result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+
+    def test_matches_keywords_field(self):
+        #####################################
+        ### TEST KEYWORD FIELD SEARCH ###
+        #####################################
+        # search 'foobarbaz' in keywords field
+        keyword = "foobarbaz"
+        activity_results = ResourcesActivityEvents.keyword_search(keyword)
+        self.assertEqual(activity_results.count(), 1)
         for result in activity_results:
             self.assertTrue(hasattr(result, "similarity"))
             self.assertTrue(
@@ -662,6 +745,7 @@ class ResourcesActivityEventsTest(ITKSearchTest):
                 "customaryuse": "customary use",
                 "timing": LookupTiming.objects.all()[0],
                 "timingdescription": "This is a description of the timing.",
+                "keywords": "test, activity",
             }
         )
         activity.save()
@@ -686,6 +770,30 @@ class ResourcesActivityEventsTest(ITKSearchTest):
         data_keys = [item["key"].lower() for item in data]
         for key in keys:
             self.assertIn(key, data_keys)
+
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = (
+            ResourcesActivityEvents.human_readable_list_of_searchable_fields()
+        )
+        expected_fields = [
+            "Keywords",
+            "Excerpt",
+            "Full Activity Description",
+            "Gear",
+            "Customary Use",
+            "Timing Description",
+            "Part Used",
+            "Place Resource - Common Name",
+            "Place Resource - English Name",
+            "Place Resource - Indigenous Name",
+            "Place Resource - Alternate Name",
+            "Activity Type",
+            "Participants",
+            "Technique",
+            "Timing",
+        ]
+        self.assertEqual(search_fields, expected_fields)
 
 
 # Citations (Bibliographic 'Sources')
@@ -712,6 +820,7 @@ class CitationsTest(ITKSearchTest):
         #   * preparedfor
         #   * referencetype (foreign key)
         #   * authortype (foreign key) (no records for testing)
+        #   * keywords
         #   X intervieweeid (foreign key) (not ready for testing)
         #   X interviewerid (foreign key) (not ready for testing)
 
@@ -748,6 +857,23 @@ class CitationsTest(ITKSearchTest):
         #######################################
         #
         #   *
+
+    def test_matches_keywords_field(self):
+        #####################################
+        ### TEST KEYWORD FIELD SEARCH ###
+        #####################################
+        # search 'foobarbaz' in keywords field
+        keyword = "foobarbaz"
+        citation_results = Citations.keyword_search(keyword)
+        self.assertEqual(citation_results.count(), 1)
+        for result in citation_results:
+            self.assertTrue(hasattr(result, "similarity"))
+            self.assertTrue(
+                (
+                    result.similarity
+                    and result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
 
     def test_citation_id_collision(self):
         """
@@ -825,6 +951,27 @@ class CitationsTest(ITKSearchTest):
         expected_description = "Text on marine flora and fauna"
         self.assertEqual(description_text, expected_description)
 
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Citations.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Keywords",
+            "Description",
+            "Primary Author",
+            "Secondary Author",
+            "Place Of Interview",
+            "Title",
+            "Series Title",
+            "Series Volume",
+            "Series Editor",
+            "Publisher",
+            "City",
+            "Prepared For",
+            "Reference Type",
+            "Author Type",
+        ]
+        self.assertEqual(search_fields, expected_fields)
+
 
 # Media
 class MediaTest(ITKSearchTest):
@@ -852,6 +999,23 @@ class MediaTest(ITKSearchTest):
                 )
             )
 
+    def test_matches_keywords_field(self):
+        #####################################
+        ### TEST KEYWORD FIELD SEARCH ###
+        #####################################
+        # search 'foobarbaz' in keywords field
+        keyword = "foobarbaz"
+        media_results = Media.keyword_search(keyword)
+        self.assertEqual(media_results.count(), 1)
+        for result in media_results:
+            self.assertTrue(hasattr(result, "similarity"))
+            self.assertTrue(
+                (
+                    result.similarity
+                    and result.similarity > settings.MIN_SEARCH_SIMILARITY
+                )
+            )
+
     def test_media_id_collision(self):
         """
         Test that saving a media can recover from an ID collision
@@ -859,6 +1023,19 @@ class MediaTest(ITKSearchTest):
         insertion_object = {}
         collision_result = test_model_id_collision(Media, insertion_object, self)
         self.assertTrue(collision_result)
+
+    def test_human_readable_list_of_searchable_fields(self):
+        """Test that human_readable_list_of_searchable_fields returns a list of field names"""
+        search_fields = Media.human_readable_list_of_searchable_fields()
+        expected_fields = [
+            "Keywords",
+            "Name",
+            "Description",
+            "Historic Location",
+            "File",
+            "Type",
+        ]
+        self.assertEqual(search_fields, expected_fields)
 
 
 # MediaBulkUpload
