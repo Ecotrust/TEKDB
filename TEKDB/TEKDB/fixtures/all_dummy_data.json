@@ -2684,7 +2684,8 @@
     "geometry": "SRID=3857;POLYGON ((-13827397.042595 5154553.4109967, -13827459.14768 5154512.8038255, -13827406.597223 5154369.4843975, -13827339.714824 5154331.2658833, -13827234.61391 5154347.9864833, -13827158.176882 5154414.868883, -13827151.01091 5154496.0832255, -13827275.221081 5154543.8563682, -13827397.042595 5154553.4109967))",
     "Source": "ryan",
     "DigitizedBy": "ryan",
-    "DigitizedDate": "2017-09-11T07:00:00Z"
+    "DigitizedDate": "2017-09-11T07:00:00Z",
+    "keywords": "shark, rock, habitat, puget sound, beach, intertidal, foobarbaz"
   }
 },
 {
@@ -3155,7 +3156,8 @@
     "species": "sp.",
     "specific": false,
     "resourceclassificationgroup": null,
-    "islocked": false
+    "islocked": false,
+    "keywords": "abalone, shellfish, marine, intertidal, invertebrate, foobarbaz"
   }
 },
 {
@@ -8184,7 +8186,8 @@
     "customaryuse": null,
     "timing": null,
     "timingdescription": null,
-    "islocked": false
+    "islocked": false,
+    "keywords": "harvesting, female, shellfish, beach, hand gathering, foobarbaz"
   }
 },
 {
@@ -8243,7 +8246,8 @@
     "preparedfor": null,
     "comments": "Text on flora and fauna harvested by Native Americans in the marine environment",
     "journal": null,
-    "journalpages": null
+    "journalpages": null,
+    "keywords": "marine harvesting, flora, fauna, text, foobarbaz"
   }
 },
 {
@@ -8340,7 +8344,8 @@
     "mediadescription": "Photo taken by Manaha Herman, 2015",
     "medialink": "/usr/local/apps/TEKDB/TEKDB/media/gumboot_chiton.jpg",
     "mediafile": "gumboot_chiton_fT5Kxtm.jpg",
-    "limitedaccess": true
+    "limitedaccess": true,
+    "keywords": "chiton, gumboot chiton, photo, foobarbaz"
   }
 },
 {
