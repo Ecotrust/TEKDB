@@ -89,7 +89,7 @@ $(function () {
   const resetModal = () => {
     $("#continueImport").html("Close");
     $("#closeModalButton").prop("disabled", false);
-    $("#continueImport").click(function () {
+    $("#continueImport").one("click", function () {
       $("#exportImportModal").modal("hide");
     });
   };
@@ -126,7 +126,7 @@ $(function () {
     $("#modalTitle").text("Import Database");
     $("#modalBody").html(importText);
     let showSpinner = true;
-    $("#continueImport").click(function () {
+    $("#continueImport").one("click", function () {
       // prevent closing the modal after verifying import
       $("#exportImportModal").modal({
         backdrop: "static",
@@ -163,7 +163,7 @@ $(function () {
               );
               showSpinner = false;
               $("#continueImport").html("Log out");
-              $("#continueImport").click(function () {
+              $("#continueImport").one("click", function () {
                 $.ajax({
                   url: "/logout/",
                   type: "POST",
