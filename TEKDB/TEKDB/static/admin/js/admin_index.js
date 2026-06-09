@@ -51,6 +51,24 @@ const exportInfoText = `The Export Database Tool is designed to support saving t
         a safe and secure practice for regular backups, which may or may 
         not involve this tool.`;
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
 $(function () {
   const unexpectedError = (statusCode, statusMessage = "") => {
     return `<p class='text-danger'>Unexpected error occurred: ${statusCode}</p><p class='text-danger'>${statusMessage}</p>`;
@@ -146,7 +164,16 @@ $(function () {
               showSpinner = false;
               $("#continueImport").html("Log out");
               $("#continueImport").click(function () {
-                location.reload(true);
+                $.ajax({
+                  url: "/logout/",
+                  type: "POST",
+                  headers: {'X-CSRFToken': csrftoken},
+                  mode: 'same-origin',
+                  success: function () {
+                    // force reload to update to logged out state
+                    location.reload(true);
+                  },
+                });
               });
             } else {
               $("#modalNextSteps").html(
