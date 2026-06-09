@@ -51,6 +51,24 @@ const exportInfoText = `The Export Database Tool is designed to support saving t
         a safe and secure practice for regular backups, which may or may 
         not involve this tool.`;
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
 $(function () {
   const unexpectedError = (statusCode, statusMessage = "") => {
     return `<p class='text-danger'>Unexpected error occurred: ${statusCode}</p><p class='text-danger'>${statusMessage}</p>`;
@@ -71,7 +89,7 @@ $(function () {
   const resetModal = () => {
     $("#continueImport").html("Close");
     $("#closeModalButton").prop("disabled", false);
-    $("#continueImport").click(function () {
+    $("#continueImport").one("click", function () {
       $("#exportImportModal").modal("hide");
     });
   };
@@ -107,8 +125,8 @@ $(function () {
 
     $("#modalTitle").text("Import Database");
     $("#modalBody").html(importText);
-
-    $("#continueImport").click(function () {
+    let showSpinner = true;
+    $("#continueImport").one("click", function () {
       // prevent closing the modal after verifying import
       $("#exportImportModal").modal({
         backdrop: "static",
@@ -117,12 +135,13 @@ $(function () {
 
       // add spinner to the button
       // change button text to "Importing..."
-      $("#continueImport").html(
-        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
-      );
-      $("#continueImport").prop("disabled", true);
-      $("#closeModalButton").prop("disabled", true);
-
+      if (showSpinner) {
+        $("#continueImport").html(
+          `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
+        );
+        $("#continueImport").prop("disabled", true);
+        $("#closeModalButton").prop("disabled", true);
+      }
       const form = $("#import-database-form");
       $.ajax({
         url: "/import_database/",
@@ -142,18 +161,30 @@ $(function () {
               $("#modalNextSteps").html(
                 `<p class='text-success'>Import successful. You may now be logged out.</p>`
               );
+              showSpinner = false;
               $("#continueImport").html("Log out");
-              $("#continueImport").click(function () {
-                location.reload(true);
+              $("#continueImport").one("click", function () {
+                $.ajax({
+                  url: "/logout/",
+                  type: "POST",
+                  headers: {'X-CSRFToken': csrftoken},
+                  mode: 'same-origin',
+                  success: function () {
+                    // force reload to update to logged out state
+                    location.reload(true);
+                  },
+                });
               });
             } else {
               $("#modalNextSteps").html(
                 `<p class='text-danger'>Import failed with error code ${data.status_code}.</p><p class='text-danger'>${data.status_message}</p>`
               );
+              showSpinner = false;
               resetModal();
             }
           } else {
             $("#modalNextSteps").html(unexpectedError(status));
+            showSpinner = false;
             resetModal();
           }
         },
