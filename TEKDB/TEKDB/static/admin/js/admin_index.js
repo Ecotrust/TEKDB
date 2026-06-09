@@ -107,7 +107,7 @@ $(function () {
 
     $("#modalTitle").text("Import Database");
     $("#modalBody").html(importText);
-
+    let showSpinner = true;
     $("#continueImport").click(function () {
       // prevent closing the modal after verifying import
       $("#exportImportModal").modal({
@@ -117,12 +117,13 @@ $(function () {
 
       // add spinner to the button
       // change button text to "Importing..."
-      $("#continueImport").html(
-        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
-      );
-      $("#continueImport").prop("disabled", true);
-      $("#closeModalButton").prop("disabled", true);
-
+      if (showSpinner) {
+        $("#continueImport").html(
+          `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
+        );
+        $("#continueImport").prop("disabled", true);
+        $("#closeModalButton").prop("disabled", true);
+      }
       const form = $("#import-database-form");
       $.ajax({
         url: "/import_database/",
@@ -142,6 +143,7 @@ $(function () {
               $("#modalNextSteps").html(
                 `<p class='text-success'>Import successful. You may now be logged out.</p>`
               );
+              showSpinner = false;
               $("#continueImport").html("Log out");
               $("#continueImport").click(function () {
                 location.reload(true);
@@ -150,10 +152,12 @@ $(function () {
               $("#modalNextSteps").html(
                 `<p class='text-danger'>Import failed with error code ${data.status_code}.</p><p class='text-danger'>${data.status_message}</p>`
               );
+              showSpinner = false;
               resetModal();
             }
           } else {
             $("#modalNextSteps").html(unexpectedError(status));
+            showSpinner = false;
             resetModal();
           }
         },
