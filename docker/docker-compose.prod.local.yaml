@@ -8,6 +8,7 @@ services:
     extends:
       file: common.yaml
       service: web
+    image: ${WEB_IMAGE}:latest
     command: ["prod-local"]
     env_file:
       - path: .env.dev
