@@ -74,9 +74,7 @@
               {% for relationship in record.relationships %}
                 {% if relationship.value|length > 0 %}
                   <h3>{{ relationship.key }}</h3>
-                    {% if model != "places" and relationship.key == "Place-Resource Events" or relationship.key == "Place" and model == "resources" or model == "Resourcesactivityevents" or model == "placesresourceevents" and relationship.value|some:"map" %}
-
-                    {% comment %} {% if display_related_map %} {% endcomment %}
+                    {% if relationship.show_map and relationship.value|some:"map" %}
                     <div class="col-md-6">
                       {% with place_resource_features=relationship.value %}
                         {% include "places-resources-map.html" with place_resource_features=place_resource_features %}

@@ -204,22 +204,22 @@ def get_by_model_id(request, model_type, id):
 
     related_place_keys = ["Place-Resource Events", "Place-Resource", "Place"]
 
-    display_related_map = False
+    found_related_geo_record = False
     if "relationships" in record_dict.keys():
         for relationship in record_dict["relationships"]:
             if relationship["key"] in related_place_keys and model_name != "Place":
                 values = relationship["value"]
                 for value in values:
                     if "map" in value.keys() and value["map"] is not None:
-                        display_related_map = True
-                        break
-                if display_related_map:
-                    break
+                        found_related_geo_record = True
+                        relationship["show_map"] = True
+                    else:
+                        relationship["show_map"] = False
 
     if (
         "map" in record_dict.keys()
         and record_dict["map"] is not None
-        or display_related_map
+        or found_related_geo_record
     ):
         DATABASE_GEOGRAPHY = get_project_geography()
         context["default_lon"] = DATABASE_GEOGRAPHY["default_lon"]
