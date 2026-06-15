@@ -57,10 +57,11 @@ mkdir tekdb
 cd tekdb
 git clone https://github.com/Ecotrust/TEKDB.git
 
-echo "Checking out the main branch..."
+# TODO: change to the main branch once the develop branch is merged into main!!
+echo "Checking out the develop branch..."
 cd TEKDB
-git checkout main
-git pull origin main
+git checkout develop    
+git pull origin develop
 
 echo "Moving the .env.prod file to the Docker directory..."
 mv $ENV_FILE docker/.env.prod
