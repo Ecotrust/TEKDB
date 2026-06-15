@@ -503,6 +503,26 @@ class PlacesTest(ITKSearchTest):
         ]
         self.assertEqual(search_fields, expected_fields)
 
+    def test_places_get_query_json_has_map(self):
+        """
+        Test that get_query_json returns a map for places
+        """
+        place = Places.objects.get(pk=19)
+        query_json = place.get_query_json()
+        self.assertIn("map", query_json)
+        self.assertIsNotNone(query_json["map"])
+
+    def test_places_get_query_json_no_map(self):
+        """
+        Test that the response from get_query_json includes no map data when map is False
+        """
+        place = Places.objects.create(
+            indigenousplacename="Test Place",
+            englishplacename="Test Place English",
+        )
+        query_json = place.get_query_json()
+        self.assertNotIn("map", query_json)
+
 
 # Resources
 class ResourcesTest(ITKSearchTest):
@@ -794,49 +814,6 @@ class ResourcesActivityEventsTest(ITKSearchTest):
             "Timing",
         ]
         self.assertEqual(search_fields, expected_fields)
-
-    def test_places_resource_get_query_json_has_map(self):
-        """
-        Test that the response from get_query_json includes map data when map is True
-        """
-        place = Places.objects.get(pk=19)
-        resource = Resources.objects.create(
-            commonname="Test Resource", indigenousname="Test Resource Indigenous"
-        )
-        event = PlacesResourceEvents.objects.create(
-            placeid=place,
-            resourceid=resource,
-            relationshipdescription="Test Relationship",
-        )
-        resource_activity_event = ResourcesActivityEvents.objects.create(
-            placeresourceid=event, relationshipdescription="Test activity"
-        )
-        query_json = resource_activity_event.get_query_json()
-
-        self.assertIn("map", query_json)
-
-    def test_places_resource_get_query_json_no_map(self):
-        """
-        Test that the response from get_query_json includes no map data when map is False
-        """
-        place = Places.objects.create(
-            indigenousplacename="Test Place",
-            englishplacename="Test Place English",
-        )
-        resource = Resources.objects.create(
-            commonname="Test Resource", indigenousname="Test Resource Indigenous"
-        )
-        event = PlacesResourceEvents.objects.create(
-            placeid=place,
-            resourceid=resource,
-            relationshipdescription="Test Relationship",
-        )
-        resource_activity_event = ResourcesActivityEvents.objects.create(
-            placeresourceid=event, relationshipdescription="Test activity"
-        )
-        query_json = resource_activity_event.get_query_json()
-
-        self.assertNotIn("map", query_json)
 
 
 # Citations (Bibliographic 'Sources')
