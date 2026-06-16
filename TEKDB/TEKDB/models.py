@@ -795,6 +795,16 @@ class Places(Reviewable, Queryable, Record, ModeratedModel, KeywordSearchable):
             "feature": feature,
         }
 
+    # necessary to see a map on the place-resource event page
+    def get_query_json(self):
+        query_json = super().get_query_json()
+        place_geom = self.map()
+
+        if place_geom:
+            # add place map information if available
+            query_json["map"] = place_geom
+        return query_json
+
     def get_related_objects(self, object_id):
         # place = Places.objects.get(pk=object_id)
         alt_names = self.placealtindigenousname_set.all()
