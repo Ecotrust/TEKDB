@@ -207,14 +207,14 @@ def get_by_model_id(request, model_type, id):
     found_related_geo_record = False
     if "relationships" in record_dict.keys():
         for relationship in record_dict["relationships"]:
+            relationship["show_map"] = False
             if relationship["key"] in related_place_keys and model_name != "Place":
                 values = relationship["value"]
                 for value in values:
                     if "map" in value.keys() and value["map"] is not None:
                         found_related_geo_record = True
                         relationship["show_map"] = True
-                    else:
-                        relationship["show_map"] = False
+                        break
 
     if (
         "map" in record_dict.keys()
