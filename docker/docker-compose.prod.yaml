@@ -8,7 +8,7 @@ services:
     extends:
       file: common.yaml
       service: web
-    image: ${ITKDB_ECR_PATH}:latest
+    image: ${WEB_IMAGE}:latest
     command: ["prod"]
     env_file:
       - path: .env.prod
@@ -24,7 +24,7 @@ services:
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
   proxy:
-    image: ${ITKDB_PROXY_ECR_PATH}:latest
+    image: ${PROXY_IMAGE}:latest
     restart: unless-stopped
     depends_on:
       - web
@@ -46,7 +46,7 @@ services:
     extends:
       file: common.yaml
       service: celery
-    image: ${ITKDB_ECR_PATH}:latest
+    image: ${WEB_IMAGE}:latest
     env_file:
       - path: .env.prod
         required: true
@@ -56,7 +56,7 @@ services:
     extends:
       file: common.yaml
       service: celery-beat
-    image: ${ITKDB_ECR_PATH}:latest
+    image: ${WEB_IMAGE}:latest
     env_file:
       - path: .env.prod
         required: true
