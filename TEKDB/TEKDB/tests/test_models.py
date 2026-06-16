@@ -514,7 +514,7 @@ class PlacesTest(ITKSearchTest):
 
     def test_places_get_query_json_no_map(self):
         """
-        Test that the response from get_query_json includes no map data when map is False
+        Test that the response from get_query_json includes no map data when map has no geometry
         """
         place = Places.objects.create(
             indigenousplacename="Test Place",
@@ -1484,7 +1484,7 @@ class PlacesResourceEventsTest(ITKTestCase):
 
     def test_places_resource_get_query_json_no_map(self):
         """
-        Test that the response from get_query_json includes no map data when map is False
+        Test that the response from get_query_json includes no map data when map has no geometry
         """
         place = Places.objects.create(
             indigenousplacename="Test Place",
