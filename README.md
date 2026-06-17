@@ -6,9 +6,9 @@ Traditional Ecological Knowledge Ethnographic Database Application
 
 ## [Running Tests](https://github.com/Ecotrust/TEKDB/wiki/Running-tests)
 
-## CI/CD 
+## Development Cycle
 
-This project has a few Github actions that run to have continous integration / continuous deployment with our environments. Below is a diagram on the path to production:
+This project aims to follow a specific development cycle to ease collaboration and keep the different environments in sync. Below is a diagram on what the development lifecycle should look like: 
 
 ```mermaid
 flowchart TB
@@ -25,15 +25,26 @@ flowchart TB
         DEVMERGE --> GHSTAGE[Github Action deploys to staging.itkdb.org]
         GHSTAGE --> QA[QA on staging environment]
         QA --> QAPASS{Passes QA}
-        QAPASS -->|PASSES| PRVERSION[Create PR to update version in settings.py]
-        QAPASS -->|FAILS| FEAT
-        PRVERSION --> PRDEV[Merge into develop branch]
     end
 
     subgraph Production
+        QAPASS -->|PASSES| PRVERSION[Create feature branch and open PR to update version in settings.py]
+        QAPASS -->|FAILS| FEAT
+        PRVERSION --> PRDEV[Merge into develop branch]
         PRDEV --> PRMAIN[PR for develop into main]
-        PRMAIN --> RELEASE[Publish a new Release]
+        PRMAIN --> PRMERGEMAIN[Merge into main branch]
+        PRMERGEMAIN --> RELEASE[Publish a new Release]
         RELEASE --> GHPROD[Github Action builds and publishes images to GHCR]
         GHPROD --> PRODDEPLOY[Manually deploy to demo.itkdb.org]
+        PRODDEPLOY --> QAPROD[Test in production]
+        QAPROD --> QAPASSPROD{Passes QA}
+        QAPASSPROD --> |PASSES| SUCCESS[Success!]
+        QAPASSPROD --> |Fails| HOTFIX[Create a hotfix branch off of main]
+        HOTFIX --> PRHOTFIX[PR for hotfix into main]
+        PRHOTFIX --> APPROVEHOTFIX{Approval}
+        APPROVEHOTFIX --> |Approval| MERGEHOTFIX[Merge into main branch]
+        APPROVEHOTFIX --> |Rejected| REJECTEDHOTFIX[Address feedback]
+        REJECTEDHOTFIX --> APPROVEHOTFIX
+        MERGEHOTFIX --> RELEASE
     end
 ```
