@@ -8,7 +8,7 @@ Traditional Ecological Knowledge Ethnographic Database Application
 
 ## Development Cycle
 
-This project aims to follow a specific development cycle to ease collaboration and keep the different environments in sync. Below is a diagram on what the development lifecycle should look like: 
+This project aims to follow a specific development cycle to ease collaboration and keep the different environments in sync. Below is a diagram of what the development lifecycle should look like:
 
 ```mermaid
 flowchart TB
@@ -22,7 +22,7 @@ flowchart TB
     end
 
     subgraph Staging
-        DEVMERGE --> GHSTAGE[Github Action deploys to staging.itkdb.org]
+        DEVMERGE --> GHSTAGE[GitHub Action deploys to staging.itkdb.org]
         GHSTAGE --> QA[QA on staging environment]
         QA --> QAPASS{Passes QA}
     end
@@ -34,7 +34,7 @@ flowchart TB
         PRDEV --> PRMAIN[PR for develop into main]
         PRMAIN --> PRMERGEMAIN[Merge into main branch]
         PRMERGEMAIN --> RELEASE[Publish a new Release]
-        RELEASE --> GHPROD[Github Action builds and publishes images to GHCR]
+        RELEASE --> GHPROD[GitHub Action builds and publishes images to GHCR]
         GHPROD --> PRODDEPLOY[Manually deploy to demo.itkdb.org]
         PRODDEPLOY --> QAPROD[Test in production]
         QAPROD --> QAPASSPROD{Passes QA}
