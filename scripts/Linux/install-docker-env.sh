@@ -73,7 +73,7 @@ echo "Starting the Docker containers..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
 
 echo "Verifying that the containers are running..."
-if docker ps --filter "name=tekdb_web" --filter "status=running" | grep -q "tekdb_web"; then
+if [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ]; then
     echo "TEKDB containers are running successfully."
 else
     echo "Failed to start TEKDB containers. Please check the Docker logs for more information."
