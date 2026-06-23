@@ -3,14 +3,19 @@ name: Create and publish web and proxy Docker images
 
 # manually trigger while testing 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
   workflow_dispatch:
 
-# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and the tags on the web and proxy image.
 env:
   REGISTRY: ghcr.io
+  METADATA_TAGS: &metadata-tags |
+    type=sha
+    type=semver,pattern=v{{version}}
+    type=semver,pattern=v{{major}}.{{minor}}
+    type=semver,pattern=v{{major}}
+    type=raw,latest
 
 jobs:
   build-and-push-image:
@@ -36,11 +41,20 @@ jobs:
         run: |
           IMAGE_NAME=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
+      
+      - name: Extract metadata (tags, labels) for Docker Web Image
+        id: meta-web
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web
+          tags: *metadata-tags
+            
+      - name: Extract metadata (tags, labels) for Docker Proxy Image
+        id: meta-proxy
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/proxy
+          tags: *metadata-tags
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see [Usage](https://github.com/docker/build-push-action#usage) in the README of the `docker/build-push-action` repository.
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
@@ -55,8 +69,8 @@ jobs:
           context: ./TEKDB
           file: ./TEKDB/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web:${{ github.sha }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-web.outputs.tags }}
+          labels: ${{ steps.meta-web.outputs.labels }}
           cache-from: type=gha,scope=ghcr-web
           cache-to: type=gha,mode=max,scope=ghcr-web
 
@@ -67,8 +81,8 @@ jobs:
           context: ./proxy
           file: ./proxy/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/proxy:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/proxy:${{ github.sha }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-proxy.outputs.tags }}
+          labels: ${{ steps.meta-proxy.outputs.labels }}
           cache-from: type=gha,scope=ghcr-proxy
           cache-to: type=gha,mode=max,scope=ghcr-proxy
       
