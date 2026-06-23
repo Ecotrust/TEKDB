@@ -1,6 +1,6 @@
 const importText = `
   This process will remove all data and files from your current 
-  database and replace it with data from the provided zip file. 
+  database and replace it with data from the provided zipfile. 
   </br><br>
   This process CANNOT be undone. </br><br>
   It is recommended that you use the 'Export to .zip' button above to export 
@@ -14,7 +14,7 @@ const importText = `
 `;
 
 const importInfoText = `The Import Database Tool is designed to support restoring your Traditional Knowledge Database back to a prior state. This is best used in conjunction with the 'Export Database' tool above. </br><br>
-      To use the Import Database tool is simple: select a properly formatted zip file to upload and then click 'Import'. All of your data will be reverted back to the state it was when that zipfile was created. </br><br>
+      To use the Import Database tool is simple: select a properly formatted zipfile to upload and then click 'Import'. All of your data will be reverted back to the state it was when that zipfile was created. </br><br>
       This is VERY DANGEROUS! For this to work, all of the data currently 
       in your database, including your users, your records, and your page 
       contents will be removed, and then replaced. Also, any files 
