@@ -245,7 +245,7 @@ def ImportDatabase(request):
                     # Validate Zip Contents
                     if not len(non_media) == 1 or len(zip.namelist()) < 2:
                         status_code = 500
-                        status_message = "Received malformed import file. Must be a zipfile contailing one JSON file and a directory named 'media'"
+                        status_message = "Received malformed import file. Must be a zipfile containing one JSON file and a directory named 'media'"
                         return JsonResponse(
                             {
                                 "status_code": status_code,
