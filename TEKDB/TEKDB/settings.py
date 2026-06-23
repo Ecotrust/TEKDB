@@ -262,7 +262,7 @@ TINYMCE_EXTRA_MEDIA = False
 TINYMCE_FILEBROWSER = False
 
 # Add Version to the admin site header
-VERSION = "2.13.0"
+VERSION = "2.13.1"
 ADMIN_SITE_HEADER = os.environ.get(
     "ADMIN_SITE_HEADER", default="ITK DB Admin v{}".format(VERSION)
 )
@@ -413,9 +413,4 @@ LOGGING = {
 try:
     from TEKDB.local_settings import *  # noqa: F403
 except Exception:
-    import sys
-
-    print(
-        "ERROR: Unable to load local_settings.py. This is expected for docker deployment",
-        file=sys.stderr,
-    )
+    pass

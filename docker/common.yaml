@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: db
     image: postgis/postgis:15-3.4
     restart: always
     platform: linux/amd64
@@ -18,8 +19,10 @@ services:
       timeout: 5s
       retries: 5
   redis:
+    container_name: redis
     image: redis:alpine
   web:
+    container_name: tekdb_web
     build:
       context: ../TEKDB/
       dockerfile: ../TEKDB/Dockerfile
@@ -37,7 +40,8 @@ services:
       retries: 5
       start_period: 30s
   
-  celery: 
+  celery:
+    container_name: tekdb_celery
     entrypoint: []
     command: celery -A TEKDB worker -l info
     environment:
@@ -50,6 +54,7 @@ services:
       redis:
         condition: service_started
   celery-beat:
+    container_name: tekdb_celery_beat
     entrypoint: []
     command: celery -A TEKDB beat -l info
     environment:
