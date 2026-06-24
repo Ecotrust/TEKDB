@@ -53,11 +53,11 @@ echo "Installing git..."
 sudo apt install git -y
 
 echo "Creating TEKDB directory"
-mkdir tekdb
+mkdir -p tekdb
 cd tekdb
 
 echo "Creating a media directory for TEKDB..."
-mkdir media
+mkdir -p media
 
 echo "Cloning the TEKDB repository..."
 git clone https://github.com/Ecotrust/TEKDB.git
@@ -80,7 +80,7 @@ echo "Starting the Docker containers..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
 
 echo "Verifying that the containers are running..."
-if [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "db" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_proxy" 2>/dev/null)" = "running" ]; then;
+if [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "db" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_proxy" 2>/dev/null)" = "running" ]; then
     echo "TEKDB containers are running successfully."
 else
     echo "Failed to start TEKDB containers. Please check the Docker logs for more information."
