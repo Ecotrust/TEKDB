@@ -73,6 +73,9 @@ mv $ENV_FILE docker/.env.prod
 echo "Pulling the latest Docker image..."
 docker pull ghcr.io/ecotrust/tekdb/web:latest
 
+echo "Building the proxy image..."
+docker build -t tekdb_proxy -f proxy/Dockerfile.local proxy/
+
 echo "Starting the Docker containers..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
 
