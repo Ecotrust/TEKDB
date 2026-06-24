@@ -21,8 +21,9 @@ services:
         condition: service_started
     volumes:
       - static_volume:/usr/src/app/static
-      - media_volume:/usr/src/app/media
+      - ../../media:/usr/src/app/media
   proxy:
+    container_name: tekdb_proxy
     build:
       context: ../proxy/
       dockerfile: ../proxy/Dockerfile.local
@@ -33,7 +34,7 @@ services:
       - "80:8080"
     volumes:
       - static_volume:/vol/static/static:ro
-      - media_volume:/vol/static/media:ro
+      - ../../media:/vol/static/media:ro
   redis:
     extends:
       file: common.yaml
@@ -56,4 +57,3 @@ services:
 volumes:
   tekdb_db_data:
   static_volume:
-  media_volume:
