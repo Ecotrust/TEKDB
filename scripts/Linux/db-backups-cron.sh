@@ -14,10 +14,11 @@ fi
 CONTAINER_NAME=db
 DB_USER=${SQL_USER}
 DB_NAME=${SQL_DATABASE}
-BACKUP_DIR="/backups/postgres"
+BACKUP_DIR="../../backups/postgres"
+
 DATE=$(date +%Y-%m-%d_%H%M%S)
 FINAL_BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${DATE}.sql"
 
 mkdir -p "${BACKUP_DIR}"
 
-docker exec -i "${CONTAINER_NAME}" pg_dump -U "${DB_USER}" "${DB_NAME}" > "${FINAL_BACKUP_FILE}"
+0 9 * * * docker exec -i "${CONTAINER_NAME}" pg_dump -U "${DB_USER}" "${DB_NAME}" > "${FINAL_BACKUP_FILE}"
