@@ -11,7 +11,7 @@ services:
     image: ${WEB_IMAGE}:latest
     command: ["prod-local"]
     env_file:
-      - path: .env.dev
+      - path: .env.prod
         required: true
     ports: []
     depends_on:
