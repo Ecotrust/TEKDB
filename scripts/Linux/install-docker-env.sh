@@ -68,7 +68,7 @@ git checkout main
 git pull origin main
 
 echo "Moving the .env.prod file to the Docker directory..."
-mv $ENV_FILE docker/.env.prod
+cp $ENV_FILE docker/.env.prod
 
 echo "Pulling the latest Docker image..."
 docker pull ghcr.io/ecotrust/tekdb/web:latest
