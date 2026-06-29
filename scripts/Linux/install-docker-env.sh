@@ -1,5 +1,5 @@
 #!/bin/bash
-ENV_FILE="${1:-.env.prod}"
+ENV_FILE=`realpath ${1:-.env.prod}`
 
 if [ ! -f "$ENV_FILE" ]; then
     echo "Environment file $ENV_FILE not found!"
@@ -68,7 +68,7 @@ git checkout main
 git pull origin main
 
 echo "Moving the .env.prod file to the Docker directory..."
-cp $ENV_FILE docker/.env.prod
+ln -s $ENV_FILE $PWD/docker/.env.prod
 
 echo "Pulling the latest Docker image..."
 docker pull ghcr.io/ecotrust/tekdb/web:latest
