@@ -88,12 +88,19 @@ else
     exit 1 
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEKDB_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+
 echo "Please follow these steps to create a database backup at the cadence of your choosing using crontab:"
 echo "1. Determine what timezone your server is in by running the command: timedatectl"
-echo "2. Determine the desired backup schedule (e.g., daily at 9 PM) considering your server's timezone. https://crontab.guru/ is a helpful resource for determing the correct cron schedule syntax."
-echo "3. Ensure you have the correct permissions to run the backup script by running: chmod +x $PWD/tekdb/TEKDB/scripts/Linux/db-dump.sh"
+echo "2. Determine the desired backup schedule (e.g., daily at 9 PM) considering your server's timezone. https://crontab.guru/ is a helpful resource for determining the correct cron schedule syntax."
+echo "3. Ensure you have the correct permissions to run the backup script by running: chmod +x ${TEKDB_ROOT}/scripts/Linux/db-dump.sh"
 echo "4. Add to your crontab by running: crontab -e"
-echo "5. Add to your cron tab: <your cron schedule> $PWD/tekdb/TEKDB/scripts/Linux/db-dump.sh $PWD/tekdb/TEKDB/docker/.env.prod >> /var/log/tekdb_db_dump.log 2>&1"
-
-echo "Success! Backup script has been added to your crontab. You can check the log file at /var/log/tekdb_db_dump.log for any errors or output from the backup script." 
+echo "5. Add to your cron tab (replace <your cron schedule> with your desired schedule):"
+echo "   <your cron schedule> ${TEKDB_ROOT}/scripts/Linux/db-dump.sh ${TEKDB_ROOT}/docker/.env.prod >> $HOME/tekdb_db_dump.log 2>&1"
+echo ""
+echo "   Example for daily backups at 9 PM:"
+echo "   0 21 * * * ${TEKDB_ROOT}/scripts/Linux/db-dump.sh ${TEKDB_ROOT}/docker/.env.prod >> $HOME/tekdb_db_dump.log 2>&1"
+echo ""
+echo "Note: Log file will be created at $HOME/tekdb_db_dump.log. You can monitor it with: tail -f $HOME/tekdb_db_dump.log" 
 exit 0

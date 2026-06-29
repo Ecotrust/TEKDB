@@ -23,7 +23,14 @@ BACKUP_FILE="${BACKUP_DIR}/${SQL_DATABASE}.sql"
 mkdir -p "${BACKUP_DIR}"
 
 # Use full path to docker for cron compatibility
-DOCKER_CMD="/usr/local/bin/docker"
+# Find docker location
+if [ -x "/usr/bin/docker" ]; then
+    DOCKER_CMD="/usr/bin/docker"
+elif [ -x "/usr/local/bin/docker" ]; then
+    DOCKER_CMD="/usr/local/bin/docker"
+else
+    DOCKER_CMD="docker"
+fi
 
 echo "Dumping database '${SQL_DATABASE}' from container '${CONTAINER_NAME}' to '${BACKUP_FILE}'..."
 "${DOCKER_CMD}" exec -t "${CONTAINER_NAME}" pg_dump -b -c -n public -O --quote-all-identifiers --no-acl -w -U "${SQL_USER}" "${SQL_DATABASE}" > "${BACKUP_FILE}"
