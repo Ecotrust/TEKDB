@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-ENV_FILE="${ENV_FILE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/docker/.env.prod}"
+ENV_FILE="${1:-}"
 
 if [ -f "$ENV_FILE" ]; then
     set -a
+    echo "Loading environment variables from $ENV_FILE..."
     source "$ENV_FILE" 
     set +a
 else
-    echo "Warning: $ENV_FILE file not found"
+    echo "Error: File "$ENV_FILE" not found. Please provide a valid environment file as an argument."
+    exit 1
 fi
 
 CONTAINER_NAME=db
@@ -20,6 +22,9 @@ BACKUP_FILE="${BACKUP_DIR}/${SQL_DATABASE}.sql"
 
 mkdir -p "${BACKUP_DIR}"
 
+# Use full path to docker for cron compatibility
+DOCKER_CMD="/usr/local/bin/docker"
+
 echo "Dumping database '${SQL_DATABASE}' from container '${CONTAINER_NAME}' to '${BACKUP_FILE}'..."
-docker exec -i "${CONTAINER_NAME}" pg_dump -b -c -n public -O --quote-all-identifiers --no-acl -w -U "${SQL_USER}" "${SQL_DATABASE}" > "${BACKUP_FILE}"
+"${DOCKER_CMD}" exec -t "${CONTAINER_NAME}" pg_dump -b -c -n public -O --quote-all-identifiers --no-acl -w -U "${SQL_USER}" "${SQL_DATABASE}" > "${BACKUP_FILE}"
 echo "Database dump completed successfully."
