@@ -62,11 +62,10 @@ mkdir -p media
 echo "Cloning the TEKDB repository..."
 git clone https://github.com/Ecotrust/TEKDB.git
 
-#TODO: change after testing
-echo "Checking out the backup-cron-jobs branch..."
+echo "Checking out the main branch..."
 cd TEKDB
-git checkout backup-cron-jobs    
-git pull origin backup-cron-jobs
+git checkout main    
+git pull origin main
 
 echo "Moving the .env.prod file to the Docker directory..."
 ln -s $ENV_FILE $PWD/docker/.env.prod
