@@ -71,19 +71,35 @@ echo "Moving the .env.prod file to the Docker directory..."
 ln -s $ENV_FILE $PWD/docker/.env.prod
 
 echo "Pulling the latest Docker image..."
-docker pull ghcr.io/ecotrust/tekdb/web:latest
+sudo docker pull ghcr.io/ecotrust/tekdb/web:latest
 
 echo "Building the proxy image..."
-docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml build proxy
+sudo docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml build proxy
 
 echo "Starting the Docker containers..."
-docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
+sudo docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
 
 echo "Verifying that the containers are running..."
-if [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "db" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_proxy" 2>/dev/null)" = "running" ]; then
+if [ "$(sudo docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ] && [ "$(sudo docker container inspect -f '{{.State.Status}}' "db" 2>/dev/null)" = "running" ] && [ "$(sudo docker container inspect -f '{{.State.Status}}' "tekdb_proxy" 2>/dev/null)" = "running" ]; then
     echo "TEKDB containers are running successfully."
 else
     echo "Failed to start TEKDB containers. Please check the Docker logs for more information."
     exit 1 
 fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEKDB_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")/tekdb/TEKDB"
+
+echo "Please follow these steps to create a database backup at the cadence of your choosing using crontab:"
+echo "1. Determine what timezone your server is in by running the command: timedatectl"
+echo "2. Determine the desired backup schedule (e.g., daily at 9 PM) considering your server's timezone. https://crontab.guru/ is a helpful resource for determining the correct cron schedule syntax."
+echo "3. Ensure you have the correct permissions to run the backup script by running: chmod +x ${TEKDB_ROOT}/scripts/Linux/db-dump.sh"
+echo "4. Add to your crontab by running: sudo crontab -e"
+echo "5. Add to your cron tab (replace <your cron schedule> with your desired schedule):"
+echo "   <your cron schedule> ${TEKDB_ROOT}/scripts/Linux/db-dump.sh ${TEKDB_ROOT}/docker/.env.prod >> $HOME/tekdb_db_dump.log 2>&1"
+echo ""
+echo "   Example for daily backups at 9 PM:"
+echo "   0 21 * * * ${TEKDB_ROOT}/scripts/Linux/db-dump.sh ${TEKDB_ROOT}/docker/.env.prod >> $HOME/tekdb_db_dump.log 2>&1"
+echo ""
+echo "Note: Log file will be created at $HOME/tekdb_db_dump.log. You can monitor it with: tail -f $HOME/tekdb_db_dump.log" 
 exit 0
