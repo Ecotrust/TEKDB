@@ -49,9 +49,6 @@ fi
 echo "Adding ubuntu user to the docker group..."
 sudo usermod -aG docker ubuntu
 
-echo "Applying new group membership for the current session..."
-newgrp docker
-
 echo "Installing git..."
 sudo apt install git -y
 
@@ -75,16 +72,16 @@ echo "Moving the .env.prod file to the Docker directory..."
 ln -s $ENV_FILE $PWD/docker/.env.prod
 
 echo "Pulling the latest Docker image..."
-docker pull ghcr.io/ecotrust/tekdb/web:latest
+sudo docker pull ghcr.io/ecotrust/tekdb/web:latest
 
 echo "Building the proxy image..."
-docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml build proxy
+sudo docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml build proxy
 
 echo "Starting the Docker containers..."
-docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
+sudo docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.local.yaml up -d
 
 echo "Verifying that the containers are running..."
-if [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "db" 2>/dev/null)" = "running" ] && [ "$(docker container inspect -f '{{.State.Status}}' "tekdb_proxy" 2>/dev/null)" = "running" ]; then
+if [ "$(sudo docker container inspect -f '{{.State.Status}}' "tekdb_web" 2>/dev/null)" = "running" ] && [ "$(sudo docker container inspect -f '{{.State.Status}}' "db" 2>/dev/null)" = "running" ] && [ "$(sudo docker container inspect -f '{{.State.Status}}' "tekdb_proxy" 2>/dev/null)" = "running" ]; then
     echo "TEKDB containers are running successfully."
 else
     echo "Failed to start TEKDB containers. Please check the Docker logs for more information."
