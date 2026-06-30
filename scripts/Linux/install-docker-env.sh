@@ -49,6 +49,9 @@ fi
 echo "Adding ubuntu user to the docker group..."
 sudo usermod -aG docker ubuntu
 
+echo "Applying new group membership for the current session..."
+newgrp docker
+
 echo "Installing git..."
 sudo apt install git -y
 
