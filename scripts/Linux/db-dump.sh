@@ -16,7 +16,7 @@ fi
 CONTAINER_NAME=db
 SQL_USER=${SQL_USER:?SQL_USER is not set}
 SQL_DATABASE=${SQL_DATABASE:?SQL_DATABASE is not set}
-BACKUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/backups/postgres"
+BACKUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)/backups/postgres"
 
 BACKUP_FILE="${BACKUP_DIR}/${SQL_DATABASE}.sql"
 
