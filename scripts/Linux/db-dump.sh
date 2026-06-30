@@ -32,6 +32,6 @@ else
     DOCKER_CMD="docker"
 fi
 
-echo "${date +"%Y-%m-%d %H:%M:%S"} - Dumping database '${SQL_DATABASE}' from container '${CONTAINER_NAME}' to '${BACKUP_FILE}'..."
+echo "$(date +"%Y-%m-%d %H:%M:%S") - Dumping database '${SQL_DATABASE}' from container '${CONTAINER_NAME}' to '${BACKUP_FILE}'..."
 "${DOCKER_CMD}" exec -t "${CONTAINER_NAME}" pg_dump -b -c -n public -O --quote-all-identifiers --no-acl -w -U "${SQL_USER}" "${SQL_DATABASE}" > "${BACKUP_FILE}"
-echo "${date +"%Y-%m-%d %H:%M:%S"} - Database dump completed successfully."
+echo "$(date +"%Y-%m-%d %H:%M:%S") - Database dump completed successfully."
