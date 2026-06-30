@@ -5,11 +5,11 @@ ENV_FILE="${1:-}"
 
 if [ -f "$ENV_FILE" ]; then
     set -a
-    echo "Loading environment variables from $ENV_FILE..."
+    echo "$(date +"%Y-%m-%d %H:%M:%S") - Loading environment variables from $ENV_FILE..."
     source "$ENV_FILE" 
     set +a
 else
-    echo "Error: File "$ENV_FILE" not found. Please provide a valid environment file as an argument."
+    echo "$(date +"%Y-%m-%d %H:%M:%S") - Error: File "$ENV_FILE" not found. Please provide a valid environment file as an argument."
     exit 1
 fi
 
