@@ -89,7 +89,7 @@ else
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEKDB_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+TEKDB_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")/tekdb/TEKDB"
 
 echo "Please follow these steps to create a database backup at the cadence of your choosing using crontab:"
 echo "1. Determine what timezone your server is in by running the command: timedatectl"
