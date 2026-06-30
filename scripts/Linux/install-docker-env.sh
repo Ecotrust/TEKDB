@@ -94,7 +94,7 @@ echo "Please follow these steps to create a database backup at the cadence of yo
 echo "1. Determine what timezone your server is in by running the command: timedatectl"
 echo "2. Determine the desired backup schedule (e.g., daily at 9 PM) considering your server's timezone. https://crontab.guru/ is a helpful resource for determining the correct cron schedule syntax."
 echo "3. Ensure you have the correct permissions to run the backup script by running: chmod +x ${TEKDB_ROOT}/scripts/Linux/db-dump.sh"
-echo "4. Add to your crontab by running: crontab -e"
+echo "4. Add to your crontab by running: sudo crontab -e"
 echo "5. Add to your cron tab (replace <your cron schedule> with your desired schedule):"
 echo "   <your cron schedule> ${TEKDB_ROOT}/scripts/Linux/db-dump.sh ${TEKDB_ROOT}/docker/.env.prod >> $HOME/tekdb_db_dump.log 2>&1"
 echo ""
