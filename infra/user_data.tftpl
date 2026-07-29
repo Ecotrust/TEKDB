@@ -77,7 +77,7 @@ WEB_IMAGE=${web_ecr_image_uri}
 PROXY_IMAGE=${proxy_ecr_image_uri}
 CELERY_BROKER_URL=${celery_broker_url}
 GIS_USER_PASSWORD=${gis_user_password}
-DOMAIN_NAME=${domain_name}
+DOMAIN_NAME=${domain_names[0]}
 EOF
 
 echo "Logging in to AWS ECR for web image..."
@@ -95,13 +95,14 @@ echo "Installing certbot..."
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-echo "Waiting for DNS to resolve ${domain_name}..."
 TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" \
   -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 EXPECTED_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
   http://169.254.169.254/latest/meta-data/public-ipv4)
+%{ for d in domain_names ~}
+echo "Checking DNS resolution for ${d}..."
 for i in $(seq 1 20); do
-  RESOLVED_IP=$(dig +short ${domain_name} | tail -1)
+  RESOLVED_IP=$(dig +short ${d} | tail -1)
   if [ "$RESOLVED_IP" = "$EXPECTED_IP" ]; then
     echo "DNS resolved correctly to $EXPECTED_IP"
     break
@@ -109,18 +110,22 @@ for i in $(seq 1 20); do
   echo "Waiting for DNS... (got $RESOLVED_IP, want $EXPECTED_IP)"
   sleep 30
 done
+%{ endfor ~}
 
 echo "Getting SSL certificate for domain"
 sudo certbot certonly --standalone \
   --non-interactive \
   --agree-tos \
   --email ${ssl_admin_email} \
-  -d ${domain_name}
+ %{ for d in domain_names ~}
+  -d ${d} \
+%{ endfor ~}
+  --cert-name ${domain_names[0]}
 
 echo "Setting letsencrypt directory permissions for nginx container..."
 sudo chmod 755 /etc/letsencrypt/live/
 sudo chmod 755 /etc/letsencrypt/archive/
-sudo chmod 644 /etc/letsencrypt/archive/${domain_name}/*.pem
+sudo chmod 644 /etc/letsencrypt/archive/${domain_names[0]}/*.pem
 
 echo "Starting Docker containers using docker compose ..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
@@ -131,7 +136,7 @@ sudo tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh > /dev/null <<'HO
 #!/bin/bash
 chmod 755 /etc/letsencrypt/live/
 chmod 755 /etc/letsencrypt/archive/
-chmod 644 /etc/letsencrypt/archive/${domain_name}/*.pem
+chmod 644 /etc/letsencrypt/archive/${domain_names[0]}/*.pem
 docker exec $(docker ps -qf "name=proxy") nginx -s reload
 HOOK
 sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
