@@ -103,8 +103,8 @@ variable "gis_user_password" {
   type        = string
 }
 
-variable "domain_name" {
-  description = "Domain name for the application"
+variable "domain_names" {
+  description = "Domain names for the application"
   type        = string
 }
 
