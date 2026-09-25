@@ -12,6 +12,10 @@ server {
   ssl_protocols       TLSv1.2 TLSv1.3;
   ssl_ciphers         HIGH:!aNULL:!MD5;
 
+   location /.well-known/acme-challenge/ {
+      root /var/www/certbot;
+    }
+
   location /static {
     alias /vol/static/static;
   }
