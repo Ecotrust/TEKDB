@@ -127,8 +127,18 @@ sudo chmod 755 /etc/letsencrypt/live/
 sudo chmod 755 /etc/letsencrypt/archive/
 sudo chmod 644 /etc/letsencrypt/archive/${domain_names[0]}/*.pem
 
+# Create webroot directory before Docker starts so nginx can mount it immediately
+sudo mkdir -p /var/www/certbot
+
 echo "Starting Docker containers using docker compose ..."
 docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
+
+# Switch certbot renewal from standalone to webroot so future renewals do not
+# conflict with the running nginx container on port 80.
+echo "Reconfiguring certbot renewal to use webroot authenticator..."
+RENEWAL_CONF="/etc/letsencrypt/renewal/${domain_names[0]}.conf"
+sudo sed -i 's/^authenticator = standalone$/authenticator = webroot/' "$RENEWAL_CONF"
+sudo sed -i '/^authenticator = webroot$/a webroot_path = /var/www/certbot' "$RENEWAL_CONF"
 
 echo "Setting up certbot renewal hook to reload nginx..."
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy
