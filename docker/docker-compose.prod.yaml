@@ -38,6 +38,7 @@ services:
       - static_volume:/vol/static/static:ro
       - media_volume:/vol/static/media:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
   redis:
     extends:
       file: common.yaml
