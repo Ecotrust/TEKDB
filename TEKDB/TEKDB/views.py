@@ -479,6 +479,7 @@ class CitationAutocompleteView(autocomplete.Select2QuerySetView):
             qs = Citations.keyword_search(self.q)
 
         return qs.order_by(
+            "citationid",
             Lower("referencetype__documenttype"),
             Lower("title"),
             Lower("intervieweeid__firstname"),
@@ -516,7 +517,9 @@ class PlaceAutocompleteView(autocomplete.Select2QuerySetView):
         if self.q:
             qs = Places.keyword_search(self.q)
 
-        return qs.order_by(Lower("indigenousplacename"), Lower("englishplacename"))
+        return qs.order_by(
+            "placeid", Lower("indigenousplacename"), Lower("englishplacename")
+        )
 
 
 class PlaceResourceAutocompleteView(autocomplete.Select2QuerySetView):
