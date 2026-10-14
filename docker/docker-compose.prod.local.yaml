@@ -8,7 +8,10 @@ services:
     extends:
       file: common.yaml
       service: web
-    image: ${WEB_IMAGE}:latest
+    # image: ${WEB_IMAGE}:latest
+    build:
+      context: ../TEKDB/
+      dockerfile: ../TEKDB/Dockerfile
     command: ["prod-local"]
     env_file:
       - path: .env.prod
