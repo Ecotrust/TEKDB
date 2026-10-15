@@ -87,22 +87,6 @@ def get_directory_size(directory):
     return total
 
 
-# Custom response class to override FileResponse.close()
-class AfterFileResponse(FileResponse):
-    def __init__(self, data, callback, **kwargs):
-        super().__init__(data, **kwargs)
-        self.callback = callback
-
-    def close(self):
-        super().close()
-        self.callback()
-
-
-def remove_tmp_file(path):
-    print(f"File at path {path} has been closed.")
-    os.remove(path)
-
-
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request, test=False):
@@ -163,13 +147,6 @@ def ExportDatabase(request, test=False):
                 for media_file in media_paths:
                     zip.write(media_file)
 
-        # download_file = open(tmp_zip.name, "rb")
-        # response = AfterFileResponse(
-        #     download_file,
-        #     lambda path=tmp_zip.name: remove_tmp_file(path),
-        #     as_attachment=True,
-        #     filename=os.path.basename(tmp_zip.name),
-        # )
         response = FileResponse(open(tmp_zip.name, "rb"))
         export_succeeded = True
 
@@ -180,8 +157,6 @@ def ExportDatabase(request, test=False):
         return response
     finally:
         try:
-            # if not test:
-            #     os.remove(tmp_zip.name)
             if not test:
                 os.remove(tmp_zip.name)
             if export_succeeded:
