@@ -98,9 +98,15 @@ class AfterFileResponse(FileResponse):
         self.callback()
 
 
-def remove_tmp_file(path):
-    print(f"File at path {path} has been closed.")
-    os.remove(path)
+def remove_tmp_file(path, test, response):
+    if not test:
+        try:
+            os.remove(path)
+        except (PermissionError, NotADirectoryError) as e:
+            error_message = f"Error cleaning up temporary files: {str(e)}"
+            response.set_cookie("export_status", "error", path="/")
+            response.set_cookie("export_error_message", quote(error_message), path="/")
+    return response
 
 
 # Only Admins!
@@ -163,14 +169,12 @@ def ExportDatabase(request, test=False):
                 for media_file in media_paths:
                     zip.write(media_file)
 
-        # download_file = open(tmp_zip.name, "rb")
-        # response = AfterFileResponse(
-        #     download_file,
-        #     lambda path=tmp_zip.name: remove_tmp_file(path),
-        #     as_attachment=True,
-        #     filename=os.path.basename(tmp_zip.name),
-        # )
-        response = FileResponse(open(tmp_zip.name, "rb"))
+        download_file = open(tmp_zip.name, "rb")
+        response = AfterFileResponse(
+            download_file,
+            lambda path=tmp_zip.name: remove_tmp_file(path, test, response),
+        )
+        # response = FileResponse(open(tmp_zip.name, "rb"))
         export_succeeded = True
 
     except Exception as e:
@@ -179,17 +183,9 @@ def ExportDatabase(request, test=False):
         response.set_cookie("export_error_message", quote(error_message), path="/")
         return response
     finally:
-        try:
-            # if not test:
-            #     os.remove(tmp_zip.name)
-            if not test:
-                os.remove(tmp_zip.name)
-            if export_succeeded:
-                response.set_cookie("export_status", "done", path="/")
-        except (PermissionError, NotADirectoryError) as e:
-            error_message = f"Error cleaning up temporary files: {str(e)}"
-            response.set_cookie("export_status", "error", path="/")
-            response.set_cookie("export_error_message", quote(error_message), path="/")
+        if export_succeeded:
+            response.set_cookie("export_status", "done", path="/")
+
     return response
 
 
