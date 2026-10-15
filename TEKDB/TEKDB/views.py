@@ -90,6 +90,7 @@ def get_directory_size(directory):
 # Only Admins!
 @user_passes_test(lambda u: u.is_superuser)
 def ExportDatabase(request, test=False):
+
     datestamp = datetime.now().strftime("%Y%m%d")
 
     os.chdir(os.path.join(settings.MEDIA_ROOT, ".."))
@@ -142,6 +143,7 @@ def ExportDatabase(request, test=False):
                 with zip.open(dumpfile, "w") as dump_entry:
                     for chunk in chunk_text_file(spooled):
                         dump_entry.write(chunk)
+
                 for media_file in media_paths:
                     zip.write(media_file)
 
