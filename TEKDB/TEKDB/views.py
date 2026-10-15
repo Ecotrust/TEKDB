@@ -161,16 +161,16 @@ def ExportDatabase(request, test=False):
                         dump_entry.write(chunk)
 
                 for media_file in media_paths:
-                    print(f"Adding media file to zip: {media_file}")
                     zip.write(media_file)
 
-        download_file = open(tmp_zip.name, "rb")
-        response = AfterFileResponse(
-            download_file,
-            lambda path=tmp_zip.name: remove_tmp_file(path),
-            as_attachment=True,
-            filename=os.path.basename(tmp_zip.name),
-        )
+        # download_file = open(tmp_zip.name, "rb")
+        # response = AfterFileResponse(
+        #     download_file,
+        #     lambda path=tmp_zip.name: remove_tmp_file(path),
+        #     as_attachment=True,
+        #     filename=os.path.basename(tmp_zip.name),
+        # )
+        response = FileResponse(open(tmp_zip.name, "rb"))
         export_succeeded = True
 
     except Exception as e:
@@ -182,6 +182,8 @@ def ExportDatabase(request, test=False):
         try:
             # if not test:
             #     os.remove(tmp_zip.name)
+            if not test:
+                os.remove(tmp_zip.name)
             if export_succeeded:
                 response.set_cookie("export_status", "done", path="/")
         except (PermissionError, NotADirectoryError) as e:
