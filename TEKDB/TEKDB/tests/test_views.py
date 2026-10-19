@@ -817,3 +817,222 @@ class GetPlacesGeoJSONTest(TestCase):
 
         self.assertTrue(isinstance(places_geojson, dict))
         self.assertIn("features", places_geojson)
+
+
+class CitationAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_citation_autocomplete(self):
+        from TEKDB.views import CitationAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "citation_autocomplete/?q=interview",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = CitationAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "interview" in result["text"].lower()
+                for result in response_data["results"]
+            )
+        )
+
+
+class MediaAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_media_autocomplete(self):
+        from TEKDB.views import MediaAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "media_autocomplete/?q=video",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = MediaAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "video" in result["text"].lower() for result in response_data["results"]
+            )
+        )
+
+
+class PlaceAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_place_autocomplete(self):
+        from TEKDB.views import PlaceAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "place_autocomplete/?q=shark",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = PlaceAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "shark" in result["text"].lower() for result in response_data["results"]
+            )
+        )
+
+
+class PlaceResourceAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_place_resource_autocomplete(self):
+        from TEKDB.views import PlaceResourceAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "place_resource_autocomplete/?q=shark",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = PlaceResourceAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "shark" in result["text"].lower() for result in response_data["results"]
+            )
+        )
+
+
+class ResourceAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_resource_autocomplete(self):
+        from TEKDB.views import ResourceAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "resource_autocomplete/?q=chiton",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = ResourceAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "chiton" in result["text"].lower()
+                for result in response_data["results"]
+            )
+        )
+
+
+class ResourceActivityAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_resource_activity_autocomplete(self):
+        from TEKDB.views import ResourceActivityAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "resource_activity_autocomplete/?q=chiton",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = ResourceActivityAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "chiton" in result["text"].lower()
+                for result in response_data["results"]
+            )
+        )
