@@ -243,7 +243,7 @@ $(function () {
       .attr("src", "/export_database/")
       .appendTo("body");
 
-    const maxPollMs = 1 * 60 * 1000; // 1 minute safety cap (probably way longer than needed)
+    const maxPollMs = 15 * 60 * 1000; // 15 minute safety cap to match the uWSGI harakiri timeout
     const startTime = Date.now();
 
     // poll cookie for export_status

@@ -27,6 +27,14 @@ server {
     uwsgi_pass web:8000;
     include /etc/nginx/uwsgi_params;
   }
+  location /export_database/ {
+    uwsgi_buffering off;
+    uwsgi_read_timeout 900s;
+    uwsgi_send_timeout 900s;
+    send_timeout 900s;
+    uwsgi_pass web:8000;
+    include /etc/nginx/uwsgi_params;
+  }
   location / {
     uwsgi_pass web:8000;
     include /etc/nginx/uwsgi_params;
