@@ -1,0 +1,70 @@
+services:
+  db:
+    extends:
+      file: common.yaml
+      service: db
+
+  web:
+    extends:
+      file: common.yaml
+      service: web
+    image: ${WEB_IMAGE}:latest
+    command: ["prod"]
+    env_file:
+      - path: .env.prod
+        required: true
+
+    ports: []
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
+  proxy:
+    image: ${PROXY_IMAGE}:latest
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "80:8080"
+      - "443:8443"
+    env_file:
+      - path: .env.prod
+        required: true
+    volumes:
+      - static_volume:/vol/static/static:ro
+      - media_volume:/vol/static/media:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
+  redis:
+    extends:
+      file: common.yaml
+      service: redis
+  celery:
+    extends:
+      file: common.yaml
+      service: celery
+    image: ${WEB_IMAGE}:latest
+    env_file:
+      - path: .env.prod
+        required: true
+    volumes:
+      - media_volume:/usr/src/app/media
+  celery-beat:
+    extends:
+      file: common.yaml
+      service: celery-beat
+    image: ${WEB_IMAGE}:latest
+    env_file:
+      - path: .env.prod
+        required: true
+    volumes:
+      - media_volume:/usr/src/app/media
+
+volumes:
+  tekdb_db_data:
+  static_volume:
+  media_volume:

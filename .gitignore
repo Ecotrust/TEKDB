@@ -88,6 +88,7 @@ celerybeat-schedule
 
 # dotenv
 .env
+.env.prod
 
 # virtualenv
 venv/
@@ -130,3 +131,8 @@ dist-ssr
 
 # client related files
 .react-router/
+# OpenTofu/Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars

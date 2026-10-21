@@ -1,6 +1,6 @@
 const importText = `
   This process will remove all data and files from your current 
-  database and replace it with data from the provided zip file. 
+  database and replace it with data from the provided zipfile. 
   </br><br>
   This process CANNOT be undone. </br><br>
   It is recommended that you use the 'Export to .zip' button above to export 
@@ -14,7 +14,7 @@ const importText = `
 `;
 
 const importInfoText = `The Import Database Tool is designed to support restoring your Traditional Knowledge Database back to a prior state. This is best used in conjunction with the 'Export Database' tool above. </br><br>
-      To use the Import Database tool is simple: select a properly formatted zip file to upload and then click 'Import'. All of your data will be reverted back to the state it was when that zipfile was created. </br><br>
+      To use the Import Database tool is simple: select a properly formatted zipfile to upload and then click 'Import'. All of your data will be reverted back to the state it was when that zipfile was created. </br><br>
       This is VERY DANGEROUS! For this to work, all of the data currently 
       in your database, including your users, your records, and your page 
       contents will be removed, and then replaced. Also, any files 
@@ -51,9 +51,27 @@ const exportInfoText = `The Export Database Tool is designed to support saving t
         a safe and secure practice for regular backups, which may or may 
         not involve this tool.`;
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
 $(function () {
   const unexpectedError = (statusCode, statusMessage = "") => {
-    return `<p class='text-danger'>Unexpected error occurred: ${statusCode}</p><p>${statusMessage}</p>`;
+    return `<p class='text-danger'>Unexpected error occurred: ${statusCode}</p><p class='text-danger'>${statusMessage}</p>`;
   };
 
   const showNextStepsSection = () => {
@@ -71,7 +89,7 @@ $(function () {
   const resetModal = () => {
     $("#continueImport").html("Close");
     $("#closeModalButton").prop("disabled", false);
-    $("#continueImport").click(function () {
+    $("#continueImport").one("click", function () {
       $("#exportImportModal").modal("hide");
     });
   };
@@ -81,12 +99,24 @@ $(function () {
       "export_status=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   };
 
+  const clearExportErrorMessageCookie = () => {
+    document.cookie =
+      "export_error_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  const showErrorMessage = (message) => {
+    $("#exportStatus")
+      .removeClass("hidden")
+      .html(`<p class='text-danger'>${message}</p>`);
+  }
+
   const resetExportButton = (iframe, clear) => {
     $("#export-button").prop("disabled", false);
     $("#export-button").html("Export to .zip");
     iframe.remove();
     clear();
     clearExportStatusCookie();
+    clearExportErrorMessageCookie();
   };
 
   $("button#import-button").click(function (e) {
@@ -95,8 +125,8 @@ $(function () {
 
     $("#modalTitle").text("Import Database");
     $("#modalBody").html(importText);
-
-    $("#continueImport").click(function () {
+    let showSpinner = true;
+    $("#continueImport").one("click", function () {
       // prevent closing the modal after verifying import
       $("#exportImportModal").modal({
         backdrop: "static",
@@ -105,12 +135,13 @@ $(function () {
 
       // add spinner to the button
       // change button text to "Importing..."
-      $("#continueImport").html(
-        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
-      );
-      $("#continueImport").prop("disabled", true);
-      $("#closeModalButton").prop("disabled", true);
-
+      if (showSpinner) {
+        $("#continueImport").html(
+          `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Importing...`
+        );
+        $("#continueImport").prop("disabled", true);
+        $("#closeModalButton").prop("disabled", true);
+      }
       const form = $("#import-database-form");
       $.ajax({
         url: "/import_database/",
@@ -130,25 +161,49 @@ $(function () {
               $("#modalNextSteps").html(
                 `<p class='text-success'>Import successful. You may now be logged out.</p>`
               );
+              showSpinner = false;
               $("#continueImport").html("Log out");
-              $("#continueImport").click(function () {
-                location.reload(true);
+              $("#continueImport").one("click", function () {
+                $.ajax({
+                  url: "/logout/",
+                  type: "POST",
+                  headers: {'X-CSRFToken': csrftoken},
+                  mode: 'same-origin',
+                  success: function () {
+                    // force reload to update to logged out state
+                    location.reload(true);
+                  },
+                });
               });
             } else {
               $("#modalNextSteps").html(
                 `<p class='text-danger'>Import failed with error code ${data.status_code}.</p><p class='text-danger'>${data.status_message}</p>`
               );
+              showSpinner = false;
               resetModal();
             }
           } else {
             $("#modalNextSteps").html(unexpectedError(status));
+            showSpinner = false;
             resetModal();
           }
         },
         error: function (xhr) {
-          $("#modalNextSteps").html(
-            unexpectedError(xhr.status, xhr.statusText)
-          );
+          showNextStepsSection();
+          let statusCode = xhr.responseJSON?.status_code || xhr.status;
+          let statusMessage = xhr.responseJSON?.status_message || xhr.statusText;
+          if (xhr.status === 0 || xhr.status === 502 || xhr.status === 503) {
+            statusMessage =
+              "The server could not process the request. This may be caused by insufficient disk space on the server. Please contact your IT team.";
+          } else if (xhr.status === 507) {
+            statusMessage =
+              xhr.responseJSON?.status_message ||
+              "Not enough disk space on the server to process the upload. Please contact your IT team.";
+          } else if (xhr.status === 413) {
+            statusMessage = "The uploaded file is too large for the server to accept.";
+          }
+          $("#modalNextSteps").html(unexpectedError(statusCode, statusMessage));
+          $("#continueImport").prop("disabled", false);
           resetModal();
         },
       });
@@ -205,17 +260,25 @@ $(function () {
       ) {
         resetExportButton(iframe, () => clearInterval(checkStatus));
         if (exportStatus.includes("export_status=error")) {
-          $("#exportStatus").removeClass("hidden");
+          // Get the error message from cookie
+          const errorMsgCookie = cookies.find((c) =>
+            c.startsWith("export_error_message=")
+          );
+          let errorMsg = "An error occurred during export.";
+          if (errorMsgCookie) {
+            errorMsg = decodeURIComponent(
+              errorMsgCookie.split("=").slice(1).join("=")
+            );
+            // Clear the error message cookie
+            clearExportErrorMessageCookie();
+          }
+          showErrorMessage(errorMsg);
         }
       } else {
         if (Date.now() - startTime > maxPollMs) {
           // timeout
           resetExportButton(iframe, () => clearInterval(checkStatus));
-          $("#exportStatus")
-            .removeClass("hidden")
-            .html(
-              "<p class='text-danger'>Export timed out. Please try again.</p>"
-            );
+          showErrorMessage("Export timed out. Please try again.");
         }
       }
     }, 1000);

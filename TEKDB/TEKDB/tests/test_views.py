@@ -1,6 +1,7 @@
 from base64 import b64encode
 from datetime import datetime
 from unittest.mock import patch
+from urllib.parse import unquote
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
@@ -410,12 +411,35 @@ class ExportTest(TestCase):
     def test_invalid_admin_export(self):
         export_request = create_export_request(self)
         export_request.user = Users.objects.get(username="admin")
-        with patch("os.remove", side_effect=NotADirectoryError):
+        with patch("os.remove", side_effect=NotADirectoryError("Test error")):
             response = ExportDatabase(export_request, test=False)
         self.assertEqual(response.status_code, 200)
         # Assert that the 'export_status=error' cookie is set
         self.assertIn("export_status", response.cookies)
         self.assertEqual(response.cookies["export_status"].value, "error")
+        # Assert that the 'export_error_message' cookie is set with correct message
+        self.assertIn("export_error_message", response.cookies)
+        error_message = unquote(response.cookies["export_error_message"].value)
+        self.assertIn("Error cleaning up temporary files", error_message)
+        self.assertIn("Test error", error_message)
+
+    # Test failure in export process due to insufficient disk space
+    def test_not_enough_disk_space_export(self):
+        export_request = create_export_request(self)
+        export_request.user = Users.objects.get(username="admin")
+        with patch("TEKDB.views.shutil.disk_usage") as mock_disk_usage:
+            mock_disk_usage.return_value = shutil._ntuple_diskusage(
+                total=0, used=0, free=0
+            )
+            response = ExportDatabase(export_request, test=False)
+        self.assertEqual(response.status_code, 507)
+        # Assert that the 'export_status=error' cookie is set
+        self.assertIn("export_status", response.cookies)
+        self.assertEqual(response.cookies["export_status"].value, "error")
+        # Assert that the 'export_error_message' cookie is set with correct message
+        self.assertIn("export_error_message", response.cookies)
+        error_message = unquote(response.cookies["export_error_message"].value)
+        self.assertIn("Not enough disk space to export the database", error_message)
 
     # Test success in export process
     def test_valid_admin_export(self):
@@ -520,7 +544,9 @@ class ImportDatabaseTest(TransactionTestCase):
             )
             self.import_request.FILES["import_file"] = import_file
             self.import_request.user = Users.objects.get(username="admin")
-            ImportDatabase(self.import_request)
+            with patch("TEKDB.views.ContentType.objects.clear_cache") as clear_cache:
+                ImportDatabase(self.import_request)
+                clear_cache.assert_called_once_with()
         self.assertEqual(Resources.objects.all().count(), self.old_resources_count)
         self.assertEqual(
             Resources.objects.filter(commonname=self.dummy_1_name).count(), 0
@@ -591,6 +617,179 @@ class ImportDatabaseTest(TransactionTestCase):
                 response.data["status_message"],
             )
 
+    def test_failed_import_preflight_no_disk_space_for_upload(self):
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # Simulate no disk space available for the uploaded file
+                mock_check_disk_space.return_value = (False, 0)
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to process the uploaded file.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "2.05 MB",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "0.00 B",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
+    def test_failed_import_preflight_partial_disk_space_for_upload(self):
+        """Test pre-flight check: partial disk space available for uploaded file"""
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # Simulate insufficient disk space (only 300000 bytes = 292.97 KB available)
+                mock_check_disk_space.return_value = (False, 300000)
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to process the uploaded file.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "2.05 MB",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "292.97 KB",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
+    def test_failed_import_insufficient_disk_space_for_fixture_extraction(self):
+        """Test insufficient disk space for extracting database fixture"""
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # First call (upload): sufficient space
+                # Second call (fixture extraction): insufficient space
+                mock_check_disk_space.side_effect = [(True, 10000000), (False, 5000)]
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to extract the database fixture.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
+    def test_failed_import_insufficient_disk_space_for_media_restoration(self):
+        """Test insufficient disk space for restoring media files"""
+        self.import_request = self.factory.post(
+            reverse("import_database"),
+            {
+                "MEDIA_DIR": self.tempmediadir.name,
+                "content_type": "application/zip",
+                "content_disposition": "attachment; filename=uploaded.dump",
+            },
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        with open(self.zipname, "rb") as z:
+            import_file = InMemoryUploadedFile(
+                z,
+                "import_file",
+                "exported_db.zip",
+                "application/zip",
+                getsize(self.zipname),
+                None,
+            )
+            self.import_request.FILES["import_file"] = import_file
+            self.import_request.user = Users.objects.get(username="admin")
+
+            with patch("TEKDB.views.check_disk_space") as mock_check_disk_space:
+                # First call (upload): sufficient space
+                # Second call (fixture extraction): sufficient space
+                # Third call (media restoration): insufficient space
+                mock_check_disk_space.side_effect = [
+                    (True, 10000000),
+                    (True, 10000000),
+                    (False, 1000),
+                ]
+                response = ImportDatabase(self.import_request)
+        self.assertEqual(response.status_code, 507)
+        response.data = json.loads(response.content)
+        self.assertIn(
+            "Not enough disk space to restore media files.",
+            response.data["status_message"],
+        )
+        self.assertIn(
+            "Please free up disk space or contact your IT team.",
+            response.data["status_message"],
+        )
+
 
 class GetPlacesGeoJSONTest(TestCase):
     def setUp(self):
@@ -618,3 +817,222 @@ class GetPlacesGeoJSONTest(TestCase):
 
         self.assertTrue(isinstance(places_geojson, dict))
         self.assertIn("features", places_geojson)
+
+
+class CitationAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_citation_autocomplete(self):
+        from TEKDB.views import CitationAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "citation_autocomplete/?q=interview",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = CitationAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "interview" in result["text"].lower()
+                for result in response_data["results"]
+            )
+        )
+
+
+class MediaAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_media_autocomplete(self):
+        from TEKDB.views import MediaAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "media_autocomplete/?q=video",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = MediaAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "video" in result["text"].lower() for result in response_data["results"]
+            )
+        )
+
+
+class PlaceAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_place_autocomplete(self):
+        from TEKDB.views import PlaceAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "place_autocomplete/?q=shark",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = PlaceAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "shark" in result["text"].lower() for result in response_data["results"]
+            )
+        )
+
+
+class PlaceResourceAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_place_resource_autocomplete(self):
+        from TEKDB.views import PlaceResourceAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "place_resource_autocomplete/?q=shark",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = PlaceResourceAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "shark" in result["text"].lower() for result in response_data["results"]
+            )
+        )
+
+
+class ResourceAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_resource_autocomplete(self):
+        from TEKDB.views import ResourceAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "resource_autocomplete/?q=chiton",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = ResourceAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "chiton" in result["text"].lower()
+                for result in response_data["results"]
+            )
+        )
+
+
+class ResourceActivityAutocompleteTest(TestCase):
+    def setUp(self):
+        import_fixture_file(
+            join(settings.BASE_DIR, "TEKDB", "fixtures", "all_dummy_data.json")
+        )
+        self.factory = RequestFactory()
+        self.credentials = b64encode(b"admin:admin").decode("ascii")
+
+    def test_resource_activity_autocomplete(self):
+        from TEKDB.views import ResourceActivityAutocompleteView
+
+        user = Users.objects.get(username="admin")
+        self.client.force_login(user)
+        self.autocomplete_request = self.factory.get(
+            "resource_activity_autocomplete/?q=chiton",
+            headers={"Authorization": f"Basic {self.credentials}"},
+        )
+        self.autocomplete_request.user = user
+
+        response = ResourceActivityAutocompleteView.as_view()(self.autocomplete_request)
+
+        self.assertTrue(hasattr(response, "status_code"))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn("results", response_data)
+        for result in response_data["results"]:
+            self.assertIn("id", result)
+            self.assertIn("text", result)
+
+        self.assertTrue(
+            any(
+                "chiton" in result["text"].lower()
+                for result in response_data["results"]
+            )
+        )

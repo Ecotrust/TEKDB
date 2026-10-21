@@ -35,7 +35,11 @@ from .tekdb_filebrowser import site as tekdb_filebrowser
 
 
 urlpatterns = [
-    # url(r'^login/', include('login.urls')),
+    path(
+        "change_password/",
+        login_views.TEKDBPasswordChangeView.as_view(),
+        name="change_password",
+    ),
     path("admin/filebrowser/", tekdb_filebrowser.urls),
     path("login/", login_views.login, name="login"),
     path("login_async/", login_views.login_async, name="login_async"),
@@ -76,6 +80,10 @@ urlpatterns = [
         "resource_activity_autocomplete/",
         views.ResourceActivityAutocompleteView.as_view(),
         name="select2_fk_resourceactivity",
+    ),
+    re_path(
+        r"^django_resumable_async_upload/",
+        include("django_resumable_async_upload.urls"),
     ),
     path("", include("explore.urls")),
 ]

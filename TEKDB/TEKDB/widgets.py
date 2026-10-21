@@ -2,8 +2,6 @@ import logging
 
 from django.contrib.gis.geometry import json_regex
 from django.contrib.gis.forms.widgets import BaseGeometryWidget
-from django.forms.widgets import ClearableFileInput
-from django.utils.safestring import mark_safe
 
 logger = logging.getLogger("django.contrib.gis")
 
@@ -61,23 +59,3 @@ class OpenLayers6PolygonWidget(OpenLayers6Widget):
             "assets/openlayers6/ol.js",
             "gis/js/OL6MapPolygonWidget.js",
         )
-
-
-class ThumbnailFileInput(ClearableFileInput):
-    template_name = "widgets/thumbnail_file_input.html"
-    allow_multiple_selected = True  # Enable multiple file uploads
-
-    def format_value(self, value):
-        if value and hasattr(value, "url"):
-            return mark_safe(f'<img src="{value.url}" width="100" height="100" />')
-        return super().format_value(value)
-
-    def __init__(self, attrs=None):
-        if attrs is None:
-            attrs = {}
-        attrs.update(
-            {
-                "multiple": "multiple"  # Allow multiple file selection
-            }
-        )
-        super().__init__(attrs)

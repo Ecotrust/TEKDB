@@ -1,0 +1,50 @@
+services:
+  db:
+    extends:
+      file: common.yaml
+      service: db
+
+  web:
+    extends:
+      file: common.yaml
+      service: web
+    command: ["dev"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DEBUG: ${DEBUG}
+      SQL_ENGINE: ${SQL_ENGINE}
+      SQL_HOST: ${SQL_HOST}
+      SQL_PORT: ${SQL_PORT}
+      SQL_DATABASE: ${SQL_DATABASE}
+      SQL_USER: ${SQL_USER}
+      SQL_PASSWORD: ${SQL_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      CELERY_BROKER_URL: redis://redis:6379/0
+    volumes:
+      - ../TEKDB:/usr/src/app
+  redis:
+    extends:
+      file: common.yaml
+      service: redis
+  celery:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
+    extends:
+      file: common.yaml
+      service: celery
+  celery-beat:
+    build: ../TEKDB/
+    volumes:
+      - ../TEKDB:/usr/src/app
+    extends:
+      file: common.yaml
+      service: celery-beat
+
+volumes:
+  tekdb_db_data:

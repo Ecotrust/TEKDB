@@ -22,17 +22,57 @@ echo "Applying database migrations..."
 python manage.py migrate --noinput
 # Load default users only if no users exist
 echo "Checking for existing users..."
-if [ "$(python manage.py shell -c 'from django.contrib.auth import get_user_model; print(get_user_model().objects.count())')" = "0" ]; then
+if [ "$(python manage.py shell -c 'from django.contrib.auth import get_user_model; print(get_user_model().objects.count())' 2>/dev/null | tail -1)" = "0" ]; then
+	echo "No users found, loading default users fixture..."
     python manage.py loaddata TEKDB/fixtures/default_users_fixture.json
 fi
+
+# Set up restricted gis user after migrations now that tables are created
+echo "Configuring gis database permissions..."
+PGPASSWORD="$SQL_PASSWORD" psql -h "$SQL_HOST" -p "${SQL_PORT:-5432}" -U "$SQL_USER" -d "$SQL_DATABASE" -v ON_ERROR_STOP=1 <<EOF
+-- Create user if it doesn't already exist
+DO \$\$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'gis') THEN
+        CREATE USER gis WITH PASSWORD '${GIS_USER_PASSWORD}';
+        RAISE NOTICE 'Created gis user';
+    ELSE
+        RAISE NOTICE 'gis user already exists, skipping creation';
+    END IF;
+END;
+\$\$;
+
+-- Schema and table permissions
+GRANT USAGE ON SCHEMA public TO gis;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
+     public.places, 
+     public.lookuphabitat, 
+     public.lookupplanningunit, 
+     public.lookuptribe
+TO gis;
+GRANT USAGE, UPDATE ON SEQUENCE public.places_placeid_seq TO gis;
+
+EOF
+echo "gis user permissions configured."
+
+
 # Load default lookups only if no lookups exist. Use LookupPlanningUnit as the check.
 echo "Checking for existing lookups..."
-if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())')" = "0" ]; then
+if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; print(LookupPlanningUnit.objects.count())' 2>/dev/null | tail -1)" = "0" ]; then
+    echo "No lookups found, loading default lookups fixture..."
 	python manage.py loaddata TEKDB/fixtures/default_lookups_fixture.json
 fi
-echo "Starting uWSGI (HTTP) on :8000"
-# Use HTTP socket so direct HTTP clients (browsers) can connect to the container port.
-# If you proxy with nginx using the uwsgi protocol, switch back to --socket and use
-# uwsgi_pass in nginx configuration.
-# uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
-python manage.py runserver 0.0.0.0:8000
+
+if [ "$1" = "prod" ]; then
+    echo "Starting uWSGI (socket) on :8000"
+    uwsgi --socket :8000 --master --enable-threads --module TEKDB.wsgi
+elif [ "$1" = "prod-local" ]; then
+	echo "Starting uWSGI (http) on :8000 with local settings"
+	uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+elif [ "$1" = "dev" ]; then
+    echo "Starting python development server on :8000"
+    python manage.py runserver 0.0.0.0:8000
+else
+    # Default to the passed command if not 'prod' or 'dev'
+    exec "$@"
+fi

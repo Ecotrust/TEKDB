@@ -2,10 +2,6 @@
   text-align: center;
 }
 
-.registration-form .helptext {
-  visibility: hidden;
-}
-
 input[type="text"],
 .form-control,
 input[type="password"] {

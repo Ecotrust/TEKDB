@@ -1,6 +1,7 @@
 #REQUIRED
 confusable-homoglyphs
 coverage
+celery
 django >=4.2.16,<4.3
 django-autocomplete-light
 django-ckeditor
@@ -11,13 +12,17 @@ django-registration
 django-reversion
 django-tinymce
 django-cors-headers
+django-celery-results
+django-celery-beat
 pillow
 psycopg2-binary
 psutil
+redis
 django-filebrowser-no-grappelli>=4.0.0,<5.0.0
 djangorestframework
 
 XlsxWriter
+django-resumable-async-upload==0.1.5
 #-e git+https://github.com/dominno/django-moderation.git@master#egg=moderation
 
 #DEPENDENCIES
@@ -30,11 +35,5 @@ testresources
 twisted>=22.4.0
 urllib3>=1.26.5
 
-#OPTIONAL, BUT LOVELY FOR DEBUGGING
-ipdb
-ipython
-
 # Serve static files in production containers
 whitenoise>=6.0.0,<7.0.0
-# FORMATTING AND LINTING
-ruff
