@@ -4,10 +4,10 @@ services:
       file: common.yaml
       service: db
 
-  web:
+  server:
     extends:
       file: common.yaml
-      service: web
+      service: server
     command: ["dev"]
     depends_on:
       db:
@@ -27,6 +27,16 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
     volumes:
       - ../TEKDB:/usr/src/app
+  client:
+    extends:
+      file: common.yaml
+      service: client
+    environment:
+      INTERNAL_API_BASE_URL: http://server:8000
+      VITE_API_PROXY_TARGET: http://server:8000
+    depends_on:
+      server:
+        condition: service_healthy
   redis:
     extends:
       file: common.yaml

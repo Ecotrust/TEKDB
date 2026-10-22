@@ -21,7 +21,7 @@ services:
   redis:
     container_name: redis
     image: redis:alpine
-  web:
+  server:
     container_name: tekdb_web
     build:
       context: ../TEKDB/
@@ -39,7 +39,24 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-  
+  client:
+    container_name: tekdb_client
+    build:
+      context: ../client/
+      dockerfile: ../client/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: .env.dev
+        required: true
+    ports:
+      - "5173:5173"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
   celery:
     container_name: tekdb_celery
     entrypoint: []
@@ -47,7 +64,7 @@ services:
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     depends_on:
-      web:
+      server:
         condition: service_healthy
       db:
         condition: service_healthy
@@ -60,7 +77,7 @@ services:
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     depends_on:
-      web:
+      server:
         condition: service_healthy
       db:
         condition: service_healthy

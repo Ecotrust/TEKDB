@@ -32,12 +32,32 @@ export type PageContentAndSiteInfo = {
   siteInfo: SiteInfoResponse;
 };
 
-// TODO: fix baseUrl to use env variable
-const baseUrl = "http://localhost:8000";
+type RuntimeEnv = Record<string, string | undefined>;
+
+const getRuntimeEnv = (): RuntimeEnv => {
+  const globalWithProcess = globalThis as {
+    process?: { env?: RuntimeEnv };
+  };
+  return globalWithProcess.process?.env ?? {};
+};
+
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return "";
+  }
+
+  const runtimeEnv = getRuntimeEnv();
+  return (
+    runtimeEnv.INTERNAL_API_BASE_URL ||
+    runtimeEnv.VITE_API_BASE_URL ||
+    "http://localhost:8000"
+  );
+};
 
 export async function fetchPageContent(
   path: string
 ): Promise<PageContentResponse> {
+  const baseUrl = getBaseUrl();
   const url = `${baseUrl}/api/page${path}/`;
   const res = await fetch(url, { credentials: "include" });
   if (!res.ok) {
@@ -47,6 +67,7 @@ export async function fetchPageContent(
 }
 
 export async function fetchSiteInfo(): Promise<SiteInfoResponse> {
+  const baseUrl = getBaseUrl();
   const url = `${baseUrl}/api/site-info/`;
   const res = await fetch(url, { credentials: "include" });
   if (!res.ok) {

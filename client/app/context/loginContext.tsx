@@ -4,7 +4,7 @@ import React, {
   createContext,
   useContext,
 } from "react";
-import { LoginState, submitAction } from "./action";
+import { type LoginState, submitAction } from "./action";
 
 type UseLoginFormReturn = {
   isAuthenticated: boolean;
