@@ -5,6 +5,8 @@ export default [
     route("", "./routes/welcome.tsx"),
     route("about", "./routes/about.tsx"),
     route("help", "./routes/help.tsx"),
-    route("explore", "./routes/explore.tsx"),
+    route("explore", "layouts/private-route.tsx", [
+      route("", "./routes/explore.tsx"),
+    ]),
   ]),
 ] satisfies RouteConfig;

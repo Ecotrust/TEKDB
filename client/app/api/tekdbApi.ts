@@ -3,10 +3,14 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
-import { redirect } from "react-router";
 
 const baseURL =
   (import.meta.env.VITE_API_BASE_URL as string) || `http://localhost:8000/`;
+
+export type AuthSessionResponse = {
+  authenticated: boolean;
+  username: string | null;
+};
 
 export const tekdbApi = axios.create({
   baseURL,
@@ -33,9 +37,6 @@ tekdbApi.interceptors.request.use(
 export const returnOnSuccess = (response: AxiosResponse) => response;
 
 export const redirectOnUnauthorized = (error: AxiosError) => {
-  if (error.response?.status === 401) {
-    redirect("/login_async/");
-  }
   return Promise.reject(error);
 };
 
@@ -47,4 +48,9 @@ export async function primeCsrf(): Promise<string> {
   const token = (resp.data?.csrfToken as string) || "";
 
   return token;
+}
+
+export async function getAuthSession(): Promise<AuthSessionResponse> {
+  const resp = await tekdbApi.get<AuthSessionResponse>("/api/auth/session/");
+  return resp.data;
 }

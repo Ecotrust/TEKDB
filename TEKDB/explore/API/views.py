@@ -53,6 +53,20 @@ class CsrfTokenAPIView(APIView):
         return response
 
 
+class AuthSessionAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        user = request.user
+        authenticated = user.is_authenticated
+        return Response(
+            {
+                "authenticated": authenticated,
+                "username": user.username if authenticated else None,
+            }
+        )
+
+
 # ----- Utility functions ported from template views -----
 def _get_project_geography():
     from TEKDB.settings import DATABASE_GEOGRAPHY

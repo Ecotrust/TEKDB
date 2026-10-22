@@ -44,6 +44,11 @@ urlpatterns = [
     path(
         "api/site-info/", api_views.SiteConfigurationAPIView.as_view(), name="site-info"
     ),
+    path(
+        "api/auth/session/",
+        api_views.AuthSessionAPIView.as_view(),
+        name="auth-session",
+    ),
     path("api/csrf/", api_views.CsrfTokenAPIView.as_view(), name="csrf-token"),
 ]
 # url(r'^logout$', views.logout, name='logout'),

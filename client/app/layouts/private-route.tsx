@@ -1,15 +1,20 @@
-import React, { ReactElement } from "react";
-import { Navigate, Outlet, useLocation } from "react-router";
+import React from "react";
+import { Outlet } from "react-router";
 import { useLogin } from "../context/loginContext";
 
-/** Redirect to the login if the user is not authenticated*/
-export const PrivateRoute = (): ReactElement => {
-  const location = useLocation();
+/** Return a 404 if the user is not authenticated */
+const PrivateRoute: React.FC = () => {
   const { loginForm } = useLogin();
+  console.log("PrivateRoute", loginForm);
+  if (loginForm.isCheckingAuth) {
+    return <></>;
+  }
 
   return loginForm.isAuthenticated ? (
     <Outlet />
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <h1>404 Not Found</h1>
   );
 };
+
+export default PrivateRoute;

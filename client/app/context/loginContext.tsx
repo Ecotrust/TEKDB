@@ -1,13 +1,15 @@
 import React, {
-  useActionState,
   useEffect,
   createContext,
   useContext,
+  useCallback,
 } from "react";
-import { type LoginState, submitAction } from "./action";
+import { submitAction } from "./action";
+import { getAuthSession } from "../api/tekdbApi";
 
 type UseLoginFormReturn = {
   isAuthenticated: boolean;
+  isCheckingAuth: boolean;
   formAction: (formData: FormData) => void;
   isPending: boolean;
   error: string | null;
@@ -19,59 +21,77 @@ type useLogin = {
   setShowLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const useLoginForm = (
-  action: (prevState: LoginState, formData: FormData) => Promise<LoginState>,
-  onSuccess: () => void,
-  onError: () => void
-): UseLoginFormReturn => {
-  const [state, formAction, isPending] = useActionState<LoginState, FormData>(
-    action,
-    {
-      success: false,
-      error: null,
-    }
-  );
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-
-  useEffect(() => {
-    if (state?.success) {
-      setIsAuthenticated(true);
-      setError(null);
-      onSuccess();
-    } else {
-      setIsAuthenticated(false);
-      if (state?.error) {
-        setError(state.error);
-        onError();
-      }
-    }
-  }, [state?.success, state?.error, onSuccess, onError]);
-
-  return {
-    isAuthenticated,
-    formAction,
-    isPending,
-    error,
-  };
-};
-
 const LoginContext = createContext<useLogin | null>(null);
 
 export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = React.useState(true);
+  const [isPending, setIsPending] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  const loginForm = useLoginForm(
-    async (prevState, formData) => {
-      return submitAction(prevState, formData);
-    },
-    () => setShowLoginModal(false),
-    () => {
-      console.log("Login failed");
+  useEffect(() => {
+    let isMounted = true;
+
+    const bootstrapAuth = async () => {
+      try {
+        const session = await getAuthSession();
+        if (isMounted) {
+          setIsAuthenticated(session.authenticated);
+        }
+      } catch (bootstrapError) {
+        if (isMounted) {
+          setIsAuthenticated(false);
+        }
+        console.error("Unable to load auth session", bootstrapError);
+      } finally {
+        if (isMounted) {
+          setIsCheckingAuth(false);
+        }
+      }
+    };
+
+    bootstrapAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const formAction = useCallback(async (formData: FormData) => {
+    setIsPending(true);
+    try {
+      const loginState = await submitAction(
+        {
+          success: false,
+          error: null,
+        },
+        formData
+      );
+
+      if (loginState.success) {
+        setIsAuthenticated(true);
+        setError(null);
+        setShowLoginModal(false);
+        return;
+      }
+
+      setIsAuthenticated(false);
+      setError(loginState.error || "Invalid username or password");
+    } finally {
+      setIsPending(false);
     }
-  );
+  }, []);
+
+  const loginForm = {
+    isAuthenticated,
+    isCheckingAuth,
+    formAction,
+    isPending,
+    error,
+  };
 
   const value = {
     loginForm,
