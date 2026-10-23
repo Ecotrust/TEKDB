@@ -13,6 +13,7 @@ type UseLoginFormReturn = {
   formAction: (formData: FormData) => void;
   isPending: boolean;
   error: string | null;
+  username: string | null;
 };
 
 type useLogin = {
@@ -31,6 +32,7 @@ export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
   const [isCheckingAuth, setIsCheckingAuth] = React.useState(true);
   const [isPending, setIsPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [username, setUsername] = React.useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,6 +42,7 @@ export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
         const session = await getAuthSession();
         if (isMounted) {
           setIsAuthenticated(session.authenticated);
+          setUsername(session.username ? session.username : null);
         }
       } catch (bootstrapError) {
         if (isMounted) {
@@ -86,11 +89,12 @@ export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
   }, []);
 
   const loginForm = {
-    isAuthenticated,
-    isCheckingAuth,
     formAction,
     isPending,
     error,
+    isAuthenticated,
+    isCheckingAuth,
+    username,
   };
 
   const value = {
