@@ -28,16 +28,14 @@ server {
     include /etc/nginx/uwsgi_params;
   }
   location /export_database/ {
-    proxy_buffering off;
-    proxy_request_buffering off;
-    proxy_read_timeout 900s;
-    proxy_send_timeout 900s;
+    uwsgi_buffering off;
+    uwsgi_request_buffering off;
+    uwsgi_connect_timeout 900s;
+    uwsgi_read_timeout 900s;
+    uwsgi_send_timeout 900s;
     send_timeout 900s;
-    proxy_pass http://web:8000;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    uwsgi_pass web:8000;
+    include /etc/nginx/uwsgi_params;
   }
   location / {
     uwsgi_pass web:8000;
