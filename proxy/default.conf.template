@@ -6,6 +6,10 @@ server {
 server {
   listen 8443 ssl;
   client_max_body_size 0;
+  uwsgi_connect_timeout 900s;
+  uwsgi_read_timeout 900s;
+  uwsgi_send_timeout 900s;
+  send_timeout 900s;
 
   ssl_certificate     /etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem;
@@ -38,6 +42,7 @@ server {
     include /etc/nginx/uwsgi_params;
   }
   location / {
+    uwsgi_request_buffering off;
     uwsgi_pass web:8000;
     include /etc/nginx/uwsgi_params;
   }
