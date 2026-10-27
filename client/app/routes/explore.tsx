@@ -19,7 +19,7 @@ const ExploreRoute: React.FC = () => {
           <section className="container">
             <div className="explore-form-row row min-full-height">
               <div className="col form-wrapper">
-                <form className="explore-form" method="post" action="/search/">
+                <form className="explore-form" method="post" action="/api/search/">
                   <h1>Search &amp; Browse</h1>
                   <p>
                     You can search by term alone and/or add category filters

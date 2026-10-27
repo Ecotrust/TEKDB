@@ -37,6 +37,9 @@ services:
     depends_on:
       server:
         condition: service_healthy
+    volumes:
+      - ../client:/app
+      - /app/node_modules
   redis:
     extends:
       file: common.yaml
