@@ -6,10 +6,10 @@ server {
 server {
   listen 8443 ssl;
   client_max_body_size 0;
-  proxy_connect_timeout 900s;
-  proxy_read_timeout 900s;
-  proxy_send_timeout 900s;
-  send_timeout 900s;
+  # include /etc/nginx/uwsgi_params;
+  # proxy_read_timeout 900s;
+  # proxy_send_timeout 900s;
+  # send_timeout 900s;
 
   ssl_certificate     /etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem;
@@ -27,6 +27,7 @@ server {
     alias /vol/static/media;
   }
   location /import_database/ {
+    include /etc/nginx/uwsgi_params;
     proxy_request_buffering off;
     proxy_pass http://web:8000;
     proxy_set_header Host $host;
@@ -35,6 +36,7 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
   location /export_database/ {
+    include /etc/nginx/uwsgi_params;
     proxy_buffering off;
     proxy_request_buffering off;
     proxy_read_timeout 900s;
@@ -47,6 +49,7 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
   location / {
+    include /etc/nginx/uwsgi_params;
     proxy_pass http://web:8000;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
