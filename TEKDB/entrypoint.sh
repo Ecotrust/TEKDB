@@ -64,11 +64,11 @@ if [ "$(python manage.py shell -c 'from TEKDB.models import LookupPlanningUnit; 
 fi
 
 if [ "$1" = "prod" ]; then
-    echo "Starting uWSGI (socket) on :8000"
-    uwsgi --socket :8000 --master --enable-threads --module TEKDB.wsgi
+    echo "Starting uWSGI (http) on :8000"
+    uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi --ini uwsgi.ini
 elif [ "$1" = "prod-local" ]; then
 	echo "Starting uWSGI (http) on :8000 with local settings"
-	uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi
+	uwsgi --http :8000 --master --enable-threads --module TEKDB.wsgi --ini uwsgi.ini
 elif [ "$1" = "dev" ]; then
     echo "Starting python development server on :8000"
     python manage.py runserver 0.0.0.0:8000
