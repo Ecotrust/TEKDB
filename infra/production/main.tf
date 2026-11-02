@@ -38,3 +38,70 @@ variable "allowed_ssh_cidr" {
   type        = string
 }
 
+variable "django_secret_key" {
+  description = "Django secret key"
+  type        = string
+  sensitive   = true
+}
+
+variable "django_allowed_hosts" {
+  description = "Django allowed hosts"
+  type        = string
+}
+
+variable "sql_db_name" {
+  description = "PostgreSQL database name"
+  type        = string
+}
+
+variable "sql_db_user" {
+  description = "PostgreSQL database user"
+  type        = string
+}
+
+variable "sql_db_password" {
+  description = "PostgreSQL database password"
+  type        = string
+  sensitive   = true
+}
+
+variable "sql_host" {
+  description = "PostgreSQL host"
+  type        = string
+}
+
+variable "sql_port" {
+  description = "PostgreSQL port"
+  type        = number
+}
+
+variable "web_ghcr_image_uri" {
+  description = "Web Docker image GHCR URI"
+  type        = string
+}
+
+variable "proxy_ghcr_image_uri" {
+  description = "Proxy Docker image GHCR URI"
+  type        = string
+}
+
+variable "celery_broker_url" {
+  description = "Celery broker URL"
+  type        = string
+}
+
+variable "gis_user_password" {
+  description = "GIS user password"
+  type        = string
+  sensitive   = true
+}
+
+variable "domain_names" {
+  description = "Comma-separated list of domain names"
+  type        = string
+}
+
+variable "ssl_admin_email" {
+  description = "Admin email for SSL certificate"
+  type        = string
+}
