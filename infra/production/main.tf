@@ -21,7 +21,7 @@ variable "ec2_instance_type" {
 }
 
 variable "ec2_ami" {
-  description = "Ubuntu 24.04 LTS AMI ID (region-specific — update if changing region)"
+  description = "Ubuntu 26.04 LTS AMI ID (region-specific — update if changing region)"
   type        = string
   # Ubuntu 26.04 LTS us-west-2 — check https://cloud-images.ubuntu.com/locator/ec2/ for your region
   default = "ami-029e1938545a0ba14"
