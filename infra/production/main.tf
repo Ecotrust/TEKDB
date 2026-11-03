@@ -26,7 +26,10 @@ variable "ec2_ami" {
   # Ubuntu 26.04 LTS us-west-2 — check https://cloud-images.ubuntu.com/locator/ec2/ for your region
   default = "ami-029e1938545a0ba14"
 }
-
+variable "project_name" {
+  description = "Project name"
+  type        = string
+}
 variable "ssh_public_key" {
   description = "SSH public key to install on the EC2 instance (contents of your .pub file)"
   type        = string

@@ -12,6 +12,7 @@ resource "aws_instance" "itkdb" {
   ami                         = var.ec2_ami
   instance_type               = var.ec2_instance_type
   key_name                    = aws_key_pair.itkdb.key_name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
   vpc_security_group_ids      = [aws_security_group.itkdb.id]
   user_data_replace_on_change = true
 
