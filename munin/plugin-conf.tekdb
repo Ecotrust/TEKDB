@@ -1,0 +1,5 @@
+[nginx_*]
+env.url http://proxy:8081/nginx_status
+
+[docker_*]
+user root

@@ -1,0 +1,58 @@
+#!/bin/sh
+# Per-container CPU and memory via the Docker API. Symlink as docker_cpu / docker_memory.
+kind=${0##*/}
+kind=${kind#docker_}
+sock=/var/run/docker.sock
+
+api() { curl -sf --unix-socket "$sock" "http://localhost$1"; }
+field() { printf 'c_%s' "$(printf '%s' "$1" | tr -c 'a-zA-Z0-9' '_')"; }
+
+containers=$(api /containers/json | jq -r '.[] | "\(.Id) \(.Names[0] | ltrimstr("/"))"') || exit 1
+
+if [ "$1" = "config" ]; then
+  case $kind in
+    cpu)
+      echo "graph_title Docker container CPU"
+      echo "graph_vlabel %"
+      echo "graph_args --base 1000 -l 0"
+      ;;
+    memory)
+      echo "graph_title Docker container memory"
+      echo "graph_vlabel bytes"
+      echo "graph_args --base 1024 -l 0"
+      ;;
+  esac
+  echo "graph_category docker"
+  echo "$containers" | while read -r _ name; do
+    echo "$(field "$name").label $name"
+  done
+  exit 0
+fi
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+# stats?stream=false takes ~1s per container, fetch in parallel 
+echo "$containers" | {
+  while read -r id _; do
+    api "/containers/$id/stats?stream=false" > "$tmp/$id.json" &
+  done
+  wait
+}
+
+echo "$containers" | while read -r id name; do
+  case $kind in
+    cpu)
+      value=$(jq -r '
+        ((.cpu_stats.cpu_usage.total_usage // 0) - (.precpu_stats.cpu_usage.total_usage // 0)) as $c
+        | ((.cpu_stats.system_cpu_usage // 0) - (.precpu_stats.system_cpu_usage // 0)) as $s
+        | if $s > 0 then $c / $s * (.cpu_stats.online_cpus // 1) * 100 else 0 end' "$tmp/$id.json")
+      ;;
+    memory)
+      value=$(jq -r '
+        (.memory_stats.usage // 0)
+        - (.memory_stats.stats.inactive_file // .memory_stats.stats.total_inactive_file // 0)' "$tmp/$id.json")
+      ;;
+  esac
+  echo "$(field "$name").value ${value:-U}"
+done
