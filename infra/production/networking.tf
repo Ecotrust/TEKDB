@@ -42,7 +42,7 @@ resource "aws_security_group" "itkdb" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [var.allowed_ssh_cidr]
-    description = "SSH (Ecotrust VPN 2024-04-01)"
+    description = "SSH"
   }
 
 }
