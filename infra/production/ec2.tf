@@ -31,6 +31,8 @@ resource "aws_instance" "itkdb" {
     gis_user_password    = var.gis_user_password
     domain_names         = [for d in split(",", var.domain_names) : trimspace(d)]
     ssl_admin_email      = var.ssl_admin_email
+    munin_user           = var.munin_user
+    munin_password       = var.munin_password
   })
 
   tags = {
