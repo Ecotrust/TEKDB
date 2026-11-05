@@ -35,18 +35,18 @@ services:
     volumes:
       - static_volume:/vol/static/static:ro
       - ../../media:/vol/static/media:ro
-      - munin_html:/vol/munin:ro
-  munin:
-    container_name: tekdb_munin
-    build: ../munin/
-    restart: unless-stopped
-    environment:
-      MUNIN_USER: ${MUNIN_USER:-admin}
-      MUNIN_PASSWORD: ${MUNIN_PASSWORD:-}
-    volumes:
-      - munin_db:/var/lib/munin
-      - munin_html:/var/cache/munin/www
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - munin_html:/vol/munin:ro
+  # munin:
+  #   container_name: tekdb_munin
+  #   build: ../munin/
+  #   restart: unless-stopped
+  #   environment:
+  #     MUNIN_USER: ${MUNIN_USER:-admin}
+  #     MUNIN_PASSWORD: ${MUNIN_PASSWORD:-}
+  #   volumes:
+  #     - munin_db:/var/lib/munin
+  #     - munin_html:/var/cache/munin/www
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
   redis:
     extends:
       file: common.yaml
@@ -69,5 +69,5 @@ services:
 volumes:
   tekdb_db_data:
   static_volume:
-  munin_db:
-  munin_html:
+  # munin_db:
+  # munin_html:
