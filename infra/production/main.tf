@@ -112,7 +112,6 @@ variable "ssl_admin_email" {
 variable "munin_user" {
   description = "Username for the Munin dashboard Basic Authentication"
   type        = string
-  default     = "admin"
 }
 
 variable "munin_password" {
