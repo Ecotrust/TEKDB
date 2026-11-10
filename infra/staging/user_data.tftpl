@@ -78,6 +78,8 @@ PROXY_IMAGE=${proxy_ecr_image_uri}
 CELERY_BROKER_URL=${celery_broker_url}
 GIS_USER_PASSWORD=${gis_user_password}
 DOMAIN_NAME=${domain_names[0]}
+MUNIN_USER=${munin_user}
+MUNIN_PASSWORD=${munin_password}
 EOF
 
 echo "Logging in to AWS ECR for web image..."
@@ -131,7 +133,8 @@ sudo chmod 644 /etc/letsencrypt/archive/${domain_names[0]}/*.pem
 sudo mkdir -p /var/www/certbot
 
 echo "Starting Docker containers using docker compose ..."
-docker compose --env-file docker/.env.prod -f docker/docker-compose.prod.yaml up -d
+docker compose --env-file docker/.env.prod \
+  -f docker/docker-compose.prod.yaml up -d
 
 # Switch certbot renewal from standalone to webroot so future renewals do not
 # conflict with the running nginx container on port 80.

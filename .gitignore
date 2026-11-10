@@ -87,6 +87,7 @@ celerybeat-schedule
 # dotenv
 .env
 .env.prod
+.env.munin
 
 # virtualenv
 venv/

@@ -112,3 +112,14 @@ variable "ssl_admin_email" {
   description = "Admin email for SSL certificate registration (Certbot)"
   type        = string
 }
+
+variable "munin_user" {
+  description = "Username for the Munin dashboard Basic Authentication"
+  type        = string
+}
+
+variable "munin_password" {
+  description = "Password for the Munin dashboard Basic Authentication"
+  type        = string
+  sensitive   = true
+}

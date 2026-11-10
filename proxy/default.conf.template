@@ -3,6 +3,14 @@ server {
   return 301 https://$host$request_uri;
 }
 
+# Internal only; Used by Munin
+server {
+  listen 8081;
+  location /nginx_status {
+    stub_status;
+  }
+}
+
 server {
   listen 8443 ssl;
   client_max_body_size 0;
@@ -20,6 +28,17 @@ server {
     root /var/www/certbot;
   }
 
+  location ~ /\.ht {
+    deny all;
+  }
+  location = /munin {
+    return 301 /munin/;
+  }
+  location /munin/ {
+    alias /vol/munin/;
+    auth_basic "Munin";
+    auth_basic_user_file /vol/munin/.htpasswd;
+  }
   location /static {
     alias /vol/static/static;
   }
