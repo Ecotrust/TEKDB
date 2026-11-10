@@ -6,7 +6,7 @@ export type LoginState = {
   error?: string | null;
 };
 
-export const submitAction = async (
+export const submitLoginAction = async (
   prevState: LoginState,
   formData: FormData
 ): Promise<LoginState> => {
@@ -53,5 +53,25 @@ export const submitAction = async (
       success: false,
       error: "Unable to log in right now. Please try again.",
     };
+  }
+};
+
+export const submitSearchAction = async ({ categories, query }: { categories: string[], query: string }) => {
+  const params = new URLSearchParams({ query });
+  categories.forEach((category) => params.append("category", category));
+
+  try {
+    const response = await tekdbApi.get("/api/search/", {
+      params,
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    }
+
+    throw new Error("Search failed");
+  } catch (error) {
+    console.error("Search error", error);
+    throw error;
   }
 };

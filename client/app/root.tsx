@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "react-router";
+import type { ReactNode } from "react";
 
 import type { Route } from "./+types/root";
 import "./App.css";
@@ -16,8 +17,10 @@ import {
   type PageContentAndSiteInfo,
 } from "./api/pageContent";
 import { LoginProvider } from "./context/loginContext";
+import { SearchProvider } from "./context/searchContext";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+
+export function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -77,9 +80,11 @@ export default function Root() {
         }}
       />
       <LoginProvider>
+        <SearchProvider>
         <Outlet
           context={{ pageContent, siteInfo } satisfies PageContentAndSiteInfo}
         />
+      </SearchProvider>
       </LoginProvider>
     </>
   );

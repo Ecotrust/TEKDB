@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSearch } from "../context/searchContext";
 
 
 const SearchRoute: React.FC = () => {
-const [categories, setCategories] = useState<string[]>([]);
+  const { handleCategoryTypeChange, handleSearch } = useSearch();
 
-  const handleCategoryTypeChange = (type: string) => {
-    if (categories.includes(type)) {
-      setCategories(categories.filter((category) => category !== type));
-    } else {
-      setCategories([...categories, type]);
-    }
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSearch(new FormData(e.currentTarget));
   };
+
   return (
     <div>
-      <form className="query-form" method='post' action='/search/' id="filter-form">
+      <form className="query-form" onSubmit={onSubmit} id="filter-form">
     <div className="form-group row">
       <div className="col col-md-2"></div>
                   <div className="input-group explore-input-group">

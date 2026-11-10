@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSearch } from "../context/searchContext";
 import "./explore.css";
 
 const ExploreRoute: React.FC = () => {
-  const [categories, setCategories] = useState<string[]>([]);
+  const { handleCategoryTypeChange, handleSearch, handleQueryChange } = useSearch();
 
-  const handleCategoryTypeChange = (type: string) => {
-    if (categories.includes(type)) {
-      setCategories(categories.filter((category) => category !== type));
-    } else {
-      setCategories([...categories, type]);
-    }
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSearch(new FormData(e.currentTarget));
   };
-  console.log("Selected categories:", categories);
+
   return (
     <div className="container-fluid content-container">
       <div className="row content-row">
@@ -19,7 +17,7 @@ const ExploreRoute: React.FC = () => {
           <section className="container">
             <div className="explore-form-row row min-full-height">
               <div className="col form-wrapper">
-                <form className="explore-form" method="post" action="/api/search/">
+                <form className="explore-form" onSubmit={onSubmit}>
                   <h1>Search &amp; Browse</h1>
                   <p>
                     You can search by term alone and/or add category filters
@@ -65,6 +63,7 @@ const ExploreRoute: React.FC = () => {
                       name="query"
                       placeholder="Search"
                       aria-describedby="search-icon-label"
+                      onChange={(e) => handleQueryChange(e.target.value)}
                     />
                     <input type="submit" id="query-form-submit" value="GO" />
                   </div>
