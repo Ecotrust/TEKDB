@@ -5,7 +5,6 @@ import { useLogin } from "../context/loginContext";
 /** Return a 404 if the user is not authenticated */
 const PrivateRoute: React.FC = () => {
   const { loginForm } = useLogin();
-  console.log("PrivateRoute", loginForm);
   if (loginForm.isCheckingAuth) {
     return <></>;
   }

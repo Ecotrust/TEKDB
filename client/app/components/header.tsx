@@ -90,7 +90,9 @@ const Header: React.FC<HeaderProps> = ({
                     id="userDropdown"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
-                  >{loginForm?.username}</a>
+                  >
+                    {loginForm?.username}
+                  </a>
                   <ul className="dropdown-menu" aria-labelledby="userDropdown">
                     <li>
                       <a

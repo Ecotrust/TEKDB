@@ -1,10 +1,11 @@
 import React, {
   useEffect,
   createContext,
-  useContext,
+  use,
   useCallback,
 } from "react";
-import { submitAction } from "./action";
+import type { ReactNode } from "react";
+import { submitLoginAction } from "./action";
 import { getAuthSession } from "../api/tekdbApi";
 
 type UseLoginFormReturn = {
@@ -24,7 +25,11 @@ type useLogin = {
 
 const LoginContext = createContext<useLogin | null>(null);
 
-export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
+interface LoginProviderProps {
+  children: ReactNode;
+}
+
+export const LoginProvider: React.FC<LoginProviderProps> = ({
   children,
 }) => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
@@ -66,7 +71,7 @@ export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
   const formAction = useCallback(async (formData: FormData) => {
     setIsPending(true);
     try {
-      const loginState = await submitAction(
+      const loginState = await submitLoginAction(
         {
           success: false,
           error: null,
@@ -77,7 +82,7 @@ export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
       if (loginState.success) {
         setIsAuthenticated(true);
         setError(null);
-        setShowLoginModal(false);
+        setShowLoginModal(false); 
         return;
       }
 
@@ -104,12 +109,12 @@ export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({
   };
 
   return (
-    <LoginContext.Provider value={value}>{children}</LoginContext.Provider>
+    <LoginContext value={value}>{children}</LoginContext>
   );
 };
 
 export const useLogin = () => {
-  const context = useContext(LoginContext);
+  const context = use(LoginContext);
   if (!context) {
     throw new Error("useLogin must be used within a LoginProvider");
   }
