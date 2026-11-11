@@ -1,9 +1,18 @@
 import React from "react";
 import { useSearch } from "../context/searchContext";
+import Checkbox from "../components/checkbox";
+import { CATEGORIES } from "../utils/constants";
+
 import "./explore.css";
 
 const ExploreRoute: React.FC = () => {
-  const { handleCategoryTypeChange, handleSearch, handleQueryChange } = useSearch();
+  const {
+    handleCategoryTypeChange,
+    handleSearch,
+    handleQueryChange,
+    categories,
+    query,
+  } = useSearch();
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,7 +81,7 @@ const ExploreRoute: React.FC = () => {
                     type="text"
                     id="search-category-type"
                     name="category"
-                    value=""
+                    value={categories.join(",")}
                     hidden
                   />
                   <div
@@ -83,46 +92,14 @@ const ExploreRoute: React.FC = () => {
                     <div className="col-12 col-xl-2" role="category-group">
                       <p>Categories:</p>
                     </div>
-                    <div className="col-lg-2 col-xl-2" role="category-group">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCategoryTypeChange("places")}
-                        id="check-places"
+                    {CATEGORIES.map((category) => (
+                      <Checkbox
+                        key={category}
+                        label={category}
+                        checked={categories.includes(category)}
+                        onChange={() => handleCategoryTypeChange(category)}
                       />
-                      <label htmlFor="check-places"></label> Places
-                    </div>
-                    <div className="col-lg-3 col-xl-2" role="category-group">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCategoryTypeChange("resources")}
-                        id="check-resources"
-                      />
-                      <label htmlFor="check-resources"></label> Resources
-                    </div>
-                    <div className="col-lg-3 col-xl-2" role="category-group">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCategoryTypeChange("activities")}
-                        id="check-activities"
-                      />
-                      <label htmlFor="check-activities"></label> Activity
-                    </div>
-                    <div className="col-lg-2 col-xl-2" role="category-group">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCategoryTypeChange("sources")}
-                        id="check-sources"
-                      />
-                      <label htmlFor="check-sources"></label> Source
-                    </div>
-                    <div className="col-lg-2 col-xl-2" role="category-group">
-                      <input
-                        type="checkbox"
-                        onChange={() => handleCategoryTypeChange("media")}
-                        id="check-media"
-                      />
-                      <label htmlFor="check-media"></label> Media
-                    </div>
+                    ))}
                   </div>
 
                   <div className="button-wrapper">
