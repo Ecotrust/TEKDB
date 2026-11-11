@@ -1,0 +1,21 @@
+.checkbox-input {
+  height: 80%;
+  opacity: 0;
+  position: absolute;
+  width: 80%;
+  z-index: 9;
+}
+
+.checkbox-input:checked ~ label {
+  background-color: var(--secondary_a);
+}
+
+.checkbox-label {
+  background: var(--white);
+  border: 2px solid var(--secondary_a);
+  display: inline-block;
+  margin-bottom: 2px;
+  margin-right: 4px;
+  padding: 6px;
+  vertical-align: middle;
+}

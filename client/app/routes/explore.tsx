@@ -11,7 +11,6 @@ const ExploreRoute: React.FC = () => {
     handleSearch,
     handleQueryChange,
     categories,
-    query,
   } = useSearch();
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,7 +19,7 @@ const ExploreRoute: React.FC = () => {
   };
 
   return (
-    <div className="container-fluid content-container">
+    <div className="container-fluid">
       <div className="row content-row">
         <div className="col well content-well accent-bg">
           <section className="container">
@@ -93,12 +92,13 @@ const ExploreRoute: React.FC = () => {
                       <p>Categories:</p>
                     </div>
                     {CATEGORIES.map((category) => (
-                      <Checkbox
-                        key={category}
-                        label={category}
-                        checked={categories.includes(category)}
-                        onChange={() => handleCategoryTypeChange(category)}
-                      />
+                      <div className="col-lg-2 col-xl-2" role="category-group" key={category}>
+                        <Checkbox
+                          label={category}
+                          checked={categories.includes(category)}
+                          onChange={() => handleCategoryTypeChange(category)}
+                        />
+                      </div>
                     ))}
                   </div>
 
