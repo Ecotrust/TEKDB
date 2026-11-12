@@ -83,6 +83,14 @@ const Table: React.FC<{ data: Result[]; columns: any[] }> = ({
         </span>
       </div>
       <BTable striped hover responsive>
+        <thead className="d-none">
+           <tr>
+             <th scope="col">Category</th>
+             <th scope="col">Name</th>
+             <th scope="col">Description</th>
+             <th scope="col">Search snippet</th>
+           </tr>
+         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => {
             return (
