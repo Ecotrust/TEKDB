@@ -9,10 +9,6 @@
     margin-top: calc(var(--margin_top) * 2);
 }
 
-.query-input-group {
-    position: relative;
-}
-
 #search-icon-label {
   border-color: var(--secondary_a);
   border-radius: 2em 0 0 2em;
@@ -50,31 +46,6 @@ input[type="password"] {
   pointer-events: none;
 }
 
-#query-form-submit {
-  height: 100%;
-  opacity: 0;
-  pointer-events: all;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 5em;
-  z-index: 9;
-}
-
-#search-text {
-  border-radius: 0 2em 2em 0;
-  border-left: none;
-}
-
-.query-input-group::after {
-  background: var(--secondary_a);
-  content: '';
-  height: 2em;
-  position: absolute;
-  right: 6em;
-  top: .625em;
-  width: 1px;
-}
 
 .highlight {
   background-color: yellow;

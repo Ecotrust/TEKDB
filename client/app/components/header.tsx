@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
 import LoginModal from "./login-modal";
-import "./header.css";
 import { useLogin } from "../context/loginContext";
+
+import "./header.css";
 
 export type HeaderProps = {
   projIcons: {
