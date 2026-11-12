@@ -1,0 +1,35 @@
+.checkbox-control {
+  display: inline-block;
+  position: relative;
+}
+
+.checkbox-input {
+  height: 16px;
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  z-index: 1;
+}
+
+.checkbox-input:checked ~ label {
+  background-color: var(--secondary_a);
+}
+
+.checkbox-input:focus-visible + .checkbox-label {
+  outline: 2px solid var(--secondary_a);
+  outline-offset: 2px;
+}
+
+.checkbox-label {
+  background: var(--white);
+  border: 2px solid var(--secondary_a);
+  display: inline-block;
+  margin-bottom: 2px;
+  margin-right: 4px;
+  padding: 6px;
+  vertical-align: middle;
+}

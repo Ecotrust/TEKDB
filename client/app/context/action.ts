@@ -1,5 +1,6 @@
 import axios from "axios";
 import { primeCsrf, tekdbApi } from "../api/tekdbApi";
+import type { FilterCategories } from "../types";
 
 export type LoginState = {
   success?: boolean;
@@ -56,7 +57,7 @@ export const submitLoginAction = async (
   }
 };
 
-export const submitSearchAction = async ({ categories, query }: { categories: string[], query: string }) => {
+export const submitSearchAction = async ({ categories, query }: { categories: FilterCategories[], query: string }) => {
   const params = new URLSearchParams({ query });
   categories.forEach((category) => params.append("category", category));
 
