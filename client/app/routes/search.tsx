@@ -5,6 +5,7 @@ import {
   rowPaginationFeature,
   createPaginatedRowModel,
   useTable,
+  metaHelper,
 } from "@tanstack/react-table";
 import { Table as BTable } from "react-bootstrap";
 
@@ -15,9 +16,14 @@ import type { Result } from "../types";
 
 import "./search.css";
 
+interface ColumnMeta {
+  className?: string;
+}
+
 const features = tableFeatures({
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
+  columnMeta: metaHelper<ColumnMeta>(),
 });
 
 const columnHelper = createColumnHelper<typeof features, Result>();
@@ -84,7 +90,7 @@ const Table: React.FC<{ data: Result[]; columns: any[] }> = ({
                   return (
                     <td
                       key={cell.id}
-                      className={cell.column.columnDef.meta?.className}
+                      className={cell.column.columnDef.meta?.className ?? ""}
                     >
                       <table.FlexRender cell={cell} />
                     </td>
@@ -147,10 +153,13 @@ const SearchRoute: React.FC = () => {
     searchedQuery,
   } = useSearch();
 
-  const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleSearch();
-  }, [handleSearch]);
+  const onSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      handleSearch();
+    },
+    [handleSearch],
+  );
 
   const columns = useMemo(() => {
     return columnHelper.columns([
@@ -207,7 +216,7 @@ const SearchRoute: React.FC = () => {
                 </svg>
               </span>
               <input
-                type="search"
+                type="text"
                 className="form-control"
                 id="search-text"
                 name="query"
@@ -242,16 +251,17 @@ const SearchRoute: React.FC = () => {
         </div>
       </form>
       <div className="row content-row">
-        <div className="row justify-content-center">
-          <div className="col col-md-8 results-left">
+        <div className="col col-md-8 results-left ">
+          <div className="row justify-content-center">
             <div className="col-auto px-4 results-control-left">
               <span>
                 Results: {filteredResults.length}
-                <i>{searchedQuery ? ` Results for "${searchedQuery}"` : " Results"}</i>
+                <i>
+                  {searchedQuery
+                    ? ` Results for "${searchedQuery}"`
+                    : " Results"}
+                </i>
               </span>
-            </div>
-            <div className="col-auto px-3 results-controls-center">
-              <div id="page-controls"></div>
             </div>
             <div className="col-auto px-4 results-controls-right">
               <div id="export-links">

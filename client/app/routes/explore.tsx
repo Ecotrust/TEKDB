@@ -65,7 +65,7 @@ const ExploreRoute: React.FC = () => {
                       </svg>
                     </span>
                     <input
-                      type="search"
+                      type="text"
                       className="form-control"
                       id="search-text"
                       name="query"
@@ -75,14 +75,6 @@ const ExploreRoute: React.FC = () => {
                     />
                     <input type="submit" id="query-form-submit" value="GO" />
                   </div>
-
-                  <input
-                    type="text"
-                    id="search-category-type"
-                    name="category"
-                    value={categories.join(",")}
-                    hidden
-                  />
                   <div
                     className="row"
                     id="filter-checkboxes"

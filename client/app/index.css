@@ -125,12 +125,6 @@ h2 {
   margin-top: var(--margin_top);
 }
 
-p {
-  font-size: 1.25em;
-  letter-spacing: .05em;
-  margin: calc(var(--margin_top) / 2) 0 calc(var(--margin_bottom) * 2)
-}
-
 .explore-form-row {
   align-items: stretch;
   flex-direction: row;
