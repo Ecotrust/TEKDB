@@ -3,12 +3,10 @@ import React, {
   useCallback,
   use,
   useState,
-  useMemo,
 } from "react";
 import type { ReactNode } from "react";
 import {useLocation} from "react-router";
 import type { FilterCategories, Result } from "../types";
-import { CategoryToFilterCategoryMap } from "../types";
 import { useNavigate } from "react-router";
 import { submitSearchAction } from "./action";
 import { CATEGORIES } from "../types";
