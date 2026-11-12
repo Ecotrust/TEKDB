@@ -16,12 +16,12 @@ import { CATEGORIES } from "../types";
 type useSearch = {
   categories: FilterCategories[];
   results: Result[];
-  filteredResults: Result[];
   query: string;
   searchedQuery: string;
   handleCategoryTypeChange: (type: FilterCategories) => void;
   handleSearch: () => Promise<void>;
   handleQueryChange: (query: string) => void;
+  handleCategoryAndSearch: (type: FilterCategories) => void;
 };
 
 const SearchContext = createContext<useSearch | null>(null);
@@ -44,8 +44,10 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
         setCategories(
           categories.filter((category: FilterCategories) => category !== type),
         );
+        return categories.filter((category: FilterCategories) => category !== type);
       } else {
         setCategories([...categories, type]);
+        return [...categories, type];
       }
     },
     [categories],
@@ -55,9 +57,9 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
     setQuery(query);
   }, []);
 
-  const handleSearch = useCallback(async () => {
+  const handleSearch = useCallback(async (categoriesToSearch?: FilterCategories[]) => {
     try {
-      const response = await submitSearchAction({ categories, query });
+      const response = await submitSearchAction({ categories: categoriesToSearch ?? categories, query });
       const { results } = response;
       setResults(results);
       setSearchedQuery(query); // update the executed searched query
@@ -67,23 +69,28 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
     } catch (error) {
       console.error("Search failed", error);
     }
-  }, [categories, query, navigate]);
+  }, [categories, query, location]);
 
-  const filteredResults = useMemo(() => {
-    return results.filter((result) =>
-      categories.includes(CategoryToFilterCategoryMap[result.category_name]),
-    );
-  }, [results, categories]);
+  const handleCategoryAndSearch = useCallback(
+    (category: FilterCategories) => {
+      const newCategories = categories.includes(category)
+        ? categories.filter((c: FilterCategories) => c !== category)
+        : [...categories, category];
+      handleSearch(newCategories);
+      handleCategoryTypeChange(category);
+    },
+    [categories, handleSearch, handleCategoryTypeChange]
+  );
   
   const value = {
     categories,
     results,
-    filteredResults,
     query,
     searchedQuery,
-    handleCategoryTypeChange,
+    handleCategoryAndSearch,
     handleSearch,
     handleQueryChange,
+    handleCategoryTypeChange,
   };
   return <SearchContext value={value}>{children}</SearchContext>;
 };

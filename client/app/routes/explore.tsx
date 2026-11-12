@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useSearch } from "../context/searchContext";
 import Checkbox from "../components/checkbox";
 import { CATEGORIES } from "../types";
@@ -12,6 +12,11 @@ const ExploreRoute: React.FC = () => {
     handleQueryChange,
     categories,
   } = useSearch();
+
+  // clear the search query on component mount
+  useEffect(() => {
+    handleQueryChange("");
+  }, [])
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

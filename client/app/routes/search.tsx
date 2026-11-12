@@ -144,11 +144,11 @@ const Table: React.FC<{ data: Result[]; columns: any[] }> = ({
 
 const SearchRoute: React.FC = () => {
   const {
-    handleCategoryTypeChange,
+    handleCategoryAndSearch,
     handleSearch,
     handleQueryChange,
     categories,
-    filteredResults,
+    results,
     query,
     searchedQuery,
   } = useSearch();
@@ -244,7 +244,7 @@ const SearchRoute: React.FC = () => {
               <Checkbox
                 label={category}
                 checked={categories.includes(category)}
-                onChange={() => handleCategoryTypeChange(category)}
+                onChange={() => handleCategoryAndSearch(category)}
               />
             </div>
           ))}
@@ -255,7 +255,7 @@ const SearchRoute: React.FC = () => {
           <div className="row justify-content-center">
             <div className="col-auto px-4 results-control-left">
               <span>
-                Results: {filteredResults.length}
+                Results: {results.length}
                 <i>
                   {searchedQuery
                     ? ` Results for "${searchedQuery}"`
@@ -288,7 +288,7 @@ const SearchRoute: React.FC = () => {
       </div>
       <div className="row">
         <div className="col">
-          <Table data={filteredResults} columns={columns} />
+          <Table data={results} columns={columns} />
         </div>
       </div>
     </div>
