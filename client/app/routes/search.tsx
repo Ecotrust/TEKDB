@@ -10,7 +10,7 @@ import { Table as BTable } from "react-bootstrap";
 
 import { useSearch } from "../context/searchContext";
 import Checkbox from "../components/checkbox";
-import { CATEGORIES } from "../utils/constants";
+import { CATEGORIES } from "../types";
 import type { Result } from "../types";
 
 import "./search.css";
@@ -31,13 +31,50 @@ const Table: React.FC<{ data: Result[]; columns: any[] }> = ({
       features,
       columns,
       data,
-      initialState: { pagination: { pageIndex: 1, pageSize: 25 } },
+      initialState: { pagination: { pageIndex: 0, pageSize: 25 } },
       debugTable: false,
     },
     (state) => state, // default selector
   );
   return (
     <div>
+      <div className="controls">
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.firstPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<<"}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {">>"}
+        </button>
+        <span className="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{" "}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+      </div>
       <BTable striped hover responsive>
         <tbody>
           {table.getRowModel().rows.map((row) => {
@@ -105,14 +142,15 @@ const SearchRoute: React.FC = () => {
     handleSearch,
     handleQueryChange,
     categories,
-    results,
+    filteredResults,
     query,
+    searchedQuery,
   } = useSearch();
 
   const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSearch(new FormData(e.currentTarget));
-  }, []);
+    handleSearch();
+  }, [handleSearch]);
 
   const columns = useMemo(() => {
     return columnHelper.columns([
@@ -208,8 +246,8 @@ const SearchRoute: React.FC = () => {
           <div className="col col-md-8 results-left">
             <div className="col-auto px-4 results-control-left">
               <span>
-                Results: {results.length}
-                <i>{query ? ` Results for "${query}"` : " Results"}</i>
+                Results: {filteredResults.length}
+                <i>{searchedQuery ? ` Results for "${searchedQuery}"` : " Results"}</i>
               </span>
             </div>
             <div className="col-auto px-3 results-controls-center">
@@ -240,7 +278,7 @@ const SearchRoute: React.FC = () => {
       </div>
       <div className="row">
         <div className="col">
-          <Table data={results} columns={columns} />
+          <Table data={filteredResults} columns={columns} />
         </div>
       </div>
     </div>

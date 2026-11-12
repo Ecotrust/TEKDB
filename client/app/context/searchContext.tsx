@@ -1,18 +1,30 @@
-import React, { useCallback, use } from "react";
+import React, {
+  createContext,
+  useCallback,
+  use,
+  useState,
+  useMemo,
+} from "react";
 import type { ReactNode } from "react";
+import {useLocation} from "react-router";
+import type { FilterCategories, Result } from "../types";
+import { CategoryToFilterCategoryMap } from "../types";
 import { useNavigate } from "react-router";
 import { submitSearchAction } from "./action";
+import { CATEGORIES } from "../types";
 
 type useSearch = {
-  categories: string[];
-  results: any[];
+  categories: FilterCategories[];
+  results: Result[];
+  filteredResults: Result[];
   query: string;
-  handleCategoryTypeChange: (type: string) => void;
-  handleSearch: (formData: FormData) => Promise<void>;
+  searchedQuery: string;
+  handleCategoryTypeChange: (type: FilterCategories) => void;
+  handleSearch: () => Promise<void>;
   handleQueryChange: (query: string) => void;
 };
 
-const SearchContext = React.createContext<useSearch | null>(null);
+const SearchContext = createContext<useSearch | null>(null);
 
 interface SearchProviderProps {
   children: ReactNode;
@@ -20,15 +32,17 @@ interface SearchProviderProps {
 
 export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const navigate = useNavigate();
-  const [categories, setCategories] = React.useState<string[]>([]);
-  const [results, setResults] = React.useState<any[]>([]);
-  const [query, setQuery] = React.useState<string>("");
+  const location = useLocation();
+  const [categories, setCategories] = useState<FilterCategories[]>(CATEGORIES);
+  const [results, setResults] = useState<Result[]>([]);
+  const [query, setQuery] = useState<string>(""); // search query input by the user
+  const [searchedQuery, setSearchedQuery] = useState<string>(""); // the executed searched query
 
   const handleCategoryTypeChange = useCallback(
-    (type: string) => {
+    (type: FilterCategories) => {
       if (categories.includes(type)) {
         setCategories(
-          categories.filter((category: string) => category !== type),
+          categories.filter((category: FilterCategories) => category !== type),
         );
       } else {
         setCategories([...categories, type]);
@@ -46,16 +60,27 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
       const response = await submitSearchAction({ categories, query });
       const { results } = response;
       setResults(results);
-      await navigate("/search");
+      setSearchedQuery(query); // update the executed searched query
+      if (location.pathname !== "/search") {
+        await navigate("/search");
+      }
     } catch (error) {
       console.error("Search failed", error);
     }
   }, [categories, query, navigate]);
 
+  const filteredResults = useMemo(() => {
+    return results.filter((result) =>
+      categories.includes(CategoryToFilterCategoryMap[result.category_name]),
+    );
+  }, [results, categories]);
+  
   const value = {
     categories,
     results,
+    filteredResults,
     query,
+    searchedQuery,
     handleCategoryTypeChange,
     handleSearch,
     handleQueryChange,

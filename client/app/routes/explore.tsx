@@ -1,7 +1,7 @@
 import React from "react";
 import { useSearch } from "../context/searchContext";
 import Checkbox from "../components/checkbox";
-import { CATEGORIES } from "../utils/constants";
+import { CATEGORIES } from "../types";
 
 import "./explore.css";
 
@@ -15,7 +15,7 @@ const ExploreRoute: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSearch(new FormData(e.currentTarget));
+    handleSearch();
   };
 
   return (
