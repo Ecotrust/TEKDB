@@ -1,13 +1,15 @@
 import { usePageContentAndSiteInfo } from "../api/pageContent";
 import { useLogin } from "../context/loginContext";
 
+import "./welcome.css";
+
 const WelcomePage: React.FC = () => {
   const { pageContent, siteInfo } = usePageContentAndSiteInfo();
   const { loginForm, setShowLoginModal } = useLogin();
   const isAuthenticated = loginForm.isAuthenticated;
 
   return (
-    <div className="container">
+    <div className="container welcome-container">
       <div className="row gx-4 align-items-center">
         <div className="col-lg-5 homepage-column" id="homepage-left-column">
           <div

@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useSearch } from "../context/searchContext";
 import Checkbox from "../components/checkbox";
-import { CATEGORIES } from "../utils/constants";
+import SearchInput from "../components/search-input";
+import { CATEGORIES } from "../types";
 
 import "./explore.css";
 
@@ -11,16 +12,20 @@ const ExploreRoute: React.FC = () => {
     handleSearch,
     handleQueryChange,
     categories,
-    query,
   } = useSearch();
+
+  // clear the search query on component mount
+  useEffect(() => {
+    handleQueryChange("");
+  }, [])
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSearch(new FormData(e.currentTarget));
+    handleSearch();
   };
 
   return (
-    <div className="container-fluid content-container">
+    <div className="container-fluid">
       <div className="row content-row">
         <div className="col well content-well accent-bg">
           <section className="container">
@@ -41,49 +46,14 @@ const ExploreRoute: React.FC = () => {
                     </em>
                   </p>
 
-                  <div className="input-group explore-input-group">
-                    <span className="input-group-text" id="search-icon-label">
-                      <svg
-                        id="Symbol_62_2"
-                        data-name="Symbol 62 – 2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                      >
-                        <rect
-                          id="Rectangle_176"
-                          data-name="Rectangle 176"
-                          width="16"
-                          height="16"
-                          fill="none"
-                        />
-                        <path
-                          id="Path_99"
-                          data-name="Path 99"
-                          d="M15.9,14.5l-3.3-3.3A6.847,6.847,0,0,0,14,7,6.957,6.957,0,0,0,7,0,6.957,6.957,0,0,0,0,7a6.957,6.957,0,0,0,7,7,6.847,6.847,0,0,0,4.2-1.4l3.3,3.3ZM2,7A4.951,4.951,0,0,1,7,2a4.951,4.951,0,0,1,5,5,4.951,4.951,0,0,1-5,5A4.951,4.951,0,0,1,2,7Z"
-                        />
-                      </svg>
-                    </span>
-                    <input
-                      type="search"
-                      className="form-control"
-                      id="search-text"
-                      name="query"
+                  <div className=" explore-input-group">
+                    <SearchInput
+                      onInputChange={handleQueryChange}
                       placeholder="Search"
-                      aria-describedby="search-icon-label"
-                      onChange={(e) => handleQueryChange(e.target.value)}
+                      submitValue="GO"
+                      showSubmitButton={false}
                     />
-                    <input type="submit" id="query-form-submit" value="GO" />
                   </div>
-
-                  <input
-                    type="text"
-                    id="search-category-type"
-                    name="category"
-                    value={categories.join(",")}
-                    hidden
-                  />
                   <div
                     className="row"
                     id="filter-checkboxes"
@@ -93,12 +63,13 @@ const ExploreRoute: React.FC = () => {
                       <p>Categories:</p>
                     </div>
                     {CATEGORIES.map((category) => (
-                      <Checkbox
-                        key={category}
-                        label={category}
-                        checked={categories.includes(category)}
-                        onChange={() => handleCategoryTypeChange(category)}
-                      />
+                      <div className="col-lg-2 col-xl-2" role="category-group" key={category}>
+                        <Checkbox
+                          label={category}
+                          checked={categories.includes(category)}
+                          onChange={() => handleCategoryTypeChange(category)}
+                        />
+                      </div>
                     ))}
                   </div>
 

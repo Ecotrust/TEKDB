@@ -1,1 +1,0 @@
-export const CATEGORIES = ["places", "resources", "activities", "sources", "media"];

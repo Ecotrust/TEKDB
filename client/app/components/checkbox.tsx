@@ -1,3 +1,5 @@
+import './checkbox.css';
+
 const Checkbox = ({
   label,
   onChange,
@@ -8,15 +10,17 @@ const Checkbox = ({
   checked: boolean;
 }) => {
   return (
-    <div className="col-lg-2 col-xl-2" role="category-group">
+    <span className="checkbox-control">
       <input
         type="checkbox"
         onChange={() => onChange()}
         checked={checked}
+        aria-label={label}
         id={`check-${label.toLowerCase()}`}
+        className="checkbox-input"
       />
-      <label htmlFor={`check-${label.toLowerCase()}`}></label> {label}
-    </div>
+      <label htmlFor={`check-${label.toLowerCase()}`} className="checkbox-label"></label> {label}
+    </span>
   );
 };
 

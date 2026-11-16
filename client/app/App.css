@@ -124,11 +124,7 @@ h2 {
   margin-top: var(--margin_top);
 }
 
-p {
-  font-size: 1.25em;
-  letter-spacing: .05em;
-  margin: calc(var(--margin_top) / 2) 0 calc(var(--margin_bottom) * 2)
-}
+
 
 .explore-form-row {
   align-items: stretch;
@@ -185,6 +181,72 @@ button.btn:hover {
   position: relative;
 }
 
+.arrow-right,
+.arrow-left {
+  background: var(--theme_color);
+  display: inline-flex;
+  height: 2px;
+  position: relative;
+  vertical-align: middle;
+  width: 24px;
+}
+
+.arrow-right {
+  margin-left: 4px;
+}
+
+.arrow-left {
+  margin-right: 4px;
+}
+
+  .arrow-right::before,
+  .arrow-right::after,
+  .arrow-left::before,
+  .arrow-left::after {
+    background: var(--theme_color);
+    content: "";
+    height: 2px;
+    position: absolute;
+    transform-origin: 50% 50%;
+    width: 10px;
+  }
+
+  .arrow-right::before,
+  .arrow-right::after {
+    right: -3px;
+  }
+
+  .arrow-left::before,
+  .arrow-left::after {
+    left: -3px;
+  }
+
+  .arrow-right::before,
+  .arrow-left::before {
+    top: -3px;
+  }
+
+  .arrow-right::before {
+    transform: rotate(45deg);
+  }
+
+  .arrow-left::before {
+    transform: rotate(-45deg);
+  }
+
+  .arrow-right::after,
+  .arrow-left::after {
+    bottom: -3px;
+  }
+
+  .arrow-right::after {
+    transform: rotate(-45deg);
+  }
+
+  .arrow-left::after {
+    transform: rotate(45deg);
+  }
+
 button.btn .arrow-right,
 button.btn .arrow-right::before,
 button.btn .arrow-right::after {
@@ -225,6 +287,7 @@ button.btn:hover .arrow-right::after {
   padding-left: 40%;
   text-transform: uppercase;
   text-align: left;
+  margin: var(--margin_top) auto;
 }
 
 @media (min-width: 64em) {
@@ -241,7 +304,7 @@ button.btn:hover .arrow-right::after {
   margin: 0;
 }
 
-main.content-wrapper div.container {
+main.content-wrapper div.welcome-container {
   min-width: 100vw;
   max-width: 100vw;
   margin: 0;

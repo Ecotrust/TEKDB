@@ -1,0 +1,44 @@
+.query-input-group {
+  position: relative;
+}
+
+.query-input-group.has-submit-button::after {
+  background: var(--secondary_a);
+  content: "";
+  height: 2em;
+  position: absolute;
+  right: 6em;
+  top: 0.625em;
+  width: 1px;
+}
+
+#query-form-submit {
+  height: 100%;
+  opacity: 0;
+  pointer-events: all;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5em;
+  z-index: 9;
+}
+
+.query-input-group:has(#query-form-submit:focus-visible) {
+  outline: 2px solid var(--secondary_a);
+  outline-offset: 2px;
+  border-radius: 2em;
+}
+
+#search-icon-label {
+  border-color: var(--secondary_a);
+  border-radius: 2em 0 0 2em;
+  border-right: none;
+  border-width: 2px;
+  background: var(--white);
+  padding: 0.375rem 1.125rem;
+}
+
+#search-text {
+  border-radius: 0 2em 2em 0;
+  border-left: none;
+}
